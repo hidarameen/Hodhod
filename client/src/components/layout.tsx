@@ -64,9 +64,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       {/* Sidebar */}
       <aside className={cn(
-        "fixed lg:static inset-y-0 left-0 z-50 w-64 flex-shrink-0 border-r border-border text-foreground backdrop-blur-sm flex flex-col transition-transform duration-300 lg:translate-x-0",
+        "fixed lg:static inset-y-0 z-50 w-64 flex-shrink-0 text-foreground backdrop-blur-sm flex flex-col transition-transform duration-300",
+        i18n.language === 'ar' ? "right-0 border-l border-border lg:translate-x-0" : "left-0 border-r border-border lg:translate-x-0",
         "bg-white/90 dark:bg-black/80",
-        sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        i18n.language === 'ar' 
+          ? (sidebarOpen ? "translate-x-0" : "translate-x-full") 
+          : (sidebarOpen ? "translate-x-0" : "-translate-x-full")
       )}>
         <div className="p-6 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-3">
