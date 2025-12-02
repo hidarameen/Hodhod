@@ -188,8 +188,9 @@ export async function getFileChanges(): Promise<{
 }
 
 /**
- * دفع ملفات Replit إلى GitHub بخطوات بسيطة
+ * دفع كل ملفات المشروع إلى GitHub
  * git add . → git commit → git push -f
+ * بدون empty commits - فقط إذا كانت هناك تغييرات حقيقية
  */
 export async function pushToGitHubRepo(
   owner: string,
@@ -200,18 +201,18 @@ export async function pushToGitHubRepo(
   try {
     console.log("[GitHub] Starting push...");
 
-    // Step 1: Configure git
+    // Setup: Configure git
     await execAsync('git config user.email "replit-bot@replit.com"');
     await execAsync('git config user.name "Replit Auto-Sync"');
 
-    // Step 2: Get token
+    // Setup: Get token
     const accessToken = await getAccessToken();
     if (!accessToken) {
       console.error("[GitHub] No token available");
       return { success: false };
     }
 
-    // Step 3: Setup remote
+    // Setup: Setup remote
     try {
       await execAsync(`git remote remove origin 2>/dev/null || true`);
     } catch (e) {
@@ -220,22 +221,26 @@ export async function pushToGitHubRepo(
     const remoteUrl = `https://oauth2:${accessToken}@github.com/${owner}/${repo}.git`;
     await execAsync(`git remote add origin "${remoteUrl}"`);
 
-    // Step 1: git add
-    console.log("[GitHub] Step 1: git add .");
+    // Step 1: git add .
+    console.log("[GitHub] Step 1: Adding all files...");
     await execAsync("git add .");
 
-    // Step 2: git commit
-    console.log("[GitHub] Step 2: git commit");
-    const escapedMessage = message.replace(/"/g, '\\"').replace(/'/g, "\\'");
-    try {
-      await execAsync(`git commit -m "${escapedMessage}"`);
-    } catch (e) {
-      console.log("[GitHub] No changes to commit, creating empty commit");
-      await execAsync(`git commit --allow-empty -m "${escapedMessage}"`);
+    // Check if there are any staged changes
+    const diffResult = await execAsync("git diff --cached --quiet; echo $?", { shell: "/bin/bash" });
+    const hasChanges = diffResult.stdout?.trim() !== "0";
+
+    if (!hasChanges) {
+      console.log("[GitHub] ✓ No changes to commit");
+      return { success: true };
     }
 
+    // Step 2: git commit
+    console.log("[GitHub] Step 2: Creating commit...");
+    const escapedMessage = message.replace(/"/g, '\\"').replace(/'/g, "\\'");
+    await execAsync(`git commit -m "${escapedMessage}"`);
+
     // Step 3: git push force
-    console.log("[GitHub] Step 3: git push -f");
+    console.log("[GitHub] Step 3: Pushing to GitHub...");
     await execAsync(`git push -f -u origin ${targetBranch}`);
 
     console.log("[GitHub] ✅ Successfully pushed to GitHub!");
