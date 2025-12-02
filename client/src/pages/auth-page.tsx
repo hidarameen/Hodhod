@@ -57,10 +57,10 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-black relative overflow-hidden font-sans">
+    <div className="min-h-screen w-full flex items-center justify-center bg-white dark:bg-black relative overflow-hidden font-sans">
       {/* Dynamic Background */}
       <div 
-        className="absolute inset-0 z-0 opacity-60"
+        className="absolute inset-0 z-0 opacity-40 dark:opacity-60"
         style={{
           backgroundImage: `url(${backgroundUrl})`,
           backgroundSize: 'cover',
@@ -69,7 +69,7 @@ export default function AuthPage() {
       />
       
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
+      <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-transparent dark:from-black dark:via-black/80 dark:to-transparent z-0" />
       
       <div className="relative z-10 w-full max-w-md px-4">
         <motion.div
@@ -81,11 +81,11 @@ export default function AuthPage() {
             <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-primary/10 border border-primary/30 backdrop-blur-xl mb-6 shadow-[0_0_30px_rgba(6,182,212,0.3)]">
               <Cpu className="h-10 w-10 text-primary" />
             </div>
-            <h1 className="font-display text-4xl font-bold text-white mb-2 tracking-wider">NEXUS</h1>
-            <p className="text-muted-foreground text-sm uppercase tracking-[0.2em]">Bot Control Interface</p>
+            <h1 className="font-display text-4xl font-bold text-black dark:text-white mb-2 tracking-wider">NEXUS</h1>
+            <p className="text-gray-600 dark:text-muted-foreground text-sm uppercase tracking-[0.2em]">Bot Control Interface</p>
           </div>
 
-          <Card className="bg-black/40 backdrop-blur-xl border-white/10 shadow-2xl">
+          <Card className="bg-white/40 dark:bg-black/40 backdrop-blur-xl border-black/10 dark:border-white/10 shadow-2xl">
             <CardContent className="p-8">
               {error && (
                 <Alert className="mb-6 bg-red-500/10 border-red-500/30">
@@ -95,15 +95,15 @@ export default function AuthPage() {
               )}
               <form onSubmit={handleLogin} className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-xs font-medium text-gray-400 uppercase tracking-wider ml-1">Admin Username</label>
+                  <label className="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider ml-1">Admin Username</label>
                   <div className="relative group">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 group-focus-within:text-primary transition-colors" />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 group-focus-within:text-primary transition-colors" />
                     <Input 
                       type="text"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       disabled={isLoading}
-                      className="pl-10 bg-white/5 border-white/10 text-white focus:border-primary/50 focus:ring-primary/20 h-11 disabled:opacity-50" 
+                      className="pl-10 bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10 text-black dark:text-white focus:border-primary/50 focus:ring-primary/20 h-11 disabled:opacity-50 placeholder:text-gray-400 dark:placeholder:text-gray-500" 
                       placeholder="Enter admin username"
                       required
                     />
@@ -111,15 +111,15 @@ export default function AuthPage() {
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-xs font-medium text-gray-400 uppercase tracking-wider ml-1">Admin Password</label>
+                  <label className="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider ml-1">Admin Password</label>
                   <div className="relative group">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 group-focus-within:text-primary transition-colors" />
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 group-focus-within:text-primary transition-colors" />
                     <Input 
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       disabled={isLoading}
-                      className="pl-10 bg-white/5 border-white/10 text-white focus:border-primary/50 focus:ring-primary/20 h-11 disabled:opacity-50" 
+                      className="pl-10 bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10 text-black dark:text-white focus:border-primary/50 focus:ring-primary/20 h-11 disabled:opacity-50 placeholder:text-gray-400 dark:placeholder:text-gray-500" 
                       placeholder="••••••••••••"
                       required
                     />
@@ -129,7 +129,7 @@ export default function AuthPage() {
                 <Button 
                   type="submit" 
                   disabled={isLoading}
-                  className="w-full h-12 bg-primary text-black font-bold hover:bg-cyan-400 transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)]"
+                  className="w-full h-12 bg-primary text-white dark:text-black font-bold hover:bg-cyan-400 transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)]"
                 >
                   {isLoading ? (
                     <span className="flex items-center gap-2">
@@ -144,7 +144,7 @@ export default function AuthPage() {
               </form>
 
               <div className="mt-6 text-center">
-                <p className="text-xs text-gray-600 font-mono">SECURE CONNECTION ESTABLISHED // TLS 1.3</p>
+                <p className="text-xs text-gray-500 dark:text-gray-600 font-mono">SECURE CONNECTION ESTABLISHED // TLS 1.3</p>
               </div>
             </CardContent>
           </Card>
