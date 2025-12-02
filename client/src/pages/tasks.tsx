@@ -341,10 +341,20 @@ export default function TasksPage() {
               <DialogDescription>أدخل تفاصيل المهمة واختر القنوات المصدر والهدف</DialogDescription>
             </DialogHeader>
             <Tabs defaultValue="basic" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="basic">الأساسيات</TabsTrigger>
-                <TabsTrigger value="summarization">التلخيص</TabsTrigger>
-                <TabsTrigger value="video">الفيديو</TabsTrigger>
+                <TabsTrigger value="summarization" className="flex items-center gap-2">
+                  <FileText className="h-4 w-4" />
+                  <span className="hidden sm:inline">التلخيص</span>
+                </TabsTrigger>
+                <TabsTrigger value="video" className="flex items-center gap-2">
+                  <Video className="h-4 w-4" />
+                  <span className="hidden sm:inline">الفيديو</span>
+                </TabsTrigger>
+                <TabsTrigger value="rules" className="flex items-center gap-2">
+                  <Settings2 className="h-4 w-4" />
+                  <span className="hidden sm:inline">القواعد</span>
+                </TabsTrigger>
               </TabsList>
               
               <TabsContent value="basic" className="space-y-4 mt-4">
@@ -641,6 +651,135 @@ export default function TasksPage() {
                   </>
                 )}
               </TabsContent>
+
+              <TabsContent value="rules" className="space-y-4 mt-4">
+                <Tabs 
+                  value={selectedRuleType} 
+                  onValueChange={(value) => {
+                    setSelectedRuleType(value);
+                    setRuleFormData(initialRuleFormData);
+                    setRuleEditMode(false);
+                  }} 
+                  className="w-full"
+                >
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="summarize" className="flex items-center gap-2">
+                      <FileText className="h-4 w-4" />
+                      التلخيص
+                    </TabsTrigger>
+                    <TabsTrigger value="video" className="flex items-center gap-2">
+                      <Video className="h-4 w-4" />
+                      الفيديو
+                    </TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="summarize" className="space-y-3 mt-3">
+                    <Card className="border-dashed">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm">{ruleEditMode ? "تعديل قاعدة التلخيص" : "إضافة قاعدة تلخيص جديدة"}</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <Label className="text-xs">الاسم</Label>
+                            <Input value={ruleFormData.name} onChange={(e) => setRuleFormData({...ruleFormData, name: e.target.value})} placeholder="مثل: تلخيص الأخبار" className="mt-1 h-8 text-xs" data-testid="input-rule-name" />
+                          </div>
+                          <div>
+                            <Label className="text-xs">الأولوية</Label>
+                            <Input type="number" value={ruleFormData.priority} onChange={(e) => setRuleFormData({...ruleFormData, priority: parseInt(e.target.value) || 0})} className="mt-1 h-8 text-xs" data-testid="input-rule-priority" />
+                          </div>
+                        </div>
+                        <div>
+                          <Label className="text-xs">Prompt التلخيص</Label>
+                          <Textarea value={ruleFormData.prompt} onChange={(e) => setRuleFormData({...ruleFormData, prompt: e.target.value})} placeholder="قم بتلخيص النص..." className="mt-1 min-h-[80px] text-xs" data-testid="textarea-rule-prompt" />
+                        </div>
+                        <Button onClick={handleSubmitRule} size="sm" className="w-full h-8 text-xs" disabled={createRuleMutation.isPending || updateRuleMutation.isPending} data-testid="button-submit-rule">
+                          {(createRuleMutation.isPending || updateRuleMutation.isPending) && <Loader className="h-3 w-3 mr-1 animate-spin" />}
+                          {ruleEditMode ? "حفظ" : "إضافة"}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                    <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                      {filteredRules.length === 0 ? (
+                        <div className="text-xs text-center py-4 text-muted-foreground">لا توجد قواعد تلخيص</div>
+                      ) : (
+                        filteredRules.map((rule: any) => (
+                          <Card key={rule.id} className={`border p-2 ${!rule.isActive ? 'opacity-50' : ''}`}>
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-medium text-foreground">{rule.name}</p>
+                                <p className="text-xs text-muted-foreground truncate">{rule.prompt}</p>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <ToggleSwitch checked={rule.isActive} onCheckedChange={() => toggleRuleMutation.mutate(rule.id)} size="sm" data-testid={`toggle-rule-${rule.id}`} />
+                                <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => handleEditRule(rule)} data-testid={`button-edit-rule-${rule.id}`}>
+                                  <Edit className="h-3 w-3" />
+                                </Button>
+                                <Button size="icon" variant="ghost" className="h-6 w-6 text-red-600" onClick={() => deleteRuleMutation.mutate(rule.id)} data-testid={`button-delete-rule-${rule.id}`}>
+                                  <Trash2 className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            </div>
+                          </Card>
+                        ))
+                      )}
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="video" className="space-y-3 mt-3">
+                    <Card className="border-dashed">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm">{ruleEditMode ? "تعديل قاعدة الفيديو" : "إضافة قاعدة فيديو جديدة"}</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <Label className="text-xs">الاسم</Label>
+                            <Input value={ruleFormData.name} onChange={(e) => setRuleFormData({...ruleFormData, name: e.target.value})} placeholder="مثل: تحويل الفيديو" className="mt-1 h-8 text-xs" data-testid="input-video-rule-name" />
+                          </div>
+                          <div>
+                            <Label className="text-xs">الأولوية</Label>
+                            <Input type="number" value={ruleFormData.priority} onChange={(e) => setRuleFormData({...ruleFormData, priority: parseInt(e.target.value) || 0})} className="mt-1 h-8 text-xs" data-testid="input-video-rule-priority" />
+                          </div>
+                        </div>
+                        <div>
+                          <Label className="text-xs">Prompt معالجة الفيديو</Label>
+                          <Textarea value={ruleFormData.prompt} onChange={(e) => setRuleFormData({...ruleFormData, prompt: e.target.value})} placeholder="قم بتلخيص محتوى الفيديو..." className="mt-1 min-h-[80px] text-xs" data-testid="textarea-video-rule-prompt" />
+                        </div>
+                        <Button onClick={handleSubmitRule} size="sm" className="w-full h-8 text-xs" disabled={createRuleMutation.isPending || updateRuleMutation.isPending} data-testid="button-submit-video-rule">
+                          {(createRuleMutation.isPending || updateRuleMutation.isPending) && <Loader className="h-3 w-3 mr-1 animate-spin" />}
+                          {ruleEditMode ? "حفظ" : "إضافة"}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                    <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                      {filteredRules.length === 0 ? (
+                        <div className="text-xs text-center py-4 text-muted-foreground">لا توجد قواعد فيديو</div>
+                      ) : (
+                        filteredRules.map((rule: any) => (
+                          <Card key={rule.id} className={`border p-2 ${!rule.isActive ? 'opacity-50' : ''}`}>
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-medium text-foreground">{rule.name}</p>
+                                <p className="text-xs text-muted-foreground truncate">{rule.prompt}</p>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <ToggleSwitch checked={rule.isActive} onCheckedChange={() => toggleRuleMutation.mutate(rule.id)} size="sm" data-testid={`toggle-rule-${rule.id}`} />
+                                <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => handleEditRule(rule)} data-testid={`button-edit-rule-${rule.id}`}>
+                                  <Edit className="h-3 w-3" />
+                                </Button>
+                                <Button size="icon" variant="ghost" className="h-6 w-6 text-red-600" onClick={() => deleteRuleMutation.mutate(rule.id)} data-testid={`button-delete-rule-${rule.id}`}>
+                                  <Trash2 className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            </div>
+                          </Card>
+                        ))
+                      )}
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </TabsContent>
             </Tabs>
 
             <Button 
@@ -780,17 +919,6 @@ export default function TasksPage() {
                   >
                     <Trash2 className="h-3 w-3 ml-1" />
                     حذف
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    className="h-8 text-xs"
-                    onClick={() => handleOpenRules(task)}
-                    data-testid={`button-rules-${task.id}`}
-                    title="القواعد"
-                  >
-                    <Settings2 className="h-3 w-3 ml-1" />
-                    قواعد
                   </Button>
                   <Button 
                     size="sm" 
