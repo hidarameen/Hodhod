@@ -32,6 +32,7 @@ export default function GitHubPage() {
   const [loadingLinked, setLoadingLinked] = useState(true);
   const [linkingLoading, setLinkingLoading] = useState(false);
   const [showCommitForm, setShowCommitForm] = useState(false);
+  const [pushSuccess, setPushSuccess] = useState(false);
 
   useEffect(() => {
     loadGitHubInfo();
@@ -130,11 +131,13 @@ export default function GitHubPage() {
     }
 
     if (!linkedRepo) {
-      toast.error("لا يوجد مستودع مربوط");
+      toast.error("يجب ربط مستودع أولاً");
       return;
     }
 
     setLoading(true);
+    setPushSuccess(false);
+    
     try {
       const repoValue = `${linkedRepo.owner}/${linkedRepo.repo}`;
 
@@ -167,9 +170,17 @@ export default function GitHubPage() {
 
       const data = await res.json();
       if (res.ok) {
+        // Delay for visual feedback
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        setPushSuccess(true);
         toast.success("✓ تم دفع التغييرات إلى GitHub بنجاح!");
-        setCommitMessage("");
-        setShowCommitForm(false);
+        
+        // Reset after success message
+        setTimeout(() => {
+          setCommitMessage("");
+          setShowCommitForm(false);
+          setPushSuccess(false);
+        }, 2000);
       } else {
         toast.error(data.error || "فشل دفع التغييرات");
       }
@@ -192,13 +203,13 @@ export default function GitHubPage() {
           </div>
           GitHub Integration
         </h1>
-        <p className="text-gray-400 mt-2">ربط وتزامن المشروع مع GitHub بسهولة وأمان</p>
+        <p className="text-gray-600 dark:text-gray-400 mt-2">ربط وتزامن المشروع مع GitHub بسهولة وأمان</p>
       </div>
 
       {/* Status and Connection Card */}
       <Card className="border border-blue-500/20 bg-gradient-to-r from-blue-500/5 to-transparent">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-white">
+          <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
             {info?.status === "connected" ? (
               <>
                 <CheckCircle className="w-5 h-5 text-green-500" />
@@ -217,8 +228,8 @@ export default function GitHubPage() {
             <div className="space-y-4">
               {/* Username Section */}
               <div className="space-y-2">
-                <p className="text-xs text-gray-400 uppercase tracking-wider">اسم المستخدم</p>
-                <p className="text-sm font-mono bg-gray-900/50 px-3 py-2 rounded border border-gray-700">
+                <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider">اسم المستخدم</p>
+                <p className="text-sm font-mono bg-gray-100 dark:bg-gray-900/50 px-3 py-2 rounded border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white">
                   {info.owner}
                 </p>
               </div>
@@ -231,9 +242,9 @@ export default function GitHubPage() {
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
                 >
-                  <label className="text-sm font-semibold text-gray-300">المستودع</label>
+                  <label className="text-sm font-semibold text-gray-900 dark:text-gray-300">المستودع</label>
                   <Select value={selectedRepo} onValueChange={setSelectedRepo} disabled={loadingRepos}>
-                    <SelectTrigger className="bg-gray-900 border border-gray-700" data-testid="select-repo">
+                    <SelectTrigger className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white" data-testid="select-repo">
                       <SelectValue placeholder="-- اختر مستودع --" />
                     </SelectTrigger>
                     <SelectContent>
@@ -256,7 +267,7 @@ export default function GitHubPage() {
                     onClick={handleLinkRepo}
                     disabled={linkingLoading || !selectedRepo}
                     size="sm"
-                    className="w-full bg-emerald-600/80 hover:bg-emerald-600 text-white"
+                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-600 dark:hover:bg-emerald-700"
                     data-testid="button-link-repo"
                   >
                     {linkingLoading ? (
@@ -274,15 +285,15 @@ export default function GitHubPage() {
                 </motion.div>
               ) : (
                 <motion.div 
-                  className="flex items-center justify-between gap-3 p-3 rounded-lg bg-green-500/10 border border-green-500/30"
+                  className="flex items-center justify-between gap-3 p-3 rounded-lg bg-green-100 dark:bg-green-500/10 border border-green-300 dark:border-green-500/30"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                 >
                   <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
+                    <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-500" />
                     <div>
-                      <p className="text-xs text-green-400">المستودع المربوط</p>
-                      <p className="text-sm text-green-300 font-mono font-bold">{linkedRepo.owner}/{linkedRepo.repo}</p>
+                      <p className="text-xs text-green-700 dark:text-green-400">المستودع المربوط</p>
+                      <p className="text-sm text-green-800 dark:text-green-300 font-mono font-bold">{linkedRepo.owner}/{linkedRepo.repo}</p>
                     </div>
                   </div>
                   <Button
@@ -290,7 +301,7 @@ export default function GitHubPage() {
                     disabled={linkingLoading}
                     size="sm"
                     variant="ghost"
-                    className="text-red-400 hover:text-red-300 hover:bg-red-500/10 h-auto"
+                    className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-100 dark:hover:bg-red-500/10 h-auto"
                     data-testid="button-unlink-repo"
                   >
                     {linkingLoading ? (
@@ -306,8 +317,8 @@ export default function GitHubPage() {
               )}
             </div>
           ) : (
-            <Alert className="bg-yellow-500/10 border-yellow-500/30">
-              <AlertDescription className="text-yellow-200">
+            <Alert className="bg-yellow-100 dark:bg-yellow-500/10 border border-yellow-300 dark:border-yellow-500/30">
+              <AlertDescription className="text-yellow-800 dark:text-yellow-200">
                 تأكد من تفعيل GitHub connector في إعدادات Replit
               </AlertDescription>
             </Alert>
@@ -316,102 +327,137 @@ export default function GitHubPage() {
       </Card>
 
       {/* Push to GitHub - Main Card */}
-      {isLinked && (
-        <Card className="border border-green-500/20 bg-gradient-to-r from-green-500/5 to-transparent">
-          <CardHeader>
-            <CardTitle className="text-white">📤 دفع التغييرات</CardTitle>
-            <CardDescription>
-              المستودع المربوط: {linkedRepo.owner}/{linkedRepo.repo}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Branch Selection */}
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-300">الفرع</label>
-              <Select value={selectedBranch} onValueChange={setSelectedBranch}>
-                <SelectTrigger className="bg-gray-900 border border-gray-700" data-testid="select-branch">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {branches.map((branch) => (
-                    <SelectItem key={branch} value={branch}>
-                      {branch}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+      <Card className="border border-green-500/20 bg-gradient-to-r from-green-500/5 to-transparent">
+        <CardHeader>
+          <CardTitle className="text-gray-900 dark:text-white">📤 دفع التغييرات</CardTitle>
+          <CardDescription className="text-gray-600 dark:text-gray-400">
+            {isLinked 
+              ? `المستودع المربوط: ${linkedRepo.owner}/${linkedRepo.repo}` 
+              : "يجب ربط مستودع أولاً"}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Branch Selection */}
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-gray-900 dark:text-gray-300">الفرع</label>
+            <Select value={selectedBranch} onValueChange={setSelectedBranch} disabled={!isLinked}>
+              <SelectTrigger className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white disabled:opacity-50" data-testid="select-branch">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {branches.map((branch) => (
+                  <SelectItem key={branch} value={branch}>
+                    {branch}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-            {/* Push Button */}
-            <Button
-              onClick={() => setShowCommitForm(!showCommitForm)}
-              className="w-full h-10 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium border border-blue-500/50 justify-between"
-              data-testid="button-toggle-commit"
+          {/* Push Button */}
+          <Button
+            onClick={() => {
+              if (isLinked) {
+                setShowCommitForm(!showCommitForm);
+              } else {
+                toast.error("يجب ربط مستودع أولاً");
+              }
+            }}
+            className="w-full h-10 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white font-medium border border-blue-500/50 justify-between disabled:opacity-50"
+            data-testid="button-toggle-commit"
+            disabled={!isLinked && !loading}
+          >
+            <span className="flex-1">📤 دفع التغييرات</span>
+            <ChevronDown className={`w-4 h-4 transition-transform ${showCommitForm ? 'rotate-180' : ''}`} />
+          </Button>
+
+          {/* Commit Form */}
+          {showCommitForm && (
+            <motion.div 
+              className="space-y-3 pt-3 border-t border-gray-300 dark:border-gray-700/50"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
             >
-              <span className="flex-1">📤 دفع التغييرات</span>
-              <ChevronDown className={`w-4 h-4 transition-transform ${showCommitForm ? 'rotate-180' : ''}`} />
-            </Button>
+              <div>
+                <label className="text-sm font-semibold text-gray-900 dark:text-gray-300">رسالة التغيير</label>
+                <Input
+                  placeholder="مثال: إضافة ميزة جديدة أو إصلاح خلل..."
+                  value={commitMessage}
+                  onChange={(e) => setCommitMessage(e.target.value)}
+                  className="mt-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-500"
+                  data-testid="input-commit-message"
+                  disabled={loading}
+                />
+              </div>
 
-            {/* Commit Form */}
-            {showCommitForm && (
-              <motion.div 
-                className="space-y-3 pt-3 border-t border-gray-700/50"
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-              >
-                <div>
-                  <label className="text-sm font-semibold text-gray-300">رسالة التغيير</label>
-                  <Input
-                    placeholder="مثال: إضافة ميزة جديدة أو إصلاح خلل..."
-                    value={commitMessage}
-                    onChange={(e) => setCommitMessage(e.target.value)}
-                    className="mt-2 bg-gray-900 border border-gray-700"
-                    data-testid="input-commit-message"
-                  />
-                </div>
-
-                <Button
-                  onClick={handlePush}
-                  disabled={loading || !commitMessage.trim()}
-                  className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-medium border border-green-500/50"
+              {loading && !pushSuccess && (
+                <motion.div
+                  className="flex items-center justify-center gap-3 p-4 rounded-lg bg-blue-100 dark:bg-blue-500/10 border border-blue-300 dark:border-blue-500/30"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
                 >
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      جاري الدفع...
-                    </>
-                  ) : (
-                    <>✓ تأكيد الدفع</>
-                  )}
-                </Button>
-              </motion.div>
-            )}
-          </CardContent>
-        </Card>
-      )}
+                  <Loader2 className="w-5 h-5 animate-spin text-blue-600 dark:text-blue-400" />
+                  <span className="text-sm font-medium text-blue-700 dark:text-blue-300">جاري دفع التغييرات...</span>
+                </motion.div>
+              )}
+
+              {pushSuccess && (
+                <motion.div
+                  className="flex items-center justify-center gap-3 p-4 rounded-lg bg-green-100 dark:bg-green-500/10 border border-green-300 dark:border-green-500/30"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                >
+                  <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-500" />
+                  <span className="text-sm font-medium text-green-700 dark:text-green-300">✓ تم الدفع بنجاح!</span>
+                </motion.div>
+              )}
+
+              <Button
+                onClick={handlePush}
+                disabled={loading || !commitMessage.trim()}
+                className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 dark:from-green-600 dark:to-green-700 dark:hover:from-green-700 dark:hover:to-green-800 text-white font-medium border border-green-500/50 disabled:opacity-50"
+              >
+                {loading && !pushSuccess ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    جاري الدفع...
+                  </>
+                ) : pushSuccess ? (
+                  <>
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    تم بنجاح!
+                  </>
+                ) : (
+                  <>✓ تأكيد الدفع</>
+                )}
+              </Button>
+            </motion.div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Quick Tips Card */}
-      <Card className="border border-gray-700/50 bg-gray-900/30">
+      <Card className="border border-gray-300 dark:border-gray-700/50 bg-gray-50 dark:bg-gray-900/30">
         <CardHeader>
-          <CardTitle className="text-sm text-white">💡 نصائح سريعة</CardTitle>
+          <CardTitle className="text-sm text-gray-900 dark:text-white">💡 نصائح سريعة</CardTitle>
         </CardHeader>
         <CardContent>
-          <ul className="space-y-2 text-xs text-gray-400">
+          <ul className="space-y-2 text-xs text-gray-700 dark:text-gray-400">
             <li className="flex gap-2">
-              <span className="text-blue-400">•</span>
+              <span className="text-blue-500 dark:text-blue-400">•</span>
               <span>ربط المستودع مرة واحدة لتبقى الاختيارات محفوظة</span>
             </li>
             <li className="flex gap-2">
-              <span className="text-green-400">•</span>
+              <span className="text-green-500 dark:text-green-400">•</span>
               <span>بعد الربط، لا يمكن تغيير المستودع إلا بقطع الاتصال أولاً</span>
             </li>
             <li className="flex gap-2">
-              <span className="text-yellow-400">•</span>
+              <span className="text-yellow-600 dark:text-yellow-400">•</span>
               <span>اختر الفرع المطلوب قبل دفع التغييرات</span>
             </li>
             <li className="flex gap-2">
-              <span className="text-purple-400">•</span>
+              <span className="text-purple-600 dark:text-purple-400">•</span>
               <span>اكتب رسالة واضحة وموجزة للتغييرات</span>
             </li>
           </ul>
