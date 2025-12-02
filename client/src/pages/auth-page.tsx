@@ -1,23 +1,59 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { Lock, User, ArrowRight, Cpu, ShieldCheck } from "lucide-react";
+import { Lock, User, ArrowRight, Cpu, ShieldCheck, AlertCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { toast } from "sonner";
 import backgroundUrl from "@/assets/background.png";
 
 export default function AuthPage() {
   const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     setIsLoading(true);
-    // Mock login delay
-    setTimeout(() => {
-      setLocation("/");
-    }, 1500);
+
+    try {
+      const res = await fetch("/api/auth/admin-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Login failed");
+        toast.error(data.error || "Login failed");
+        setIsLoading(false);
+        return;
+      }
+
+      // حفظ الـ token والـ admin status
+      localStorage.setItem("adminToken", data.token);
+      localStorage.setItem("adminUser", data.username);
+      localStorage.setItem("isAdmin", "true");
+      
+      toast.success("✓ Admin login successful!");
+      
+      // الانتظار قليلاً قبل الانتقال
+      setTimeout(() => {
+        setLocation("/");
+      }, 500);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "An error occurred";
+      setError(message);
+      toast.error(message);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -51,27 +87,41 @@ export default function AuthPage() {
 
           <Card className="bg-black/40 backdrop-blur-xl border-white/10 shadow-2xl">
             <CardContent className="p-8">
+              {error && (
+                <Alert className="mb-6 bg-red-500/10 border-red-500/30">
+                  <AlertCircle className="h-4 w-4 text-red-500" />
+                  <AlertDescription className="text-red-400">{error}</AlertDescription>
+                </Alert>
+              )}
               <form onSubmit={handleLogin} className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-xs font-medium text-gray-400 uppercase tracking-wider ml-1">Username</label>
+                  <label className="text-xs font-medium text-gray-400 uppercase tracking-wider ml-1">Admin Username</label>
                   <div className="relative group">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 group-focus-within:text-primary transition-colors" />
                     <Input 
-                      type="text" 
-                      className="pl-10 bg-white/5 border-white/10 text-white focus:border-primary/50 focus:ring-primary/20 h-11" 
-                      placeholder="Enter admin ID"
+                      type="text"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      disabled={isLoading}
+                      className="pl-10 bg-white/5 border-white/10 text-white focus:border-primary/50 focus:ring-primary/20 h-11 disabled:opacity-50" 
+                      placeholder="Enter admin username"
+                      required
                     />
                   </div>
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-xs font-medium text-gray-400 uppercase tracking-wider ml-1">Access Key</label>
+                  <label className="text-xs font-medium text-gray-400 uppercase tracking-wider ml-1">Admin Password</label>
                   <div className="relative group">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 group-focus-within:text-primary transition-colors" />
                     <Input 
-                      type="password" 
-                      className="pl-10 bg-white/5 border-white/10 text-white focus:border-primary/50 focus:ring-primary/20 h-11" 
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      disabled={isLoading}
+                      className="pl-10 bg-white/5 border-white/10 text-white focus:border-primary/50 focus:ring-primary/20 h-11 disabled:opacity-50" 
                       placeholder="••••••••••••"
+                      required
                     />
                   </div>
                 </div>

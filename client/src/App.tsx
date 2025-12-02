@@ -1,4 +1,6 @@
 import { Switch, Route } from "wouter";
+import { useLocation } from "wouter";
+import { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import Layout from "@/components/layout";
@@ -22,6 +24,25 @@ const queryClient = new QueryClient({
   },
 });
 
+// Protected Route Wrapper
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const [, setLocation] = useLocation();
+  const [isLoading, setIsLoading] = useState(true);
+  const isAdmin = typeof window !== 'undefined' ? localStorage.getItem("isAdmin") === "true" : false;
+
+  useEffect(() => {
+    if (!isAdmin) {
+      setLocation("/auth");
+    }
+    setIsLoading(false);
+  }, [isAdmin, setLocation]);
+
+  if (isLoading) return null;
+  if (!isAdmin) return null;
+
+  return <>{children}</>;
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -31,25 +52,39 @@ function App() {
           
           {/* Protected Routes */}
           <Route path="/">
-            <Layout><Dashboard /></Layout>
+            <ProtectedRoute>
+              <Layout><Dashboard /></Layout>
+            </ProtectedRoute>
           </Route>
           <Route path="/tasks">
-            <Layout><TasksPage /></Layout>
+            <ProtectedRoute>
+              <Layout><TasksPage /></Layout>
+            </ProtectedRoute>
           </Route>
           <Route path="/channels">
-            <Layout><ChannelsPage /></Layout>
+            <ProtectedRoute>
+              <Layout><ChannelsPage /></Layout>
+            </ProtectedRoute>
           </Route>
           <Route path="/ai-config">
-            <Layout><AIConfigPage /></Layout>
+            <ProtectedRoute>
+              <Layout><AIConfigPage /></Layout>
+            </ProtectedRoute>
           </Route>
           <Route path="/settings">
-            <Layout><SettingsPage /></Layout>
+            <ProtectedRoute>
+              <Layout><SettingsPage /></Layout>
+            </ProtectedRoute>
           </Route>
           <Route path="/error-logs">
-            <Layout><ErrorLogsPage /></Layout>
+            <ProtectedRoute>
+              <Layout><ErrorLogsPage /></Layout>
+            </ProtectedRoute>
           </Route>
           <Route path="/github">
-            <Layout><GitHubPage /></Layout>
+            <ProtectedRoute>
+              <Layout><GitHubPage /></Layout>
+            </ProtectedRoute>
           </Route>
           
           <Route component={NotFound} />

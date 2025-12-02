@@ -120,7 +120,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
           </div>
           
-          <button className="flex w-full items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors">
+          <button 
+            onClick={() => {
+              localStorage.removeItem("isAdmin");
+              localStorage.removeItem("adminToken");
+              localStorage.removeItem("adminUser");
+              window.location.href = "/auth";
+            }}
+            className="flex w-full items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+          >
             <LogOut className="h-5 w-5" />
             <span>{t('nav.disconnect')}</span>
           </button>

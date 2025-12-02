@@ -14,6 +14,43 @@ const handleError = (res: Response, error: unknown, message: string = "An error 
 
 export async function registerRoutes(httpServer: Server, app: Express): Promise<Server> {
   // ============ Authentication ============
+  
+  // Admin Login - استخدام Secrets
+  app.post("/api/auth/admin-login", async (req: Request, res: Response) => {
+    try {
+      const { username, password } = req.body;
+      
+      // التحقق من وجود credentials
+      if (!username || !password) {
+        return res.status(400).json({ error: "Username and password are required" });
+      }
+      
+      // التحقق من الـ secrets
+      const secretUsername = process.env.ADMIN_USERNAME;
+      const secretPassword = process.env.ADMIN_PASSWORD;
+      
+      if (!secretUsername || !secretPassword) {
+        console.error("[Auth] Admin credentials not configured in secrets");
+        return res.status(500).json({ error: "Admin authentication not configured" });
+      }
+      
+      // مقارنة مباشرة (الـ secrets محمية في Replit)
+      if (username !== secretUsername || password !== secretPassword) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+      
+      // تسجيل دخول ناجح
+      res.json({ 
+        admin: true,
+        username: secretUsername,
+        message: "Admin login successful",
+        token: Buffer.from(`${secretUsername}:${Date.now()}`).toString('base64')
+      });
+    } catch (error) {
+      handleError(res, error, "Admin login failed");
+    }
+  });
+
   app.post("/api/auth/login", async (req: Request, res: Response) => {
     try {
       const { username, password } = req.body;
