@@ -94,6 +94,26 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
+  app.patch("/api/tasks/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const task = await storage.updateTask(id, req.body);
+      res.json({ task });
+    } catch (error) {
+      handleError(res, error, "Failed to update task");
+    }
+  });
+
+  app.post("/api/tasks/:id/toggle", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const task = await storage.toggleTask(id);
+      res.json({ task });
+    } catch (error) {
+      handleError(res, error, "Failed to toggle task");
+    }
+  });
+
   app.delete("/api/tasks/:id", async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
@@ -101,6 +121,59 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       res.json({ message: "Task deleted" });
     } catch (error) {
       handleError(res, error, "Failed to delete task");
+    }
+  });
+
+  // Task Rules endpoints
+  app.get("/api/tasks/:taskId/rules", async (req: Request, res: Response) => {
+    try {
+      const taskId = parseInt(req.params.taskId);
+      const rules = await storage.getTaskRules(taskId);
+      res.json(rules);
+    } catch (error) {
+      handleError(res, error, "Failed to get task rules");
+    }
+  });
+
+  app.post("/api/tasks/:taskId/rules", async (req: Request, res: Response) => {
+    try {
+      const taskId = parseInt(req.params.taskId);
+      const data = { ...req.body, taskId };
+      const parsed = insertAiRuleSchema.parse(data);
+      const rule = await storage.createRule(parsed);
+      res.status(201).json(rule);
+    } catch (error) {
+      handleError(res, error, "Failed to create rule");
+    }
+  });
+
+  app.patch("/api/rules/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const rule = await storage.updateRule(id, req.body);
+      res.json(rule);
+    } catch (error) {
+      handleError(res, error, "Failed to update rule");
+    }
+  });
+
+  app.post("/api/rules/:id/toggle", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const rule = await storage.toggleRule(id);
+      res.json(rule);
+    } catch (error) {
+      handleError(res, error, "Failed to toggle rule");
+    }
+  });
+
+  app.delete("/api/rules/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteRule(id);
+      res.json({ message: "Rule deleted" });
+    } catch (error) {
+      handleError(res, error, "Failed to delete rule");
     }
   });
 
