@@ -1,0 +1,32 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Eagle Head -->
+  <circle cx="100" cy="80" r="40" fill="currentColor"/>
+  
+  <!-- Left Wing -->
+  <path d="M 70 85 Q 30 70 20 100 Q 25 110 50 100 Q 70 95 75 90" fill="currentColor"/>
+  
+  <!-- Right Wing -->
+  <path d="M 130 85 Q 170 70 180 100 Q 175 110 150 100 Q 130 95 125 90" fill="currentColor"/>
+  
+  <!-- Beak Upper -->
+  <path d="M 135 75 L 170 70 L 145 82" fill="currentColor"/>
+  
+  <!-- Beak Lower -->
+  <path d="M 135 85 L 170 90 L 145 88" fill="currentColor"/>
+  
+  <!-- Body -->
+  <ellipse cx="100" cy="130" rx="30" ry="45" fill="currentColor"/>
+  
+  <!-- Left Eye -->
+  <circle cx="90" cy="75" r="5" fill="white"/>
+  <circle cx="91" cy="75" r="2" fill="currentColor"/>
+  
+  <!-- Right Eye -->
+  <circle cx="110" cy="75" r="5" fill="white"/>
+  <circle cx="111" cy="75" r="2" fill="currentColor"/>
+  
+  <!-- Tail Feathers -->
+  <path d="M 85 170 Q 80 190 70 185" stroke="currentColor" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M 100 175 Q 100 195 95 195" stroke="currentColor" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M 115 170 Q 120 190 130 185" stroke="currentColor" stroke-width="6" fill="none" stroke-linecap="round"/>
+</svg>
