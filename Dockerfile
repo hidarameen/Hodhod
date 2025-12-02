@@ -25,7 +25,7 @@ COPY package.json package-lock.json ./
 # Copy all project files needed for build
 COPY . .
 
-# Build the Node.js application
+# Build the Node.js applicationapplication
 RUN npm run build
 
 # Stage 4: Python dependencies
