@@ -188,8 +188,8 @@ export async function getFileChanges(): Promise<{
 }
 
 /**
- * دفع ملفات Replit إلى GitHub مع احترام .gitignore
- * يستخدم git add . الذي يحترم .gitignore تلقائياً
+ * دفع ملفات Replit إلى GitHub بخطوات بسيطة
+ * git add . → git commit → git push -f
  */
 export async function pushToGitHubRepo(
   owner: string,
@@ -198,151 +198,50 @@ export async function pushToGitHubRepo(
   targetBranch: string = "main"
 ): Promise<{ success: boolean }> {
   try {
-    console.log("[GitHub] ========================================");
-    console.log("[GitHub] PUSH TO GITHUB");
-    console.log("[GitHub] Target:", `${owner}/${repo}`, "Branch:", targetBranch);
-    console.log("[GitHub] ========================================");
-
-    const workspaceDir = process.cwd();
-    console.log("[GitHub] Workspace:", workspaceDir);
+    console.log("[GitHub] Starting push...");
 
     // Step 1: Configure git
-    console.log("\n[GitHub] Step 1: Configuring git...");
     await execAsync('git config user.email "replit-bot@replit.com"');
     await execAsync('git config user.name "Replit Auto-Sync"');
-    console.log("[GitHub] ✓ Git configured");
 
     // Step 2: Get token
-    console.log("\n[GitHub] Step 2: Getting GitHub token...");
     const accessToken = await getAccessToken();
     if (!accessToken) {
-      console.error("[GitHub] ✗ No token available");
+      console.error("[GitHub] No token available");
       return { success: false };
     }
-    console.log("[GitHub] ✓ Token obtained");
 
     // Step 3: Setup remote
-    console.log("\n[GitHub] Step 3: Setting up remote...");
     try {
-      await execAsync(`git remote remove origin 2>/dev/null || true`, { timeout: 5000 });
+      await execAsync(`git remote remove origin 2>/dev/null || true`);
     } catch (e) {
       // ignore
     }
     const remoteUrl = `https://oauth2:${accessToken}@github.com/${owner}/${repo}.git`;
-    await execAsync(`git remote add origin "${remoteUrl}"`, { timeout: 5000 });
-    console.log("[GitHub] ✓ Remote configured");
+    await execAsync(`git remote add origin "${remoteUrl}"`);
 
-    // Step 4: Ensure .gitignore exists and has critical entries
-    console.log("\n[GitHub] Step 4: Verifying .gitignore...");
-    try {
-      const gitignoreCheck = await execAsync("cat .gitignore | head -5", { timeout: 5000 });
-      console.log("[GitHub] ✓ .gitignore exists");
-    } catch (e) {
-      console.log("[GitHub] ⚠ .gitignore not found, creating default...");
-      const defaultGitignore = `node_modules/\n.env\n*.session\n.pythonlibs/\n.cache/\ndist/\n`;
-      await execAsync(`echo "${defaultGitignore}" > .gitignore`, { timeout: 5000 });
-    }
+    // Step 1: git add
+    console.log("[GitHub] Step 1: git add .");
+    await execAsync("git add .");
 
-    // Step 5: Checkout/Create branch
-    console.log("\n[GitHub] Step 5: Preparing branch...");
-    try {
-      // Try to fetch first if remote exists
-      await execAsync(`git fetch origin ${targetBranch} 2>/dev/null || true`, { timeout: 10000 });
-    } catch (e) {
-      // ignore
-    }
-    
-    try {
-      await execAsync(`git checkout "${targetBranch}" 2>/dev/null || git checkout -b "${targetBranch}"`, { timeout: 5000 });
-      console.log(`[GitHub] ✓ On branch ${targetBranch}`);
-    } catch (e) {
-      console.log(`[GitHub] Creating new branch ${targetBranch}...`);
-      await execAsync(`git checkout -b "${targetBranch}"`, { timeout: 5000 });
-      console.log(`[GitHub] ✓ Created ${targetBranch}`);
-    }
-
-    // Step 6: Add files (respects .gitignore)
-    console.log("\n[GitHub] Step 6: Adding files (respecting .gitignore)...");
-    try {
-      // Use git add . which respects .gitignore
-      await execAsync("git add .", { timeout: 20000 });
-      console.log("[GitHub] ✓ Files added (ignoring entries in .gitignore)");
-    } catch (e) {
-      console.error("[GitHub] Error adding files:", e);
-      return { success: false };
-    }
-
-    // Step 7: Show what will be committed
-    console.log("\n[GitHub] Step 7: Checking staged files...");
-    try {
-      const statusResult = await execAsync("git diff --cached --stat | tail -5", { timeout: 5000 });
-      console.log("[GitHub] Staged changes:\n", statusResult.stdout || "(no changes)");
-      
-      // Count files
-      const countResult = await execAsync("git diff --cached --name-only | wc -l", { timeout: 5000 });
-      const fileCount = parseInt(countResult.stdout?.trim() || "0");
-      console.log(`[GitHub] ✓ ${fileCount} files staged for commit`);
-    } catch (e) {
-      console.log("[GitHub] Could not get staged files info");
-    }
-
-    // Step 8: Check for sensitive files that should NOT be pushed
-    console.log("\n[GitHub] Step 8: Security check...");
-    try {
-      const sensitiveCheck = await execAsync(
-        "git diff --cached --name-only | grep -E '(\\.env|\\.session|secret|password|token|key)' || echo 'SAFE'",
-        { timeout: 5000 }
-      );
-      if (sensitiveCheck.stdout?.trim() !== 'SAFE' && sensitiveCheck.stdout?.trim()) {
-        console.log("[GitHub] ⚠ WARNING: Potentially sensitive files detected:");
-        console.log(sensitiveCheck.stdout);
-        // Unstage sensitive files
-        await execAsync("git reset HEAD -- '*.env' '*.session' 2>/dev/null || true", { timeout: 5000 });
-        console.log("[GitHub] ✓ Sensitive files unstaged");
-      } else {
-        console.log("[GitHub] ✓ No sensitive files detected");
-      }
-    } catch (e) {
-      console.log("[GitHub] Security check passed");
-    }
-
-    // Step 9: Create commit
-    console.log("\n[GitHub] Step 9: Creating commit...");
+    // Step 2: git commit
+    console.log("[GitHub] Step 2: git commit");
     const escapedMessage = message.replace(/"/g, '\\"').replace(/'/g, "\\'");
     try {
-      const commitResult = await execAsync(`git commit -m "${escapedMessage}" 2>&1 || echo "NO_CHANGES"`, { timeout: 10000 });
-      if (commitResult.stdout?.includes("NO_CHANGES") || commitResult.stdout?.includes("nothing to commit")) {
-        console.log("[GitHub] No changes to commit");
-        // Create empty commit if no changes
-        await execAsync(`git commit --allow-empty -m "${escapedMessage}"`, { timeout: 10000 });
-        console.log("[GitHub] ✓ Empty commit created");
-      } else {
-        console.log("[GitHub] ✓ Commit created");
-      }
+      await execAsync(`git commit -m "${escapedMessage}"`);
     } catch (e) {
-      console.error("[GitHub] Commit failed:", e);
-      return { success: false };
+      console.log("[GitHub] No changes to commit, creating empty commit");
+      await execAsync(`git commit --allow-empty -m "${escapedMessage}"`);
     }
 
-    // Step 10: Push to GitHub
-    console.log("\n[GitHub] Step 10: Pushing to GitHub...");
-    try {
-      await execAsync(`git push -f -u origin ${targetBranch}`, { timeout: 60000 });
-      console.log("[GitHub] ✅ Successfully pushed to GitHub!");
-      console.log("[GitHub] ========================================");
-      return { success: true };
-    } catch (pushError: any) {
-      const errorMsg = pushError?.message || String(pushError);
-      console.error("[GitHub] ✗ Push failed:", errorMsg.substring(0, 300));
-      console.log("[GitHub] ========================================");
-      return { success: false };
-    }
+    // Step 3: git push force
+    console.log("[GitHub] Step 3: git push -f");
+    await execAsync(`git push -f -u origin ${targetBranch}`);
+
+    console.log("[GitHub] ✅ Successfully pushed to GitHub!");
+    return { success: true };
   } catch (error) {
-    console.error("[GitHub] ✗ Sync failed:", error);
-    if (error instanceof Error) {
-      console.error("[GitHub] Error:", error.message);
-    }
-    console.log("[GitHub] ========================================");
+    console.error("[GitHub] Push failed:", error);
     return { success: false };
   }
 }
