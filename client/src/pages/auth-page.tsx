@@ -129,7 +129,7 @@ export default function AuthPage() {
                 <Button 
                   type="submit" 
                   disabled={isLoading}
-                  className="w-full h-12 bg-primary text-white dark:text-black font-bold hover:bg-cyan-400 transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)]"
+                  className="w-full h-12 bg-primary text-black dark:text-white font-bold hover:bg-cyan-400 transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)]"
                 >
                   {isLoading ? (
                     <span className="flex items-center gap-2">
