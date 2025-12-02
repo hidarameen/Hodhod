@@ -131,11 +131,7 @@ export default function GitHubPage() {
       const validRepos = (reposData.repos || []).filter((r: any) => r.owner && r.name);
       setRepos(validRepos);
       setBranches(branchesData.branches || ["main"]);
-      
-      if (infoData.owner && infoData.repo) {
-        const defaultValue = `${infoData.owner}/${infoData.repo}`;
-        setSelectedRepo(defaultValue);
-      }
+      setSelectedRepo("");
     } catch (error) {
       console.error("Failed to load GitHub info:", error);
       toast.error("فشل تحميل معلومات GitHub");
@@ -232,19 +228,12 @@ export default function GitHubPage() {
         </CardHeader>
         <CardContent>
           {info?.status === "connected" ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <p className="text-xs text-gray-400 uppercase tracking-wider">اسم المستخدم</p>
-                <p className="text-sm font-mono bg-gray-900/50 px-3 py-2 rounded border border-gray-700">
-                  {info.owner}
-                </p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-xs text-gray-400 uppercase tracking-wider">المستودع الافتراضي</p>
-                <p className="text-sm font-mono bg-gray-900/50 px-3 py-2 rounded border border-gray-700">
-                  {info.repo}
-                </p>
-              </div>
+            <div className="space-y-2">
+              <p className="text-xs text-gray-400 uppercase tracking-wider">اسم المستخدم</p>
+              <p className="text-sm font-mono bg-gray-900/50 px-3 py-2 rounded border border-gray-700">
+                {info.owner}
+              </p>
+              <p className="text-xs text-green-400 mt-3">✓ متصل بنجاح - يمكنك الآن اختيار أي مستودع</p>
             </div>
           ) : (
             <Alert className="bg-yellow-500/10 border-yellow-500/30">
