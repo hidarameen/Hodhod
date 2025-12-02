@@ -8,14 +8,18 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Plus, Globe, Hash, Users, Trash2, Loader } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Search, Plus, Globe, Hash, Users, Trash2, Loader, Edit, Send } from "lucide-react";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 export default function ChannelsPage() {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedType, setSelectedType] = useState("all");
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     type: "telegram_channel",
     identifier: "",
@@ -28,13 +32,19 @@ export default function ChannelsPage() {
     queryFn: () => api.getChannels(),
   });
 
+  const { data: tasks = [] } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: () => api.getTasks(),
+  });
+
   const createMutation = useMutation({
-    mutationFn: (data: any) => api.createChannel(data),
+    mutationFn: (data: any) => editingId ? api.updateChannel(editingId, data) : api.createChannel(data),
     onSuccess: () => {
-      toast.success("تمت إضافة المصدر بنجاح");
+      toast.success(editingId ? "تم تحديث المصدر بنجاح" : "تمت إضافة المصدر بنجاح");
       queryClient.invalidateQueries({ queryKey: ["channels"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
       setIsOpen(false);
+      setEditingId(null);
       setFormData({
         type: "telegram_channel",
         identifier: "",
@@ -43,7 +53,7 @@ export default function ChannelsPage() {
       });
     },
     onError: (error: any) => {
-      toast.error(error.message || "فشل إضافة المصدر");
+      toast.error(error.message || "فشل العملية");
     },
   });
 
@@ -63,10 +73,41 @@ export default function ChannelsPage() {
     createMutation.mutate(formData);
   };
 
-  const filteredChannels = channels.filter(c => 
-    c.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    c.identifier?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const handleEdit = (channel: any) => {
+    setEditingId(channel.id);
+    setFormData({
+      type: channel.type,
+      identifier: channel.identifier,
+      title: channel.title,
+      description: channel.description || "",
+    });
+    setIsOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsOpen(false);
+    setEditingId(null);
+    setFormData({
+      type: "telegram_channel",
+      identifier: "",
+      title: "",
+      description: "",
+    });
+  };
+
+  const getTaskCount = (channelId: number) => {
+    return tasks.filter((t: any) => 
+      t.sourceChannels?.includes(channelId) || t.targetChannels?.includes(channelId)
+    ).length;
+  };
+
+  const filteredChannels = channels.filter(c => {
+    const matchesSearch = 
+      c.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.identifier?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesType = selectedType === "all" || c.type === selectedType;
+    return matchesSearch && matchesType;
+  });
 
   if (isLoading) {
     return (
@@ -76,29 +117,54 @@ export default function ChannelsPage() {
     );
   }
 
-  const typeIcon = {
-    "telegram_channel": Hash,
-    "telegram_group": Users,
-    "website": Globe,
+  const typeConfig = {
+    "telegram_channel": { 
+      icon: Hash, 
+      color: "from-blue-500 to-blue-600", 
+      bgColor: "bg-blue-500/10",
+      label: "قناة تلغرام",
+      shortLabel: "قناة"
+    },
+    "telegram_group": { 
+      icon: Users, 
+      color: "from-purple-500 to-purple-600", 
+      bgColor: "bg-purple-500/10",
+      label: "مجموعة تلغرام",
+      shortLabel: "مجموعة"
+    },
+    "website": { 
+      icon: Globe, 
+      color: "from-green-500 to-green-600", 
+      bgColor: "bg-green-500/10",
+      label: "موقع إلكتروني",
+      shortLabel: "موقع"
+    },
   };
+
+  const types = [
+    { value: "all", label: "الكل" },
+    { value: "telegram_channel", label: "القنوات" },
+    { value: "telegram_group", label: "المجموعات" },
+    { value: "website", label: "المواقع" },
+  ];
 
   return (
     <div className="space-y-6" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div className={i18n.language === 'ar' ? 'text-right' : 'text-left'}>
           <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground tracking-wide">المصادر والقنوات</h2>
-          <p className="text-muted-foreground mt-1 text-sm md:text-base">إدارة القنوات والمجموعات والمواقع الإلكترونية</p>
+          <p className="text-muted-foreground mt-1 text-sm md:text-base">إدارة القنوات والمجموعات والمواقع الإلكترونية - {channels.length} مصادر</p>
         </div>
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={(open) => { if (!open) handleCloseDialog(); else setIsOpen(true); }}>
           <DialogTrigger asChild>
             <Button className="bg-primary text-primary-foreground font-bold hover:bg-primary/90 w-full sm:w-auto" data-testid="button-add-channel">
-              <Plus className="h-3 w-3 mr-2" /> إضافة مصدر
+              <Plus className="h-4 w-4 mr-2" /> إضافة مصدر
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>إضافة مصدر جديد</DialogTitle>
-              <DialogDescription>أدخل تفاصيل المصدر الجديد</DialogDescription>
+              <DialogTitle>{editingId ? "تعديل المصدر" : "إضافة مصدر جديد"}</DialogTitle>
+              <DialogDescription>{editingId ? "تحديث تفاصيل المصدر" : "أدخل تفاصيل المصدر الجديد"}</DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div>
@@ -158,78 +224,122 @@ export default function ChannelsPage() {
                 data-testid="button-submit-channel"
               >
                 {createMutation.isPending && <Loader className="h-4 w-4 mr-2 animate-spin" />}
-                إضافة المصدر
+                {editingId ? "تحديث المصدر" : "إضافة المصدر"}
               </Button>
             </div>
           </DialogContent>
         </Dialog>
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className={`absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground ${i18n.language === 'ar' ? 'right-3' : 'left-3'}`} />
           <Input 
             placeholder="البحث في المصادر..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
+            className={i18n.language === 'ar' ? 'pr-10' : 'pl-10'}
             data-testid="input-search-channels"
           />
         </div>
+
+        <div className="flex gap-2 flex-wrap">
+          {types.map((type) => (
+            <Button
+              key={type.value}
+              variant={selectedType === type.value ? "default" : "outline"}
+              size="sm"
+              onClick={() => setSelectedType(type.value)}
+              className="text-xs"
+              data-testid={`button-filter-${type.value}`}
+            >
+              {type.label}
+            </Button>
+          ))}
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredChannels.map((channel) => {
-          const IconComponent = typeIcon[channel.type as keyof typeof typeIcon] || Globe;
-          return (
-            <Card key={channel.id} className="border shadow-sm group hover:shadow-md transition-all" data-testid={`card-channel-${channel.id}`}>
-              <CardContent className="p-5">
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
-                      <IconComponent className="h-4 w-4 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-foreground">{channel.title}</h3>
-                      <p className="text-xs text-muted-foreground">
-                        {channel.type === "telegram_channel" ? "قناة تلغرام" : 
-                         channel.type === "telegram_group" ? "مجموعة تلغرام" : 
-                         "موقع إلكتروني"}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-                </div>
-                
-                <div className="space-y-3">
-                  <div className="text-sm text-muted-foreground break-all font-mono text-xs bg-muted/50 p-2 rounded">
-                    {channel.identifier}
-                  </div>
-                  {channel.description && (
-                    <p className="text-xs text-muted-foreground">{channel.description}</p>
-                  )}
-                </div>
+      {filteredChannels.length === 0 ? (
+        <Card className="border-dashed text-center py-12">
+          <div className="space-y-2">
+            <p className="text-muted-foreground">لا توجد مصادر تطابق البحث</p>
+            <p className="text-xs text-muted-foreground">جرّب تغيير معايير البحث أو الفلاتر</p>
+          </div>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredChannels.map((channel: any, index) => {
+            const config = typeConfig[channel.type as keyof typeof typeConfig] || typeConfig["telegram_channel"];
+            const IconComponent = config.icon;
+            const taskCount = getTaskCount(channel.id);
 
-                <div className="mt-4 pt-4 border-t border-border flex justify-end gap-2">
-                  <Button 
-                    size="sm" 
-                    variant="ghost"
-                    onClick={() => deleteMutation.mutate(channel.id)}
-                    className="h-8 text-xs text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-500/10"
-                    data-testid={`button-delete-channel-${channel.id}`}
-                  >
-                    <Trash2 className="h-3 w-3 mr-1" /> حذف
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+            return (
+              <motion.div
+                key={channel.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+              >
+                <Card className={`border shadow-sm group hover:shadow-lg transition-all overflow-hidden`} data-testid={`card-channel-${channel.id}`}>
+                  <div className={`h-1 bg-gradient-to-r ${config.color}`} />
+                  <CardContent className="p-5">
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="flex items-center gap-3 flex-1">
+                        <div className={`h-10 w-10 rounded-full ${config.bgColor} flex items-center justify-center border border-primary/20`}>
+                          <IconComponent className="h-5 w-5 text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-bold text-foreground truncate">{channel.title}</h3>
+                            <Badge variant="secondary" className="text-xs flex-shrink-0">{config.shortLabel}</Badge>
+                          </div>
+                          <p className="text-xs text-muted-foreground">{config.label}</p>
+                        </div>
+                      </div>
+                      <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse flex-shrink-0" />
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div className="text-xs text-muted-foreground break-all font-mono bg-muted/50 p-2 rounded border border-border">
+                        {channel.identifier}
+                      </div>
+                      {channel.description && (
+                        <p className="text-xs text-muted-foreground line-clamp-2">{channel.description}</p>
+                      )}
+                    </div>
 
-      {filteredChannels.length === 0 && (
-        <div className="p-8 text-center text-muted-foreground">
-          {channels.length === 0 ? "لا توجد مصادر حالياً. اضغط على 'إضافة مصدر' للبدء" : "لم يتم العثور على نتائج"}
+                    <div className="mt-4 pt-4 border-t border-border flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-1">
+                        <Send className="h-3 w-3 text-muted-foreground" />
+                        <span className="text-xs font-semibold text-muted-foreground">{taskCount}</span>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button 
+                          size="sm" 
+                          variant="ghost"
+                          onClick={() => handleEdit(channel)}
+                          className="h-8 text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:bg-blue-500/10"
+                          data-testid={`button-edit-channel-${channel.id}`}
+                        >
+                          <Edit className="h-3 w-3" />
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="ghost"
+                          onClick={() => deleteMutation.mutate(channel.id)}
+                          className="h-8 text-xs text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-500/10"
+                          data-testid={`button-delete-channel-${channel.id}`}
+                          disabled={deleteMutation.isPending}
+                        >
+                          {deleteMutation.isPending ? <Loader className="h-3 w-3 animate-spin" /> : <Trash2 className="h-3 w-3" />}
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
         </div>
       )}
     </div>
