@@ -26,7 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const eagleImage = "/attached_assets/generated_images/professional_eagle_head_logo_design.png";
+const eagleImage = "/attached_assets/generated_images/minimalist_black_eagle_on_transparent_background.png";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
@@ -74,7 +74,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <img 
                 src={eagleImage} 
                 alt="Eagle" 
-                className="h-7 w-7 object-cover rounded-full" 
+                className="h-10 w-10 object-contain filter dark:invert" 
                 style={{ transform: i18n.language === 'ar' ? 'scaleX(-1)' : 'scaleX(1)' }}
               />
             </div>

@@ -11,7 +11,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
 import backgroundUrl from "@/assets/background.png";
 
-const eagleImage = "/attached_assets/generated_images/professional_eagle_head_logo_design.png";
+const eagleImage = "/attached_assets/generated_images/minimalist_black_eagle_on_transparent_background.png";
 
 export default function AuthPage() {
   const [, setLocation] = useLocation();
@@ -121,7 +121,7 @@ export default function AuthPage() {
               <img 
                 src={eagleImage} 
                 alt="Eagle" 
-                className="h-16 w-16 object-cover" 
+                className="h-20 w-20 object-contain filter dark:invert" 
                 style={{ transform: i18n.language === 'ar' ? 'scaleX(-1)' : 'scaleX(1)' }}
               />
             </div>
