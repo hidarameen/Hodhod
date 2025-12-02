@@ -3,13 +3,13 @@
 # Debian-based for better compatibility
 # ==============================================
 
-# Stage 1: Install Node.js dependencies (cached if package.json unchanged)
+# Stage 1: Node.js dependencies for production
 FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 
-# Stage 2: Install ALL dependencies for build
+# Stage 2: Node.js dependencies for build (including devDependencies)
 FROM node:20-alpine AS builder-deps
 WORKDIR /app
 COPY package.json package-lock.json ./
@@ -19,31 +19,21 @@ RUN npm ci
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Copy dependencies from builder-deps stage
+# Copy dependencies from builder-deps
 COPY --from=builder-deps /app/node_modules ./node_modules
 COPY package.json package-lock.json ./
 
-# Copy ONLY files needed for build (ordered by change frequency)
-COPY tsconfig.json ./
-COPY drizzle.config.ts ./
-COPY vite.config.ts ./
-COPY postcss.config.js ./
-COPY components.json ./
-COPY vite-plugin-meta-images.ts ./
-COPY script ./script
-COPY shared ./shared
-COPY server ./server
-COPY client ./client
+# Copy all project files needed for build
+COPY . .
 
-# Build the application
+# Build Node.js application
 RUN npm run build
 
-# Stage 4: Production runtime (Debian-based)
+# Stage 4: Production runtime
 FROM python:3.11-slim AS production
-
 WORKDIR /app
 
-# Install system dependencies
+# Install runtime system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     postgresql-client \
@@ -52,53 +42,48 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     dos2unix \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Node.js (using official NodeSource)
+# Install Node.js runtime
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements file and install Python dependencies
+# Copy Python requirements and install dependencies
 COPY requirements-python.txt ./
 RUN pip install --no-cache-dir -r requirements-python.txt
 
-# Copy package.json for npm scripts
+# Copy production Node.js files
+COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./
-
-# Copy production node modules
 COPY --from=deps /app/node_modules ./node_modules
 
-# Copy built application
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/drizzle.config.ts ./
+# Copy all project files into /app (migrations, shared, telegram_bot, scripts)
+COPY . .
 
-# Copy migrations and shared
-COPY migrations ./migrations
-COPY shared ./shared
+# Fix entrypoint and start script permissions
+RUN dos2unix /app/docker-entrypoint.sh /app/start.sh 2>/dev/null || true && \
+    chmod +x /app/docker-entrypoint.sh /app/start.sh
 
-# Copy telegram bot
-COPY telegram_bot ./telegram_bot
-
-# Copy and fix entrypoint scripts
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-COPY start.sh /app/start.sh
-RUN dos2unix /docker-entrypoint.sh /app/start.sh 2>/dev/null || true && \
-    chmod +x /docker-entrypoint.sh /app/start.sh
-
-# Create non-root user and directories
+# Create non-root user and required directories
 RUN useradd -m -u 1001 appuser && \
     mkdir -p /app/telegram_bot/temp /app/telegram_bot/logs && \
     chown -R appuser:appuser /app
 
 USER appuser
 
+# Environment variables
 ENV NODE_ENV=production
 ENV PYTHONUNBUFFERED=1
 ENV PORT=5000
 
+# Expose application port
 EXPOSE 5000
 
+# Healthcheck
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
     CMD curl -f http://localhost:5000/health || exit 1
 
-ENTRYPOINT ["/usr/bin/dumb-init", "--", "/docker-entrypoint.sh"]
+# Entry point
+ENTRYPOINT ["/usr/bin/dumb-init", "--", "/app/docker-entrypoint.sh"]
+
+# Start command
 CMD ["node", "dist/index.cjs"]
