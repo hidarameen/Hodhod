@@ -29,7 +29,13 @@ class AuthServiceManager {
 
     console.log("[auth-service] Starting auth service...");
     
-    this.process = spawn("uv", ["run", "python", "-m", "uvicorn", "telegram_bot.auth_service:app", "--host", "127.0.0.1", "--port", "8765"], {
+    // Use python directly in Docker, uv in development
+    const command = process.env.NODE_ENV === "production" ? "python" : "uv";
+    const args = process.env.NODE_ENV === "production"
+      ? ["-m", "uvicorn", "telegram_bot.auth_service:app", "--host", "127.0.0.1", "--port", "8765"]
+      : ["run", "python", "-m", "uvicorn", "telegram_bot.auth_service:app", "--host", "127.0.0.1", "--port", "8765"];
+
+    this.process = spawn(command, args, {
       cwd: process.cwd(),
       stdio: ["ignore", "pipe", "pipe"],
       env: { ...process.env, PYTHONPATH: process.cwd(), UV_PROJECT_ENVIRONMENT: "venv" },

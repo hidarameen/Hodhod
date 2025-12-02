@@ -34,7 +34,13 @@ function startTelegramBot() {
   const botPath = path.join(process.cwd(), "telegram_bot");
   console.log(`[telegram-bot] Starting bot from: ${botPath}`);
 
-  botProcess = spawn("uv", ["run", "python", "main.py"], {
+  // Use python directly in Docker, uv in development
+  const command = process.env.NODE_ENV === "production" ? "python" : "uv";
+  const args = process.env.NODE_ENV === "production" 
+    ? ["main.py"]
+    : ["run", "python", "main.py"];
+
+  botProcess = spawn(command, args, {
     cwd: botPath,
     stdio: ["ignore", "pipe", "pipe"],
     env: { ...process.env, UV_PROJECT_ENVIRONMENT: "venv" },
