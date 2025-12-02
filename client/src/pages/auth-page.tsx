@@ -10,8 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
 import backgroundUrl from "@/assets/background.png";
-
-const eagleImage = "/attached_assets/generated_images/minimalist_black_eagle_on_transparent_background.png";
+import { EagleLogo } from "@/components/eagle-logo";
 
 export default function AuthPage() {
   const [, setLocation] = useLocation();
@@ -118,12 +117,7 @@ export default function AuthPage() {
         >
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-primary/10 border border-primary/30 backdrop-blur-xl mb-6 shadow-[0_0_30px_rgba(6,182,212,0.3)]">
-              <img 
-                src={eagleImage} 
-                alt="Eagle" 
-                className="h-20 w-20 object-contain filter dark:invert" 
-                style={{ transform: i18n.language === 'ar' ? 'scaleX(-1)' : 'scaleX(1)' }}
-              />
+              <EagleLogo size={64} flip={i18n.language === 'ar'} className="text-black dark:text-white" />
             </div>
             <style>{`
               @keyframes marquee {
