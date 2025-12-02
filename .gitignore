@@ -1,0 +1,90 @@
+# Dependencies
+node_modules/
+.pythonlibs/
+.cache/
+.uv/
+
+# Build output
+dist/
+build/
+
+# Environment and secrets (CRITICAL - Never push these!)
+.env
+.env.local
+.env.*.local
+*.env
+
+# Telegram session files (SENSITIVE!)
+*.session
+*.session-journal
+telegram_bot/*.session
+telegram_bot/*.session-journal
+
+# IDE and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+
+# Logs
+*.log
+logs/
+telegram_bot/logs/
+telegram_bot/bot.log
+
+# Temporary files
+tmp/
+temp/
+telegram_bot/temp/
+*.tmp
+*.temp
+
+# Replit specific (keep local only)
+.replit
+replit.nix
+.breakpoints
+.config/
+.upm/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+*.egg
+
+# Test and coverage
+coverage/
+.nyc_output/
+*.test.ts.snap
+
+# Server generated
+server/public/
+
+# Vite
+vite.config.ts.*
+
+# Archives
+*.tar.gz
+*.zip
+*.rar
+
+# Lock files (optional - some prefer to include)
+# package-lock.json
+# uv.lock
+
+# Attached assets (development only)
+attached_assets/
+
+# Debug files
+debug_*.session*
