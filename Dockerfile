@@ -18,16 +18,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY package.json package-lock.json ./
 
 # Copy ONLY files needed for build (ordered by change frequency)
-COPY tsconfig.json ./
-COPY drizzle.config.ts ./
-COPY vite.config.ts ./
-COPY postcss.config.js ./
-COPY components.json ./
-COPY vite-plugin-meta-images.ts ./
-COPY script ./script
-COPY shared ./shared
-COPY server ./server
-COPY client ./client
+copy ..
 
 # Build the application
 RUN npm run build
