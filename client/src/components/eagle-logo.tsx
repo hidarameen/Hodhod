@@ -1,3 +1,5 @@
+import { useTheme } from "next-themes";
+
 export function EagleLogo({ 
   size = 40, 
   flip = false,
@@ -7,9 +9,15 @@ export function EagleLogo({
   flip?: boolean
   className?: string 
 }) {
+  const { theme } = useTheme();
+  
+  const logoSrc = theme === "dark" 
+    ? "/attached_assets/generated_images/eagle-logo-dark.png"
+    : "/attached_assets/generated_images/eagle-logo-futuristic.png";
+
   return (
     <img 
-      src="/attached_assets/generated_images/eagle-logo.png"
+      src={logoSrc}
       alt="Eagle Logo"
       style={{ 
         width: `${size}px`, 
