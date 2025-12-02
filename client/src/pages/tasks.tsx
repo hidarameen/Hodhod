@@ -551,9 +551,9 @@ export default function TasksPage() {
                           filteredRules.map((rule: any) => (
                             <Card key={rule.id} className={`border p-2 ${!rule.isActive ? 'opacity-50' : ''}`}>
                               <div className="flex items-center justify-between gap-2">
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-xs font-medium text-foreground">{rule.name}</p>
-                                  <p className="text-xs text-muted-foreground truncate">{rule.prompt}</p>
+                                <div className="flex-1 min-w-0 max-w-sm">
+                                  <p className="text-xs font-medium text-foreground truncate">{rule.name}</p>
+                                  <p className="text-xs text-muted-foreground line-clamp-2 break-words">{rule.prompt}</p>
                                 </div>
                                 <div className="flex items-center gap-1">
                                   <ToggleSwitch checked={rule.isActive} onCheckedChange={() => toggleRuleMutation.mutate(rule.id)} size="sm" data-testid={`toggle-rule-${rule.id}`} />
@@ -740,9 +740,9 @@ export default function TasksPage() {
                           filteredRules.map((rule: any) => (
                             <Card key={rule.id} className={`border p-2 ${!rule.isActive ? 'opacity-50' : ''}`}>
                               <div className="flex items-center justify-between gap-2">
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-xs font-medium text-foreground">{rule.name}</p>
-                                  <p className="text-xs text-muted-foreground truncate">{rule.prompt}</p>
+                                <div className="flex-1 min-w-0 max-w-sm">
+                                  <p className="text-xs font-medium text-foreground truncate">{rule.name}</p>
+                                  <p className="text-xs text-muted-foreground line-clamp-2 break-words">{rule.prompt}</p>
                                 </div>
                                 <div className="flex items-center gap-1">
                                   <ToggleSwitch checked={rule.isActive} onCheckedChange={() => toggleRuleMutation.mutate(rule.id)} size="sm" data-testid={`toggle-rule-${rule.id}`} />
@@ -1056,7 +1056,7 @@ export default function TasksPage() {
                             </div>
                             <div>
                               <p className="font-medium">{rule.name}</p>
-                              <p className="text-sm text-muted-foreground truncate max-w-md">{rule.prompt}</p>
+                              <p className="text-sm text-muted-foreground line-clamp-2 break-words max-w-lg">{rule.prompt}</p>
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
@@ -1190,7 +1190,7 @@ export default function TasksPage() {
                             </div>
                             <div>
                               <p className="font-medium">{rule.name}</p>
-                              <p className="text-sm text-muted-foreground truncate max-w-md">{rule.prompt}</p>
+                              <p className="text-sm text-muted-foreground line-clamp-2 break-words max-w-lg">{rule.prompt}</p>
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
