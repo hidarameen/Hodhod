@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, CheckCircle, AlertCircle, Github, Link2, Unlink2, ChevronDown, ChevronUp } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Loader2, CheckCircle, AlertCircle, Github, Link2, Unlink2, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 interface GitHubRepo {
   name: string;
@@ -57,9 +59,6 @@ export default function GitHubPage() {
       const res = await fetch("/api/github/linked-repo");
       const data = await res.json();
       setLinkedRepo(data);
-      if (data.status === "linked") {
-        setSelectedRepo(`${data.owner}/${data.repo}`);
-      }
     } catch (error) {
       console.error("Failed to load linked repo:", error);
     } finally {
@@ -146,20 +145,24 @@ export default function GitHubPage() {
       return;
     }
 
-    if (!selectedRepo) {
+    if (!selectedRepo && !linkedRepo) {
       toast.error("حدد مستودع");
       return;
     }
 
     setLoading(true);
     try {
-      if (!selectedRepo || !selectedRepo.includes("/")) {
+      const repoValue = linkedRepo?.status === "linked" 
+        ? `${linkedRepo.owner}/${linkedRepo.repo}` 
+        : selectedRepo;
+
+      if (!repoValue || !repoValue.includes("/")) {
         toast.error("يجب اختيار مستودع صحيح");
         setLoading(false);
         return;
       }
       
-      const parts = selectedRepo.split("/");
+      const parts = repoValue.split("/");
       let owner = parts[0]?.trim();
       let repo = parts[1]?.trim();
       
@@ -185,7 +188,7 @@ export default function GitHubPage() {
         toast.success("✓ تم دفع التغييرات إلى GitHub بنجاح!");
         setCommitMessage("");
         setShowCommitForm(false);
-        await loadFileChanges(); // تحديث قائمة التغييرات
+        await loadFileChanges();
       } else {
         toast.error(data.error || "فشل دفع التغييرات");
       }
@@ -196,6 +199,8 @@ export default function GitHubPage() {
       setLoading(false);
     }
   };
+
+  const isLinked = linkedRepo?.status === "linked";
 
   return (
     <div className="space-y-6" data-testid="github-page">
@@ -233,7 +238,15 @@ export default function GitHubPage() {
               <p className="text-sm font-mono bg-gray-900/50 px-3 py-2 rounded border border-gray-700">
                 {info.owner}
               </p>
-              <p className="text-xs text-green-400 mt-3">✓ متصل بنجاح - يمكنك الآن اختيار أي مستودع</p>
+              <p className="text-xs text-green-400 mt-3">✓ متصل بنجاح</p>
+              {isLinked && (
+                <div className="mt-3 p-3 bg-green-500/10 border border-green-500/30 rounded">
+                  <p className="text-xs text-green-300">
+                    <CheckCircle className="w-3 h-3 inline mr-1" />
+                    المستودع المربوط: <span className="font-mono font-bold">{linkedRepo.owner}/{linkedRepo.repo}</span>
+                  </p>
+                </div>
+              )}
             </div>
           ) : (
             <Alert className="bg-yellow-500/10 border-yellow-500/30">
@@ -290,145 +303,145 @@ export default function GitHubPage() {
         <CardHeader>
           <CardTitle className="text-white">📤 دفع التغييرات</CardTitle>
           <CardDescription>
-            {linkedRepo?.status === "linked" 
+            {isLinked 
               ? `المستودع المربوط: ${linkedRepo.owner}/${linkedRepo.repo}` 
-              : "لم يتم ربط أي مستودع بعد - اختر واحد أدناه"}
+              : "اختر مستودع أو ربط مستودع افتراضي"}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Row 1: Repository, Branch, and Link Button */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-2 items-end">
-            {/* Repository Selection */}
-            <div className="md:col-span-2 space-y-2">
-              <label className="text-xs font-semibold text-gray-300 uppercase tracking-wider" htmlFor="repo-select">
-                المستودع
-              </label>
-              {loadingRepos ? (
-                <div className="flex items-center justify-center h-8 bg-gray-900 border border-gray-700 rounded">
-                  <Loader2 className="w-3 h-3 animate-spin text-gray-400" />
-                </div>
-              ) : (
-                <select
-                  id="repo-select"
-                  data-testid="select-repo"
-                  value={selectedRepo}
-                  onChange={(e) => setSelectedRepo(e.target.value)}
-                  className="w-full h-8 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white hover:border-gray-600 focus:border-blue-500 focus:outline-none transition-colors"
-                >
-                  <option value="">-- اختر مستودع --</option>
-                  {repos.map((repo) => (
-                    <option key={`${repo.owner}/${repo.name}`} value={`${repo.owner}/${repo.name}`}>
-                      {repo.owner}/{repo.name} {repo.private ? "🔒" : "🌐"}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </div>
-
-            {/* Branch Selection - Very Small */}
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-gray-300 uppercase tracking-wider" htmlFor="branch-select">
-                الفرع
-              </label>
-              <select
-                id="branch-select"
-                data-testid="select-branch"
-                value={selectedBranch}
-                onChange={(e) => setSelectedBranch(e.target.value)}
-                className="w-full h-8 bg-gray-900 border border-gray-700 rounded px-1.5 py-0.5 text-xs text-white hover:border-gray-600 focus:border-blue-500 focus:outline-none transition-colors font-mono"
-              >
-                {branches.map((branch) => (
-                  <option key={branch} value={branch} className="bg-gray-900 text-white">
-                    {branch}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Link/Unlink Button */}
-            <div>
-              {linkedRepo?.status === "linked" ? (
-                <Button
-                  onClick={handleUnlinkRepo}
-                  disabled={linkingLoading}
-                  size="sm"
-                  className="w-full h-8 bg-red-600/80 hover:bg-red-600 text-white border border-red-500/50 text-xs"
-                  data-testid="button-unlink-repo"
-                >
-                  {linkingLoading ? (
-                    <>
-                      <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-                      <span>جاري</span>
-                    </>
-                  ) : (
-                    <>
-                      <Unlink2 className="w-3 h-3 mr-1" />
-                      <span>إلغاء</span>
-                    </>
-                  )}
-                </Button>
-              ) : (
-                <Button
-                  onClick={handleLinkRepo}
-                  disabled={linkingLoading || !selectedRepo}
-                  size="sm"
-                  className="w-full h-8 bg-emerald-600/80 hover:bg-emerald-600 text-white border border-emerald-500/50 text-xs"
-                  data-testid="button-link-repo"
-                >
-                  {linkingLoading ? (
-                    <>
-                      <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-                      <span>جاري</span>
-                    </>
-                  ) : (
-                    <>
-                      <Link2 className="w-3 h-3 mr-1" />
-                      <span>ربط</span>
-                    </>
-                  )}
-                </Button>
-              )}
-            </div>
-          </div>
-
-          {/* Row 2: Push Button with Toggle */}
-          <div className="flex gap-2 items-center">
-            <Button
-              onClick={() => setShowCommitForm(!showCommitForm)}
-              className="flex-1 h-10 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium border border-blue-500/50 transition-all justify-between"
-              data-testid="button-toggle-commit"
+          {!isLinked && (
+            <motion.div 
+              className="space-y-3 pb-3 border-b border-gray-700/50"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
             >
-              <span className="flex-1">📤 دفع التغييرات</span>
-              {showCommitForm ? (
-                <ChevronUp className="w-4 h-4" />
-              ) : (
-                <ChevronDown className="w-4 h-4" />
-              )}
-            </Button>
+              <label className="text-sm font-semibold text-gray-300">المستودع</label>
+              <Select value={selectedRepo} onValueChange={setSelectedRepo} disabled={loadingRepos}>
+                <SelectTrigger className="mt-1 bg-gray-900 border border-gray-700" data-testid="select-repo">
+                  <SelectValue placeholder="-- اختر مستودع --" />
+                </SelectTrigger>
+                <SelectContent>
+                  {repos.length === 0 ? (
+                    <div className="px-2 py-1.5 text-xs text-muted-foreground">لا توجد مستودعات متاحة</div>
+                  ) : (
+                    repos.map((repo) => (
+                      <SelectItem key={`${repo.owner}/${repo.name}`} value={`${repo.owner}/${repo.name}`}>
+                        <div className="flex items-center gap-2">
+                          <span>{repo.owner}/{repo.name}</span>
+                          <span className="text-xs">{repo.private ? "🔒" : "🌐"}</span>
+                        </div>
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
+
+              {/* Link Repo Button */}
+              <Button
+                onClick={handleLinkRepo}
+                disabled={linkingLoading || !selectedRepo}
+                size="sm"
+                className="w-full bg-emerald-600/80 hover:bg-emerald-600 text-white"
+                data-testid="button-link-repo"
+              >
+                {linkingLoading ? (
+                  <>
+                    <Loader2 className="w-3 h-3 mr-2 animate-spin" />
+                    جاري...
+                  </>
+                ) : (
+                  <>
+                    <Link2 className="w-3 h-3 mr-2" />
+                    ربط المستودع
+                  </>
+                )}
+              </Button>
+            </motion.div>
+          )}
+
+          {/* Linked Status */}
+          {isLinked && (
+            <motion.div 
+              className="flex items-center justify-between gap-3 p-3 rounded-lg bg-green-500/10 border border-green-500/30"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-green-500" />
+                <span className="text-sm text-green-300 font-medium">مربوط</span>
+              </div>
+              <Button
+                onClick={handleUnlinkRepo}
+                disabled={linkingLoading}
+                size="sm"
+                variant="ghost"
+                className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                data-testid="button-unlink-repo"
+              >
+                {linkingLoading ? (
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                ) : (
+                  <>
+                    <Unlink2 className="w-3 h-3 mr-1" />
+                    قطع
+                  </>
+                )}
+              </Button>
+            </motion.div>
+          )}
+
+          {/* Branch Selection */}
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-gray-300">الفرع</label>
+            <Select value={selectedBranch} onValueChange={setSelectedBranch}>
+              <SelectTrigger className="bg-gray-900 border border-gray-700" data-testid="select-branch">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {branches.map((branch) => (
+                  <SelectItem key={branch} value={branch}>
+                    {branch}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
-          {/* Row 3: Commit Message Form (Conditional) */}
+          {/* Push Button */}
+          <Button
+            onClick={() => setShowCommitForm(!showCommitForm)}
+            className="w-full h-10 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium border border-blue-500/50 justify-between"
+            data-testid="button-toggle-commit"
+            disabled={!selectedRepo && !isLinked}
+          >
+            <span className="flex-1">📤 دفع التغييرات</span>
+            <ChevronDown className={`w-4 h-4 transition-transform ${showCommitForm ? 'rotate-180' : ''}`} />
+          </Button>
+
+          {/* Commit Form */}
           {showCommitForm && (
-            <div className="space-y-3 pt-2 border-t border-gray-700/50">
+            <motion.div 
+              className="space-y-3 pt-3 border-t border-gray-700/50"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+            >
               <div>
-                <label className="text-xs font-semibold text-gray-300 uppercase tracking-wider" htmlFor="commit-msg">
-                  رسالة التغيير
-                </label>
+                <label className="text-sm font-semibold text-gray-300">رسالة التغيير</label>
                 <Input
-                  id="commit-msg"
-                  data-testid="input-commit-message"
                   placeholder="مثال: إضافة ميزة جديدة أو إصلاح خلل..."
                   value={commitMessage}
                   onChange={(e) => setCommitMessage(e.target.value)}
-                  className="mt-2 h-9 bg-gray-900 border border-gray-700 px-3 py-2 text-sm placeholder:text-gray-600 focus:border-blue-500 focus:outline-none transition-colors"
+                  className="mt-2 bg-gray-900 border border-gray-700"
+                  data-testid="input-commit-message"
                 />
               </div>
 
-              {/* Final Push Button */}
               <Button
                 onClick={handlePush}
-                disabled={loading || !selectedRepo || !commitMessage.trim()}
-                className="w-full h-10 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-medium border border-green-500/50 transition-all"
+                disabled={loading || (!selectedRepo && !isLinked) || !commitMessage.trim()}
+                className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-medium border border-green-500/50"
               >
                 {loading ? (
                   <>
@@ -439,7 +452,7 @@ export default function GitHubPage() {
                   <>✓ تأكيد الدفع</>
                 )}
               </Button>
-            </div>
+            </motion.div>
           )}
         </CardContent>
       </Card>
@@ -457,15 +470,15 @@ export default function GitHubPage() {
             </li>
             <li className="flex gap-2">
               <span className="text-green-400">•</span>
-              <span>اختر الفرع المطلوب قبل دفع التغييرات</span>
+              <span>بعد الربط، لا يمكن تغيير المستودع إلا بقطع الاتصال أولاً</span>
             </li>
             <li className="flex gap-2">
               <span className="text-yellow-400">•</span>
-              <span>اكتب رسالة واضحة وموجزة للتغييرات</span>
+              <span>اختر الفرع المطلوب قبل دفع التغييرات</span>
             </li>
             <li className="flex gap-2">
               <span className="text-purple-400">•</span>
-              <span>يتم دفع التغييرات مباشرة إلى الفرع المحدد</span>
+              <span>اكتب رسالة واضحة وموجزة للتغييرات</span>
             </li>
           </ul>
         </CardContent>
