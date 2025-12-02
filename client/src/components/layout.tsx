@@ -16,8 +16,7 @@ import {
   Languages,
   Menu,
   X,
-  Github,
-  Bird
+  Github
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,6 +25,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+const eagleImage = "/attached_assets/generated_images/professional_eagle_head_logo_design.png";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
@@ -70,7 +71,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="p-6 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 shadow-[0_0_15px_hsl(var(--primary)/0.2)]">
-              <Bird className="h-6 w-6 text-primary" />
+              <img 
+                src={eagleImage} 
+                alt="Eagle" 
+                className="h-7 w-7 object-cover rounded-full" 
+                style={{ transform: i18n.language === 'ar' ? 'scaleX(-1)' : 'scaleX(1)' }}
+              />
             </div>
             <div>
               <h1 className="font-display font-bold text-lg tracking-wider text-foreground">{t('app.name')}</h1>

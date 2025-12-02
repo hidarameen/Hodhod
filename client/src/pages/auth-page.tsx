@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { Lock, User, ArrowRight, ShieldCheck, AlertCircle, Sun, Moon, Languages, Bird } from "lucide-react";
+import { Lock, User, ArrowRight, ShieldCheck, AlertCircle, Sun, Moon, Languages } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useTranslation } from "react-i18next";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
 import backgroundUrl from "@/assets/background.png";
+
+const eagleImage = "/attached_assets/generated_images/professional_eagle_head_logo_design.png";
 
 export default function AuthPage() {
   const [, setLocation] = useLocation();
@@ -116,7 +118,12 @@ export default function AuthPage() {
         >
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-primary/10 border border-primary/30 backdrop-blur-xl mb-6 shadow-[0_0_30px_rgba(6,182,212,0.3)]">
-              <Bird className="h-12 w-12 text-primary" />
+              <img 
+                src={eagleImage} 
+                alt="Eagle" 
+                className="h-16 w-16 object-cover" 
+                style={{ transform: i18n.language === 'ar' ? 'scaleX(-1)' : 'scaleX(1)' }}
+              />
             </div>
             <style>{`
               @keyframes marquee {
