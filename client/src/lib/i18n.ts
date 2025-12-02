@@ -90,8 +90,8 @@ i18n
         }
       }
     },
-    lng: "en", 
-    fallbackLng: "en",
+    lng: "ar", 
+    fallbackLng: "ar",
     interpolation: {
       escapeValue: false 
     }
