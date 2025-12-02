@@ -9,6 +9,10 @@ i18n
     resources: {
       en: {
         translation: {
+          "app": {
+            "name": "Eagle",
+            "subtitle": "Multi-Task Bot"
+          },
           "nav": {
             "overview": "Overview",
             "tasks": "Forwarding Tasks",
@@ -46,6 +50,10 @@ i18n
       },
       ar: {
         translation: {
+          "app": {
+            "name": "صقر",
+            "subtitle": "بوت متعدد المهام"
+          },
           "nav": {
             "overview": "نظرة عامة",
             "tasks": "مهام التوجيه",

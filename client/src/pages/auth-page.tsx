@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { Lock, User, ArrowRight, ShieldCheck, AlertCircle, Sun, Moon, Languages, Eagle } from "lucide-react";
+import { Lock, User, ArrowRight, ShieldCheck, AlertCircle, Sun, Moon, Languages, Bird } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useTranslation } from "react-i18next";
 import { Input } from "@/components/ui/input";
@@ -116,10 +116,26 @@ export default function AuthPage() {
         >
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-primary/10 border border-primary/30 backdrop-blur-xl mb-6 shadow-[0_0_30px_rgba(6,182,212,0.3)]">
-              <Eagle className="h-12 w-12 text-primary" />
+              <Bird className="h-12 w-12 text-primary" />
             </div>
-            <h1 className="font-display text-4xl font-bold text-black dark:text-white mb-2 tracking-wider">NEXUS</h1>
-            <p className="text-gray-600 dark:text-muted-foreground text-sm uppercase tracking-[0.2em]">Bot Control Interface</p>
+            <div className="overflow-hidden mb-2">
+              <motion.h1 
+                className="font-display text-4xl font-bold text-black dark:text-white tracking-wider whitespace-nowrap"
+                animate={{ x: i18n.language === 'ar' ? [100, -100] : [-100, 100] }}
+                transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
+              >
+                {t('app.name')}
+              </motion.h1>
+            </div>
+            <div className="overflow-hidden">
+              <motion.p 
+                className="text-gray-600 dark:text-muted-foreground text-sm uppercase tracking-[0.2em] whitespace-nowrap"
+                animate={{ x: i18n.language === 'ar' ? [-100, 100] : [100, -100] }}
+                transition={{ duration: 3, repeat: Infinity, repeatType: "reverse", delay: 0.2 }}
+              >
+                {t('app.subtitle')}
+              </motion.p>
+            </div>
           </div>
 
           <Card className="bg-white/40 dark:bg-black/40 backdrop-blur-xl border-black/10 dark:border-white/10 shadow-2xl">

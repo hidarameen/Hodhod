@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "next-themes";
@@ -17,7 +18,7 @@ import {
   Menu,
   X,
   Github,
-  Eagle
+  Bird
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -70,10 +71,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="p-6 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 shadow-[0_0_15px_hsl(var(--primary)/0.2)]">
-              <Eagle className="h-6 w-6 text-primary" />
+              <Bird className="h-6 w-6 text-primary" />
             </div>
-            <div>
-              <h1 className="font-display font-bold text-lg tracking-wider text-foreground">NEXUS</h1>
+            <div className="flex-1 min-w-0">
+              <div className="overflow-hidden">
+                <motion.h1 
+                  className="font-display font-bold text-lg tracking-wider text-foreground whitespace-nowrap"
+                  animate={{ x: i18n.language === 'ar' ? [50, -50] : [-50, 50] }}
+                  transition={{ duration: 2.5, repeat: Infinity, repeatType: "reverse" }}
+                >
+                  {t('app.name')}
+                </motion.h1>
+              </div>
               <p className="text-xs text-muted-foreground font-mono">v2.4.0-BETA</p>
             </div>
           </div>
