@@ -164,6 +164,9 @@ app.use((req, res, next) => {
 (async () => {
   await registerRoutes(httpServer, app);
 
+  // Serve static assets (images, etc.)
+  app.use("/attached_assets", express.static(path.join(process.cwd(), "attached_assets")));
+
   // Middleware to handle 404 for API routes before Vite catches them
   app.use("/api", (req, res) => {
     res.status(404).json({ error: "API endpoint not found", path: req.path });
