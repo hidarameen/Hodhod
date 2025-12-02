@@ -185,44 +185,86 @@ export default function TasksPage() {
 
   const createRuleMutation = useMutation({
     mutationFn: ({ taskId, data }: { taskId: number; data: any }) => api.createRule(taskId, data),
+    onMutate: async ({ taskId, data }) => {
+      await queryClient.cancelQueries({ queryKey: ["task-rules", taskId] });
+      const prev = queryClient.getQueryData(["task-rules", taskId]);
+      queryClient.setQueryData(["task-rules", taskId], (old: any) => [
+        ...(old || []),
+        { ...data, id: Date.now() }
+      ]);
+      return { prev };
+    },
     onSuccess: () => {
       toast.success("✅ تم إنشاء القاعدة بنجاح");
       refetchRules();
       setRuleFormData(initialRuleFormData);
       setRuleEditMode(false);
     },
-    onError: (error: any) => {
-      console.error("Rule creation error:", error);
+    onError: (error, _, context) => {
+      queryClient.setQueryData(["task-rules", selectedTaskId], context?.prev);
       toast.error(error.message || "فشل إنشاء القاعدة");
     },
   });
 
   const updateRuleMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: any }) => api.updateRule(id, data),
+    onMutate: async ({ id, data }) => {
+      await queryClient.cancelQueries({ queryKey: ["task-rules", selectedTaskId] });
+      const prev = queryClient.getQueryData(["task-rules", selectedTaskId]);
+      queryClient.setQueryData(["task-rules", selectedTaskId], (old: any) =>
+        old?.map((r: any) => r.id === id ? { ...r, ...data } : r) || []
+      );
+      return { prev };
+    },
     onSuccess: () => {
       toast.success("تم تحديث القاعدة بنجاح");
       refetchRules();
       setRuleFormData(initialRuleFormData);
       setRuleEditMode(false);
     },
-    onError: (error: any) => {
+    onError: (error, _, context) => {
+      queryClient.setQueryData(["task-rules", selectedTaskId], context?.prev);
       toast.error(error.message || "فشل تحديث القاعدة");
     },
   });
 
   const toggleRuleMutation = useMutation({
     mutationFn: (id: number) => api.toggleRule(id),
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ["task-rules", selectedTaskId] });
+      const prev = queryClient.getQueryData(["task-rules", selectedTaskId]);
+      queryClient.setQueryData(["task-rules", selectedTaskId], (old: any) =>
+        old?.map((r: any) => r.id === id ? { ...r, isActive: !r.isActive } : r) || []
+      );
+      return { prev };
+    },
     onSuccess: () => {
       toast.success("تم تحديث حالة القاعدة");
       refetchRules();
+    },
+    onError: (_, __, context) => {
+      queryClient.setQueryData(["task-rules", selectedTaskId], context?.prev);
+      toast.error("فشل تحديث حالة القاعدة");
     },
   });
 
   const deleteRuleMutation = useMutation({
     mutationFn: (id: number) => api.deleteRule(id),
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ["task-rules", selectedTaskId] });
+      const prev = queryClient.getQueryData(["task-rules", selectedTaskId]);
+      queryClient.setQueryData(["task-rules", selectedTaskId], (old: any) =>
+        old?.filter((r: any) => r.id !== id) || []
+      );
+      return { prev };
+    },
     onSuccess: () => {
       toast.success("تم حذف القاعدة");
       refetchRules();
+    },
+    onError: (_, __, context) => {
+      queryClient.setQueryData(["task-rules", selectedTaskId], context?.prev);
+      toast.error("فشل حذف القاعدة");
     },
   });
 
