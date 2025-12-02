@@ -29,6 +29,13 @@ i18n
             "throughput": "Throughput Analysis",
             "live_logs": "Live Logs"
           },
+          "auth": {
+            "admin_username": "Admin Username",
+            "admin_password": "Admin Password",
+            "username_placeholder": "Enter admin username",
+            "initialize_session": "Initialize Session",
+            "authenticating": "Authenticating..."
+          },
           "common": {
             "latency": "LATENCY",
             "system_online": "System Online",
@@ -47,6 +54,13 @@ i18n
             "settings": "إعدادات النظام",
             "disconnect": "تسجيل الخروج",
             "system_load": "حمل النظام"
+          },
+          "auth": {
+            "admin_username": "اسم المستخدم",
+            "admin_password": "كلمة المرور",
+            "username_placeholder": "أدخل اسم المستخدم",
+            "initialize_session": "بدء الجلسة",
+            "authenticating": "جاري التحقق..."
           },
           "dashboard": {
             "title": "لوحة القيادة",

@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { Lock, User, ArrowRight, Cpu, ShieldCheck, AlertCircle, Sun, Moon } from "lucide-react";
+import { Lock, User, ArrowRight, Cpu, ShieldCheck, AlertCircle, Sun, Moon, Languages } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useTranslation } from "react-i18next";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,10 +14,16 @@ import backgroundUrl from "@/assets/background.png";
 export default function AuthPage() {
   const [, setLocation] = useLocation();
   const { theme, setTheme } = useTheme();
+  const { t, i18n } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    document.documentElement.dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = i18n.language;
+  }, [i18n.language]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,12 +81,25 @@ export default function AuthPage() {
       <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-transparent dark:from-black dark:via-black/80 dark:to-transparent z-0" />
       
       <div className="relative z-10 w-full max-w-md px-4">
-        {/* Theme Toggle Button */}
-        <div className="flex justify-end mb-4">
+        {/* Control Buttons */}
+        <div className={`flex ${i18n.language === 'ar' ? 'flex-row-reverse' : ''} justify-between items-center mb-4 gap-2`}>
+          {/* Language Toggle */}
+          <button
+            onClick={() => i18n.changeLanguage(i18n.language === 'ar' ? 'en' : 'ar')}
+            className="p-2 rounded-lg bg-black/20 dark:bg-white/20 hover:bg-black/30 dark:hover:bg-white/30 transition-colors"
+            aria-label="Toggle language"
+            data-testid="button-toggle-language"
+            title={i18n.language === 'ar' ? 'English' : 'العربية'}
+          >
+            <Languages className="h-5 w-5 text-primary" />
+          </button>
+
+          {/* Theme Toggle Button */}
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className="p-2 rounded-lg bg-black/20 dark:bg-white/20 hover:bg-black/30 dark:hover:bg-white/30 transition-colors"
             aria-label="Toggle theme"
+            data-testid="button-toggle-theme"
           >
             {theme === "dark" ? (
               <Sun className="h-5 w-5 text-amber-400" />
@@ -110,35 +130,41 @@ export default function AuthPage() {
                   <AlertDescription className="text-red-400">{error}</AlertDescription>
                 </Alert>
               )}
-              <form onSubmit={handleLogin} className="space-y-6">
+              <form onSubmit={handleLogin} className={`space-y-6 ${i18n.language === 'ar' ? 'text-right' : 'text-left'}`}>
                 <div className="space-y-2">
-                  <label className="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider ml-1">Admin Username</label>
+                  <label className={`text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider ${i18n.language === 'ar' ? 'mr-1' : 'ml-1'}`}>
+                    {t('auth.admin_username')}
+                  </label>
                   <div className="relative group">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 group-focus-within:text-primary transition-colors" />
+                    <User className={`absolute ${i18n.language === 'ar' ? 'right-3' : 'left-3'} top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 group-focus-within:text-primary transition-colors`} />
                     <Input 
                       type="text"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       disabled={isLoading}
-                      className="pl-10 bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10 text-black dark:text-white focus:border-primary/50 focus:ring-primary/20 h-11 disabled:opacity-50 placeholder:text-gray-400 dark:placeholder:text-gray-500" 
-                      placeholder="Enter admin username"
+                      className={`${i18n.language === 'ar' ? 'pr-10 text-right' : 'pl-10'} bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10 text-black dark:text-white focus:border-primary/50 focus:ring-primary/20 h-11 disabled:opacity-50 placeholder:text-gray-400 dark:placeholder:text-gray-500`} 
+                      placeholder={t('auth.username_placeholder')}
                       required
+                      data-testid="input-username"
                     />
                   </div>
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider ml-1">Admin Password</label>
+                  <label className={`text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider ${i18n.language === 'ar' ? 'mr-1' : 'ml-1'}`}>
+                    {t('auth.admin_password')}
+                  </label>
                   <div className="relative group">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 group-focus-within:text-primary transition-colors" />
+                    <Lock className={`absolute ${i18n.language === 'ar' ? 'right-3' : 'left-3'} top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 group-focus-within:text-primary transition-colors`} />
                     <Input 
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       disabled={isLoading}
-                      className="pl-10 bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10 text-black dark:text-white focus:border-primary/50 focus:ring-primary/20 h-11 disabled:opacity-50 placeholder:text-gray-400 dark:placeholder:text-gray-500" 
+                      className={`${i18n.language === 'ar' ? 'pr-10 text-right' : 'pl-10'} bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10 text-black dark:text-white focus:border-primary/50 focus:ring-primary/20 h-11 disabled:opacity-50 placeholder:text-gray-400 dark:placeholder:text-gray-500`} 
                       placeholder="••••••••••••"
                       required
+                      data-testid="input-password"
                     />
                   </div>
                 </div>
@@ -147,14 +173,15 @@ export default function AuthPage() {
                   type="submit" 
                   disabled={isLoading}
                   className="w-full h-12 bg-primary text-black dark:text-white font-bold hover:bg-cyan-400 transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)]"
+                  data-testid="button-submit"
                 >
                   {isLoading ? (
                     <span className="flex items-center gap-2">
-                      <ShieldCheck className="h-4 w-4 animate-pulse" /> Authenticating...
+                      <ShieldCheck className="h-4 w-4 animate-pulse" /> {t('auth.authenticating')}
                     </span>
                   ) : (
                     <span className="flex items-center gap-2">
-                      Initialize Session <ArrowRight className="h-4 w-4" />
+                      {t('auth.initialize_session')} <ArrowRight className="h-4 w-4" />
                     </span>
                   )}
                 </Button>
