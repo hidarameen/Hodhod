@@ -37,12 +37,6 @@ export default function GitHubPage() {
     loadGitHubInfo();
     loadFileChanges();
     loadLinkedRepo();
-    const interval1 = setInterval(loadFileChanges, 5000);
-    const interval2 = setInterval(loadLinkedRepo, 15000);
-    return () => {
-      clearInterval(interval1);
-      clearInterval(interval2);
-    };
   }, []);
 
   const loadFileChanges = async () => {
