@@ -10,14 +10,14 @@ import {
   Radio, 
   Settings, 
   LogOut,
-  Cpu,
   Shield,
   Sun,
   Moon,
   Languages,
   Menu,
   X,
-  Github
+  Github,
+  Eagle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -70,7 +70,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="p-6 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 shadow-[0_0_15px_hsl(var(--primary)/0.2)]">
-              <Cpu className="h-6 w-6 text-primary" />
+              <Eagle className="h-6 w-6 text-primary" />
             </div>
             <div>
               <h1 className="font-display font-bold text-lg tracking-wider text-foreground">NEXUS</h1>
