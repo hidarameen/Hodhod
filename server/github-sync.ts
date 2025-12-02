@@ -188,9 +188,9 @@ export async function getFileChanges(): Promise<{
 }
 
 /**
- * دفع كل ملفات المشروع إلى GitHub
+ * دفع كل ملفات المشروع إلى GitHub مع سجلات تفصيلية
  * git add . → git commit → git push -f
- * بدون empty commits - فقط إذا كانت هناك تغييرات حقيقية
+ * عرض الملفات واحد تلو الآخر بشكل متحرك
  */
 export async function pushToGitHubRepo(
   owner: string,
@@ -199,20 +199,31 @@ export async function pushToGitHubRepo(
   targetBranch: string = "main"
 ): Promise<{ success: boolean }> {
   try {
-    console.log("[GitHub] Starting push...");
+    console.log("\n[GitHub] ========================================");
+    console.log("[GitHub] 🚀 Starting GitHub Push");
+    console.log("[GitHub] ========================================");
+    console.log(`[GitHub] Repository: ${owner}/${repo}`);
+    console.log(`[GitHub] Target Branch: ${targetBranch}`);
+    console.log(`[GitHub] Commit Message: ${message}`);
+    console.log("[GitHub] ========================================\n");
 
     // Setup: Configure git
+    console.log("[GitHub] 🔧 Setting up Git configuration...");
     await execAsync('git config user.email "replit-bot@replit.com"');
     await execAsync('git config user.name "Replit Auto-Sync"');
+    console.log("[GitHub] ✓ Git configured\n");
 
     // Setup: Get token
+    console.log("[GitHub] 🔑 Retrieving GitHub access token...");
     const accessToken = await getAccessToken();
     if (!accessToken) {
-      console.error("[GitHub] No token available");
+      console.error("[GitHub] ✗ No token available");
       return { success: false };
     }
+    console.log("[GitHub] ✓ Token retrieved\n");
 
     // Setup: Setup remote
+    console.log("[GitHub] 🔗 Configuring remote repository...");
     try {
       await execAsync(`git remote remove origin 2>/dev/null || true`);
     } catch (e) {
@@ -220,33 +231,61 @@ export async function pushToGitHubRepo(
     }
     const remoteUrl = `https://oauth2:${accessToken}@github.com/${owner}/${repo}.git`;
     await execAsync(`git remote add origin "${remoteUrl}"`);
+    console.log("[GitHub] ✓ Remote configured\n");
 
     // Step 1: git add .
-    console.log("[GitHub] Step 1: Adding all files...");
+    console.log("[GitHub] 📦 Step 1: Adding files...");
     await execAsync("git add .");
-
-    // Check if there are any staged changes
-    const diffResult = await execAsync("git diff --cached --quiet; echo $?", { shell: "/bin/bash" });
-    const hasChanges = diffResult.stdout?.trim() !== "0";
-
-    if (!hasChanges) {
-      console.log("[GitHub] ✓ No changes to commit");
+    
+    // Get list of staged files
+    const stagedFilesResult = await execAsync("git diff --cached --name-only");
+    const stagedFiles = stagedFilesResult.stdout?.trim().split("\n").filter(f => f) || [];
+    
+    if (stagedFiles.length === 0) {
+      console.log("[GitHub] ⚠️  No files to commit");
       return { success: true };
     }
 
+    console.log(`[GitHub] ✓ Found ${stagedFiles.length} files to commit:\n`);
+    stagedFiles.forEach((file, index) => {
+      console.log(`[GitHub]   ${index + 1}. 📄 ${file}`);
+    });
+    console.log();
+
+    // Get file statistics
+    const statsResult = await execAsync("git diff --cached --stat");
+    console.log("[GitHub] 📊 Statistics:");
+    console.log(statsResult.stdout);
+
     // Step 2: git commit
-    console.log("[GitHub] Step 2: Creating commit...");
+    console.log("\n[GitHub] 💾 Step 2: Creating commit...");
     const escapedMessage = message.replace(/"/g, '\\"').replace(/'/g, "\\'");
-    await execAsync(`git commit -m "${escapedMessage}"`);
+    const commitResult = await execAsync(`git commit -m "${escapedMessage}"`);
+    
+    // Extract commit hash
+    const commitMatch = commitResult.stdout?.match(/\[.*? ([a-f0-9]+)\]/);
+    const commitHash = commitMatch ? commitMatch[1].substring(0, 7) : "unknown";
+    console.log(`[GitHub] ✓ Commit created (${commitHash})\n`);
 
     // Step 3: git push force
-    console.log("[GitHub] Step 3: Pushing to GitHub...");
+    console.log("[GitHub] 🚀 Step 3: Pushing to GitHub...");
+    console.log(`[GitHub] Pushing to: origin/${targetBranch}\n`);
+    
     await execAsync(`git push -f -u origin ${targetBranch}`);
-
+    
+    console.log("\n[GitHub] ========================================");
     console.log("[GitHub] ✅ Successfully pushed to GitHub!");
+    console.log("[GitHub] ========================================");
+    console.log(`[GitHub] Total files pushed: ${stagedFiles.length}`);
+    console.log(`[GitHub] Branch: ${targetBranch}`);
+    console.log(`[GitHub] Commit: ${commitHash}`);
+    console.log("[GitHub] ========================================\n");
+
     return { success: true };
   } catch (error) {
-    console.error("[GitHub] Push failed:", error);
+    console.error("\n[GitHub] ✗ Push failed!");
+    console.error("[GitHub] Error:", error);
+    console.log("[GitHub] ========================================\n");
     return { success: false };
   }
 }
