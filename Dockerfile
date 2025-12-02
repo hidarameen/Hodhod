@@ -2,31 +2,37 @@
 # OPTIMIZED DOCKERFILE FOR LAYER CACHING
 # ==============================================
 
-# Stage 1: Install Node.js dependencies (cached if package.json unchanged)
+# Stage 1: Node.js dependencies for production
 FROM node:20-alpine AS deps
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+
+# Stage 2: Node.js dependencies for build (including devDependencies)
+FROM node:20-alpine AS builder-deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# Stage 2: Build the application
+# Stage 3: Build the Node.js application
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Copy dependencies from deps stage
-COPY --from=deps /app/node_modules ./node_modules
+# Copy dependencies from builder-deps
+COPY --from=builder-deps /app/node_modules ./node_modules
 COPY package.json package-lock.json ./
 
-# Copy all project files (except ignored by .dockerignore)
+# Copy all project files needed for build
 COPY . .
 
 # Build the Node.js application
 RUN npm run build
 
-# Stage 3: Python dependencies (cached separately)
+# Stage 4: Python dependencies
 FROM python:3.11-alpine AS python-deps
 WORKDIR /app
 
-# Install build dependencies for Python packages
+# Install build dependencies for Python
 RUN apk add --no-cache \
     gcc \
     g++ \
@@ -40,7 +46,7 @@ COPY requirements-python.txt ./
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements-python.txt
 
-# Stage 4: Production runtime
+# Stage 5: Production runtime
 FROM python:3.11-alpine AS production
 WORKDIR /app
 
@@ -68,22 +74,23 @@ COPY --from=builder /app/package.json ./
 # Copy production node_modules
 COPY --from=deps /app/node_modules ./node_modules
 
-# Copy the rest of project files (all folders, scripts, migrations, shared, telegram_bot)
-COPY . .
+# Copy important project folders/files
+COPY migrations ./migrations
+COPY shared ./shared
+COPY telegram_bot ./telegram_bot
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+COPY start.sh /app/start.sh
 
-# Fix permissions for entrypoint scripts
-RUN dos2unix /docker-entrypoint.sh /app/start.sh 2>/dev/null || true && \
-    chmod +x /docker-entrypoint.sh /app/start.sh
+# Fix permissions for scripts
+RUN dos2unix /app/docker-entrypoint.sh /app/start.sh 2>/dev/null || true && \
+    chmod +x /app/docker-entrypoint.sh /app/start.sh
 
-# Create non-root user
+# Create non-root user and directories
 RUN addgroup -g 1001 -S appgroup && \
-    adduser -S appuser -u 1001 -G appgroup
-
-# Create necessary directories and set ownership
-RUN mkdir -p /app/telegram_bot/temp /app/telegram_bot/logs && \
+    adduser -S appuser -u 1001 -G appgroup && \
+    mkdir -p /app/telegram_bot/temp /app/telegram_bot/logs && \
     chown -R appuser:appgroup /app
 
-# Switch to non-root user
 USER appuser
 
 # Environment variables
@@ -98,8 +105,8 @@ EXPOSE 5000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
     CMD curl -f http://localhost:5000/health || exit 1
 
-# Use dumb-init to handle signals properly
-ENTRYPOINT ["/usr/bin/dumb-init", "--", "/docker-entrypoint.sh"]
+# Entry point
+ENTRYPOINT ["/usr/bin/dumb-init", "--", "/app/docker-entrypoint.sh"]
 
-# Start the application
+# Start command
 CMD ["node", "dist/index.cjs"]
