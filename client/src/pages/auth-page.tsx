@@ -114,26 +114,10 @@ export default function AuthPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
+          className="flex justify-center mb-8"
         >
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-primary/10 border border-primary/30 backdrop-blur-xl mb-6 shadow-[0_0_30px_rgba(6,182,212,0.3)]">
-              <EagleLogo size={64} flip={i18n.language === 'ar'} className="text-black dark:text-white" />
-            </div>
-            <style>{`
-              @keyframes marquee {
-                0% { transform: translateX(0); }
-                100% { transform: translateX(100%); }
-              }
-              .marquee {
-                animation: marquee 8s linear infinite;
-                display: inline-block;
-              }
-            `}</style>
-            <h1 className="font-display text-4xl font-bold text-black dark:text-white mb-2 tracking-wider">
-              <span className="marquee">{t('app.name')}</span>
-            </h1>
-            <p className="text-gray-600 dark:text-muted-foreground text-sm uppercase tracking-[0.2em]">{t('app.subtitle')}</p>
-          </div>
+          <EagleLogo size={350} flip={i18n.language === 'ar'} className="text-black dark:text-white" />
+        </motion.div>
 
           <Card className="bg-white/40 dark:bg-black/40 backdrop-blur-xl border-black/10 dark:border-white/10 shadow-2xl">
             <CardContent className="p-8">
@@ -205,7 +189,6 @@ export default function AuthPage() {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
       </div>
     </div>
   );
