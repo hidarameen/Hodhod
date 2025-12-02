@@ -118,24 +118,20 @@ export default function AuthPage() {
             <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-primary/10 border border-primary/30 backdrop-blur-xl mb-6 shadow-[0_0_30px_rgba(6,182,212,0.3)]">
               <Bird className="h-12 w-12 text-primary" />
             </div>
-            <div className="overflow-hidden mb-2">
-              <motion.h1 
-                className="font-display text-4xl font-bold text-black dark:text-white tracking-wider whitespace-nowrap"
-                animate={{ x: i18n.language === 'ar' ? [100, -100] : [-100, 100] }}
-                transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
-              >
-                {t('app.name')}
-              </motion.h1>
-            </div>
-            <div className="overflow-hidden">
-              <motion.p 
-                className="text-gray-600 dark:text-muted-foreground text-sm uppercase tracking-[0.2em] whitespace-nowrap"
-                animate={{ x: i18n.language === 'ar' ? [-100, 100] : [100, -100] }}
-                transition={{ duration: 3, repeat: Infinity, repeatType: "reverse", delay: 0.2 }}
-              >
-                {t('app.subtitle')}
-              </motion.p>
-            </div>
+            <style>{`
+              @keyframes marquee {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(100%); }
+              }
+              .marquee {
+                animation: marquee 8s linear infinite;
+                display: inline-block;
+              }
+            `}</style>
+            <h1 className="font-display text-4xl font-bold text-black dark:text-white mb-2 tracking-wider">
+              <span className="marquee">{t('app.name')}</span>
+            </h1>
+            <p className="text-gray-600 dark:text-muted-foreground text-sm uppercase tracking-[0.2em]">{t('app.subtitle')}</p>
           </div>
 
           <Card className="bg-white/40 dark:bg-black/40 backdrop-blur-xl border-black/10 dark:border-white/10 shadow-2xl">
