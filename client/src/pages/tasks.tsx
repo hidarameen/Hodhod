@@ -159,6 +159,7 @@ export default function TasksPage() {
       toast.success("تم تحديث المهمة بنجاح! يمكنك الآن إضافة القواعس");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+      refetchRules();
     },
     onError: (error: any) => {
       toast.error(error.message || "فشل تحديث المهمة");
