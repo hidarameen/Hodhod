@@ -101,9 +101,6 @@ Thumbs.db
 *.session
 *.session-journal
 
-# Attached assets (development)
-attached_assets
-
 # Lock files for other package managers
 yarn.lock
 pnpm-lock.yaml
