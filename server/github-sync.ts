@@ -289,8 +289,8 @@ export async function pushToGitHubRepo(
 
     // Step 2: git commit
     console.log("\n[GitHub] 💾 Step 2: Creating commit...");
-    const escapedMessage = message.replace(/"/g, '\\"').replace(/'/g, "\\'");
-    const commitResult = await execAsync(`git commit -m "${escapedMessage}"`);
+    // Use echo to safely handle special characters including Arabic
+    const commitResult = await execAsync(`echo "${message.replace(/"/g, '\\"')}" | git commit -F -`, { shell: '/bin/bash' });
     
     // Extract commit hash
     const commitMatch = commitResult.stdout?.match(/\[.*? ([a-f0-9]+)\]/);
