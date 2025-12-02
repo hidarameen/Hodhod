@@ -140,11 +140,13 @@ export default function TasksPage() {
 
   const createMutation = useMutation({
     mutationFn: (data: TaskFormData) => api.createTask(data),
-    onSuccess: () => {
-      toast.success("تم إنشاء المهمة بنجاح");
+    onSuccess: (newTask: any) => {
+      toast.success("تم إنشاء المهمة بنجاح! يمكنك الآن إضافة القواعس");
+      setSelectedTaskId(newTask.id);
+      setFormData(initialFormData);
+      setEditMode(false);
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
-      handleCloseDialog();
     },
     onError: (error: any) => {
       toast.error(error.message || "فشل إنشاء المهمة");
@@ -154,10 +156,9 @@ export default function TasksPage() {
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Partial<TaskFormData> }) => api.updateTask(id, data),
     onSuccess: () => {
-      toast.success("تم تحديث المهمة بنجاح");
+      toast.success("تم تحديث المهمة بنجاح! يمكنك الآن إضافة القواعس");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
-      handleCloseDialog();
     },
     onError: (error: any) => {
       toast.error(error.message || "فشل تحديث المهمة");
@@ -184,12 +185,13 @@ export default function TasksPage() {
   const createRuleMutation = useMutation({
     mutationFn: ({ taskId, data }: { taskId: number; data: any }) => api.createRule(taskId, data),
     onSuccess: () => {
-      toast.success("تم إنشاء القاعدة بنجاح");
+      toast.success("✅ تم إنشاء القاعدة بنجاح");
       refetchRules();
       setRuleFormData(initialRuleFormData);
       setRuleEditMode(false);
     },
     onError: (error: any) => {
+      console.error("Rule creation error:", error);
       toast.error(error.message || "فشل إنشاء القاعدة");
     },
   });
@@ -227,16 +229,21 @@ export default function TasksPage() {
     setIsOpen(false);
     setEditMode(false);
     setFormData(initialFormData);
+    setSelectedTaskId(null);
+    setRuleFormData(initialRuleFormData);
+    setRuleEditMode(false);
   };
 
   const handleOpenCreate = () => {
     setEditMode(false);
     setFormData(initialFormData);
+    setSelectedTaskId(null);
     setIsOpen(true);
   };
 
   const handleOpenEdit = (task: any) => {
     setEditMode(true);
+    setSelectedTaskId(task.id);
     setFormData({
       id: task.id,
       name: task.name || "",
@@ -305,6 +312,8 @@ export default function TasksPage() {
         taskId: selectedTaskId, 
         data: { ...ruleFormData, type: selectedRuleType }
       });
+    } else {
+      toast.error("يرجى حفظ المهمة أولاً قبل إضافة القواعس");
     }
   };
 
@@ -340,9 +349,9 @@ export default function TasksPage() {
               <DialogTitle>{editMode ? "تعديل المهمة" : "إنشاء مهمة توجيه جديدة"}</DialogTitle>
               <DialogDescription>أدخل تفاصيل المهمة واختر القنوات المصدر والهدف</DialogDescription>
             </DialogHeader>
-            <Tabs defaultValue="basic" className="w-full">
+            <Tabs defaultValue={editMode ? "basic" : selectedTaskId ? "summarization" : "basic"} className="w-full">
               <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="basic">الأساسيات</TabsTrigger>
+                <TabsTrigger value="basic" disabled={selectedTaskId ? true : false} className="disabled:opacity-50">الأساسيات</TabsTrigger>
                 <TabsTrigger value="summarization" className="flex items-center gap-2">
                   <FileText className="h-4 w-4" />
                   <span className="hidden sm:inline">التلخيص</span>
