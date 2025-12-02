@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,6 +12,7 @@ import { Search, Plus, Globe, Hash, Users, Trash2, Loader } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ChannelsPage() {
+  const { i18n } = useTranslation();
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -81,9 +83,9 @@ export default function ChannelsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div>
+        <div className={i18n.language === 'ar' ? 'text-right' : 'text-left'}>
           <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground tracking-wide">المصادر والقنوات</h2>
           <p className="text-muted-foreground mt-1 text-sm md:text-base">إدارة القنوات والمجموعات والمواقع الإلكترونية</p>
         </div>

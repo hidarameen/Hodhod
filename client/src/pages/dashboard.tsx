@@ -25,7 +25,7 @@ const chartData = [
 ];
 
 export default function Dashboard() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const { data: stats, isLoading } = useQuery({
     queryKey: ["dashboard-stats"],
@@ -73,10 +73,10 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="space-y-6 md:space-y-8">
+    <div className="space-y-6 md:space-y-8" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div>
+        <div className={i18n.language === 'ar' ? 'text-right' : 'text-left'}>
           <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground tracking-wide">{t('dashboard.title')}</h2>
           <p className="text-muted-foreground mt-1 text-sm md:text-base">{t('dashboard.subtitle')}</p>
         </div>
