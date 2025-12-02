@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
 import { 
   Table, 
   TableBody, 
@@ -34,7 +35,8 @@ import {
   ChevronDown,
   Sparkles,
   Bot,
-  Link2
+  Link2,
+  ArrowRight
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -654,111 +656,172 @@ export default function TasksPage() {
         </Dialog>
       </div>
 
-      <Card className="border shadow-sm">
-        <CardContent className="p-0 overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-muted-foreground">الاسم</TableHead>
-                <TableHead className="text-muted-foreground">الحالة</TableHead>
-                <TableHead className="text-muted-foreground hidden sm:table-cell">المصادر → الأهداف</TableHead>
-                <TableHead className="text-muted-foreground hidden md:table-cell">الذكاء الصناعي</TableHead>
-                <TableHead className="text-muted-foreground hidden md:table-cell">التلخيص</TableHead>
-                <TableHead className="text-muted-foreground hidden lg:table-cell">الفيديو</TableHead>
-                <TableHead className="text-muted-foreground hidden lg:table-cell">الموجهة</TableHead>
-                <TableHead className="text-right text-muted-foreground">الإجراءات</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {tasks.map((task: any) => (
-                <TableRow key={task.id} className="hover:bg-muted/50 transition-colors" data-testid={`row-task-${task.id}`}>
-                  <TableCell className="font-medium text-foreground">{task.name}</TableCell>
-                  <TableCell>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {tasks.length === 0 ? (
+          <div className="col-span-full p-8 text-center text-muted-foreground">
+            لا توجد مهام حالياً. اضغط على "مهمة جديدة" للبدء
+          </div>
+        ) : (
+          tasks.map((task: any, idx: number) => (
+            <motion.div
+              key={task.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.1 }}
+              data-testid={`card-task-${task.id}`}
+            >
+              <Card className="border shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden group cursor-pointer">
+                {/* Header with gradient */}
+                <div className={`h-1 bg-gradient-to-r ${
+                  task.isActive 
+                    ? 'from-green-500 to-emerald-500' 
+                    : 'from-yellow-500 to-orange-500'
+                }`} />
+                
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1">
+                      <CardTitle className="text-base font-bold text-foreground line-clamp-2">
+                        {task.name}
+                      </CardTitle>
+                      <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
+                        {task.description || "بدون وصف"}
+                      </p>
+                    </div>
                     <Badge 
-                      variant="outline"
                       className={task.isActive 
-                        ? "bg-green-500/10 text-green-600 dark:text-green-500 border-green-500/20" 
-                        : "bg-yellow-500/10 text-yellow-600 dark:text-yellow-500 border-yellow-500/20"}
+                        ? "bg-green-500/20 text-green-600 dark:text-green-400 border-green-500/30 whitespace-nowrap" 
+                        : "bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 border-yellow-500/30 whitespace-nowrap"}
+                      variant="outline"
                       data-testid={`badge-status-${task.id}`}
                     >
-                      {task.isActive ? "نشطة" : "معطلة"}
+                      {task.isActive ? "🟢 نشطة" : "🟡 معطلة"}
                     </Badge>
-                  </TableCell>
-                  <TableCell className="text-sm hidden sm:table-cell">
-                    {task.sourceChannels?.length || 0} → {task.targetChannels?.length || 0}
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {task.aiEnabled ? (
-                      <Badge className="bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20">مفعل</Badge>
-                    ) : (
-                      <span className="text-muted-foreground text-sm">معطل</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {task.summarizationEnabled ? (
-                      <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20">مفعل</Badge>
-                    ) : (
-                      <span className="text-muted-foreground text-sm">معطل</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="hidden lg:table-cell">
-                    {task.videoProcessingEnabled ? (
-                      <Badge className="bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20">مفعل</Badge>
-                    ) : (
-                      <span className="text-muted-foreground text-sm">معطل</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="font-mono hidden lg:table-cell">{task.totalForwarded}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-1">
-                      <Button 
-                        size="icon" 
-                        variant="ghost" 
-                        className="h-6 w-6"
-                        onClick={() => toggleMutation.mutate(task.id)}
-                        data-testid={`button-toggle-${task.id}`}
-                      >
-                        {task.isActive ? <Pause className="h-2.5 w-2.5" /> : <Play className="h-2.5 w-2.5" />}
-                      </Button>
-                      <Button 
-                        size="icon" 
-                        variant="ghost"
-                        className="h-6 w-6"
-                        onClick={() => handleOpenRules(task)}
-                        data-testid={`button-rules-${task.id}`}
-                        title="إدارة القواعد"
-                      >
-                        <Settings2 className="h-3 w-3" />
-                      </Button>
-                      <Button 
-                        size="icon" 
-                        variant="ghost"
-                        className="h-6 w-6"
-                        onClick={() => handleOpenEdit(task)}
-                        data-testid={`button-edit-${task.id}`}
-                      >
-                        <Edit className="h-3 w-3" />
-                      </Button>
-                      <Button 
-                        size="icon" 
-                        variant="ghost"
-                        className="h-8 w-8 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
-                        onClick={() => deleteMutation.mutate(task.id)}
-                        data-testid={`button-delete-${task.id}`}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                  </div>
+                </CardHeader>
+
+                <CardContent className="space-y-3">
+                  {/* Channels */}
+                  <div className="flex items-center gap-2 text-xs">
+                    <div className="flex items-center gap-1 px-2 py-1 rounded bg-muted/50">
+                      <span className="text-muted-foreground">المصادر:</span>
+                      <span className="font-bold text-foreground">{task.sourceChannels?.length || 0}</span>
                     </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          {tasks.length === 0 && (
-            <div className="p-8 text-center text-muted-foreground">لا توجد مهام حالياً. اضغط على "مهمة جديدة" للبدء</div>
-          )}
-        </CardContent>
-      </Card>
+                    <ArrowRight className="h-3 w-3 text-muted-foreground" />
+                    <div className="flex items-center gap-1 px-2 py-1 rounded bg-muted/50">
+                      <span className="text-muted-foreground">الأهداف:</span>
+                      <span className="font-bold text-foreground">{task.targetChannels?.length || 0}</span>
+                    </div>
+                  </div>
+
+                  {/* Features indicators */}
+                  <div className="flex flex-wrap gap-2">
+                    {task.aiEnabled && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="flex items-center gap-1 px-2 py-1 rounded-full bg-purple-500/10 border border-purple-500/20"
+                      >
+                        <Sparkles className="h-3 w-3 text-purple-600 dark:text-purple-400" />
+                        <span className="text-xs text-purple-600 dark:text-purple-400">AI</span>
+                      </motion.div>
+                    )}
+                    {task.summarizationEnabled && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.05 }}
+                        className="flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20"
+                      >
+                        <FileText className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
+                        <span className="text-xs text-emerald-600 dark:text-emerald-400">تلخيص</span>
+                      </motion.div>
+                    )}
+                    {task.videoProcessingEnabled && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.1 }}
+                        className="flex items-center gap-1 px-2 py-1 rounded-full bg-blue-500/10 border border-blue-500/20"
+                      >
+                        <Video className="h-3 w-3 text-blue-600 dark:text-blue-400" />
+                        <span className="text-xs text-blue-600 dark:text-blue-400">فيديو</span>
+                      </motion.div>
+                    )}
+                    {task.linkProcessingEnabled && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.15 }}
+                        className="flex items-center gap-1 px-2 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20"
+                      >
+                        <Link2 className="h-3 w-3 text-cyan-600 dark:text-cyan-400" />
+                        <span className="text-xs text-cyan-600 dark:text-cyan-400">روابط</span>
+                      </motion.div>
+                    )}
+                  </div>
+
+                  {/* Stats */}
+                  <div className="flex items-center justify-between text-xs border-t border-border pt-2">
+                    <span className="text-muted-foreground">الموجهة:</span>
+                    <span className="font-mono font-bold text-foreground">{task.totalForwarded} رسالة</span>
+                  </div>
+                </CardContent>
+
+                {/* Actions */}
+                <div className="px-4 pb-3 flex gap-2 justify-end border-t border-border pt-3">
+                  <Button 
+                    size="sm" 
+                    variant="ghost" 
+                    className="h-8 text-xs text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-500/10"
+                    onClick={() => deleteMutation.mutate(task.id)}
+                    data-testid={`button-delete-${task.id}`}
+                    title="حذف"
+                  >
+                    <Trash2 className="h-3 w-3 ml-1" />
+                    حذف
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    className="h-8 text-xs"
+                    onClick={() => handleOpenRules(task)}
+                    data-testid={`button-rules-${task.id}`}
+                    title="القواعد"
+                  >
+                    <Settings2 className="h-3 w-3 ml-1" />
+                    قواعد
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    className="h-8 text-xs"
+                    onClick={() => handleOpenEdit(task)}
+                    data-testid={`button-edit-${task.id}`}
+                    title="تعديل"
+                  >
+                    <Edit className="h-3 w-3 ml-1" />
+                    تعديل
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    className="h-8 text-xs bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary"
+                    onClick={() => toggleMutation.mutate(task.id)}
+                    data-testid={`button-toggle-${task.id}`}
+                    title={task.isActive ? "إيقاف" : "تشغيل"}
+                  >
+                    {task.isActive ? (
+                      <><Pause className="h-3 w-3 ml-1" /> إيقاف</>
+                    ) : (
+                      <><Play className="h-3 w-3 ml-1" /> تشغيل</>
+                    )}
+                  </Button>
+                </div>
+              </Card>
+            </motion.div>
+          ))
+        )}
+      </div>
 
       <Dialog open={isRulesOpen} onOpenChange={setIsRulesOpen}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
