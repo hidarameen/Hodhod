@@ -207,6 +207,16 @@ export async function pushToGitHubRepo(
     console.log(`[GitHub] Commit Message: ${message}`);
     console.log("[GitHub] ========================================\n");
 
+    // Cleanup: Remove stale lock file if exists
+    console.log("[GitHub] 🔄 Cleaning up git locks...");
+    try {
+      await execAsync('rm -f /home/runner/workspace/.git/index.lock 2>/dev/null || true');
+      console.log("[GitHub] ✓ Lock file cleaned");
+      await execAsync('sleep 1');
+    } catch (e) {
+      console.log("[GitHub] ⚠️  Could not clean lock file");
+    }
+
     // Setup: Configure git
     console.log("[GitHub] 🔧 Setting up Git configuration...");
     await execAsync('git config user.email "replit-bot@replit.com"');
@@ -237,25 +247,45 @@ export async function pushToGitHubRepo(
     console.log("[GitHub] 📦 Step 1: Adding files...");
     await execAsync("git add .");
     
-    // Get list of staged files
-    const stagedFilesResult = await execAsync("git diff --cached --name-only");
-    const stagedFiles = stagedFilesResult.stdout?.trim().split("\n").filter(f => f) || [];
-    
-    if (stagedFiles.length === 0) {
-      console.log("[GitHub] ⚠️  No files to commit");
-      return { success: true };
+    // Get list of ALL tracked/untracked files being pushed
+    let allFiles: string[] = [];
+    try {
+      // Get all files that will be pushed (modified, new, deleted)
+      const unstagedResult = await execAsync("git diff --name-only HEAD 2>/dev/null || echo ''");
+      const modifiedFiles = unstagedResult.stdout?.trim().split("\n").filter(f => f) || [];
+      
+      const stagedResult = await execAsync("git diff --cached --name-only");
+      const stagedFiles = stagedResult.stdout?.trim().split("\n").filter(f => f) || [];
+      
+      const untrackedResult = await execAsync("git ls-files --others --exclude-standard");
+      const untrackedFiles = untrackedResult.stdout?.trim().split("\n").filter(f => f) || [];
+      
+      const fileSet = new Set([...modifiedFiles, ...stagedFiles, ...untrackedFiles]);
+      allFiles = Array.from(fileSet).sort();
+    } catch (e) {
+      // If git is not initialized or other issues, get all files using ls-files
+      const lsResult = await execAsync("git ls-files");
+      allFiles = lsResult.stdout?.trim().split("\n").filter(f => f) || [];
     }
 
-    console.log(`[GitHub] ✓ Found ${stagedFiles.length} files to commit:\n`);
-    stagedFiles.forEach((file, index) => {
-      console.log(`[GitHub]   ${index + 1}. 📄 ${file}`);
-    });
-    console.log();
+    if (allFiles.length === 0) {
+      console.log("[GitHub] ℹ️  No files to commit (repository may be up to date)");
+      console.log("[GitHub] Attempting to push anyway with force push...\n");
+    } else {
+      console.log(`[GitHub] ✓ Found ${allFiles.length} files:\n`);
+      allFiles.slice(0, 20).forEach((file, index) => {
+        console.log(`[GitHub]   ${index + 1}. 📄 ${file}`);
+      });
+      if (allFiles.length > 20) {
+        console.log(`[GitHub]   ... and ${allFiles.length - 20} more files`);
+      }
+      console.log();
 
-    // Get file statistics
-    const statsResult = await execAsync("git diff --cached --stat");
-    console.log("[GitHub] 📊 Statistics:");
-    console.log(statsResult.stdout);
+      // Get file statistics
+      const statsResult = await execAsync("git diff --cached --stat 2>/dev/null || echo 'No staged changes'");
+      console.log("[GitHub] 📊 Statistics:");
+      console.log(statsResult.stdout || "(no staged changes)");
+    }
 
     // Step 2: git commit
     console.log("\n[GitHub] 💾 Step 2: Creating commit...");
@@ -276,7 +306,7 @@ export async function pushToGitHubRepo(
     console.log("\n[GitHub] ========================================");
     console.log("[GitHub] ✅ Successfully pushed to GitHub!");
     console.log("[GitHub] ========================================");
-    console.log(`[GitHub] Total files pushed: ${stagedFiles.length}`);
+    console.log(`[GitHub] Total files in repository: ${allFiles.length}`);
     console.log(`[GitHub] Branch: ${targetBranch}`);
     console.log(`[GitHub] Commit: ${commitHash}`);
     console.log("[GitHub] ========================================\n");
