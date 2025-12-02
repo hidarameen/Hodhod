@@ -580,16 +580,16 @@ export default function TasksPage() {
                   </>
                 )}
 
-                <div className="flex items-center justify-between p-3 rounded-lg border border-cyan-500/20 bg-gradient-to-r from-cyan-500/5 to-transparent">
+                <div className="flex items-center justify-between p-3 rounded-lg border border-blue-500/20 bg-gradient-to-r from-blue-500/5 to-transparent">
                   <div className="flex items-center gap-2">
-                    <Link2 className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
-                    <Label htmlFor="link-enabled" className="text-cyan-600 dark:text-cyan-400 font-medium">معالجة الروابط</Label>
+                    <Link2 className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                    <Label htmlFor="link-enabled" className="text-blue-600 dark:text-blue-400 font-medium">معالجة الروابط</Label>
                   </div>
                   <ToggleSwitch
                     id="link-enabled"
                     checked={formData.linkProcessingEnabled}
                     onCheckedChange={(checked) => setFormData({...formData, linkProcessingEnabled: checked})}
-                    activeColor="cyan"
+                    activeColor="blue"
                     size="sm"
                     data-testid="switch-link-enabled"
                   />
@@ -605,13 +605,13 @@ export default function TasksPage() {
                       </p>
                     </div>
 
-                    <div className="flex items-center justify-between p-3 rounded-lg border border-amber-500/20 bg-gradient-to-r from-amber-500/5 to-transparent">
-                      <Label htmlFor="link-video-download" className="text-amber-600 dark:text-amber-400">تحميل الفيديو الأصلي</Label>
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-emerald-500/20 bg-gradient-to-r from-emerald-500/5 to-transparent">
+                      <Label htmlFor="link-video-download" className="text-emerald-600 dark:text-emerald-400">تحميل الفيديو الأصلي</Label>
                       <ToggleSwitch
                         id="link-video-download"
                         checked={formData.linkVideoDownloadEnabled}
                         onCheckedChange={(checked) => setFormData({...formData, linkVideoDownloadEnabled: checked})}
-                        activeColor="amber"
+                        activeColor="emerald"
                         size="sm"
                         data-testid="switch-link-video-download"
                       />
@@ -770,7 +770,11 @@ export default function TasksPage() {
             <DialogDescription>إضافة وتعديل وحذف القواعد للمهمة</DialogDescription>
           </DialogHeader>
 
-          <Tabs value={selectedRuleType} onValueChange={setSelectedRuleType} className="w-full">
+          <Tabs value={selectedRuleType} onValueChange={(value) => {
+            setSelectedRuleType(value);
+            setRuleFormData(initialRuleFormData);
+            setRuleEditMode(false);
+          }} className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="summarize" className="flex items-center gap-2">
                 <FileText className="h-4 w-4" />
