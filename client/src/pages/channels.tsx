@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +21,8 @@ export default function ChannelsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState("all");
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [channelToDelete, setChannelToDelete] = useState<{ id: number; title: string } | null>(null);
   const [formData, setFormData] = useState({
     type: "telegram_channel",
     identifier: "",
@@ -106,6 +109,19 @@ export default function ChannelsPage() {
       title: "",
       description: "",
     });
+  };
+
+  const handleDeleteClick = (channel: any) => {
+    setChannelToDelete({ id: channel.id, title: channel.title });
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (channelToDelete) {
+      deleteMutation.mutate(channelToDelete.id);
+      setDeleteDialogOpen(false);
+      setChannelToDelete(null);
+    }
   };
 
   const getTaskCount = (channelId: number) => {
@@ -339,11 +355,7 @@ export default function ChannelsPage() {
                         <Button 
                           size="sm" 
                           variant="ghost"
-                          onClick={() => {
-                            if (window.confirm(`هل أنت متأكد من حذف "${channel.title}"؟`)) {
-                              deleteMutation.mutate(channel.id);
-                            }
-                          }}
+                          onClick={() => handleDeleteClick(channel)}
                           className="h-8 text-xs text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-500/10"
                           data-testid={`button-delete-channel-${channel.id}`}
                           disabled={deleteMutation.isPending}
@@ -359,6 +371,28 @@ export default function ChannelsPage() {
           })}
         </div>
       )}
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent className="max-w-md" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-lg font-bold">تأكيد الحذف</AlertDialogTitle>
+            <AlertDialogDescription className="text-sm text-muted-foreground">
+              هل أنت متأكد من حذف المصدر <span className="font-semibold text-foreground">"{channelToDelete?.title}"</span>؟ 
+              <br />
+              لا يمكن التراجع عن هذا الإجراء.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="gap-2">
+            <AlertDialogCancel className="m-0">إلغاء</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleConfirmDelete}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              حذف المصدر
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
