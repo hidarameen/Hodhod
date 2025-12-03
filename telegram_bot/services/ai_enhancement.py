@@ -423,3 +423,32 @@ class AIEnhancer:
 
 # Global instance
 ai_enhancer = AIEnhancer()
+
+    async def enhance_news_content(
+        self,
+        text: str,
+        content_type: str = "news"  # news, interview, broadcast, statement
+    ) -> Tuple[str, float, Dict[str, Any]]:
+        """Enhance news content with Yemen expert analysis"""
+        
+        if yemen_analyzer is None:
+            return await self.enhance_result(text, text, "summarization")
+        
+        # Analyze with Yemen expert system
+        analysis = await yemen_analyzer.analyze_news(text, source_type=content_type)
+        
+        # Enhance Arabic
+        enhanced_arabic, arabic_result = arabic_processor.enhance_arabic(analysis.get("analysis", text))
+        
+        # Verify facts
+        verification = await web_search.verify_claims(text, analysis.get("entities", {}))
+        
+        metadata = {
+            "yemen_analysis": analysis,
+            "arabic_enhancement": arabic_result,
+            "fact_verification": verification
+        }
+        
+        quality_score = verification.get("verification_score", 0.5)
+        
+        return enhanced_arabic, quality_score, metadata
