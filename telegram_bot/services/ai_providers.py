@@ -187,8 +187,8 @@ class ClaudeProvider(AIProvider):
             text_content = ""
             if response.content and len(response.content) > 0:
                 block = response.content[0]
-                if hasattr(block, 'text'):
-                    text_content = block.text
+                # Use getattr to safely access text attribute regardless of block type
+                text_content = getattr(block, 'text', '') or ''
             return text_content
         except Exception as e:
             error_logger.log_info(f"Claude error: {str(e)}")
@@ -211,7 +211,12 @@ class HuggingFaceProvider(AIProvider):
     ) -> str:
         """Generate text using HuggingFace"""
         try:
-            from huggingface_hub import AsyncInferenceClient
+            # Try to import huggingface_hub, return error message if not available
+            try:
+                from huggingface_hub import AsyncInferenceClient  # type: ignore
+            except ImportError:
+                error_logger.log_warning("huggingface_hub not installed, skipping HuggingFace provider")
+                return ""
             
             client = AsyncInferenceClient(token=self.api_key)
             
@@ -222,7 +227,7 @@ class HuggingFaceProvider(AIProvider):
                 temperature=temperature
             )
             
-            return response
+            return response or ""
         except Exception as e:
             error_logger.log_info(f"HuggingFace error: {str(e)}")
             raise

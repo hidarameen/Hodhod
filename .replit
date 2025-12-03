@@ -4,7 +4,7 @@ expertMode = true
 
 [nix]
 channel = "stable-25_05"
-packages = ["ffmpeg-full", "freetype", "lcms2", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "openjpeg", "postgresql", "tcl", "tk", "zlib"]
+packages = ["ffmpeg-full", "freetype", "lcms2", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "openjpeg", "postgresql", "tcl", "tk", "yt-dlp", "zlib", "jq"]
 
 [userenv]
 
@@ -40,6 +40,10 @@ outputType = "webview"
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 39733
+externalPort = 3000
 
 [deployment]
 deploymentTarget = "autoscale"

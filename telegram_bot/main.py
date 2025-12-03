@@ -310,19 +310,34 @@ async def initialize_bot():
 
 async def warmup_channel_peers():
     """
-    Warm up channel peers by trying to access them.
-    This helps resolve PEER_ID_INVALID errors after restart.
+    Warm up channel peers by loading all dialogs first, then verifying channels.
+    This populates Pyrogram's peer cache to resolve PEER_ID_INVALID errors.
     NOTE: Failures here don't block bot startup - they're non-critical.
     """
     log_detailed("info", "warmup", "start", "Starting channel peer warmup...")
     
     try:
-        # Get all channels from database
+        assert app is not None, "Pyrogram client not initialized"
+        
+        # Step 1: Load ALL dialogs to populate the peer cache
+        log_detailed("info", "warmup", "dialogs", "Loading all dialogs to populate peer cache...")
+        dialog_count = 0
+        cached_ids = set()
+        
+        async for dialog in app.get_dialogs():
+            dialog_count += 1
+            cached_ids.add(dialog.chat.id)
+            if dialog_count % 50 == 0:
+                log_detailed("debug", "warmup", "dialogs", f"Loaded {dialog_count} dialogs...")
+        
+        log_detailed("info", "warmup", "dialogs", f"✅ Cached {dialog_count} dialogs in peer cache")
+        
+        # Step 2: Verify channels from database are accessible
         channels = await db.get_channels()
-        log_detailed("info", "warmup", "channels", f"Found {len(channels)} channels to warm up")
+        log_detailed("info", "warmup", "channels", f"Found {len(channels)} channels to verify")
         
         if not channels:
-            log_detailed("info", "warmup", "skip", "No channels to warm up - skipping")
+            log_detailed("info", "warmup", "skip", "No channels to verify - skipping")
             return
         
         warmed_up = 0
@@ -337,31 +352,31 @@ async def warmup_channel_peers():
                 continue
             
             try:
-                # Use channel_id as-is (already in correct format from database)
                 chat_id = int(channel_id)
                 
-                # Try to get the chat - this populates the peer cache
-                assert app is not None, "Pyrogram client not initialized"
+                # Check if already in cache from dialogs
+                if chat_id in cached_ids:
+                    log_detailed("info", "warmup", "cached", f"✅ {channel_title} already in peer cache")
+                    warmed_up += 1
+                    continue
+                
+                # Try to get the chat to add it to cache
                 chat = await app.get_chat(chat_id)
                 chat_title = getattr(chat, 'title', 'Unknown')
-                chat_id_attr = getattr(chat, 'id', channel_id)
-                log_detailed("info", "warmup", "success", f"✅ Warmed up: {chat_title} ({chat_id_attr})")
+                log_detailed("info", "warmup", "success", f"✅ Warmed up: {chat_title} ({chat_id})")
                 warmed_up += 1
                 
             except Exception as e:
                 error_msg = str(e)
-                # Log the actual error for debugging
-                if 'CHANNEL_INVALID' in error_msg:
-                    log_detailed("debug", "warmup", "access_denied", f"⏭ Channel {channel_title} (ID: {channel_id}) - Bot may not have access or channel doesn't exist. Error: {error_msg[:100]}")
+                if 'CHANNEL_INVALID' in error_msg or 'PEER_ID_INVALID' in error_msg:
+                    log_detailed("warning", "warmup", "failed", f"❌ Failed to warm up {channel_title}: {error_msg[:80]}")
                 elif 'CHANNEL_PRIVATE' in error_msg or 'private' in error_msg.lower():
-                    log_detailed("debug", "warmup", "private", f"⏭ Channel {channel_title} (ID: {channel_id}) is private/inaccessible to userbot")
-                elif 'PEER_ID_INVALID' in error_msg:
-                    log_detailed("debug", "warmup", "peer_invalid", f"⏭ Channel {channel_title} (ID: {channel_id}) - Peer ID may be invalid. Consider re-adding the channel.")
+                    log_detailed("debug", "warmup", "private", f"⏭ Channel {channel_title} is private/inaccessible")
                 else:
                     log_detailed("warning", "warmup", "failed", f"❌ Failed to warm up {channel_title}: {error_msg[:80]}")
                 failed += 1
         
-        log_detailed("info", "warmup", "complete", f"✅ Warmup complete: {warmed_up} success, {failed} skipped")
+        log_detailed("info", "warmup", "complete", f"✅ Warmup complete: {warmed_up} success, {failed} failed")
         
     except Exception as e:
         # Don't let warmup errors crash the bot
