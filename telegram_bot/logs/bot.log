@@ -8654,3 +8654,15 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-03 22:16:40,249 - main - INFO - [2025-12-03 22:16:40.249] [INFO] [warmup::cached] ✅ اختبار 2 already in peer cache | {}
 2025-12-03 22:16:40,249 - main - INFO - [2025-12-03 22:16:40.249] [INFO] [warmup::complete] ✅ Warmup complete: 2 success, 0 failed | {}
 2025-12-03 22:16:40,249 - main - INFO - [2025-12-03 22:16:40.249] [INFO] [main::idle] Userbot is now running and waiting for messages... | {}
+2025-12-03 22:26:08,303 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-03 22:26:08,305 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-03 22:26:08,306 - main - INFO - [2025-12-03 22:26:08.306] [INFO] [main::entry] Bot script started | {}
+2025-12-03 22:26:08,307 - main - INFO - [2025-12-03 22:26:08.307] [INFO] [main::startup] Validating settings... | {}
+2025-12-03 22:26:08,307 - main - INFO - [2025-12-03 22:26:08.307] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-03 22:26:08,308 - main - INFO - [2025-12-03 22:26:08.308] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-03 22:26:20,600 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-03 22:26:20,601 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-03 22:26:20,602 - main - INFO - [2025-12-03 22:26:20.602] [INFO] [main::entry] Bot script started | {}
+2025-12-03 22:26:20,603 - main - INFO - [2025-12-03 22:26:20.603] [INFO] [main::startup] Validating settings... | {}
+2025-12-03 22:26:20,604 - main - INFO - [2025-12-03 22:26:20.604] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-03 22:26:20,604 - main - INFO - [2025-12-03 22:26:20.604] [INFO] [session::check] Checking for active userbot session... | {}
