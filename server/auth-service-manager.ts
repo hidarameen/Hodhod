@@ -29,7 +29,6 @@ class AuthServiceManager {
 
     console.log("[auth-service] Starting auth service...");
     
-    // Use python directly in Docker, uv in development
     const command = process.env.NODE_ENV === "production" ? "python" : "uv";
     const args = process.env.NODE_ENV === "production"
       ? ["-m", "uvicorn", "telegram_bot.auth_service:app", "--host", "127.0.0.1", "--port", "8765"]
@@ -54,7 +53,6 @@ class AuthServiceManager {
       this.process = null;
     });
 
-    // Wait for service to be ready
     await this.waitForReady();
   }
 
@@ -92,6 +90,18 @@ class AuthServiceManager {
 
   async verify2FA(phoneNumber: string, password: string) {
     return await this.client.post("/verify-2fa", { phone_number: phoneNumber, password });
+  }
+
+  async cancelLogin(phoneNumber: string) {
+    return await this.client.post("/cancel-login", { phone_number: phoneNumber });
+  }
+
+  async logout(phoneNumber?: string) {
+    return await this.client.post("/logout", { phone_number: phoneNumber || null });
+  }
+
+  async getLoginStatus(phoneNumber: string) {
+    return await this.client.get(`/login-status/${encodeURIComponent(phoneNumber)}`);
   }
 }
 

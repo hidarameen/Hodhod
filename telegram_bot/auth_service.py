@@ -8,8 +8,8 @@ import sys
 from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from typing import Optional
 
-# Add telegram_bot to path
 sys.path.insert(0, str(Path(__file__).parent))
 from services.userbot_auth import userbot_auth
 
@@ -29,6 +29,12 @@ class Verify2FARequest(BaseModel):
     phone_number: str
     password: str
 
+class CancelRequest(BaseModel):
+    phone_number: str
+
+class LogoutRequest(BaseModel):
+    phone_number: Optional[str] = None
+
 @app.post("/start-login")
 async def start_login(req: LoginRequest):
     result = await userbot_auth.start_login(req.phone_number)
@@ -42,6 +48,21 @@ async def verify_code(req: VerifyCodeRequest):
 @app.post("/verify-2fa")
 async def verify_2fa(req: Verify2FARequest):
     result = await userbot_auth.verify_2fa(req.phone_number, req.password)
+    return result
+
+@app.post("/cancel-login")
+async def cancel_login(req: CancelRequest):
+    result = await userbot_auth.cancel_login(req.phone_number)
+    return result
+
+@app.post("/logout")
+async def logout(req: LogoutRequest):
+    result = await userbot_auth.logout(req.phone_number)
+    return result
+
+@app.get("/login-status/{phone_number}")
+async def get_login_status(phone_number: str):
+    result = await userbot_auth.get_login_status(phone_number)
     return result
 
 @app.get("/health")

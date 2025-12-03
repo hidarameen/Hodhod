@@ -20,7 +20,9 @@ import {
   LogOut,
   CheckCircle,
   AlertCircle,
-  Smartphone
+  Smartphone,
+  XCircle,
+  RefreshCw
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -43,12 +45,12 @@ export default function SettingsPage() {
     autoBackup: true
   });
   
-  // Userbot login state
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otpCode, setOtpCode] = useState("");
   const [twoFaPassword, setTwoFaPassword] = useState("");
   const [loginStep, setLoginStep] = useState<"phone" | "otp" | "2fa">("phone");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [phoneError, setPhoneError] = useState("");
 
   const { data: admins = [], isLoading: loadingAdmins } = useQuery({
     queryKey: ["admins"],
@@ -60,14 +62,13 @@ export default function SettingsPage() {
     queryFn: () => api.getSettings(),
   });
 
-  // Userbot session status
   const { data: userbotStatus, isLoading: loadingUserbot, refetch: refetchUserbot } = useQuery({
     queryKey: ["userbot-status"],
     queryFn: async () => {
       const res = await fetch("/api/userbot/status");
       return res.json();
     },
-    refetchInterval: 10000, // Check every 10 seconds
+    refetchInterval: 10000,
   });
 
   const createAdminMutation = useMutation({
@@ -125,10 +126,32 @@ export default function SettingsPage() {
     }
   };
 
-  // Userbot login handlers
+  const validatePhoneNumber = (phone: string): boolean => {
+    const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
+    const phoneRegex = /^\+?[1-9]\d{6,14}$/;
+    return phoneRegex.test(cleanPhone);
+  };
+
+  const resetLoginForm = () => {
+    setPhoneNumber("");
+    setOtpCode("");
+    setTwoFaPassword("");
+    setLoginStep("phone");
+    setPhoneError("");
+  };
+
   const handleStartLogin = async () => {
+    setPhoneError("");
+    
     if (!phoneNumber) {
+      setPhoneError("يرجى إدخال رقم الهاتف");
       toast.error("يرجى إدخال رقم الهاتف");
+      return;
+    }
+    
+    if (!validatePhoneNumber(phoneNumber)) {
+      setPhoneError("رقم الهاتف غير صالح - تأكد من إضافة رمز الدولة");
+      toast.error("رقم الهاتف غير صالح");
       return;
     }
     
@@ -146,6 +169,9 @@ export default function SettingsPage() {
         setLoginStep("otp");
       } else if (data.status === "error") {
         toast.error(data.message || "فشل إرسال الرمز");
+        if (data.error === "phone_invalid") {
+          setPhoneError("رقم الهاتف غير صحيح");
+        }
       }
     } catch (error) {
       toast.error("حدث خطأ في الاتصال");
@@ -171,15 +197,16 @@ export default function SettingsPage() {
       
       if (data.status === "success") {
         toast.success(data.message || "تم تسجيل الدخول بنجاح");
-        setLoginStep("phone");
-        setPhoneNumber("");
-        setOtpCode("");
+        resetLoginForm();
         refetchUserbot();
       } else if (data.status === "2fa_required") {
         toast.info(data.message || "يتطلب كلمة مرور التحقق بخطوتين");
         setLoginStep("2fa");
       } else if (data.status === "error") {
         toast.error(data.message || "رمز التحقق غير صحيح");
+        if (data.error === "session_expired" || data.error === "code_expired") {
+          resetLoginForm();
+        }
       }
     } catch (error) {
       toast.error("حدث خطأ في الاتصال");
@@ -205,13 +232,13 @@ export default function SettingsPage() {
       
       if (data.status === "success") {
         toast.success(data.message || "تم تسجيل الدخول بنجاح");
-        setLoginStep("phone");
-        setPhoneNumber("");
-        setOtpCode("");
-        setTwoFaPassword("");
+        resetLoginForm();
         refetchUserbot();
       } else if (data.status === "error") {
         toast.error(data.message || "كلمة المرور غير صحيحة");
+        if (data.error === "session_expired") {
+          resetLoginForm();
+        }
       }
     } catch (error) {
       toast.error("حدث خطأ في الاتصال");
@@ -220,7 +247,30 @@ export default function SettingsPage() {
     }
   };
 
+  const handleCancelLogin = async () => {
+    if (!phoneNumber) {
+      resetLoginForm();
+      return;
+    }
+    
+    setIsLoggingIn(true);
+    try {
+      await fetch("/api/userbot/login/cancel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phoneNumber }),
+      });
+      toast.info("تم إلغاء عملية تسجيل الدخول");
+    } catch (error) {
+      console.error("Cancel error:", error);
+    } finally {
+      resetLoginForm();
+      setIsLoggingIn(false);
+    }
+  };
+
   const handleLogout = async () => {
+    setIsLoggingIn(true);
     try {
       const res = await fetch("/api/userbot/logout", { method: "POST" });
       const data = await res.json();
@@ -231,6 +281,8 @@ export default function SettingsPage() {
       }
     } catch (error) {
       toast.error("فشل تسجيل الخروج");
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
@@ -238,6 +290,8 @@ export default function SettingsPage() {
     if (!username) return "?";
     return username.replace("@", "").charAt(0).toUpperCase();
   };
+
+  const isConnected = userbotStatus?.status === "connected" || userbotStatus?.status === "active";
 
   return (
     <div className="space-y-6 md:space-y-8 max-w-4xl mx-auto">
@@ -261,7 +315,6 @@ export default function SettingsPage() {
         </Button>
       </div>
 
-      {/* Userbot Login */}
       <Card className="border shadow-sm border-primary/30">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-foreground">
@@ -276,8 +329,7 @@ export default function SettingsPage() {
             <div className="flex justify-center p-4">
               <Loader className="h-6 w-6 animate-spin text-primary" />
             </div>
-          ) : userbotStatus?.status === "active" ? (
-            // Logged in state
+          ) : isConnected ? (
             <div className="space-y-4">
               <div className="flex items-center gap-3 p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
                 <CheckCircle className="h-6 w-6 text-green-500" />
@@ -286,20 +338,31 @@ export default function SettingsPage() {
                   <p className="text-sm text-muted-foreground">
                     رقم الهاتف: {userbotStatus.phoneNumber}
                   </p>
+                  {userbotStatus.lastLoginAt && (
+                    <p className="text-xs text-muted-foreground">
+                      آخر تسجيل دخول: {new Date(userbotStatus.lastLoginAt).toLocaleString('ar')}
+                    </p>
+                  )}
                 </div>
                 <Button 
                   variant="outline" 
                   size="sm"
                   onClick={handleLogout}
+                  disabled={isLoggingIn}
                   className="text-red-600 border-red-500/30 hover:bg-red-500/10"
                   data-testid="button-userbot-logout"
                 >
-                  <LogOut className="h-4 w-4 mr-1" /> تسجيل خروج
+                  {isLoggingIn ? (
+                    <Loader className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <>
+                      <LogOut className="h-4 w-4 mr-1" /> تسجيل خروج
+                    </>
+                  )}
                 </Button>
               </div>
             </div>
           ) : (
-            // Login flow
             <div className="space-y-4">
               <div className="flex items-center gap-2 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
                 <AlertCircle className="h-5 w-5 text-yellow-500" />
@@ -318,16 +381,23 @@ export default function SettingsPage() {
                         id="phone"
                         type="tel"
                         value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
+                        onChange={(e) => {
+                          setPhoneNumber(e.target.value);
+                          setPhoneError("");
+                        }}
                         placeholder="+966512345678"
-                        className="pl-10"
+                        className={`pl-10 ${phoneError ? 'border-red-500' : ''}`}
                         dir="ltr"
                         data-testid="input-phone-number"
                       />
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      مثال: +966512345678 أو +201012345678
-                    </p>
+                    {phoneError ? (
+                      <p className="text-xs text-red-500 mt-1">{phoneError}</p>
+                    ) : (
+                      <p className="text-xs text-muted-foreground mt-1">
+                        مثال: +966512345678 أو +201012345678
+                      </p>
+                    )}
                   </div>
                   <Button 
                     onClick={handleStartLogin}
@@ -351,6 +421,9 @@ export default function SettingsPage() {
                     <p className="text-sm text-blue-600 dark:text-blue-400">
                       تم إرسال رمز التحقق إلى تلغرام أو الرسائل النصية
                     </p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      رقم الهاتف: {phoneNumber}
+                    </p>
                   </div>
                   <div>
                     <Label htmlFor="otp">رمز التحقق</Label>
@@ -358,7 +431,7 @@ export default function SettingsPage() {
                       id="otp"
                       type="text"
                       value={otpCode}
-                      onChange={(e) => setOtpCode(e.target.value)}
+                      onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
                       placeholder="12345"
                       className="mt-1 text-center text-2xl tracking-widest"
                       maxLength={6}
@@ -369,21 +442,32 @@ export default function SettingsPage() {
                   <div className="flex gap-2">
                     <Button 
                       variant="outline"
-                      onClick={() => setLoginStep("phone")}
+                      onClick={handleCancelLogin}
                       className="flex-1"
+                      disabled={isLoggingIn}
                     >
-                      رجوع
+                      <XCircle className="h-4 w-4 mr-1" />
+                      إلغاء
                     </Button>
                     <Button 
                       onClick={handleVerifyCode}
                       className="flex-1"
-                      disabled={isLoggingIn}
+                      disabled={isLoggingIn || !otpCode}
                       data-testid="button-verify-code"
                     >
                       {isLoggingIn && <Loader className="h-4 w-4 mr-2 animate-spin" />}
                       تحقق
                     </Button>
                   </div>
+                  <Button 
+                    variant="ghost"
+                    onClick={handleStartLogin}
+                    className="w-full text-sm"
+                    disabled={isLoggingIn}
+                  >
+                    <RefreshCw className="h-3 w-3 mr-1" />
+                    إعادة إرسال الرمز
+                  </Button>
                 </div>
               )}
 
@@ -409,15 +493,17 @@ export default function SettingsPage() {
                   <div className="flex gap-2">
                     <Button 
                       variant="outline"
-                      onClick={() => setLoginStep("otp")}
+                      onClick={handleCancelLogin}
                       className="flex-1"
+                      disabled={isLoggingIn}
                     >
-                      رجوع
+                      <XCircle className="h-4 w-4 mr-1" />
+                      إلغاء
                     </Button>
                     <Button 
                       onClick={handleVerify2FA}
                       className="flex-1"
-                      disabled={isLoggingIn}
+                      disabled={isLoggingIn || !twoFaPassword}
                       data-testid="button-verify-2fa"
                     >
                       {isLoggingIn && <Loader className="h-4 w-4 mr-2 animate-spin" />}
@@ -431,7 +517,6 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      {/* Admin Management */}
       <Card className="border shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-foreground">
@@ -530,7 +615,6 @@ export default function SettingsPage() {
       </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Database Config */}
         <Card className="border shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-foreground">
@@ -559,7 +643,6 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        {/* System Notifications */}
         <Card className="border shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-foreground">
@@ -580,8 +663,8 @@ export default function SettingsPage() {
             </div>
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label className="text-foreground">إكمال المهام</Label>
-                <p className="text-xs text-muted-foreground">ملخص العمليات اليومية</p>
+                <Label className="text-foreground">إتمام المهام</Label>
+                <p className="text-xs text-muted-foreground">إشعار عند إتمام مهام التوجيه</p>
               </div>
               <Switch 
                 checked={notificationSettings.taskCompletion}

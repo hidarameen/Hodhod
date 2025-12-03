@@ -15,17 +15,14 @@ const handleError = (res: Response, error: unknown, message: string = "An error 
 export async function registerRoutes(httpServer: Server, app: Express): Promise<Server> {
   // ============ Authentication ============
   
-  // Admin Login - استخدام Secrets
   app.post("/api/auth/admin-login", async (req: Request, res: Response) => {
     try {
       const { username, password } = req.body;
       
-      // التحقق من وجود credentials
       if (!username || !password) {
         return res.status(400).json({ error: "Username and password are required" });
       }
       
-      // التحقق من الـ secrets
       const secretUsername = process.env.ADMIN_USERNAME;
       const secretPassword = process.env.ADMIN_PASSWORD;
       
@@ -34,12 +31,10 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
         return res.status(500).json({ error: "Admin authentication not configured" });
       }
       
-      // مقارنة مباشرة (الـ secrets محمية في Replit)
       if (username !== secretUsername || password !== secretPassword) {
         return res.status(401).json({ error: "Invalid credentials" });
       }
       
-      // تسجيل دخول ناجح
       res.json({ 
         admin: true,
         username: secretUsername,
@@ -235,7 +230,6 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   });
 
   // ============ AI Config ============
-  // AI Providers
   app.get("/api/ai/providers", async (req: Request, res: Response) => {
     try {
       const providers = await storage.getAiProviders();
@@ -338,7 +332,6 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
 
   // ============ Userbot ============
   
-  // Get userbot status
   app.get("/api/userbot/status", async (req: Request, res: Response) => {
     try {
       const session = await storage.getActiveUserbotSession();
@@ -356,49 +349,46 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
-  // Start login (alias for request)
   app.post("/api/userbot/login/start", async (req: Request, res: Response) => {
     try {
       const { phoneNumber } = req.body;
       if (!phoneNumber) {
         return res.status(400).json({ status: "error", message: "رقم الهاتف مطلوب" });
       }
+      
+      const phoneRegex = /^\+?[1-9]\d{6,14}$/;
+      const cleanPhone = phoneNumber.replace(/[\s-]/g, '');
+      if (!phoneRegex.test(cleanPhone)) {
+        return res.status(400).json({ status: "error", message: "رقم الهاتف غير صالح" });
+      }
+      
       const response = await authServiceManager.startLogin(phoneNumber);
       res.json(response.data);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login start error:", error);
-      res.json({ status: "error", message: "فشل في إرسال رمز التحقق" });
+      const errorMessage = error?.response?.data?.message || "فشل في إرسال رمز التحقق";
+      res.json({ status: "error", message: errorMessage });
     }
   });
 
-  // Verify OTP code
   app.post("/api/userbot/login/verify", async (req: Request, res: Response) => {
     try {
       const { phoneNumber, code } = req.body;
       if (!phoneNumber || !code) {
         return res.status(400).json({ status: "error", message: "رقم الهاتف ورمز التحقق مطلوبان" });
       }
+      
       const response = await authServiceManager.verifyCode(phoneNumber, code);
+      
       if (response.data.status === "success" && response.data.session_string) {
         await storage.activateUserbotSession(phoneNumber, response.data.session_string);
       }
+      
       res.json(response.data);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Verify code error:", error);
-      res.json({ status: "error", message: "رمز التحقق غير صحيح" });
-    }
-  });
-
-  app.post("/api/userbot/login/request", async (req: Request, res: Response) => {
-    try {
-      const { phoneNumber } = req.body;
-      if (!phoneNumber) {
-        return res.status(400).json({ error: "Phone number is required" });
-      }
-      const response = await authServiceManager.startLogin(phoneNumber);
-      res.json(response.data);
-    } catch (error) {
-      handleError(res, error, "Failed to request auth");
+      const errorMessage = error?.response?.data?.message || "رمز التحقق غير صحيح";
+      res.json({ status: "error", message: errorMessage });
     }
   });
 
@@ -406,21 +396,50 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     try {
       const { phoneNumber, password } = req.body;
       if (!phoneNumber || !password) {
-        return res.status(400).json({ error: "Phone number and password are required" });
+        return res.status(400).json({ status: "error", message: "رقم الهاتف وكلمة المرور مطلوبان" });
       }
+      
       const response = await authServiceManager.verify2FA(phoneNumber, password);
+      
       if (response.data.status === "success" && response.data.session_string) {
         await storage.activateUserbotSession(phoneNumber, response.data.session_string);
       }
+      
       res.json(response.data);
-    } catch (error) {
-      handleError(res, error, "Failed to verify 2FA");
+    } catch (error: any) {
+      console.error("2FA verification error:", error);
+      const errorMessage = error?.response?.data?.message || "كلمة المرور غير صحيحة";
+      res.json({ status: "error", message: errorMessage });
+    }
+  });
+
+  app.post("/api/userbot/login/cancel", async (req: Request, res: Response) => {
+    try {
+      const { phoneNumber } = req.body;
+      if (!phoneNumber) {
+        return res.status(400).json({ status: "error", message: "رقم الهاتف مطلوب" });
+      }
+      
+      const response = await authServiceManager.cancelLogin(phoneNumber);
+      res.json(response.data);
+    } catch (error: any) {
+      console.error("Cancel login error:", error);
+      res.json({ status: "error", message: "فشل في إلغاء عملية تسجيل الدخول" });
     }
   });
 
   app.post("/api/userbot/logout", async (req: Request, res: Response) => {
     try {
+      const session = await storage.getActiveUserbotSession();
+      
+      try {
+        await authServiceManager.logout(session?.phoneNumber);
+      } catch (authError) {
+        console.warn("Auth service logout warning:", authError);
+      }
+      
       await storage.deactivateUserbotSession();
+      
       res.json({ status: "success", message: "تم تسجيل الخروج بنجاح" });
     } catch (error) {
       handleError(res, error, "Failed to logout");
@@ -498,7 +517,6 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
-  // GitHub Repository Linking
   app.get("/api/github/linked-repo", async (req: Request, res: Response) => {
     try {
       const settings = await storage.getGithubSettings();

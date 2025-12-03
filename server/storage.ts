@@ -27,23 +27,29 @@ import type {
 } from "@shared/schema";
 
 function getLocalDatabaseUrl(): string {
-  if (process.env.PGHOST && process.env.PGUSER && process.env.PGPASSWORD && process.env.PGDATABASE) {
-    const port = process.env.PGPORT || "5432";
-    return `postgresql://${process.env.PGUSER}:${process.env.PGPASSWORD}@${process.env.PGHOST}:${port}/${process.env.PGDATABASE}`;
-  }
-  
-  const dbUrl = process.env.DATABASE_URL || "";
+  let dbUrl = process.env.DATABASE_URL || "";
   if (!dbUrl) return "";
   
   if (dbUrl.includes(',')) {
-    const match = dbUrl.match(/^(postgresql|postgres):\/\/([^@]+)@([^\/,]+)/);
-    if (match) {
-      const [, protocol, credentials, host] = match;
-      const dbMatch = dbUrl.match(/\/([^?]+)/);
-      const db = dbMatch ? dbMatch[1] : "";
-      console.log('[DB] Using primary host from multi-host URL');
-      return `${protocol}://${credentials}@${host}/${db}`;
+    const atIndex = dbUrl.lastIndexOf('@');
+    if (atIndex !== -1) {
+      const beforeAt = dbUrl.substring(0, atIndex + 1);
+      const afterAt = dbUrl.substring(atIndex + 1);
+      
+      const slashIndex = afterAt.indexOf('/');
+      if (slashIndex !== -1) {
+        const hostsSection = afterAt.substring(0, slashIndex);
+        const pathSection = afterAt.substring(slashIndex);
+        
+        const primaryHost = hostsSection.split(',')[0].trim();
+        dbUrl = beforeAt + primaryHost + pathSection;
+        console.log('[DB] Using primary host from multi-host URL');
+      }
     }
+  }
+  
+  if (!dbUrl.includes('sslmode=')) {
+    dbUrl += (dbUrl.includes('?') ? '&' : '?') + 'sslmode=require';
   }
   
   return dbUrl;
@@ -122,6 +128,7 @@ export interface IStorage {
   createUserbotSession(data: InsertUserbotSession): Promise<UserbotSession>;
   activateUserbotSession(phoneNumber: string, sessionString: string): Promise<void>;
   deactivateUserbotSession(): Promise<void>;
+  cancelPendingLogin(phoneNumber: string): Promise<void>;
 
   // GitHub Settings
   getGithubSettings(): Promise<any>;
@@ -470,9 +477,27 @@ export class DbStorage implements IStorage {
         isActive: false,
         isPrimary: false,
         status: "expired",
+        sessionString: null,
+        loginState: null,
         updatedAt: new Date(),
       })
       .where(eq(schema.userbotSessions.isActive, true));
+  }
+
+  async cancelPendingLogin(phoneNumber: string): Promise<void> {
+    await database
+      .update(schema.userbotSessions)
+      .set({
+        status: "cancelled",
+        loginState: null,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(schema.userbotSessions.phoneNumber, phoneNumber),
+          sql`${schema.userbotSessions.status} IN ('awaiting_code', 'awaiting_password')`
+        )
+      );
   }
 
   // GitHub Settings

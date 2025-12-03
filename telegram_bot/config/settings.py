@@ -13,39 +13,46 @@ load_dotenv()
 
 def get_database_url() -> str:
     """
-    Get database URL, preferring local Replit database if available.
-    Falls back to DATABASE_URL with multi-host sanitization.
+    Get database URL from DATABASE_URL secret.
+    Handles multi-host URLs by using primary host only.
     """
-    pghost = os.getenv("PGHOST")
-    pguser = os.getenv("PGUSER")
-    pgpassword = os.getenv("PGPASSWORD")
-    pgdatabase = os.getenv("PGDATABASE")
-    pgport = os.getenv("PGPORT", "5432")
-    
-    if pghost and pguser and pgpassword and pgdatabase:
-        local_url = f"postgresql://{pguser}:{pgpassword}@{pghost}:{pgport}/{pgdatabase}"
-        print(f"[Settings] Using local Replit database")
-        return local_url
+    from urllib.parse import urlparse, urlunparse
     
     url = os.getenv("DATABASE_URL", "")
     if not url:
         return url
     
     if ',' not in url:
+        if 'sslmode=' not in url:
+            url += ('&' if '?' in url else '?') + 'sslmode=require'
+        print(f"[Settings] Using DATABASE_URL")
         return url
     
-    pattern = r'^(postgresql|postgres)://([^@]+)@([^/]+)/(.+)$'
-    match = re.match(pattern, url)
-    
-    if not match:
+    try:
+        parsed = urlparse(url)
+        hosts = parsed.netloc.split('@')[-1]
+        primary_host = hosts.split(',')[0].strip()
+        
+        user_pass = parsed.netloc.split('@')[0] if '@' in parsed.netloc else ''
+        new_netloc = f"{user_pass}@{primary_host}" if user_pass else primary_host
+        
+        sanitized_url = urlunparse((
+            parsed.scheme,
+            new_netloc,
+            parsed.path,
+            parsed.params,
+            parsed.query,
+            parsed.fragment
+        ))
+        
+        if 'sslmode=' not in sanitized_url:
+            sanitized_url += ('&' if '?' in sanitized_url else '?') + 'sslmode=require'
+        
+        print(f"[Settings] Using primary host from multi-host DATABASE_URL")
+        return sanitized_url
+    except Exception as e:
+        print(f"[Settings] Error parsing DATABASE_URL: {e}")
         return url
-    
-    protocol, credentials, hosts, rest = match.groups()
-    primary_host = hosts.split(',')[0].strip()
-    sanitized_url = f"{protocol}://{credentials}@{primary_host}/{rest}"
-    
-    print(f"[Settings] Using primary host from multi-host DATABASE_URL")
-    return sanitized_url
 
 
 class Settings:
