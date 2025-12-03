@@ -218,56 +218,116 @@ export default function TasksPage() {
     },
   });
 
-  const createRuleMutation = useMutation({
-    mutationFn: ({ taskId, data }: { taskId: number; data: any }) => api.addTaskRule(taskId, data),
-    onSuccess: () => {
-      toast.success("تم إنشاء القاعدة بنجاح!");
-      refetchRules();
-      setRuleFormData(initialRuleFormData);
-      setRuleEditMode(false);
-    },
-    onError: (error: any) => {
-      toast.error(error.message || "فشل إنشاء القاعدة");
-    },
-  });
+  // Function to fetch task rules and update local state
+  const fetchTaskRules = async (taskId: number) => {
+    try {
+      const rules = await api.getTaskRules(taskId);
+      setTaskRules(rules || []);
+    } catch (error) {
+      console.error("Failed to fetch task rules:", error);
+      setTaskRules([]);
+    }
+  };
 
-  const updateRuleMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: any }) => api.updateTaskRule(id, data),
-    onSuccess: () => {
-      toast.success("تم تحديث القاعدة بنجاح!");
-      refetchRules();
-      setRuleFormData(initialRuleFormData);
-      setRuleEditMode(false);
-    },
-    onError: (error: any) => {
-      toast.error(error.message || "فشل تحديث القاعدة");
-    },
-  });
-
+  // Delete a rule
   const deleteRuleMutation = useMutation({
     mutationFn: (id: number) => api.deleteTaskRule(id),
     onSuccess: () => {
-      toast.success("تم حذف القاعدة بنجاح");
-      refetchRules();
+      queryClient.invalidateQueries({ queryKey: ["taskRules", selectedTaskId] });
+      // Refresh local rules state
+      if (selectedTaskId) {
+        fetchTaskRules(selectedTaskId);
+      }
+      toast({
+        title: t("success"),
+        description: "تم حذف القاعدة بنجاح",
+        variant: "default",
+      });
     },
     onError: () => {
-      toast.error("فشل في حذف القاعدة");
+      toast({
+        title: t("error"),
+        description: "فشل في حذف القاعدة",
+        variant: "destructive",
+      });
     },
   });
 
+  // Toggle rule status
   const toggleRuleMutation = useMutation({
-    mutationFn: (id: number) => {
-      const rule = taskRules.find(r => r.id === id);
-      return api.updateTaskRule(id, { isActive: !rule?.isActive });
-    },
+    mutationFn: (id: number) => api.toggleTaskRule(id),
     onSuccess: () => {
-      toast.success("تم تحديث حالة القاعدة");
-      refetchRules();
+      queryClient.invalidateQueries({ queryKey: ["taskRules", selectedTaskId] });
+      // Refresh local rules state
+      if (selectedTaskId) {
+        fetchTaskRules(selectedTaskId);
+      }
     },
     onError: () => {
-      toast.error("فشل في تحديث حالة القاعدة");
+      toast({
+        title: t("error"),
+        description: "فشل في تغيير حالة القاعدة",
+        variant: "destructive",
+      });
     },
   });
+
+  // Update rule
+  const updateRuleMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: any }) => api.updateTaskRule(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["taskRules", selectedTaskId] });
+      // Refresh local rules state
+      if (selectedTaskId) {
+        fetchTaskRules(selectedTaskId);
+      }
+      setEditingRule(null);
+      setShowRuleDialog(false);
+      toast({
+        title: t("success"),
+        description: "تم تحديث القاعدة بنجاح",
+        variant: "default",
+      });
+    },
+    onError: () => {
+      toast({
+        title: t("error"),
+        description: "فشل في تحديث القاعدة",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Create new rule
+  const createRuleMutation = useMutation({
+    mutationFn: (data: RuleFormData) => {
+      if (!selectedTaskId) throw new Error("No task selected");
+      return api.createTaskRule(selectedTaskId, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["taskRules", selectedTaskId] });
+      // Refresh local rules state
+      if (selectedTaskId) {
+        fetchTaskRules(selectedTaskId);
+      }
+      setShowRuleDialog(false);
+      setNewRule({ name: "", prompt: "", type: "summarize", priority: 1, isActive: true });
+      toast({
+        title: t("success"),
+        description: "تم إضافة القاعدة بنجاح",
+        variant: "default",
+      });
+    },
+    onError: (error) => {
+      console.error("Error creating rule:", error);
+      toast({
+        title: t("error"),
+        description: "فشل في إضافة القاعدة",
+        variant: "destructive",
+      });
+    },
+  });
+
 
   // Load rules for a specific task
   const loadTaskRules = async (taskId: number) => {
@@ -1151,7 +1211,7 @@ export default function TasksPage() {
                       <Input
                         value={ruleFormData.name}
                         onChange={(e) => setRuleFormData({...ruleFormData, name: e.target.value})}
-                        placeholder="مثل: تلخيص الأخبار"
+                        placeholder="مثل: تلخيص مختصر للأخبار"
                         className="mt-1"
                         data-testid="input-rule-name"
                       />

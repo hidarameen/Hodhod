@@ -106,6 +106,12 @@ export const aiRules = pgTable("ai_rules", {
 // Export aiRules as taskRules for compatibility
 export const taskRules = aiRules;
 
+// Additional exports for backward compatibility
+export { forwardingTasks as tasks };
+export { aiProviders as providers };
+export { aiModels as models };
+export { botConfig as settings };
+
 // Task Logs
 export const taskLogs = pgTable("task_logs", {
   id: serial("id").primaryKey(),

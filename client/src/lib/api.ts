@@ -149,55 +149,46 @@ class ApiClient {
   }
 
   // AI Rules
-  async getTaskRules(taskId: number) {
-    return this.request<any[]>(`/tasks/${taskId}/rules`);
-  }
+  async getTaskRules(taskId: number): Promise<any[]> {
+    const response = await fetch(`/api/tasks/${taskId}/rules`);
+    if (!response.ok) throw new Error('Failed to fetch task rules');
+    return response.json();
+  },
 
-  async createRule(taskId: number, data: any) {
-    return this.request<any>(`/tasks/${taskId}/rules`, {
-      method: "POST",
-      body: JSON.stringify(data),
+  async createTaskRule(taskId: number, rule: any): Promise<any> {
+    const response = await fetch(`/api/tasks/${taskId}/rules`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(rule),
     });
-  }
+    if (!response.ok) throw new Error('Failed to create task rule');
+    return response.json();
+  },
 
-  async addTaskRule(taskId: number, data: any) {
-    return this.request<any>(`/tasks/${taskId}/rules`, {
-      method: "POST",
-      body: JSON.stringify(data),
+  async updateTaskRule(id: number, rule: any): Promise<any> {
+    const response = await fetch(`/api/task-rules/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(rule),
     });
-  }
+    if (!response.ok) throw new Error('Failed to update task rule');
+    return response.json();
+  },
 
-  async updateRule(ruleId: number, data: any) {
-    return this.request<any>(`/rules/${ruleId}`, {
-      method: "PATCH",
-      body: JSON.stringify(data),
+  async deleteTaskRule(id: number): Promise<void> {
+    const response = await fetch(`/api/task-rules/${id}`, {
+      method: 'DELETE',
     });
-  }
+    if (!response.ok) throw new Error('Failed to delete task rule');
+  },
 
-  async updateTaskRule(ruleId: number, data: any) {
-    return this.request<any>(`/task-rules/${ruleId}`, {
-      method: "PUT",
-      body: JSON.stringify(data),
+  async toggleTaskRule(id: number): Promise<any> {
+    const response = await fetch(`/api/rules/${id}/toggle`, {
+      method: 'POST',
     });
-  }
-
-  async toggleRule(ruleId: number) {
-    return this.request<any>(`/rules/${ruleId}/toggle`, {
-      method: "POST",
-    });
-  }
-
-  async deleteRule(ruleId: number) {
-    return this.request<{ message: string }>(`/rules/${ruleId}`, {
-      method: "DELETE",
-    });
-  }
-
-  async deleteTaskRule(ruleId: number) {
-    return this.request<{ message: string }>(`/task-rules/${ruleId}`, {
-      method: "DELETE",
-    });
-  }
+    if (!response.ok) throw new Error('Failed to toggle task rule');
+    return response.json();
+  },
 
   // Admins
   async getAdmins() {

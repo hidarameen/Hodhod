@@ -7,7 +7,7 @@ import { insertUserSchema, insertForwardingTaskSchema, insertChannelSchema, inse
 import { z } from "zod";
 import { pushToGitHub, getGitHubInfo, listGitHubRepos, pushToGitHubRepo, getBranches, getFileChanges } from "./github-sync";
 import { database as db } from "./storage";
-import { tasks, channels, providers, models, settings, errorLogs, taskRules } from "../shared/schema";
+import { forwardingTasks as tasks, channels, aiProviders as providers, aiModels as models, botConfig as settings, errorLogs, aiRules as taskRules } from "../shared/schema";
 import { eq, desc } from "drizzle-orm";
 
 const handleError = (res: Response, error: unknown, message: string = "An error occurred") => {
