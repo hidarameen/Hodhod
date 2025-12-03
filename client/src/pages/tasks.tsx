@@ -3,30 +3,30 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Play, 
-  Pause, 
-  Edit, 
-  Trash2, 
-  Plus, 
+import {
+  Play,
+  Pause,
+  Edit,
+  Trash2,
+  Plus,
   Loader,
   Settings2,
   FileText,
@@ -36,7 +36,10 @@ import {
   Sparkles,
   Bot,
   Link2,
-  ArrowRight
+  ArrowRight,
+  Brain,
+  Edit2 as EditIcon, // Renamed to avoid conflict with Edit button
+  Switch // Added Switch component import
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -104,6 +107,23 @@ export default function TasksPage() {
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
   const [selectedRuleType, setSelectedRuleType] = useState<string>("summarize");
 
+  // State for multiple rules management
+  const [showRules, setShowRules] = useState(false);
+  const [isDeleting, setIsDeleting] = useState<number | null>(null);
+  const [taskRules, setTaskRules] = useState<any[]>([]);
+  const [showRuleDialog, setShowRuleDialog] = useState(false);
+  const [editingRule, setEditingRule] = useState<any | null>(null);
+  const [newRule, setNewRule] = useState<RuleFormData>({
+    name: "",
+    prompt: "",
+    type: "summarize",
+    priority: 1,
+    isActive: true
+  });
+  const [editingTask, setEditingTask] = useState<any>(null); // State to hold the task being edited for rule management
+  const [isDialogOpen, setIsDialogOpen] = useState(false); // State for the main task dialog
+
+
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["tasks"],
     queryFn: () => api.getTasks(),
@@ -124,17 +144,24 @@ export default function TasksPage() {
     queryFn: () => api.getAiModels(),
   });
 
-  const { data: taskRules = [], refetch: refetchRules } = useQuery({
+  const { data: fetchedTaskRules = [], refetch: refetchRules } = useQuery({
     queryKey: ["task-rules", selectedTaskId],
     queryFn: () => selectedTaskId ? api.getTaskRules(selectedTaskId) : Promise.resolve([]),
     enabled: !!selectedTaskId,
   });
 
-  const summarizationModels = models.filter(m => 
+  // Effect to set taskRules when fetchedTaskRules changes
+  useEffect(() => {
+    if (fetchedTaskRules) {
+      setTaskRules(fetchedTaskRules);
+    }
+  }, [fetchedTaskRules]);
+
+  const summarizationModels = models.filter(m =>
     formData.summarizationProviderId ? m.providerId === formData.summarizationProviderId : true
   );
 
-  const videoModels = models.filter(m => 
+  const videoModels = models.filter(m =>
     formData.videoAiProviderId ? m.providerId === formData.videoAiProviderId : true
   );
 
@@ -164,7 +191,7 @@ export default function TasksPage() {
       setEditMode(false);
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
-      refetchRules();
+      refetchRules(); // Refetch rules if they were open
     },
     onError: (error: any) => {
       toast.error(error.message || "فشل تحديث المهمة");
@@ -179,99 +206,116 @@ export default function TasksPage() {
     },
   });
 
-  const deleteMutation = useMutation({
+  const deleteTaskMutation = useMutation({
     mutationFn: (id: number) => api.deleteTask(id),
     onSuccess: () => {
-      toast.success("تم حذف المهمة");
+      toast.success("تم حذف المهمة بنجاح");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
     },
-  });
-
-  const createRuleMutation = useMutation({
-    mutationFn: ({ taskId, data }: { taskId: number; data: any }) => api.createRule(taskId, data),
-    onMutate: async ({ taskId, data }) => {
-      await queryClient.cancelQueries({ queryKey: ["task-rules", taskId] });
-      const prev = queryClient.getQueryData(["task-rules", taskId]);
-      queryClient.setQueryData(["task-rules", taskId], (old: any) => [
-        ...(old || []),
-        { ...data, id: Date.now() }
-      ]);
-      return { prev };
-    },
-    onSuccess: () => {
-      toast.success("✅ تم إنشاء القاعدة بنجاح");
-      refetchRules();
-      setRuleFormData(initialRuleFormData);
-      setRuleEditMode(false);
-    },
-    onError: (error, _, context) => {
-      queryClient.setQueryData(["task-rules", selectedTaskId], context?.prev);
-      toast.error(error.message || "فشل إنشاء القاعدة");
+    onError: () => {
+      toast.error("فشل في حذف المهمة");
     },
   });
 
-  const updateRuleMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: any }) => api.updateRule(id, data),
-    onMutate: async ({ id, data }) => {
-      await queryClient.cancelQueries({ queryKey: ["task-rules", selectedTaskId] });
-      const prev = queryClient.getQueryData(["task-rules", selectedTaskId]);
-      queryClient.setQueryData(["task-rules", selectedTaskId], (old: any) =>
-        old?.map((r: any) => r.id === id ? { ...r, ...data } : r) || []
-      );
-      return { prev };
-    },
-    onSuccess: () => {
+  // Load rules for a specific task
+  const loadTaskRules = async (taskId: number) => {
+    try {
+      const rules = await api.getTaskRules(taskId);
+      setTaskRules(rules || []);
+    } catch (error) {
+      console.error("Failed to load task rules:", error);
+      setTaskRules([]);
+    }
+  };
+
+  // Add new rule
+  const addRule = async () => {
+    if (!editingTask?.id || !newRule.name || !newRule.prompt) {
+      toast.error("يرجى ملء جميع الحقول المطلوبة");
+      return;
+    }
+
+    try {
+      await api.addTaskRule(editingTask.id, {
+        ...newRule,
+        taskId: editingTask.id
+      });
+      toast.success("تمت إضافة القاعدة بنجاح");
+      await loadTaskRules(editingTask.id);
+      setShowRuleDialog(false);
+      setNewRule({
+        name: "",
+        prompt: "",
+        type: "summarize",
+        priority: 1,
+        isActive: true
+      });
+    } catch (error) {
+      toast.error("فشل في إضافة القاعدة");
+    }
+  };
+
+  // Edit existing rule
+  const editRule = (rule: any) => {
+    setEditingRule(rule);
+    setNewRule({
+      name: rule.name,
+      prompt: rule.prompt,
+      type: rule.type,
+      priority: rule.priority,
+      isActive: rule.isActive
+    });
+    setShowRuleDialog(true);
+  };
+
+  // Update existing rule
+  const updateRule = async () => {
+    if (!editingRule?.id || !newRule.name || !newRule.prompt) {
+      toast.error("يرجى ملء جميع الحقول المطلوبة");
+      return;
+    }
+
+    try {
+      await api.updateTaskRule(editingRule.id, newRule);
       toast.success("تم تحديث القاعدة بنجاح");
-      refetchRules();
-      setRuleFormData(initialRuleFormData);
-      setRuleEditMode(false);
-    },
-    onError: (error, _, context) => {
-      queryClient.setQueryData(["task-rules", selectedTaskId], context?.prev);
-      toast.error(error.message || "فشل تحديث القاعدة");
-    },
-  });
+      await loadTaskRules(editingTask!.id);
+      setShowRuleDialog(false);
+      setEditingRule(null);
+      setNewRule({
+        name: "",
+        prompt: "",
+        type: "summarize",
+        priority: 1,
+        isActive: true
+      });
+    } catch (error) {
+      toast.error("فشل في تحديث القاعدة");
+    }
+  };
 
-  const toggleRuleMutation = useMutation({
-    mutationFn: (id: number) => api.toggleRule(id),
-    onMutate: async (id) => {
-      await queryClient.cancelQueries({ queryKey: ["task-rules", selectedTaskId] });
-      const prev = queryClient.getQueryData(["task-rules", selectedTaskId]);
-      queryClient.setQueryData(["task-rules", selectedTaskId], (old: any) =>
-        old?.map((r: any) => r.id === id ? { ...r, isActive: !r.isActive } : r) || []
-      );
-      return { prev };
-    },
-    onSuccess: () => {
-      toast.success("تم تحديث حالة القاعدة");
-      refetchRules();
-    },
-    onError: (_, __, context) => {
-      queryClient.setQueryData(["task-rules", selectedTaskId], context?.prev);
-      toast.error("فشل تحديث حالة القاعدة");
-    },
-  });
+  // Delete rule
+  const deleteRule = async (ruleId: number) => {
+    try {
+      await api.deleteTaskRule(ruleId);
+      toast.success("تم حذف القاعدة بنجاح");
+      await loadTaskRules(editingTask!.id);
+    } catch (error) {
+      toast.error("فشل في حذف القاعدة");
+    }
+  };
 
-  const deleteRuleMutation = useMutation({
-    mutationFn: (id: number) => api.deleteRule(id),
-    onMutate: async (id) => {
-      await queryClient.cancelQueries({ queryKey: ["task-rules", selectedTaskId] });
-      const prev = queryClient.getQueryData(["task-rules", selectedTaskId]);
-      queryClient.setQueryData(["task-rules", selectedTaskId], (old: any) =>
-        old?.filter((r: any) => r.id !== id) || []
-      );
-      return { prev };
-    },
-    onSuccess: () => {
-      toast.success("تم حذف القاعدة");
-      refetchRules();
-    },
-    onError: (_, __, context) => {
-      queryClient.setQueryData(["task-rules", selectedTaskId], context?.prev);
-      toast.error("فشل حذف القاعدة");
-    },
-  });
+  // Toggle rule active status
+  const toggleRuleActive = async (ruleId: number, isActive: boolean) => {
+    try {
+      await api.updateTaskRule(ruleId, { isActive });
+      toast.success(`تم ${isActive ? 'تفعيل' : 'إلغاء'} القاعدة`);
+      await loadTaskRules(editingTask!.id);
+    } catch (error) {
+      toast.error("فشل في تحديث حالة القاعدة");
+    }
+  };
+
 
   const handleCloseDialog = () => {
     setIsOpen(false);
@@ -280,6 +324,12 @@ export default function TasksPage() {
     setSelectedTaskId(null);
     setRuleFormData(initialRuleFormData);
     setRuleEditMode(false);
+    setIsRulesOpen(false); // Close rules dialog as well
+    setEditingRule(null);
+    setNewRule({ name: "", prompt: "", type: "summarize", priority: 1, isActive: true });
+    setShowRuleDialog(false);
+    setEditingTask(null);
+    setIsDialogOpen(false);
   };
 
   const handleOpenCreate = () => {
@@ -289,7 +339,7 @@ export default function TasksPage() {
     setIsOpen(true);
   };
 
-  const handleOpenEdit = (task: any) => {
+  const handleOpenEdit = async (task: any) => {
     setEditMode(true);
     setSelectedTaskId(task.id);
     setFormData({
@@ -312,11 +362,13 @@ export default function TasksPage() {
     setIsOpen(true);
   };
 
-  const handleOpenRules = (task: any) => {
+  const handleOpenRules = async (task: any) => {
     setSelectedTaskId(task.id);
+    setEditingTask(task); // Set the task being edited for rule management
     setIsRulesOpen(true);
     setRuleFormData(initialRuleFormData);
     setRuleEditMode(false);
+    await loadTaskRules(task.id); // Load rules for this task
   };
 
   const handleEditRule = (rule: any) => {
@@ -337,7 +389,7 @@ export default function TasksPage() {
       toast.error("يرجى ملء جميع الحقول المطلوبة");
       return;
     }
-    
+
     if (editMode && formData.id) {
       const { id, ...data } = formData;
       updateMutation.mutate({ id, data });
@@ -351,13 +403,13 @@ export default function TasksPage() {
       toast.error("يرجى ملء اسم القاعدة والـ Prompt");
       return;
     }
-    
+
     if (ruleEditMode && ruleFormData.id) {
       const { id, ...data } = ruleFormData;
       updateRuleMutation.mutate({ id, data });
     } else if (selectedTaskId) {
-      createRuleMutation.mutate({ 
-        taskId: selectedTaskId, 
+      createRuleMutation.mutate({
+        taskId: selectedTaskId,
         data: { ...ruleFormData, type: selectedRuleType }
       });
     } else {
@@ -409,7 +461,7 @@ export default function TasksPage() {
                   <span className="hidden sm:inline">الفيديو</span>
                 </TabsTrigger>
               </TabsList>
-              
+
               <TabsContent value="basic" className="space-y-4 mt-4">
                 <div>
                   <Label htmlFor="task-name">اسم المهمة</Label>
@@ -422,7 +474,7 @@ export default function TasksPage() {
                     data-testid="input-task-name"
                   />
                 </div>
-                
+
                 <div>
                   <Label htmlFor="task-desc">الوصف</Label>
                   <Textarea
@@ -522,7 +574,7 @@ export default function TasksPage() {
                       <Select
                         value={formData.summarizationProviderId?.toString() || ""}
                         onValueChange={(value) => setFormData({
-                          ...formData, 
+                          ...formData,
                           summarizationProviderId: value ? parseInt(value) : null,
                           summarizationModelId: null
                         })}
@@ -533,7 +585,7 @@ export default function TasksPage() {
                         <SelectContent>
                           {providers.filter((p: any) => p.isActive).map((provider: any) => (
                             <SelectItem key={provider.id} value={provider.id.toString()}>
-                              {provider.name === "groq" ? "Groq (سريع)" : 
+                              {provider.name === "groq" ? "Groq (سريع)" :
                                provider.name === "huggingface" ? "HuggingFace" :
                                provider.name === "openai" ? "OpenAI" :
                                provider.name === "claude" ? "Claude" : provider.name}
@@ -652,7 +704,7 @@ export default function TasksPage() {
                       <Select
                         value={formData.videoAiProviderId?.toString() || ""}
                         onValueChange={(value) => setFormData({
-                          ...formData, 
+                          ...formData,
                           videoAiProviderId: value ? parseInt(value) : null,
                           videoAiModelId: null
                         })}
@@ -663,7 +715,7 @@ export default function TasksPage() {
                         <SelectContent>
                           {providers.filter((p: any) => p.isActive).map((provider: any) => (
                             <SelectItem key={provider.id} value={provider.id.toString()}>
-                              {provider.name === "groq" ? "Groq (سريع)" : 
+                              {provider.name === "groq" ? "Groq (سريع)" :
                                provider.name === "huggingface" ? "HuggingFace" :
                                provider.name === "openai" ? "OpenAI" :
                                provider.name === "claude" ? "Claude" : provider.name}
@@ -749,7 +801,7 @@ export default function TasksPage() {
                               type="button"
                               onClick={() => setFormData({...formData, linkVideoQuality: quality.value})}
                               className={`p-3 rounded-lg border-2 transition-all duration-200 text-right ${
-                                formData.linkVideoQuality === quality.value 
+                                formData.linkVideoQuality === quality.value
                                   ? `bg-gradient-to-br ${quality.color} ring-2 ring-offset-2 ring-offset-background ring-primary/50`
                                   : 'bg-muted/30 border-border hover:border-primary/50 hover:bg-muted/50'
                               }`}
@@ -832,7 +884,7 @@ export default function TasksPage() {
               </TabsContent>
             </Tabs>
 
-            <Button 
+            <Button
               onClick={handleSubmit}
               className="w-full mt-4"
               disabled={createMutation.isPending || updateMutation.isPending}
@@ -862,11 +914,11 @@ export default function TasksPage() {
               <Card className="border shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden group cursor-pointer">
                 {/* Header with gradient */}
                 <div className={`h-1 bg-gradient-to-r ${
-                  task.isActive 
-                    ? 'from-green-500 to-emerald-500' 
+                  task.isActive
+                    ? 'from-green-500 to-emerald-500'
                     : 'from-yellow-500 to-orange-500'
                 }`} />
-                
+
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1">
@@ -877,9 +929,9 @@ export default function TasksPage() {
                         {task.description || "بدون وصف"}
                       </p>
                     </div>
-                    <Badge 
-                      className={task.isActive 
-                        ? "bg-green-500/20 text-green-600 dark:text-green-400 border-green-500/30 whitespace-nowrap" 
+                    <Badge
+                      className={task.isActive
+                        ? "bg-green-500/20 text-green-600 dark:text-green-400 border-green-500/30 whitespace-nowrap"
                         : "bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 border-yellow-500/30 whitespace-nowrap"}
                       variant="outline"
                       data-testid={`badge-status-${task.id}`}
@@ -959,19 +1011,19 @@ export default function TasksPage() {
 
                 {/* Actions */}
                 <div className="px-4 pb-3 flex gap-2 justify-end border-t border-border pt-3">
-                  <Button 
-                    size="sm" 
-                    variant="ghost" 
+                  <Button
+                    size="sm"
+                    variant="ghost"
                     className="h-8 text-xs text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-500/10"
-                    onClick={() => deleteMutation.mutate(task.id)}
+                    onClick={() => deleteTaskMutation.mutate(task.id)}
                     data-testid={`button-delete-${task.id}`}
                     title="حذف"
                   >
                     <Trash2 className="h-3 w-3 ml-1" />
                     حذف
                   </Button>
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     variant="outline"
                     className="h-8 text-xs"
                     onClick={() => handleOpenEdit(task)}
@@ -981,8 +1033,8 @@ export default function TasksPage() {
                     <Edit className="h-3 w-3 ml-1" />
                     تعديل
                   </Button>
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     className="h-8 text-xs bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary"
                     onClick={() => toggleMutation.mutate(task.id)}
                     data-testid={`button-toggle-${task.id}`}
@@ -1001,19 +1053,20 @@ export default function TasksPage() {
         )}
       </div>
 
-      <Dialog open={isRulesOpen} onOpenChange={setIsRulesOpen}>
+      {/* Rules Management Dialog for a selected task */}
+      <Dialog open={isRulesOpen} onOpenChange={(open) => { if (!open) { setIsRulesOpen(false); setSelectedTaskId(null); setEditingTask(null); setTaskRules([]); } else { setIsRulesOpen(true); } }}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Settings2 className="h-5 w-5" />
-              إدارة القواعد
+              إدارة القواعد للمهمة: {editingTask?.name || '...'}
             </DialogTitle>
             <DialogDescription>إضافة وتعديل وحذف القواعد للمهمة</DialogDescription>
           </DialogHeader>
 
           <Tabs value={selectedRuleType} onValueChange={(value) => {
             setSelectedRuleType(value);
-            setRuleFormData(initialRuleFormData);
+            setRuleFormData(initialRuleFormData); // Reset form when switching tabs
             setRuleEditMode(false);
           }} className="w-full">
             <TabsList className="grid w-full grid-cols-2">
@@ -1068,7 +1121,7 @@ export default function TasksPage() {
                     />
                   </div>
                   <div className="flex gap-2">
-                    <Button 
+                    <Button
                       onClick={handleSubmitRule}
                       disabled={createRuleMutation.isPending || updateRuleMutation.isPending}
                       data-testid="button-submit-rule"
@@ -1077,7 +1130,7 @@ export default function TasksPage() {
                       {ruleEditMode ? "حفظ التعديلات" : "إضافة القاعدة"}
                     </Button>
                     {ruleEditMode && (
-                      <Button 
+                      <Button
                         variant="outline"
                         onClick={() => {
                           setRuleEditMode(false);
@@ -1104,18 +1157,18 @@ export default function TasksPage() {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <div className="flex flex-col gap-1">
-                              <Button 
-                                size="icon" 
-                                variant="ghost" 
+                              <Button
+                                size="icon"
+                                variant="ghost"
                                 className="h-5 w-5"
                                 onClick={() => updateRulePriority(rule.id, rule.priority + 1)}
                               >
                                 <ChevronUp className="h-3 w-3" />
                               </Button>
                               <span className="text-xs text-center text-muted-foreground">{rule.priority}</span>
-                              <Button 
-                                size="icon" 
-                                variant="ghost" 
+                              <Button
+                                size="icon"
+                                variant="ghost"
                                 className="h-5 w-5"
                                 onClick={() => updateRulePriority(rule.id, Math.max(0, rule.priority - 1))}
                               >
@@ -1130,24 +1183,24 @@ export default function TasksPage() {
                           <div className="flex items-center gap-2">
                             <ToggleSwitch
                               checked={rule.isActive}
-                              onCheckedChange={() => toggleRuleMutation.mutate(rule.id)}
+                              onCheckedChange={() => toggleRuleActive(rule.id, !rule.isActive)}
                               size="sm"
                               data-testid={`toggle-rule-${rule.id}`}
                             />
-                            <Button 
-                              size="icon" 
+                            <Button
+                              size="icon"
                               variant="ghost"
                               className="h-7 w-7"
                               onClick={() => handleEditRule(rule)}
                               data-testid={`button-edit-rule-${rule.id}`}
                             >
-                              <Edit className="h-3 w-3" />
+                              <EditIcon className="h-3 w-3" />
                             </Button>
-                            <Button 
-                              size="icon" 
+                            <Button
+                              size="icon"
                               variant="ghost"
                               className="h-7 w-7 text-red-600"
-                              onClick={() => deleteRuleMutation.mutate(rule.id)}
+                              onClick={() => deleteRule(rule.id)}
                               data-testid={`button-delete-rule-${rule.id}`}
                             >
                               <Trash2 className="h-3 w-3" />
@@ -1202,7 +1255,7 @@ export default function TasksPage() {
                     />
                   </div>
                   <div className="flex gap-2">
-                    <Button 
+                    <Button
                       onClick={handleSubmitRule}
                       disabled={createRuleMutation.isPending || updateRuleMutation.isPending}
                       data-testid="button-submit-video-rule"
@@ -1211,7 +1264,7 @@ export default function TasksPage() {
                       {ruleEditMode ? "حفظ التعديلات" : "إضافة القاعدة"}
                     </Button>
                     {ruleEditMode && (
-                      <Button 
+                      <Button
                         variant="outline"
                         onClick={() => {
                           setRuleEditMode(false);
@@ -1238,18 +1291,18 @@ export default function TasksPage() {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <div className="flex flex-col gap-1">
-                              <Button 
-                                size="icon" 
-                                variant="ghost" 
+                              <Button
+                                size="icon"
+                                variant="ghost"
                                 className="h-5 w-5"
                                 onClick={() => updateRulePriority(rule.id, rule.priority + 1)}
                               >
                                 <ChevronUp className="h-3 w-3" />
                               </Button>
                               <span className="text-xs text-center text-muted-foreground">{rule.priority}</span>
-                              <Button 
-                                size="icon" 
-                                variant="ghost" 
+                              <Button
+                                size="icon"
+                                variant="ghost"
                                 className="h-5 w-5"
                                 onClick={() => updateRulePriority(rule.id, Math.max(0, rule.priority - 1))}
                               >
@@ -1264,24 +1317,24 @@ export default function TasksPage() {
                           <div className="flex items-center gap-2">
                             <ToggleSwitch
                               checked={rule.isActive}
-                              onCheckedChange={() => toggleRuleMutation.mutate(rule.id)}
+                              onCheckedChange={() => toggleRuleActive(rule.id, !rule.isActive)}
                               size="sm"
                               data-testid={`toggle-video-rule-${rule.id}`}
                             />
-                            <Button 
-                              size="icon" 
+                            <Button
+                              size="icon"
                               variant="ghost"
                               className="h-7 w-7"
                               onClick={() => handleEditRule(rule)}
                               data-testid={`button-edit-video-rule-${rule.id}`}
                             >
-                              <Edit className="h-3 w-3" />
+                              <EditIcon className="h-3 w-3" />
                             </Button>
-                            <Button 
-                              size="icon" 
+                            <Button
+                              size="icon"
                               variant="ghost"
                               className="h-7 w-7 text-red-600"
-                              onClick={() => deleteRuleMutation.mutate(rule.id)}
+                              onClick={() => deleteRule(rule.id)}
                               data-testid={`button-delete-video-rule-${rule.id}`}
                             >
                               <Trash2 className="h-3 w-3" />
@@ -1295,6 +1348,103 @@ export default function TasksPage() {
               </div>
             </TabsContent>
           </Tabs>
+        </DialogContent>
+      </Dialog>
+
+      {/* Rule Creation/Editing Dialog */}
+      <Dialog open={showRuleDialog} onOpenChange={setShowRuleDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>
+              {editingRule ? "تعديل قاعدة" : "إضافة قاعدة جديدة"}
+            </DialogTitle>
+            <DialogDescription>
+              {editingRule ? "قم بتعديل تفاصيل القاعدة" : "قم بإضافة قاعدة جديدة للذكاء الصناعي"}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="rule-name">اسم القاعدة</Label>
+                <Input
+                  id="rule-name"
+                  placeholder="مثال: تلخيص مختصر للأخبار"
+                  value={newRule.name}
+                  onChange={(e) => setNewRule({ ...newRule, name: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label htmlFor="rule-type">نوع القاعدة</Label>
+                <Select
+                  value={newRule.type}
+                  onValueChange={(value) => setNewRule({ ...newRule, type: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="summarize">تلخيص النصوص</SelectItem>
+                    <SelectItem value="video">تحليل الفيديو</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="rule-priority">الأولوية</Label>
+                <Input
+                  id="rule-priority"
+                  type="number"
+                  min="1"
+                  max="10"
+                  value={newRule.priority}
+                  onChange={(e) => setNewRule({ ...newRule, priority: parseInt(e.target.value) || 1 })}
+                />
+              </div>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  checked={newRule.isActive}
+                  onCheckedChange={(checked) => setNewRule({ ...newRule, isActive: checked })}
+                />
+                <Label>القاعدة نشطة</Label>
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="rule-prompt">تعليمات القاعدة</Label>
+              <Textarea
+                id="rule-prompt"
+                placeholder="مثال: اجعل الملخص مختصر في 3-5 نقاط، ركز على الأحداث المهمة..."
+                className="min-h-[120px]"
+                value={newRule.prompt}
+                onChange={(e) => setNewRule({ ...newRule, prompt: e.target.value })}
+              />
+            </div>
+          </div>
+
+          <DialogFooter className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowRuleDialog(false);
+                setEditingRule(null);
+                setNewRule({
+                  name: "",
+                  prompt: "",
+                  type: "summarize",
+                  priority: 1,
+                  isActive: true
+                });
+              }}
+            >
+              إلغاء
+            </Button>
+            <Button onClick={editingRule ? updateRule : addRule}>
+              {editingRule ? "تحديث القاعدة" : "إضافة القاعدة"}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
