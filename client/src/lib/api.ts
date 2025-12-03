@@ -153,7 +153,7 @@ class ApiClient {
     const response = await fetch(`/api/tasks/${taskId}/rules`);
     if (!response.ok) throw new Error('Failed to fetch task rules');
     return response.json();
-  },
+  }
 
   async createTaskRule(taskId: number, rule: any): Promise<any> {
     const response = await fetch(`/api/tasks/${taskId}/rules`, {
@@ -163,7 +163,7 @@ class ApiClient {
     });
     if (!response.ok) throw new Error('Failed to create task rule');
     return response.json();
-  },
+  }
 
   async updateTaskRule(id: number, rule: any): Promise<any> {
     const response = await fetch(`/api/task-rules/${id}`, {
@@ -173,14 +173,14 @@ class ApiClient {
     });
     if (!response.ok) throw new Error('Failed to update task rule');
     return response.json();
-  },
+  }
 
   async deleteTaskRule(id: number): Promise<void> {
     const response = await fetch(`/api/task-rules/${id}`, {
       method: 'DELETE',
     });
     if (!response.ok) throw new Error('Failed to delete task rule');
-  },
+  }
 
   async toggleTaskRule(id: number): Promise<any> {
     const response = await fetch(`/api/rules/${id}/toggle`, {
@@ -188,7 +188,7 @@ class ApiClient {
     });
     if (!response.ok) throw new Error('Failed to toggle task rule');
     return response.json();
-  },
+  }
 
   // Admins
   async getAdmins() {
