@@ -24,7 +24,7 @@ COPY package.json package-lock.json ./
 
 # Copy all project files needed for build
 COPY . .
-
+COPY attached_assets ./attached_assets
 # Build the Node.js applicationapplication
 RUN npm run build
 
