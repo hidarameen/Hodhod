@@ -58,35 +58,35 @@ export const forwardingTasks = pgTable("forwarding_tasks", {
   name: text("name").notNull(),
   description: text("description"),
   isActive: boolean("is_active").notNull().default(true),
-  
+
   // Source and target channels (arrays of channel IDs)
   sourceChannels: jsonb("source_channels").notNull(), // [1, 2, 3]
   targetChannels: jsonb("target_channels").notNull(), // [4, 5, 6]
-  
+
   // AI Configuration (master toggle)
   aiEnabled: boolean("ai_enabled").notNull().default(false),
   aiProviderId: integer("ai_provider_id").references(() => aiProviders.id),
   aiModelId: integer("ai_model_id").references(() => aiModels.id),
-  
+
   // Text Summarization
   summarizationEnabled: boolean("summarization_enabled").notNull().default(false),
   summarizationProviderId: integer("summarization_provider_id").references(() => aiProviders.id),
   summarizationModelId: integer("summarization_model_id").references(() => aiModels.id),
-  
+
   // Video Processing
   videoProcessingEnabled: boolean("video_processing_enabled").notNull().default(false),
   videoAiProviderId: integer("video_ai_provider_id").references(() => aiProviders.id),
   videoAiModelId: integer("video_ai_model_id").references(() => aiModels.id),
-  
+
   // Link Processing (download videos from social media links)
   linkProcessingEnabled: boolean("link_processing_enabled").notNull().default(false),
   linkVideoDownloadEnabled: boolean("link_video_download_enabled").notNull().default(true),
   linkVideoQuality: text("link_video_quality").notNull().default("high"), // 'low' | 'medium' | 'high' | 'best'
-  
+
   // Statistics
   totalForwarded: integer("total_forwarded").notNull().default(0),
   lastForwardedAt: timestamp("last_forwarded_at"),
-  
+
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
@@ -102,6 +102,9 @@ export const aiRules = pgTable("ai_rules", {
   priority: integer("priority").notNull().default(0),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+// Export aiRules as taskRules for compatibility
+export const taskRules = aiRules;
 
 // Task Logs
 export const taskLogs = pgTable("task_logs", {
