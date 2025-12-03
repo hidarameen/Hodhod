@@ -229,6 +229,26 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
+  app.patch("/api/channels/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const channel = await storage.updateChannel(id, req.body);
+      res.json(channel);
+    } catch (error) {
+      handleError(res, error, "Failed to update channel");
+    }
+  });
+
+  app.delete("/api/channels/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteChannel(id);
+      res.json({ message: "Channel deleted successfully" });
+    } catch (error) {
+      handleError(res, error, "Failed to delete channel");
+    }
+  });
+
   // ============ AI Config ============
   app.get("/api/ai/providers", async (req: Request, res: Response) => {
     try {
