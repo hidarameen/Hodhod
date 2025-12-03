@@ -273,18 +273,87 @@ export async function pushToGitHubRepo(
       console.log("[GitHub] Attempting to push anyway with force push...\n");
     } else {
       console.log(`[GitHub] ✓ Found ${allFiles.length} files:\n`);
-      allFiles.slice(0, 20).forEach((file, index) => {
-        console.log(`[GitHub]   ${index + 1}. 📄 ${file}`);
+      
+      // Get detailed file status
+      const statusResult = await execAsync("git status --porcelain");
+      const statusLines = statusResult.stdout?.trim().split("\n").filter(l => l) || [];
+      
+      const modifiedFiles: string[] = [];
+      const addedFiles: string[] = [];
+      const deletedFiles: string[] = [];
+      const renamedFiles: string[] = [];
+      
+      statusLines.forEach(line => {
+        const status = line.substring(0, 2).trim();
+        const file = line.substring(3);
+        
+        if (status === 'M' || status === 'MM' || status === 'AM') {
+          modifiedFiles.push(file);
+        } else if (status === 'A' || status === '??') {
+          addedFiles.push(file);
+        } else if (status === 'D') {
+          deletedFiles.push(file);
+        } else if (status === 'R') {
+          renamedFiles.push(file);
+        }
       });
-      if (allFiles.length > 20) {
-        console.log(`[GitHub]   ... and ${allFiles.length - 20} more files`);
+      
+      console.log("[GitHub] 📋 تقرير التغييرات التفصيلي:\n");
+      
+      if (addedFiles.length > 0) {
+        console.log(`[GitHub] ✨ ملفات جديدة (${addedFiles.length}):`);
+        addedFiles.slice(0, 10).forEach((file, i) => {
+          console.log(`[GitHub]    ${i + 1}. ➕ ${file}`);
+        });
+        if (addedFiles.length > 10) {
+          console.log(`[GitHub]    ... و ${addedFiles.length - 10} ملف آخر`);
+        }
+        console.log();
       }
-      console.log();
+      
+      if (modifiedFiles.length > 0) {
+        console.log(`[GitHub] 🔄 ملفات معدلة (${modifiedFiles.length}):`);
+        modifiedFiles.slice(0, 10).forEach((file, i) => {
+          console.log(`[GitHub]    ${i + 1}. 📝 ${file}`);
+        });
+        if (modifiedFiles.length > 10) {
+          console.log(`[GitHub]    ... و ${modifiedFiles.length - 10} ملف آخر`);
+        }
+        console.log();
+      }
+      
+      if (deletedFiles.length > 0) {
+        console.log(`[GitHub] 🗑️  ملفات محذوفة (${deletedFiles.length}):`);
+        deletedFiles.slice(0, 10).forEach((file, i) => {
+          console.log(`[GitHub]    ${i + 1}. ❌ ${file}`);
+        });
+        if (deletedFiles.length > 10) {
+          console.log(`[GitHub]    ... و ${deletedFiles.length - 10} ملف آخر`);
+        }
+        console.log();
+      }
+      
+      if (renamedFiles.length > 0) {
+        console.log(`[GitHub] ♻️  ملفات معاد تسميتها (${renamedFiles.length}):`);
+        renamedFiles.slice(0, 10).forEach((file, i) => {
+          console.log(`[GitHub]    ${i + 1}. 🔄 ${file}`);
+        });
+        if (renamedFiles.length > 10) {
+          console.log(`[GitHub]    ... و ${renamedFiles.length - 10} ملف آخر`);
+        }
+        console.log();
+      }
 
       // Get file statistics
       const statsResult = await execAsync("git diff --cached --stat 2>/dev/null || echo 'No staged changes'");
-      console.log("[GitHub] 📊 Statistics:");
+      console.log("[GitHub] 📊 إحصائيات التغييرات:");
       console.log(statsResult.stdout || "(no staged changes)");
+      
+      // Summary
+      console.log("\n[GitHub] 📈 ملخص:");
+      console.log(`[GitHub]    إجمالي الملفات: ${allFiles.length}`);
+      console.log(`[GitHub]    جديد: ${addedFiles.length} | معدل: ${modifiedFiles.length} | محذوف: ${deletedFiles.length}`);
+      console.log();
     }
 
     // Step 2: git commit
