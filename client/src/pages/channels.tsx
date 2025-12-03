@@ -59,9 +59,22 @@ export default function ChannelsPage() {
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) => api.deleteChannel(id),
+    onMutate: async (deletedId) => {
+      await queryClient.cancelQueries({ queryKey: ["channels"] });
+      const previousChannels = queryClient.getQueryData(["channels"]);
+      queryClient.setQueryData(["channels"], (old: any) => 
+        old?.filter((channel: any) => channel.id !== deletedId) || []
+      );
+      return { previousChannels };
+    },
     onSuccess: () => {
-      toast.success("تم حذف المصدر");
+      toast.success("تم حذف المصدر بنجاح");
       queryClient.invalidateQueries({ queryKey: ["channels"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+    },
+    onError: (error: any, _, context) => {
+      queryClient.setQueryData(["channels"], context?.previousChannels);
+      toast.error(error.message || "فشل حذف المصدر");
     },
   });
 
@@ -326,7 +339,11 @@ export default function ChannelsPage() {
                         <Button 
                           size="sm" 
                           variant="ghost"
-                          onClick={() => deleteMutation.mutate(channel.id)}
+                          onClick={() => {
+                            if (window.confirm(`هل أنت متأكد من حذف "${channel.title}"؟`)) {
+                              deleteMutation.mutate(channel.id);
+                            }
+                          }}
                           className="h-8 text-xs text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-500/10"
                           data-testid={`button-delete-channel-${channel.id}`}
                           disabled={deleteMutation.isPending}
