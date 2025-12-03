@@ -7749,3 +7749,11 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-03 21:27:06,966 - main - INFO - [2025-12-03 21:27:06.966] [INFO] [session::load] No active session found - userbot login required | {}
 2025-12-03 21:27:18,763 - database - INFO - Database connected successfully | {}
 2025-12-03 21:27:19,179 - main - INFO - [2025-12-03 21:27:19.179] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:27:31,010 - database - INFO - Database connected successfully | {}
+2025-12-03 21:27:31,444 - main - INFO - [2025-12-03 21:27:31.444] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:27:43,224 - database - INFO - Database connected successfully | {}
+2025-12-03 21:27:43,640 - main - INFO - [2025-12-03 21:27:43.639] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:27:55,867 - database - INFO - Database connected successfully | {}
+2025-12-03 21:27:56,297 - main - INFO - [2025-12-03 21:27:56.297] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:28:08,109 - database - INFO - Database connected successfully | {}
+2025-12-03 21:28:08,542 - main - INFO - [2025-12-03 21:28:08.542] [INFO] [session::load] No active session found - userbot login required | {}
