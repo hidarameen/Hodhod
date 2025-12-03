@@ -645,14 +645,30 @@ async def main():
                 """)
         except:
             pass
+    except RPCError as e:
+        error_code = e.CODE if hasattr(e, 'CODE') else None
+        error_msg = str(e)
+        
+        # Handle AUTH_KEY_DUPLICATED specifically
+        if error_code == 406 or 'AUTH_KEY_DUPLICATED' in error_msg:
+            log_detailed("error", "main", "auth_duplicated", "Session is being used elsewhere. Marking as expired...")
+            try:
+                if db.pool is not None:
+                    await db.pool.execute("""
+                        UPDATE userbot_sessions SET is_active = false, status = 'duplicated' 
+                        WHERE is_primary = true
+                    """)
+                    log_detailed("info", "main", "auth_duplicated", "Session marked as expired. Please login again via Settings.")
+            except Exception as db_error:
+                log_detailed("error", "main", "db_error", f"Failed to mark session as expired: {str(db_error)}")
+        else:
+            log_detailed("error", "main", "rpc_error", f"RPC Error: {error_msg}", {
+                "error_code": error_code
+            })
     except FloodWait as e:
         log_detailed("error", "main", "flood", f"Flood wait: {e.value} seconds")
         wait_time = int(e.value) if isinstance(e.value, (int, float)) else 5
         await asyncio.sleep(wait_time)
-    except RPCError as e:
-        log_detailed("error", "main", "rpc_error", f"RPC Error: {str(e)}", {
-            "error_code": e.CODE if hasattr(e, 'CODE') else None
-        })
     except KeyboardInterrupt:
         log_detailed("info", "main", "interrupt", "Userbot stopped by user (Ctrl+C)")
     except Exception as e:
