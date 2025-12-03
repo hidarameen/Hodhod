@@ -105,7 +105,8 @@ class Settings:
         ],
         "groq": [
             {"name": "mixtral-8x7b-32768", "display": "Mixtral 8x7B", "type": "text"},
-            {"name": "llama2-70b-4096", "display": "LLaMA 2 70B", "type": "text"},
+            {"name": "llama-3.3-70b-versatile", "display": "LLaMA 3.3 70B Versatile", "type": "text"},
+            {"name": "llama-3.1-8b-instant", "display": "LLaMA 3.1 8B Instant", "type": "text"},
             {"name": "gemma-7b-it", "display": "Gemma 7B", "type": "text"},
         ],
         "claude": [
