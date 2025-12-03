@@ -289,6 +289,20 @@ class TextReplacer:
         "ميليشيات الحوثي": "قوات أنصار الله",
     }
     
+    # Profanity to polite replacements
+    PROFANITY_REPLACEMENTS = {
+        "أحمق": "غير حكيم",
+        "غبي": "أقل فهماً",
+        "حمار": "شخص مختلف الرأي",
+        "كلب": "شخص سيء السلوك",
+        "قذر": "غير نظيف",
+        "لعين": "سيء السلوك",
+        "وسخ": "غير مقبول",
+        "خنزير": "شخص سيء الأخلاق",
+        "حقير": "أقل شأناً",
+        "نذل": "سيء الطبع",
+    }
+    
     @staticmethod
     def parse_replacement_rule(rule_text: str) -> Dict[str, str]:
         """
@@ -351,6 +365,17 @@ class TextReplacer:
                         count = result.count(original)
                         result = result.replace(original, replacement)
                         changes.append(f"استبدال '{original}' بـ '{replacement}' ({count} مرة)")
+        
+        # 3. Apply profanity replacements if custom rule mentions cleaning or politeness
+        if custom_rule:
+            rule_lower = custom_rule.lower()
+            profanity_keywords = ['شتم', 'كلمات سيئة', 'لطيف', 'مهذب', 'نظيف', 'أدب', 'احترام']
+            if any(keyword in rule_lower for keyword in profanity_keywords):
+                for profane, polite in TextReplacer.PROFANITY_REPLACEMENTS.items():
+                    if profane in result:
+                        count = result.count(profane)
+                        result = result.replace(profane, polite)
+                        changes.append(f"تنظيف '{profane}' إلى '{polite}' ({count} مرة)")
         
         return result, changes
 
