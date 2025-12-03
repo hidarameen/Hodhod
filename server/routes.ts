@@ -248,25 +248,21 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
-  app.put("/api/ai/provider/:id", async (req: Request, res: Response) => {
+  app.patch("/api/ai/providers/:id", async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
-      const { apiKey } = req.body;
-      if (!apiKey) {
-        return res.status(400).json({ error: "API key is required" });
-      }
-      const provider = await storage.updateAiProvider(id, { apiKey });
-      res.json({ provider });
+      const provider = await storage.updateAiProvider(id, req.body);
+      res.json(provider);
     } catch (error) {
       handleError(res, error, "Failed to update AI provider");
     }
   });
 
-  app.post("/api/ai/provider/toggle/:id", async (req: Request, res: Response) => {
+  app.post("/api/ai/providers/:id/toggle", async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
       const provider = await storage.toggleAiProvider(id);
-      res.json({ provider });
+      res.json(provider);
     } catch (error) {
       handleError(res, error, "Failed to toggle AI provider");
     }
