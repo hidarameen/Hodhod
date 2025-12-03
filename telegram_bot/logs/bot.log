@@ -8884,3 +8884,15 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-03 22:33:59,912 - main - INFO - [2025-12-03 22:33:59.912] [INFO] [warmup::cached] ✅ اختبار 2 already in peer cache | {}
 2025-12-03 22:33:59,912 - main - INFO - [2025-12-03 22:33:59.912] [INFO] [warmup::complete] ✅ Warmup complete: 2 success, 0 failed | {}
 2025-12-03 22:33:59,912 - main - INFO - [2025-12-03 22:33:59.912] [INFO] [main::idle] Userbot is now running and waiting for messages... | {}
+2025-12-03 22:34:26,371 - main - INFO - [2025-12-03 22:34:26.371] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003119954858', 'chat_title': 'شبكة الفرقان copy', 'message_id': 2050, 'message_type': 'media', 'has_text': False, 'has_caption': True, 'media_type': 'MessageMediaType.VIDEO', 'media_group_id': None} | {}
+2025-12-03 22:34:26,371 - main - INFO - [2025-12-03 22:34:26.371] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-03 22:34:26,653 - main - INFO - [2025-12-03 22:34:26.653] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-03 22:34:26,653 - main - INFO - [2025-12-03 22:34:26.653] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-03 22:34:26,839 - main - INFO - [2025-12-03 22:34:26.839] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 17851, 'message_type': 'media', 'has_text': False, 'has_caption': True, 'media_type': 'MessageMediaType.VIDEO', 'media_group_id': None} | {}
+2025-12-03 22:34:26,839 - main - INFO - [2025-12-03 22:34:26.839] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-03 22:34:27,077 - main - INFO - [2025-12-03 22:34:27.077] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003119954858', 'match': False} | {}
+2025-12-03 22:34:27,077 - main - INFO - [2025-12-03 22:34:27.077] [INFO] [message_handler::skip] No matching task for chat: شبكة الفرقان copy | Data: {'chat_id': '-1003119954858'} | {}
+2025-12-03 22:34:27,265 - main - INFO - [2025-12-03 22:34:27.265] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-03 22:34:27,265 - main - INFO - [2025-12-03 22:34:27.265] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-03 22:34:27,690 - main - INFO - [2025-12-03 22:34:27.690] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-03 22:34:27,691 - main - INFO - [2025-12-03 22:34:27.691] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
