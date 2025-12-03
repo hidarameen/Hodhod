@@ -7757,3 +7757,47 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-03 21:27:56,297 - main - INFO - [2025-12-03 21:27:56.297] [INFO] [session::load] No active session found - userbot login required | {}
 2025-12-03 21:28:08,109 - database - INFO - Database connected successfully | {}
 2025-12-03 21:28:08,542 - main - INFO - [2025-12-03 21:28:08.542] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:28:20,408 - database - INFO - Database connected successfully | {}
+2025-12-03 21:28:20,839 - main - INFO - [2025-12-03 21:28:20.839] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:28:32,665 - database - INFO - Database connected successfully | {}
+2025-12-03 21:28:33,098 - main - INFO - [2025-12-03 21:28:33.098] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:28:44,951 - database - INFO - Database connected successfully | {}
+2025-12-03 21:28:45,381 - main - INFO - [2025-12-03 21:28:45.381] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:28:57,192 - database - INFO - Database connected successfully | {}
+2025-12-03 21:28:57,628 - main - INFO - [2025-12-03 21:28:57.628] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:29:09,441 - database - INFO - Database connected successfully | {}
+2025-12-03 21:29:09,870 - main - INFO - [2025-12-03 21:29:09.870] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:29:21,658 - database - INFO - Database connected successfully | {}
+2025-12-03 21:29:22,075 - main - INFO - [2025-12-03 21:29:22.075] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:29:33,957 - database - INFO - Database connected successfully | {}
+2025-12-03 21:29:34,390 - main - INFO - [2025-12-03 21:29:34.390] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:29:46,330 - database - INFO - Database connected successfully | {}
+2025-12-03 21:29:46,750 - main - INFO - [2025-12-03 21:29:46.750] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:29:58,603 - database - INFO - Database connected successfully | {}
+2025-12-03 21:29:59,034 - main - INFO - [2025-12-03 21:29:59.034] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:30:10,854 - database - INFO - Database connected successfully | {}
+2025-12-03 21:30:11,288 - main - INFO - [2025-12-03 21:30:11.288] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:30:23,277 - database - INFO - Database connected successfully | {}
+2025-12-03 21:30:23,693 - main - INFO - [2025-12-03 21:30:23.692] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:30:35,696 - database - INFO - Database connected successfully | {}
+2025-12-03 21:30:36,140 - main - INFO - [2025-12-03 21:30:36.140] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:30:48,121 - database - INFO - Database connected successfully | {}
+2025-12-03 21:30:48,556 - main - INFO - [2025-12-03 21:30:48.556] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:31:00,386 - database - INFO - Database connected successfully | {}
+2025-12-03 21:31:00,817 - main - INFO - [2025-12-03 21:31:00.817] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:31:29,609 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-03 21:31:29,612 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-03 21:31:29,617 - main - INFO - [2025-12-03 21:31:29.616] [INFO] [main::entry] Bot script started | {}
+2025-12-03 21:31:29,618 - main - INFO - [2025-12-03 21:31:29.617] [INFO] [main::startup] Validating settings... | {}
+2025-12-03 21:31:29,618 - main - INFO - [2025-12-03 21:31:29.618] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-03 21:31:29,618 - main - INFO - [2025-12-03 21:31:29.618] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-03 21:31:31,470 - database - INFO - Database connected successfully | {}
+2025-12-03 21:31:31,903 - main - INFO - [2025-12-03 21:31:31.903] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:31:31,904 - main - INFO - [2025-12-03 21:31:31.904] [WARNING] [session::missing] ⚠️ No active session found! Please login via the web interface. | {}
+2025-12-03 21:31:33,686 - database - INFO - Database connected successfully | {}
+2025-12-03 21:31:45,469 - database - INFO - Database connected successfully | {}
+2025-12-03 21:31:45,884 - main - INFO - [2025-12-03 21:31:45.884] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:31:57,721 - database - INFO - Database connected successfully | {}
+2025-12-03 21:31:58,150 - main - INFO - [2025-12-03 21:31:58.150] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 21:32:10,248 - database - INFO - Database connected successfully | {}
+2025-12-03 21:32:10,738 - main - INFO - [2025-12-03 21:32:10.738] [INFO] [session::load] No active session found - userbot login required | {}

@@ -3,9 +3,10 @@ AI Providers Integration
 Support for OpenAI, Groq, Claude, and HuggingFace
 """
 import asyncio
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Tuple
 from config.settings import settings
 from utils.error_handler import handle_errors, ErrorLogger
+from services.ai_enhancement import ai_enhancer
 
 error_logger = ErrorLogger("ai_providers")
 
@@ -378,15 +379,24 @@ class AIManager:
         
         if result and result.strip():
             result = result.strip()
-            result_length = len(result)
+            
+            # Enhance result with validation, cleaning, and quality scoring
+            enhanced_result, quality_score, metadata = await ai_enhancer.enhance_result(
+                original_text=text,
+                ai_result=result,
+                task_type="summarization"
+            )
+            
+            result_length = len(enhanced_result)
             if text_length > 0:
                 reduction_percent = max(0, min(100, 100 - (result_length * 100 // text_length)))
             else:
                 reduction_percent = 0
             
-            error_logger.log_info(f"[AIManager] ✅ Summarization complete | Provider: {provider} | Model: {model} | Output: {result_length} chars | Reduction: {text_length - result_length} chars ({reduction_percent}%)")
-            error_logger.log_info(f"[AIManager] Summary preview: {result[:150]}")
-            return result
+            error_logger.log_info(f"[AIManager] ✅ Summarization complete | Provider: {provider} | Model: {model} | Output: {result_length} chars | Reduction: {text_length - result_length} chars ({reduction_percent}%) | Quality: {quality_score:.2f}")
+            error_logger.log_info(f"[AIManager] Metadata: {metadata}")
+            error_logger.log_info(f"[AIManager] Summary preview: {enhanced_result[:150]}")
+            return enhanced_result
         else:
             error_logger.log_info(f"[AIManager] ⚠️ Summarization failed after {max_retries + 1} attempts, returning original text | Provider: {provider} | Model: {model}")
             return text
