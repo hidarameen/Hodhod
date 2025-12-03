@@ -104,16 +104,31 @@ class Settings:
             {"name": "gpt-3.5-turbo", "display": "GPT-3.5 Turbo", "type": "text"},
         ],
         "groq": [
-            {"name": "mixtral-8x7b-32768", "display": "Mixtral 8x7B", "type": "text"},
-            {"name": "llama-3.3-70b-versatile", "display": "LLaMA 3.3 70B Versatile", "type": "text"},
+            # Production Models - نماذج الإنتاج
             {"name": "llama-3.1-8b-instant", "display": "LLaMA 3.1 8B Instant", "type": "text"},
+            {"name": "llama-3.3-70b-versatile", "display": "LLaMA 3.3 70B Versatile", "type": "text"},
+            {"name": "meta-llama/llama-guard-4-12b", "display": "LLaMA Guard 4 12B", "type": "text"},
+            {"name": "openai/gpt-oss-120b", "display": "GPT OSS 120B", "type": "text"},
+            {"name": "openai/gpt-oss-20b", "display": "GPT OSS 20B", "type": "text"},
+            {"name": "whisper-large-v3", "display": "Whisper Large v3", "type": "audio"},
+            {"name": "whisper-large-v3-turbo", "display": "Whisper Large v3 Turbo", "type": "audio"},
+            
+            # Preview Models - نماذج المعاينة
+            {"name": "meta-llama/llama-4-maverick-17b-128e-instruct", "display": "Llama 4 Maverick 17B 128E", "type": "text"},
+            {"name": "meta-llama/llama-4-scout-17b-16e-instruct", "display": "Llama 4 Scout 17B 16E", "type": "text"},
+            {"name": "moonshotai/kimi-k2-instruct-0905", "display": "Kimi K2", "type": "text"},
+            {"name": "openai/gpt-oss-safeguard-20b", "display": "Safety GPT OSS 20B", "type": "text"},
+            {"name": "playai-tts", "display": "PlayAI TTS", "type": "tts"},
+            {"name": "playai-tts-arabic", "display": "PlayAI TTS Arabic", "type": "tts"},
+            {"name": "qwen/qwen3-32b", "display": "Qwen 3 32B", "type": "text"},
+            
+            # Legacy Models (Still Supported) - نماذج قديمة (مدعومة)
+            {"name": "mixtral-8x7b-32768", "display": "Mixtral 8x7B", "type": "text"},
             {"name": "gemma-7b-it", "display": "Gemma 7B", "type": "text"},
             {"name": "llama-3.3-70b-specdec", "display": "LLaMA 3.3 70B SpecDec", "type": "text"},
             {"name": "llama-guard-3-8b", "display": "LLaMA Guard 3 8B", "type": "text"},
             {"name": "llama3-groq-70b-8192-tool-use-preview", "display": "LLaMA 3 Groq 70B Tool Use", "type": "text"},
             {"name": "llama3-groq-8b-8192-tool-use-preview", "display": "LLaMA 3 Groq 8B Tool Use", "type": "text"},
-            {"name": "whisper-large-v3", "display": "Whisper Large v3", "type": "audio"},
-            {"name": "whisper-large-v3-turbo", "display": "Whisper Large v3 Turbo", "type": "audio"},
         ],
         "claude": [
             {"name": "claude-3-opus-20240229", "display": "Claude 3 Opus", "type": "text"},
