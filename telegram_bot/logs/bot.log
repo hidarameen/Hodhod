@@ -7388,3 +7388,16 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-03 20:49:56,098 - database - INFO - Database connected successfully | {}
 2025-12-03 20:49:56,801 - main - INFO - [2025-12-03 20:49:56.801] [INFO] [session::load] No active session found - userbot login required | {}
 2025-12-03 20:50:09,997 - database - INFO - Database connected successfully | {}
+2025-12-03 20:50:10,797 - main - INFO - [2025-12-03 20:50:10.746] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 20:50:23,967 - database - INFO - Database connected successfully | {}
+2025-12-03 20:50:24,747 - main - INFO - [2025-12-03 20:50:24.747] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 20:50:37,781 - database - INFO - Database connected successfully | {}
+2025-12-03 20:50:38,530 - main - INFO - [2025-12-03 20:50:38.530] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 20:50:51,441 - database - INFO - Database connected successfully | {}
+2025-12-03 20:50:52,167 - main - INFO - [2025-12-03 20:50:52.167] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 20:51:05,060 - database - INFO - Database connected successfully | {}
+2025-12-03 20:51:05,797 - main - INFO - [2025-12-03 20:51:05.796] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 20:51:18,892 - database - INFO - Database connected successfully | {}
+2025-12-03 20:51:19,642 - main - INFO - [2025-12-03 20:51:19.642] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 20:51:32,570 - database - INFO - Database connected successfully | {}
+2025-12-03 20:51:33,289 - main - INFO - [2025-12-03 20:51:33.289] [INFO] [session::load] No active session found - userbot login required | {}
