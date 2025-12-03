@@ -14,6 +14,7 @@ from pyrogram.client import Client
 from pyrogram.types import Message, MessageEntity, InputMediaPhoto, InputMediaVideo, InputMediaDocument, InputMediaAudio
 from pyrogram.enums import MessageEntityType, MessageMediaType
 from pyrogram.errors import FloodWait, RPCError, ChannelPrivate, ChatWriteForbidden
+import re
 from utils.error_handler import handle_errors, ErrorLogger, TaskLogger
 from utils.database import db
 from services.ai_providers import ai_manager
@@ -21,6 +22,7 @@ from services.queue_system import queue_manager
 from services.telegraph_service import telegraph_manager
 from services.link_processor import link_processor
 from services.video_processor import video_processor
+from services.ai_pipeline import ai_pipeline
 
 error_logger = ErrorLogger("forwarding_engine")
 
@@ -676,6 +678,140 @@ class ForwardingEngine:
             await task_logger.log_info(f"Media group sent to {target_identifier}")
     
     @handle_errors("forwarding_engine", "process_message")
+    async def _check_content_filters(
+        self,
+        text: str,
+        task_id: int,
+        preprocessing_result: Any = None
+    ) -> tuple:
+        """
+        Check content filters to determine if message should be processed
+        Returns: (should_forward: bool, action: str, filter_matched: Optional[dict], modified_text: str)
+        """
+        try:
+            filters = await db.get_content_filters(task_id)
+            
+            if not filters:
+                return (True, "forward", None, text)
+            
+            for filter_rule in filters:
+                filter_type = filter_rule.get("filter_type", "block")
+                match_type = filter_rule.get("match_type", "contains")
+                pattern = filter_rule.get("pattern", "")
+                action = filter_rule.get("action", "skip")
+                
+                matched = False
+                
+                if match_type == "contains":
+                    matched = pattern.lower() in text.lower()
+                elif match_type == "exact":
+                    matched = text.strip().lower() == pattern.lower()
+                elif match_type == "regex":
+                    try:
+                        matched = bool(re.search(pattern, text, re.IGNORECASE))
+                    except:
+                        matched = False
+                elif match_type == "sentiment" and preprocessing_result:
+                    target_sentiment = filter_rule.get("sentiment_target", "any")
+                    current_sentiment = getattr(preprocessing_result, 'sentiment', None)
+                    if current_sentiment:
+                        sentiment_value = getattr(current_sentiment, 'overall', 'neutral')
+                        if target_sentiment == "any":
+                            matched = True
+                        else:
+                            matched = sentiment_value == target_sentiment
+                elif match_type == "context":
+                    context_desc = filter_rule.get("context_description", "")
+                    if context_desc and context_desc.lower() in text.lower():
+                        matched = True
+                
+                if matched:
+                    await db.increment_filter_match_count(filter_rule["id"])
+                    log_detailed("info", "forwarding_engine", "_check_content_filters", 
+                                f"Filter matched: {filter_rule['name']}", {
+                                    "filter_type": filter_type,
+                                    "action": action,
+                                    "pattern": pattern[:50]
+                                })
+                    
+                    if filter_type == "block":
+                        return (False, "skip", filter_rule, text)
+                    elif filter_type == "allow":
+                        return (True, "forward", filter_rule, text)
+                    elif filter_type == "require":
+                        if action == "modify" and filter_rule.get("modify_instructions"):
+                            return (True, "modify", filter_rule, text)
+                        return (True, action, filter_rule, text)
+            
+            return (True, "forward", None, text)
+            
+        except Exception as e:
+            log_detailed("error", "forwarding_engine", "_check_content_filters", f"Filter check error: {str(e)}")
+            return (True, "forward", None, text)
+    
+    async def _apply_publishing_template(
+        self,
+        text: str,
+        task_id: int,
+        extracted_data: Dict[str, Any] = None
+    ) -> str:
+        """
+        Apply publishing template to format the output
+        """
+        try:
+            template = await db.get_default_template(task_id)
+            
+            if not template:
+                return text
+            
+            header = template.get("header_template", "")
+            body = template.get("body_template", "{summary}")
+            footer = template.get("footer_template", "")
+            use_markdown = template.get("use_markdown", True)
+            use_bold = template.get("use_bold", True)
+            max_length = template.get("max_length")
+            
+            extracted_data = extracted_data or {}
+            extracted_data["summary"] = text
+            
+            for key, value in extracted_data.items():
+                placeholder = "{" + key + "}"
+                header = header.replace(placeholder, str(value) if value else "")
+                body = body.replace(placeholder, str(value) if value else "")
+                footer = footer.replace(placeholder, str(value) if value else "")
+            
+            result_parts = []
+            if header:
+                if use_markdown and use_bold:
+                    result_parts.append(f"**{header}**")
+                else:
+                    result_parts.append(header)
+            
+            if body:
+                result_parts.append(body)
+            
+            if footer:
+                if use_markdown:
+                    result_parts.append(f"_{footer}_")
+                else:
+                    result_parts.append(footer)
+            
+            result = "\n\n".join(result_parts)
+            
+            if max_length and len(result) > max_length:
+                result = result[:max_length - 3] + "..."
+            
+            log_detailed("info", "forwarding_engine", "_apply_publishing_template",
+                        f"Template applied: {template['name']}", {
+                            "output_length": len(result)
+                        })
+            
+            return result
+            
+        except Exception as e:
+            log_detailed("error", "forwarding_engine", "_apply_publishing_template", f"Template error: {str(e)}")
+            return text
+    
     async def _process_message(
         self,
         message: Message,
@@ -683,7 +819,7 @@ class ForwardingEngine:
         task_config: Dict[str, Any],
         task_logger: TaskLogger
     ) -> Optional[str]:
-        """Process message with AI if enabled"""
+        """Process message with unified AI pipeline including content filters and publishing templates"""
         text = ""
         
         log_detailed("info", "forwarding_engine", "_process_message", "Starting message processing", {
@@ -696,7 +832,6 @@ class ForwardingEngine:
         })
         
         try:
-            # Extract text from message
             text = message.text or message.caption or ""
             
             if not text:
@@ -705,7 +840,6 @@ class ForwardingEngine:
             
             log_detailed("info", "forwarding_engine", "_process_message", f"Text length: {len(text)} chars")
             
-            # Check for video processing
             if task_config.get("video_processing_enabled") and message.video:
                 log_detailed("info", "forwarding_engine", "_process_message", "Video detected, adding to queue")
                 await task_logger.log_info("Video detected, processing...")
@@ -725,33 +859,15 @@ class ForwardingEngine:
                 )
                 return None
             
-            # Check if summarization is enabled
             if not task_config.get("summarization_enabled"):
                 log_detailed("info", "forwarding_engine", "_process_message", "Summarization not enabled for this task")
                 return text
             
-            # Get provider and model for summarization (support both snake_case and camelCase)
             provider_id = task_config.get("summarization_provider_id") or task_config.get("summarizationProviderId")
             model_id = task_config.get("summarization_model_id") or task_config.get("summarizationModelId")
             
-            # Get AI rules for the task (only summarize type)
-            all_rules = await db.get_task_rules(task_id)
-            rules = [r for r in all_rules if r["type"] == "summarize" and r["is_active"]]
-            
-            if not rules:
-                log_detailed("info", "forwarding_engine", "_process_message", "No active summarization rules configured")
-                return text
-            
-            log_detailed("info", "forwarding_engine", "_process_message", f"Found {len(rules)} active summarization rules")
-            
-            # Get system prompt from settings (the general prompt from AI Config)
-            system_prompt = await db.get_setting("default_prompt")
-            if system_prompt:
-                log_detailed("info", "forwarding_engine", "_process_message", f"Using system prompt from settings: {system_prompt[:80]}...")
-            
-            # Get provider and model info from database
-            provider_name = "groq"  # Default provider
-            model_name = "mixtral-8x7b-32768"  # Default model
+            provider_name = "groq"
+            model_name = "mixtral-8x7b-32768"
             
             if provider_id:
                 provider_info = await db.get_ai_provider(provider_id)
@@ -765,49 +881,81 @@ class ForwardingEngine:
                     model_name = model_info["model_name"]
                     log_detailed("info", "forwarding_engine", "_process_message", f"Using model: {model_name}")
             
-            # Apply AI rules in priority order (already sorted by priority desc)
-            processed_text = text
-            for rule in rules:
-                log_detailed("info", "forwarding_engine", "_process_message", f"Applying rule: {rule['name']}", {
-                    "rule_type": rule["type"],
+            system_prompt = await db.get_setting("default_prompt")
+            if system_prompt:
+                log_detailed("info", "forwarding_engine", "_process_message", f"Using system prompt: {system_prompt[:80]}...")
+            
+            all_rules = await db.get_task_rules(task_id)
+            rules = [r for r in all_rules if r["type"] == "summarize" and r["is_active"]]
+            
+            log_detailed("info", "forwarding_engine", "_process_message", 
+                        f"🚀 Starting AI Pipeline processing with {len(rules)} rules")
+            
+            pipeline_result = await ai_pipeline.process(
+                text=text,
+                task_id=task_id,
+                provider=provider_name,
+                model=model_name,
+                system_prompt=system_prompt,
+                custom_rules=rules
+            )
+            
+            log_detailed("info", "forwarding_engine", "_process_message", "📊 AI Pipeline completed", {
+                "original_length": len(text),
+                "final_length": len(pipeline_result.final_text),
+                "stages": len(pipeline_result.stages),
+                "rules_applied": pipeline_result.rules_applied_count,
+                "quality_score": pipeline_result.quality_score,
+                "total_time": f"{pipeline_result.total_time:.2f}s"
+            })
+            
+            for stage in pipeline_result.stages:
+                log_detailed("info", "forwarding_engine", "_process_message", 
+                            f"  ├─ {stage.stage_name}: {'✅' if stage.success else '❌'} ({stage.processing_time:.2f}s)")
+            
+            if pipeline_result.entities_replaced:
+                for entity_type, replacements in pipeline_result.entities_replaced.items():
+                    log_detailed("info", "forwarding_engine", "_process_message",
+                                f"  ├─ Entity replacements ({entity_type}): {len(replacements)}")
+            
+            processed_text = pipeline_result.final_text
+            
+            should_forward, action, filter_matched, processed_text = await self._check_content_filters(
+                processed_text, task_id, pipeline_result.preprocessing
+            )
+            
+            if not should_forward:
+                log_detailed("info", "forwarding_engine", "_process_message", 
+                            f"⛔ Message blocked by filter: {filter_matched['name'] if filter_matched else 'unknown'}")
+                await task_logger.log_warning(f"Message blocked by content filter")
+                return None
+            
+            if action == "modify" and filter_matched:
+                log_detailed("info", "forwarding_engine", "_process_message", 
+                            f"🔄 Applying filter modification: {filter_matched['name']}")
+            
+            processed_text = await self._apply_publishing_template(processed_text, task_id)
+            
+            await task_logger.log_info(
+                f"AI Pipeline completed | From {len(text)} → {len(processed_text)} chars",
+                {
+                    "rules_applied": pipeline_result.rules_applied_count,
+                    "quality_score": pipeline_result.quality_score,
                     "provider": provider_name,
-                    "model": model_name,
-                    "priority": rule["priority"]
-                })
-                
-                original_length = len(processed_text)
-                processed_text = await ai_manager.summarize_text(
-                    processed_text,
-                    provider=provider_name,
-                    model=model_name,
-                    system_prompt=system_prompt,
-                    custom_rule=rule["prompt"]
-                )
-                new_length = len(processed_text) if processed_text else 0
-                
-                # Log detailed processing results
-                log_detailed("info", "forwarding_engine", "_process_message", f"📊 Rule result: {rule['name']}", {
-                    "original_length": original_length,
-                    "new_length": new_length,
-                    "reduction": original_length - new_length,
-                    "reduction_percent": 100 - (new_length * 100 // original_length) if original_length > 0 else 0,
-                    "preview": (processed_text[:100] if processed_text else "")
-                })
-                
-                await task_logger.log_info(
-                    f"Applied AI rule: {rule['name']} | From {original_length} → {new_length} chars",
-                    {"rule_type": rule["type"], "provider": provider_name, "model": model_name, "reduction": original_length - new_length}
-                )
-                await db.update_task_stats(task_id, "ai")
+                    "model": model_name
+                }
+            )
+            await db.update_task_stats(task_id, "ai")
             
             reduction_percent = 100 - (len(processed_text) * 100 // len(text)) if len(text) > 0 else 0
             log_detailed("info", "forwarding_engine", "_process_message", "✅ Message processing completed", {
                 "original_length": len(text),
-                "processed_length": len(processed_text) if processed_text else 0,
-                "total_reduction": len(text) - (len(processed_text) if processed_text else 0),
+                "processed_length": len(processed_text),
+                "total_reduction": len(text) - len(processed_text),
                 "reduction_percent": reduction_percent,
-                "final_preview": (processed_text[:150] if processed_text else "")
+                "final_preview": processed_text[:150]
             })
+            
             return processed_text
             
         except Exception as e:
@@ -815,7 +963,7 @@ class ForwardingEngine:
                 "traceback": traceback.format_exc()
             })
             await task_logger.log_error(f"AI processing error: {str(e)}")
-            return text  # Return original text on error
+            return text
     
     @handle_errors("forwarding_engine", "forward_to_target")
     async def _forward_to_target(

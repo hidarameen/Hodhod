@@ -703,5 +703,99 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
+  // ============ AI Content Filters ============
+  app.get("/api/tasks/:taskId/content-filters", async (req: Request, res: Response) => {
+    try {
+      const taskId = parseInt(req.params.taskId);
+      const filters = await storage.getContentFilters(taskId);
+      res.json(filters);
+    } catch (error) {
+      handleError(res, error, "Failed to get content filters");
+    }
+  });
+
+  app.post("/api/tasks/:taskId/content-filters", async (req: Request, res: Response) => {
+    try {
+      const taskId = parseInt(req.params.taskId);
+      const data = { ...req.body, taskId };
+      const filter = await storage.createContentFilter(data);
+      res.json(filter);
+    } catch (error) {
+      handleError(res, error, "Failed to create content filter");
+    }
+  });
+
+  app.patch("/api/content-filters/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.updateContentFilter(id, req.body);
+      res.json({ message: "Content filter updated" });
+    } catch (error) {
+      handleError(res, error, "Failed to update content filter");
+    }
+  });
+
+  app.delete("/api/content-filters/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteContentFilter(id);
+      res.json({ message: "Content filter deleted" });
+    } catch (error) {
+      handleError(res, error, "Failed to delete content filter");
+    }
+  });
+
+  // ============ AI Publishing Templates ============
+  app.get("/api/tasks/:taskId/publishing-templates", async (req: Request, res: Response) => {
+    try {
+      const taskId = parseInt(req.params.taskId);
+      const templates = await storage.getPublishingTemplates(taskId);
+      res.json(templates);
+    } catch (error) {
+      handleError(res, error, "Failed to get publishing templates");
+    }
+  });
+
+  app.get("/api/tasks/:taskId/publishing-templates/default", async (req: Request, res: Response) => {
+    try {
+      const taskId = parseInt(req.params.taskId);
+      const template = await storage.getDefaultTemplate(taskId);
+      res.json(template || {});
+    } catch (error) {
+      handleError(res, error, "Failed to get default template");
+    }
+  });
+
+  app.post("/api/tasks/:taskId/publishing-templates", async (req: Request, res: Response) => {
+    try {
+      const taskId = parseInt(req.params.taskId);
+      const data = { ...req.body, taskId };
+      const template = await storage.createPublishingTemplate(data);
+      res.json(template);
+    } catch (error) {
+      handleError(res, error, "Failed to create publishing template");
+    }
+  });
+
+  app.patch("/api/publishing-templates/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.updatePublishingTemplate(id, req.body);
+      res.json({ message: "Publishing template updated" });
+    } catch (error) {
+      handleError(res, error, "Failed to update publishing template");
+    }
+  });
+
+  app.delete("/api/publishing-templates/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deletePublishingTemplate(id);
+      res.json({ message: "Publishing template deleted" });
+    } catch (error) {
+      handleError(res, error, "Failed to delete publishing template");
+    }
+  });
+
   return httpServer;
 }

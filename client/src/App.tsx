@@ -8,6 +8,7 @@ import AuthPage from "@/pages/auth-page";
 import Dashboard from "@/pages/dashboard";
 import TasksPage from "@/pages/tasks";
 import AIConfigPage from "@/pages/ai-config";
+import AIRulesPage from "@/pages/ai-rules";
 import ChannelsPage from "@/pages/channels";
 import SettingsPage from "@/pages/settings";
 import ErrorLogsPage from "@/pages/error-logs";
@@ -69,6 +70,11 @@ function App() {
           <Route path="/ai-config">
             <ProtectedRoute>
               <Layout><AIConfigPage /></Layout>
+            </ProtectedRoute>
+          </Route>
+          <Route path="/ai-rules">
+            <ProtectedRoute>
+              <Layout><AIRulesPage /></Layout>
             </ProtectedRoute>
           </Route>
           <Route path="/settings">

@@ -336,6 +336,48 @@ class ApiClient {
       body: JSON.stringify(data),
     });
   }
+
+  // ============================================
+  // Content Filters
+  // ============================================
+  
+  async getContentFilters(taskId: number) {
+    return this.request<any[]>(`/tasks/${taskId}/content-filters`);
+  }
+
+  async createContentFilter(data: any) {
+    return this.request<any>(`/tasks/${data.taskId}/content-filters`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteContentFilter(id: number) {
+    return this.request<{ message: string }>(`/content-filters/${id}`, {
+      method: "DELETE",
+    });
+  }
+
+  // ============================================
+  // Publishing Templates
+  // ============================================
+  
+  async getPublishingTemplates(taskId: number) {
+    return this.request<any[]>(`/tasks/${taskId}/publishing-templates`);
+  }
+
+  async createPublishingTemplate(data: any) {
+    return this.request<any>(`/tasks/${data.taskId}/publishing-templates`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deletePublishingTemplate(id: number) {
+    return this.request<{ message: string }>(`/publishing-templates/${id}`, {
+      method: "DELETE",
+    });
+  }
 }
 
 export const api = new ApiClient();

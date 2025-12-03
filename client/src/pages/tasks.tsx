@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
+import { Link } from "wouter";
 import { 
   Table, 
   TableBody, 
@@ -36,7 +37,11 @@ import {
   Sparkles,
   Bot,
   Link2,
-  ArrowRight
+  ArrowRight,
+  ExternalLink,
+  Layers,
+  Filter,
+  Replace
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -617,6 +622,46 @@ export default function TasksPage() {
                           ))
                         )}
                       </div>
+                    </div>
+
+                    <div className="border-t pt-4 mt-4">
+                      <Card className="border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/5 to-transparent">
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-sm flex items-center gap-2">
+                            <Layers className="h-4 w-4 text-primary" />
+                            القواعد المتقدمة للذكاء الاصطناعي
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                          <p className="text-xs text-muted-foreground">
+                            إدارة قواعد متقدمة تشمل استبدال الكيانات، تعديل السياق، فلترة المحتوى، وقوالب النشر
+                          </p>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="flex items-center gap-2 text-xs bg-muted/50 p-2 rounded">
+                              <Replace className="h-3 w-3 text-blue-500" />
+                              <span>استبدال الكيانات</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-xs bg-muted/50 p-2 rounded">
+                              <Settings2 className="h-3 w-3 text-green-500" />
+                              <span>قواعد السياق</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-xs bg-muted/50 p-2 rounded">
+                              <Filter className="h-3 w-3 text-orange-500" />
+                              <span>فلاتر المحتوى</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-xs bg-muted/50 p-2 rounded">
+                              <FileText className="h-3 w-3 text-purple-500" />
+                              <span>قوالب النشر</span>
+                            </div>
+                          </div>
+                          <Link href="/ai-rules">
+                            <Button variant="outline" size="sm" className="w-full mt-2 gap-2">
+                              <ExternalLink className="h-3 w-3" />
+                              فتح صفحة القواعد المتقدمة
+                            </Button>
+                          </Link>
+                        </CardContent>
+                      </Card>
                     </div>
                   </>
                 )}

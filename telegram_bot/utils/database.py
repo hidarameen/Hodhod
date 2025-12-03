@@ -674,6 +674,176 @@ class Database:
                 str(data.get("temperature", "0.7")),
                 data.get("quality_level", "balanced")
             )
+    
+    # ============================================
+    # AI Content Filters
+    # ============================================
+    
+    async def get_content_filters(self, task_id: int) -> List[Dict[str, Any]]:
+        """Get content filters for a task"""
+        rows = await self.fetch(
+            """SELECT * FROM ai_content_filters 
+               WHERE task_id = $1 AND is_active = true
+               ORDER BY priority DESC, created_at ASC""",
+            task_id
+        )
+        return [dict(row) for row in rows]
+    
+    async def add_content_filter(self, data: Dict[str, Any]) -> int:
+        """Add new content filter"""
+        return await self.fetchval(
+            """INSERT INTO ai_content_filters 
+               (task_id, name, filter_type, match_type, pattern, context_description,
+                sentiment_target, action, modify_instructions, is_active, priority)
+               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id""",
+            data["task_id"],
+            data["name"],
+            data["filter_type"],
+            data["match_type"],
+            data["pattern"],
+            data.get("context_description"),
+            data.get("sentiment_target"),
+            data.get("action", "skip"),
+            data.get("modify_instructions"),
+            data.get("is_active", True),
+            data.get("priority", 0)
+        )
+    
+    async def update_content_filter(self, filter_id: int, data: Dict[str, Any]):
+        """Update content filter"""
+        fields = []
+        values = []
+        param_count = 1
+        
+        allowed_fields = ['name', 'filter_type', 'match_type', 'pattern', 
+                          'context_description', 'sentiment_target', 'action',
+                          'modify_instructions', 'is_active', 'priority']
+        
+        for field in allowed_fields:
+            if field in data:
+                fields.append(f"{field} = ${param_count}")
+                values.append(data[field])
+                param_count += 1
+        
+        if not fields:
+            return
+        
+        values.append(filter_id)
+        query = f"UPDATE ai_content_filters SET {', '.join(fields)} WHERE id = ${param_count}"
+        return await self.execute(query, *values)
+    
+    async def delete_content_filter(self, filter_id: int):
+        """Delete content filter"""
+        return await self.execute(
+            "DELETE FROM ai_content_filters WHERE id = $1",
+            filter_id
+        )
+    
+    async def increment_filter_match_count(self, filter_id: int):
+        """Increment match count for content filter"""
+        return await self.execute(
+            "UPDATE ai_content_filters SET match_count = match_count + 1 WHERE id = $1",
+            filter_id
+        )
+    
+    # ============================================
+    # AI Publishing Templates
+    # ============================================
+    
+    async def get_publishing_templates(self, task_id: int) -> List[Dict[str, Any]]:
+        """Get publishing templates for a task"""
+        rows = await self.fetch(
+            """SELECT * FROM ai_publishing_templates 
+               WHERE task_id = $1 AND is_active = true
+               ORDER BY is_default DESC, created_at ASC""",
+            task_id
+        )
+        return [dict(row) for row in rows]
+    
+    async def get_default_template(self, task_id: int) -> Optional[Dict[str, Any]]:
+        """Get default publishing template for a task"""
+        row = await self.fetchrow(
+            """SELECT * FROM ai_publishing_templates 
+               WHERE task_id = $1 AND is_default = true AND is_active = true
+               LIMIT 1""",
+            task_id
+        )
+        return dict(row) if row else None
+    
+    async def add_publishing_template(self, data: Dict[str, Any]) -> int:
+        """Add new publishing template"""
+        if data.get("is_default"):
+            await self.execute(
+                "UPDATE ai_publishing_templates SET is_default = false WHERE task_id = $1",
+                data["task_id"]
+            )
+        
+        extract_fields = json.dumps(data.get("extract_fields", [])) if data.get("extract_fields") else None
+        
+        return await self.fetchval(
+            """INSERT INTO ai_publishing_templates 
+               (task_id, name, is_default, template_type, header_template,
+                body_template, footer_template, extract_fields, use_markdown,
+                use_bold, use_italic, max_length, extraction_prompt, is_active)
+               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING id""",
+            data["task_id"],
+            data["name"],
+            data.get("is_default", False),
+            data["template_type"],
+            data.get("header_template"),
+            data.get("body_template"),
+            data.get("footer_template"),
+            extract_fields,
+            data.get("use_markdown", True),
+            data.get("use_bold", True),
+            data.get("use_italic", False),
+            data.get("max_length"),
+            data.get("extraction_prompt"),
+            data.get("is_active", True)
+        )
+    
+    async def update_publishing_template(self, template_id: int, data: Dict[str, Any]):
+        """Update publishing template"""
+        if data.get("is_default") and data.get("task_id"):
+            await self.execute(
+                "UPDATE ai_publishing_templates SET is_default = false WHERE task_id = $1",
+                data["task_id"]
+            )
+        
+        fields = []
+        values = []
+        param_count = 1
+        
+        allowed_fields = ['name', 'is_default', 'template_type', 'header_template',
+                          'body_template', 'footer_template', 'use_markdown',
+                          'use_bold', 'use_italic', 'max_length', 'extraction_prompt', 'is_active']
+        
+        for field in allowed_fields:
+            if field in data:
+                fields.append(f"{field} = ${param_count}")
+                values.append(data[field])
+                param_count += 1
+        
+        if 'extract_fields' in data:
+            fields.append(f"extract_fields = ${param_count}")
+            values.append(json.dumps(data['extract_fields']) if data['extract_fields'] else None)
+            param_count += 1
+        
+        fields.append(f"updated_at = NOW()")
+        
+        if not values:
+            return
+        
+        values.append(template_id)
+        query = f"UPDATE ai_publishing_templates SET {', '.join(fields)} WHERE id = ${param_count}"
+        return await self.execute(query, *values)
+    
+    async def delete_publishing_template(self, template_id: int):
+        """Delete publishing template"""
+        return await self.execute(
+            "DELETE FROM ai_publishing_templates WHERE id = $1",
+            template_id
+        )
 
 # Global database instance
 db = Database()

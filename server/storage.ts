@@ -810,6 +810,139 @@ export class DbStorage implements IStorage {
       return result[0].id;
     }
   }
+
+  // ============ AI Content Filters ============
+  async getContentFilters(taskId: number): Promise<any[]> {
+    return await database
+      .select()
+      .from(schema.aiContentFilters)
+      .where(
+        and(
+          eq(schema.aiContentFilters.taskId, taskId),
+          eq(schema.aiContentFilters.isActive, true)
+        )
+      )
+      .orderBy(desc(schema.aiContentFilters.priority));
+  }
+
+  async createContentFilter(data: any): Promise<any> {
+    const result = await database
+      .insert(schema.aiContentFilters)
+      .values({
+        taskId: data.taskId,
+        name: data.name,
+        filterType: data.filterType,
+        matchType: data.matchType,
+        pattern: data.pattern,
+        contextDescription: data.contextDescription || null,
+        sentimentTarget: data.sentimentTarget || null,
+        action: data.action || 'skip',
+        modifyInstructions: data.modifyInstructions || null,
+        isActive: data.isActive ?? true,
+        priority: data.priority ?? 0,
+      })
+      .returning();
+    return result[0];
+  }
+
+  async updateContentFilter(id: number, data: any): Promise<void> {
+    await database
+      .update(schema.aiContentFilters)
+      .set(data)
+      .where(eq(schema.aiContentFilters.id, id));
+  }
+
+  async deleteContentFilter(id: number): Promise<void> {
+    await database
+      .delete(schema.aiContentFilters)
+      .where(eq(schema.aiContentFilters.id, id));
+  }
+
+  async incrementFilterMatchCount(id: number): Promise<void> {
+    await database
+      .update(schema.aiContentFilters)
+      .set({ matchCount: sql`${schema.aiContentFilters.matchCount} + 1` })
+      .where(eq(schema.aiContentFilters.id, id));
+  }
+
+  // ============ AI Publishing Templates ============
+  async getPublishingTemplates(taskId: number): Promise<any[]> {
+    return await database
+      .select()
+      .from(schema.aiPublishingTemplates)
+      .where(
+        and(
+          eq(schema.aiPublishingTemplates.taskId, taskId),
+          eq(schema.aiPublishingTemplates.isActive, true)
+        )
+      )
+      .orderBy(desc(schema.aiPublishingTemplates.isDefault));
+  }
+
+  async getDefaultTemplate(taskId: number): Promise<any> {
+    const result = await database
+      .select()
+      .from(schema.aiPublishingTemplates)
+      .where(
+        and(
+          eq(schema.aiPublishingTemplates.taskId, taskId),
+          eq(schema.aiPublishingTemplates.isDefault, true),
+          eq(schema.aiPublishingTemplates.isActive, true)
+        )
+      )
+      .limit(1);
+    return result[0] || null;
+  }
+
+  async createPublishingTemplate(data: any): Promise<any> {
+    if (data.isDefault) {
+      await database
+        .update(schema.aiPublishingTemplates)
+        .set({ isDefault: false })
+        .where(eq(schema.aiPublishingTemplates.taskId, data.taskId));
+    }
+    
+    const result = await database
+      .insert(schema.aiPublishingTemplates)
+      .values({
+        taskId: data.taskId,
+        name: data.name,
+        isDefault: data.isDefault ?? false,
+        templateType: data.templateType,
+        headerTemplate: data.headerTemplate || null,
+        bodyTemplate: data.bodyTemplate || null,
+        footerTemplate: data.footerTemplate || null,
+        extractFields: data.extractFields || null,
+        useMarkdown: data.useMarkdown ?? true,
+        useBold: data.useBold ?? true,
+        useItalic: data.useItalic ?? false,
+        maxLength: data.maxLength || null,
+        extractionPrompt: data.extractionPrompt || null,
+        isActive: data.isActive ?? true,
+      })
+      .returning();
+    return result[0];
+  }
+
+  async updatePublishingTemplate(id: number, data: any): Promise<void> {
+    if (data.isDefault && data.taskId) {
+      await database
+        .update(schema.aiPublishingTemplates)
+        .set({ isDefault: false })
+        .where(eq(schema.aiPublishingTemplates.taskId, data.taskId));
+    }
+    
+    await database
+      .update(schema.aiPublishingTemplates)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(schema.aiPublishingTemplates.id, id));
+  }
+
+  async deletePublishingTemplate(id: number): Promise<void> {
+    await database
+      .delete(schema.aiPublishingTemplates)
+      .where(eq(schema.aiPublishingTemplates.id, id));
+  }
 }
 
 export const storage = new DbStorage();

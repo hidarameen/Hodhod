@@ -259,6 +259,54 @@ export const githubSettings = pgTable("github_settings", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
+// AI Content Filters (for filtering messages before forwarding based on context/content)
+export const aiContentFilters = pgTable("ai_content_filters", {
+  id: serial("id").primaryKey(),
+  taskId: integer("task_id").notNull().references(() => forwardingTasks.id, { onDelete: 'cascade' }),
+  name: text("name").notNull(),
+  filterType: text("filter_type").notNull(), // 'allow' | 'block' | 'require'
+  matchType: text("match_type").notNull(), // 'contains' | 'exact' | 'regex' | 'context' | 'sentiment' | 'ai_analysis'
+  pattern: text("pattern").notNull(), // The pattern/keywords to match
+  contextDescription: text("context_description"), // AI description for context-based filtering
+  sentimentTarget: text("sentiment_target"), // 'positive' | 'negative' | 'neutral' | 'any'
+  action: text("action").notNull().default("skip"), // 'skip' | 'forward' | 'modify' | 'flag'
+  modifyInstructions: text("modify_instructions"), // If action is 'modify', what to do
+  isActive: boolean("is_active").notNull().default(true),
+  priority: integer("priority").notNull().default(0),
+  matchCount: integer("match_count").notNull().default(0), // Stats: how many times matched
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// AI Publishing Templates (for controlling final message format)
+export const aiPublishingTemplates = pgTable("ai_publishing_templates", {
+  id: serial("id").primaryKey(),
+  taskId: integer("task_id").notNull().references(() => forwardingTasks.id, { onDelete: 'cascade' }),
+  name: text("name").notNull(),
+  isDefault: boolean("is_default").notNull().default(false),
+  templateType: text("template_type").notNull(), // 'news' | 'report' | 'interview' | 'summary' | 'custom'
+  
+  // Template structure
+  headerTemplate: text("header_template"), // e.g., "📰 {news_type} | {date}"
+  bodyTemplate: text("body_template"), // e.g., "{summary}"
+  footerTemplate: text("footer_template"), // e.g., "📍 {location} | 🏷 {source}"
+  
+  // Fields to extract via AI
+  extractFields: jsonb("extract_fields"), // ['title', 'date', 'location', 'news_type', 'source', 'summary']
+  
+  // Formatting options
+  useMarkdown: boolean("use_markdown").notNull().default(true),
+  useBold: boolean("use_bold").notNull().default(true),
+  useItalic: boolean("use_italic").notNull().default(false),
+  maxLength: integer("max_length"), // Maximum output length
+  
+  // AI instructions for extraction
+  extractionPrompt: text("extraction_prompt"), // Custom AI prompt for extracting fields
+  
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
 // Insert Schemas
 export const insertUserSchema = createInsertSchema(users).omit({ id: true, createdAt: true });
 export const insertAdminSchema = createInsertSchema(admins).omit({ id: true, createdAt: true });
@@ -302,6 +350,8 @@ export const insertUserbotSessionSchema = createInsertSchema(userbotSessions).om
   errorMessage: true
 });
 export const insertGithubSettingsSchema = createInsertSchema(githubSettings).omit({ id: true, linkedAt: true, updatedAt: true });
+export const insertAiContentFilterSchema = createInsertSchema(aiContentFilters).omit({ id: true, createdAt: true, matchCount: true });
+export const insertAiPublishingTemplateSchema = createInsertSchema(aiPublishingTemplates).omit({ id: true, createdAt: true, updatedAt: true });
 
 // Types
 export type User = typeof users.$inferSelect;
@@ -357,3 +407,9 @@ export type InsertUserbotSession = z.infer<typeof insertUserbotSessionSchema>;
 
 export type GitHubSettings = typeof githubSettings.$inferSelect;
 export type InsertGithubSettings = z.infer<typeof insertGithubSettingsSchema>;
+
+export type AiContentFilter = typeof aiContentFilters.$inferSelect;
+export type InsertAiContentFilter = z.infer<typeof insertAiContentFilterSchema>;
+
+export type AiPublishingTemplate = typeof aiPublishingTemplates.$inferSelect;
+export type InsertAiPublishingTemplate = z.infer<typeof insertAiPublishingTemplateSchema>;

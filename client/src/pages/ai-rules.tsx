@@ -30,7 +30,8 @@ import {
   Copy,
   Check,
   AlertCircle,
-  Zap
+  Zap,
+  Filter
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -69,6 +70,38 @@ interface TrainingExample {
   isActive: boolean;
 }
 
+interface ContentFilter {
+  id?: number;
+  taskId: number;
+  name: string;
+  filterType: string;
+  matchType: string;
+  pattern: string;
+  contextDescription?: string;
+  sentimentTarget?: string;
+  action: string;
+  modifyInstructions?: string;
+  priority: number;
+  isActive: boolean;
+}
+
+interface PublishingTemplate {
+  id?: number;
+  taskId: number;
+  name: string;
+  templateType: string;
+  isDefault: boolean;
+  headerTemplate: string;
+  bodyTemplate: string;
+  footerTemplate: string;
+  extractFields: string[];
+  useMarkdown: boolean;
+  useBold: boolean;
+  useItalic: boolean;
+  maxLength?: number;
+  extractionPrompt?: string;
+}
+
 const entityTypes = [
   { value: 'person', label: 'شخص', icon: '👤' },
   { value: 'organization', label: 'منظمة', icon: '🏢' },
@@ -90,6 +123,42 @@ const exampleTypes = [
   { value: 'preference', label: 'تفضيل', description: 'أسلوب تفضله في الصياغة' },
   { value: 'style', label: 'أسلوب', description: 'أسلوب كتابة معين' },
   { value: 'terminology', label: 'مصطلحات', description: 'مصطلحات تفضلها' },
+];
+
+const filterTypes = [
+  { value: 'allow', label: 'سماح', description: 'السماح بالمحتوى المطابق' },
+  { value: 'block', label: 'حظر', description: 'حظر المحتوى المطابق' },
+  { value: 'require', label: 'مطلوب', description: 'يتطلب وجود المحتوى' },
+];
+
+const matchTypes = [
+  { value: 'contains', label: 'يحتوي', description: 'يحتوي على النص' },
+  { value: 'exact', label: 'مطابق', description: 'مطابقة تامة' },
+  { value: 'regex', label: 'تعبير نمطي', description: 'تعبير نمطي (Regex)' },
+  { value: 'sentiment', label: 'مشاعر', description: 'تحليل المشاعر' },
+  { value: 'context', label: 'سياق', description: 'تحليل السياق' },
+];
+
+const filterActions = [
+  { value: 'skip', label: 'تخطي', description: 'تخطي الرسالة' },
+  { value: 'forward', label: 'تمرير', description: 'تمرير الرسالة' },
+  { value: 'modify', label: 'تعديل', description: 'تعديل المحتوى' },
+  { value: 'flag', label: 'تمييز', description: 'تمييز للمراجعة' },
+];
+
+const sentimentTargets = [
+  { value: 'positive', label: 'إيجابي' },
+  { value: 'negative', label: 'سلبي' },
+  { value: 'neutral', label: 'محايد' },
+  { value: 'any', label: 'أي' },
+];
+
+const templateTypes = [
+  { value: 'news', label: 'خبر', description: 'قالب الأخبار' },
+  { value: 'report', label: 'تقرير', description: 'قالب التقارير' },
+  { value: 'interview', label: 'مقابلة', description: 'قالب المقابلات' },
+  { value: 'summary', label: 'ملخص', description: 'قالب الملخصات' },
+  { value: 'custom', label: 'مخصص', description: 'قالب مخصص' },
 ];
 
 export default function AIRulesPage() {
@@ -125,6 +194,36 @@ export default function AIRulesPage() {
     tags: [],
     isActive: true
   });
+
+  const [filterForm, setFilterForm] = useState<Partial<ContentFilter>>({
+    name: '',
+    filterType: 'allow',
+    matchType: 'contains',
+    pattern: '',
+    contextDescription: '',
+    sentimentTarget: 'any',
+    action: 'forward',
+    modifyInstructions: '',
+    priority: 0,
+    isActive: true
+  });
+
+  const [templateForm, setTemplateForm] = useState<Partial<PublishingTemplate>>({
+    name: '',
+    templateType: 'news',
+    isDefault: false,
+    headerTemplate: '',
+    bodyTemplate: '{summary}',
+    footerTemplate: '',
+    extractFields: [],
+    useMarkdown: true,
+    useBold: true,
+    useItalic: false,
+    maxLength: undefined,
+    extractionPrompt: ''
+  });
+
+  const [extractFieldInput, setExtractFieldInput] = useState('');
   
   const [editingEntity, setEditingEntity] = useState<number | null>(null);
   const [editingContext, setEditingContext] = useState<number | null>(null);
@@ -150,6 +249,18 @@ export default function AIRulesPage() {
   const { data: trainingExamples = [], isLoading: loadingTraining } = useQuery({
     queryKey: ["training-examples", selectedTaskId],
     queryFn: () => api.getTrainingExamples(selectedTaskId),
+  });
+
+  const { data: contentFilters = [], isLoading: loadingFilters } = useQuery({
+    queryKey: ["content-filters", selectedTaskId],
+    queryFn: () => selectedTaskId ? api.getContentFilters(selectedTaskId) : Promise.resolve([]),
+    enabled: !!selectedTaskId,
+  });
+
+  const { data: publishingTemplates = [], isLoading: loadingTemplates } = useQuery({
+    queryKey: ["publishing-templates", selectedTaskId],
+    queryFn: () => selectedTaskId ? api.getPublishingTemplates(selectedTaskId) : Promise.resolve([]),
+    enabled: !!selectedTaskId,
   });
 
   const createEntityMutation = useMutation({
@@ -220,6 +331,44 @@ export default function AIRulesPage() {
     onError: () => toast.error("فشل في حذف المثال"),
   });
 
+  const createFilterMutation = useMutation({
+    mutationFn: (data: any) => api.createContentFilter(data),
+    onSuccess: () => {
+      toast.success("تم إضافة الفلتر");
+      queryClient.invalidateQueries({ queryKey: ["content-filters"] });
+      resetFilterForm();
+    },
+    onError: () => toast.error("فشل في إضافة الفلتر"),
+  });
+
+  const deleteFilterMutation = useMutation({
+    mutationFn: (id: number) => api.deleteContentFilter(id),
+    onSuccess: () => {
+      toast.success("تم حذف الفلتر");
+      queryClient.invalidateQueries({ queryKey: ["content-filters"] });
+    },
+    onError: () => toast.error("فشل في حذف الفلتر"),
+  });
+
+  const createTemplateMutation = useMutation({
+    mutationFn: (data: any) => api.createPublishingTemplate(data),
+    onSuccess: () => {
+      toast.success("تم إضافة القالب");
+      queryClient.invalidateQueries({ queryKey: ["publishing-templates"] });
+      resetTemplateForm();
+    },
+    onError: () => toast.error("فشل في إضافة القالب"),
+  });
+
+  const deleteTemplateMutation = useMutation({
+    mutationFn: (id: number) => api.deletePublishingTemplate(id),
+    onSuccess: () => {
+      toast.success("تم حذف القالب");
+      queryClient.invalidateQueries({ queryKey: ["publishing-templates"] });
+    },
+    onError: () => toast.error("فشل في حذف القالب"),
+  });
+
   const resetEntityForm = () => {
     setEntityForm({
       entityType: 'person',
@@ -253,6 +402,39 @@ export default function AIRulesPage() {
       tags: [],
       isActive: true
     });
+  };
+
+  const resetFilterForm = () => {
+    setFilterForm({
+      name: '',
+      filterType: 'allow',
+      matchType: 'contains',
+      pattern: '',
+      contextDescription: '',
+      sentimentTarget: 'any',
+      action: 'forward',
+      modifyInstructions: '',
+      priority: 0,
+      isActive: true
+    });
+  };
+
+  const resetTemplateForm = () => {
+    setTemplateForm({
+      name: '',
+      templateType: 'news',
+      isDefault: false,
+      headerTemplate: '',
+      bodyTemplate: '{summary}',
+      footerTemplate: '',
+      extractFields: [],
+      useMarkdown: true,
+      useBold: true,
+      useItalic: false,
+      maxLength: undefined,
+      extractionPrompt: ''
+    });
+    setExtractFieldInput('');
   };
 
   const handleSubmitEntity = () => {
@@ -293,6 +475,42 @@ export default function AIRulesPage() {
   const handleEditEntity = (entity: any) => {
     setEntityForm(entity);
     setEditingEntity(entity.id);
+  };
+
+  const handleSubmitFilter = () => {
+    if (!selectedTaskId || !filterForm.name || !filterForm.pattern) {
+      toast.error("يرجى ملء جميع الحقول المطلوبة");
+      return;
+    }
+
+    const data = { ...filterForm, taskId: selectedTaskId };
+    createFilterMutation.mutate(data);
+  };
+
+  const handleSubmitTemplate = () => {
+    if (!selectedTaskId || !templateForm.name) {
+      toast.error("يرجى ملء جميع الحقول المطلوبة");
+      return;
+    }
+
+    const data = { ...templateForm, taskId: selectedTaskId };
+    createTemplateMutation.mutate(data);
+  };
+
+  const handleAddExtractField = () => {
+    if (extractFieldInput.trim()) {
+      setTemplateForm({
+        ...templateForm,
+        extractFields: [...(templateForm.extractFields || []), extractFieldInput.trim()]
+      });
+      setExtractFieldInput('');
+    }
+  };
+
+  const handleRemoveExtractField = (index: number) => {
+    const newFields = [...(templateForm.extractFields || [])];
+    newFields.splice(index, 1);
+    setTemplateForm({ ...templateForm, extractFields: newFields });
   };
 
   return (
@@ -347,7 +565,7 @@ export default function AIRulesPage() {
           animate={{ opacity: 1, y: 0 }}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-3 mb-6">
+            <TabsList className="grid w-full grid-cols-5 mb-6">
               <TabsTrigger value="entities" className="flex items-center gap-2">
                 <ArrowRightLeft className="h-4 w-4" />
                 <span className="hidden sm:inline">قواعد الاستبدال</span>
@@ -370,6 +588,22 @@ export default function AIRulesPage() {
                 <span className="sm:hidden">تدريب</span>
                 {trainingExamples.length > 0 && (
                   <Badge variant="secondary" className="ml-1">{trainingExamples.length}</Badge>
+                )}
+              </TabsTrigger>
+              <TabsTrigger value="filters" className="flex items-center gap-2">
+                <Filter className="h-4 w-4" />
+                <span className="hidden sm:inline">فلاتر المحتوى</span>
+                <span className="sm:hidden">فلاتر</span>
+                {contentFilters.length > 0 && (
+                  <Badge variant="secondary" className="ml-1">{contentFilters.length}</Badge>
+                )}
+              </TabsTrigger>
+              <TabsTrigger value="templates" className="flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                <span className="hidden sm:inline">قوالب النشر</span>
+                <span className="sm:hidden">قوالب</span>
+                {publishingTemplates.length > 0 && (
+                  <Badge variant="secondary" className="ml-1">{publishingTemplates.length}</Badge>
                 )}
               </TabsTrigger>
             </TabsList>
@@ -863,6 +1097,490 @@ export default function AIRulesPage() {
                       </AccordionItem>
                     ))}
                   </Accordion>
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="filters" className="space-y-6">
+              <Card className="border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/5 to-transparent">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Plus className="h-5 w-5" />
+                    إضافة فلتر محتوى جديد
+                  </CardTitle>
+                  <CardDescription>
+                    تصفية المحتوى تلقائياً بناءً على أنماط محددة
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label>اسم الفلتر</Label>
+                      <Input
+                        value={filterForm.name}
+                        onChange={(e) => setFilterForm({ ...filterForm, name: e.target.value })}
+                        placeholder="مثال: فلتر المحتوى السلبي"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label>نوع الفلتر</Label>
+                      <Select
+                        value={filterForm.filterType}
+                        onValueChange={(value) => setFilterForm({ ...filterForm, filterType: value })}
+                      >
+                        <SelectTrigger className="mt-1">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {filterTypes.map((type) => (
+                            <SelectItem key={type.value} value={type.value}>
+                              <div>
+                                <div className="font-medium">{type.label}</div>
+                                <div className="text-xs text-muted-foreground">{type.description}</div>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label>نوع المطابقة</Label>
+                      <Select
+                        value={filterForm.matchType}
+                        onValueChange={(value) => setFilterForm({ ...filterForm, matchType: value })}
+                      >
+                        <SelectTrigger className="mt-1">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {matchTypes.map((type) => (
+                            <SelectItem key={type.value} value={type.value}>
+                              <div>
+                                <div className="font-medium">{type.label}</div>
+                                <div className="text-xs text-muted-foreground">{type.description}</div>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label>الإجراء</Label>
+                      <Select
+                        value={filterForm.action}
+                        onValueChange={(value) => setFilterForm({ ...filterForm, action: value })}
+                      >
+                        <SelectTrigger className="mt-1">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {filterActions.map((action) => (
+                            <SelectItem key={action.value} value={action.value}>
+                              <div>
+                                <div className="font-medium">{action.label}</div>
+                                <div className="text-xs text-muted-foreground">{action.description}</div>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label>النمط / الكلمات المفتاحية</Label>
+                    <Input
+                      value={filterForm.pattern}
+                      onChange={(e) => setFilterForm({ ...filterForm, pattern: e.target.value })}
+                      placeholder="مثال: كلمة1|كلمة2|كلمة3"
+                      className="mt-1 font-mono"
+                      dir="ltr"
+                    />
+                  </div>
+
+                  {filterForm.matchType === 'context' && (
+                    <div>
+                      <Label>وصف السياق</Label>
+                      <Textarea
+                        value={filterForm.contextDescription}
+                        onChange={(e) => setFilterForm({ ...filterForm, contextDescription: e.target.value })}
+                        placeholder="اكتب وصفاً للسياق المطلوب تحليله..."
+                        className="mt-1 min-h-[80px]"
+                      />
+                    </div>
+                  )}
+
+                  {filterForm.matchType === 'sentiment' && (
+                    <div>
+                      <Label>المشاعر المستهدفة</Label>
+                      <Select
+                        value={filterForm.sentimentTarget}
+                        onValueChange={(value) => setFilterForm({ ...filterForm, sentimentTarget: value })}
+                      >
+                        <SelectTrigger className="mt-1">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {sentimentTargets.map((target) => (
+                            <SelectItem key={target.value} value={target.value}>
+                              {target.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+
+                  {filterForm.action === 'modify' && (
+                    <div>
+                      <Label>تعليمات التعديل</Label>
+                      <Textarea
+                        value={filterForm.modifyInstructions}
+                        onChange={(e) => setFilterForm({ ...filterForm, modifyInstructions: e.target.value })}
+                        placeholder="اكتب تعليمات التعديل للذكاء الاصطناعي..."
+                        className="mt-1 min-h-[80px]"
+                      />
+                    </div>
+                  )}
+
+                  <div className="flex flex-wrap items-center gap-6">
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={filterForm.isActive}
+                        onCheckedChange={(checked) => setFilterForm({ ...filterForm, isActive: checked })}
+                      />
+                      <Label>مفعّل</Label>
+                    </div>
+                    <div>
+                      <Label className="text-sm text-muted-foreground">الأولوية</Label>
+                      <Input
+                        type="number"
+                        value={filterForm.priority}
+                        onChange={(e) => setFilterForm({ ...filterForm, priority: parseInt(e.target.value) || 0 })}
+                        className="w-20 h-8"
+                        min={0}
+                      />
+                    </div>
+                  </div>
+
+                  <Button
+                    onClick={handleSubmitFilter}
+                    disabled={createFilterMutation.isPending}
+                    className="w-full"
+                  >
+                    {createFilterMutation.isPending && <Loader className="h-4 w-4 mr-2 animate-spin" />}
+                    إضافة الفلتر
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <Filter className="h-5 w-5 text-primary" />
+                  الفلاتر المضافة ({contentFilters.length})
+                </h3>
+                
+                {loadingFilters ? (
+                  <div className="flex justify-center p-8">
+                    <Loader className="h-8 w-8 animate-spin text-primary" />
+                  </div>
+                ) : contentFilters.length === 0 ? (
+                  <Card className="p-8 text-center text-muted-foreground">
+                    <Filter className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>لا توجد فلاتر محتوى. أضف فلتر جديد للبدء.</p>
+                  </Card>
+                ) : (
+                  <div className="grid gap-3">
+                    {contentFilters.map((filter: any) => (
+                      <Card key={filter.id} className={`p-4 ${!filter.isActive ? 'opacity-60' : ''}`}>
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="font-semibold">{filter.name}</span>
+                              <Badge variant={filter.isActive ? "default" : "secondary"}>
+                                {filter.isActive ? "مفعّل" : "معطّل"}
+                              </Badge>
+                            </div>
+                            <div className="flex flex-wrap items-center gap-2 mb-2">
+                              <Badge variant="outline">
+                                {filterTypes.find(t => t.value === filter.filterType)?.label}
+                              </Badge>
+                              <Badge variant="outline">
+                                {matchTypes.find(t => t.value === filter.matchType)?.label}
+                              </Badge>
+                              <Badge variant="outline">
+                                {filterActions.find(a => a.value === filter.action)?.label}
+                              </Badge>
+                              {filter.priority > 0 && (
+                                <Badge variant="outline">أولوية: {filter.priority}</Badge>
+                              )}
+                            </div>
+                            <code className="text-sm bg-muted px-2 py-1 rounded">{filter.pattern}</code>
+                          </div>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="text-red-600"
+                            onClick={() => deleteFilterMutation.mutate(filter.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="templates" className="space-y-6">
+              <Card className="border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/5 to-transparent">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Plus className="h-5 w-5" />
+                    إضافة قالب نشر جديد
+                  </CardTitle>
+                  <CardDescription>
+                    إنشاء قوالب لتنسيق المحتوى المنشور تلقائياً
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label>اسم القالب</Label>
+                      <Input
+                        value={templateForm.name}
+                        onChange={(e) => setTemplateForm({ ...templateForm, name: e.target.value })}
+                        placeholder="مثال: قالب الأخبار العاجلة"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label>نوع القالب</Label>
+                      <Select
+                        value={templateForm.templateType}
+                        onValueChange={(value) => setTemplateForm({ ...templateForm, templateType: value })}
+                      >
+                        <SelectTrigger className="mt-1">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {templateTypes.map((type) => (
+                            <SelectItem key={type.value} value={type.value}>
+                              <div>
+                                <div className="font-medium">{type.label}</div>
+                                <div className="text-xs text-muted-foreground">{type.description}</div>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label>رأس القالب</Label>
+                    <Input
+                      value={templateForm.headerTemplate}
+                      onChange={(e) => setTemplateForm({ ...templateForm, headerTemplate: e.target.value })}
+                      placeholder="مثال: 🔴 {news_type} | {date}"
+                      className="mt-1"
+                      dir="ltr"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      المتغيرات المتاحة: {'{news_type}'}, {'{date}'}, {'{time}'}
+                    </p>
+                  </div>
+
+                  <div>
+                    <Label>جسم القالب</Label>
+                    <Textarea
+                      value={templateForm.bodyTemplate}
+                      onChange={(e) => setTemplateForm({ ...templateForm, bodyTemplate: e.target.value })}
+                      placeholder="{summary}"
+                      className="mt-1 min-h-[100px]"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      المتغير الرئيسي: {'{summary}'}
+                    </p>
+                  </div>
+
+                  <div>
+                    <Label>تذييل القالب</Label>
+                    <Input
+                      value={templateForm.footerTemplate}
+                      onChange={(e) => setTemplateForm({ ...templateForm, footerTemplate: e.target.value })}
+                      placeholder="مثال: 📍 {location} | المصدر: {source}"
+                      className="mt-1"
+                      dir="ltr"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      المتغيرات المتاحة: {'{location}'}, {'{source}'}, {'{author}'}
+                    </p>
+                  </div>
+
+                  <div>
+                    <Label>حقول الاستخراج</Label>
+                    <div className="flex gap-2 mt-1">
+                      <Input
+                        value={extractFieldInput}
+                        onChange={(e) => setExtractFieldInput(e.target.value)}
+                        placeholder="اسم الحقل"
+                        onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddExtractField())}
+                      />
+                      <Button type="button" onClick={handleAddExtractField} variant="outline">
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    {templateForm.extractFields && templateForm.extractFields.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {templateForm.extractFields.map((field, index) => (
+                          <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                            {field}
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveExtractField(index)}
+                              className="ml-1 hover:text-red-600"
+                            >
+                              ×
+                            </button>
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label>تعليمات الاستخراج (اختياري)</Label>
+                    <Textarea
+                      value={templateForm.extractionPrompt}
+                      onChange={(e) => setTemplateForm({ ...templateForm, extractionPrompt: e.target.value })}
+                      placeholder="تعليمات للذكاء الاصطناعي لاستخراج البيانات..."
+                      className="mt-1 min-h-[80px]"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label>الحد الأقصى للطول (اختياري)</Label>
+                      <Input
+                        type="number"
+                        value={templateForm.maxLength || ''}
+                        onChange={(e) => setTemplateForm({ ...templateForm, maxLength: e.target.value ? parseInt(e.target.value) : undefined })}
+                        placeholder="بدون حد"
+                        className="mt-1"
+                        min={0}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-6">
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={templateForm.isDefault}
+                        onCheckedChange={(checked) => setTemplateForm({ ...templateForm, isDefault: checked })}
+                      />
+                      <Label>قالب افتراضي</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={templateForm.useMarkdown}
+                        onCheckedChange={(checked) => setTemplateForm({ ...templateForm, useMarkdown: checked })}
+                      />
+                      <Label>استخدام Markdown</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={templateForm.useBold}
+                        onCheckedChange={(checked) => setTemplateForm({ ...templateForm, useBold: checked })}
+                      />
+                      <Label>نص عريض</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={templateForm.useItalic}
+                        onCheckedChange={(checked) => setTemplateForm({ ...templateForm, useItalic: checked })}
+                      />
+                      <Label>نص مائل</Label>
+                    </div>
+                  </div>
+
+                  <Button
+                    onClick={handleSubmitTemplate}
+                    disabled={createTemplateMutation.isPending}
+                    className="w-full"
+                  >
+                    {createTemplateMutation.isPending && <Loader className="h-4 w-4 mr-2 animate-spin" />}
+                    إضافة القالب
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-primary" />
+                  القوالب المضافة ({publishingTemplates.length})
+                </h3>
+                
+                {loadingTemplates ? (
+                  <div className="flex justify-center p-8">
+                    <Loader className="h-8 w-8 animate-spin text-primary" />
+                  </div>
+                ) : publishingTemplates.length === 0 ? (
+                  <Card className="p-8 text-center text-muted-foreground">
+                    <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>لا توجد قوالب نشر. أضف قالب جديد للبدء.</p>
+                  </Card>
+                ) : (
+                  <div className="grid gap-3">
+                    {publishingTemplates.map((template: any) => (
+                      <Card key={template.id} className="p-4">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="font-semibold">{template.name}</span>
+                              <Badge variant="outline">
+                                {templateTypes.find(t => t.value === template.templateType)?.label}
+                              </Badge>
+                              {template.isDefault && (
+                                <Badge>افتراضي</Badge>
+                              )}
+                            </div>
+                            <div className="flex flex-wrap items-center gap-2 mb-2">
+                              {template.useMarkdown && <Badge variant="secondary">Markdown</Badge>}
+                              {template.useBold && <Badge variant="secondary">عريض</Badge>}
+                              {template.useItalic && <Badge variant="secondary">مائل</Badge>}
+                              {template.maxLength && <Badge variant="outline">الحد: {template.maxLength}</Badge>}
+                            </div>
+                            {template.headerTemplate && (
+                              <div className="text-sm mb-1">
+                                <span className="text-muted-foreground">الرأس: </span>
+                                <code className="bg-muted px-1 rounded">{template.headerTemplate}</code>
+                              </div>
+                            )}
+                            {template.footerTemplate && (
+                              <div className="text-sm">
+                                <span className="text-muted-foreground">التذييل: </span>
+                                <code className="bg-muted px-1 rounded">{template.footerTemplate}</code>
+                              </div>
+                            )}
+                          </div>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="text-red-600"
+                            onClick={() => deleteTemplateMutation.mutate(template.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
                 )}
               </div>
             </TabsContent>
