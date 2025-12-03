@@ -218,6 +218,57 @@ export default function TasksPage() {
     },
   });
 
+  const createRuleMutation = useMutation({
+    mutationFn: ({ taskId, data }: { taskId: number; data: any }) => api.addTaskRule(taskId, data),
+    onSuccess: () => {
+      toast.success("تم إنشاء القاعدة بنجاح!");
+      refetchRules();
+      setRuleFormData(initialRuleFormData);
+      setRuleEditMode(false);
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "فشل إنشاء القاعدة");
+    },
+  });
+
+  const updateRuleMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: any }) => api.updateTaskRule(id, data),
+    onSuccess: () => {
+      toast.success("تم تحديث القاعدة بنجاح!");
+      refetchRules();
+      setRuleFormData(initialRuleFormData);
+      setRuleEditMode(false);
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "فشل تحديث القاعدة");
+    },
+  });
+
+  const deleteRuleMutation = useMutation({
+    mutationFn: (id: number) => api.deleteTaskRule(id),
+    onSuccess: () => {
+      toast.success("تم حذف القاعدة بنجاح");
+      refetchRules();
+    },
+    onError: () => {
+      toast.error("فشل في حذف القاعدة");
+    },
+  });
+
+  const toggleRuleMutation = useMutation({
+    mutationFn: (id: number) => {
+      const rule = taskRules.find(r => r.id === id);
+      return api.updateTaskRule(id, { isActive: !rule?.isActive });
+    },
+    onSuccess: () => {
+      toast.success("تم تحديث حالة القاعدة");
+      refetchRules();
+    },
+    onError: () => {
+      toast.error("فشل في تحديث حالة القاعدة");
+    },
+  });
+
   // Load rules for a specific task
   const loadTaskRules = async (taskId: number) => {
     try {
@@ -412,8 +463,14 @@ export default function TasksPage() {
         taskId: selectedTaskId,
         data: { ...ruleFormData, type: selectedRuleType }
       });
+    } else if (formData.id) {
+      // If we're editing a task, use the task ID from formData
+      createRuleMutation.mutate({
+        taskId: formData.id,
+        data: { ...ruleFormData, type: selectedRuleType }
+      });
     } else {
-      toast.error("يرجى حفظ المهمة أولاً قبل إضافة القواعس");
+      toast.error("يرجى حفظ المهمة أولاً قبل إضافة القواعد");
     }
   };
 

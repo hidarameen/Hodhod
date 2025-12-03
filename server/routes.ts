@@ -6,8 +6,9 @@ import bcrypt from "bcryptjs";
 import { insertUserSchema, insertForwardingTaskSchema, insertChannelSchema, insertAiRuleSchema } from "@shared/schema";
 import { z } from "zod";
 import { pushToGitHub, getGitHubInfo, listGitHubRepos, pushToGitHubRepo, getBranches, getFileChanges } from "./github-sync";
-import { db } from "@/server/storage";
-import { tasks, channels, providers, models, settings, errorLogs, taskRules } from "@/shared/schema";
+import { db } from "./storage";
+import { tasks, channels, providers, models, settings, errorLogs, taskRules } from "../shared/schema";
+import { eq, desc } from "drizzle-orm";
 
 const handleError = (res: Response, error: unknown, message: string = "An error occurred") => {
   console.error(error);

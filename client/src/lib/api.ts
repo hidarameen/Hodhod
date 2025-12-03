@@ -160,9 +160,23 @@ class ApiClient {
     });
   }
 
+  async addTaskRule(taskId: number, data: any) {
+    return this.request<any>(`/tasks/${taskId}/rules`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
   async updateRule(ruleId: number, data: any) {
     return this.request<any>(`/rules/${ruleId}`, {
       method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateTaskRule(ruleId: number, data: any) {
+    return this.request<any>(`/task-rules/${ruleId}`, {
+      method: "PUT",
       body: JSON.stringify(data),
     });
   }
@@ -175,6 +189,12 @@ class ApiClient {
 
   async deleteRule(ruleId: number) {
     return this.request<{ message: string }>(`/rules/${ruleId}`, {
+      method: "DELETE",
+    });
+  }
+
+  async deleteTaskRule(ruleId: number) {
+    return this.request<{ message: string }>(`/task-rules/${ruleId}`, {
       method: "DELETE",
     });
   }
