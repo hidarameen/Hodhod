@@ -108,6 +108,12 @@ class Settings:
             {"name": "llama-3.3-70b-versatile", "display": "LLaMA 3.3 70B Versatile", "type": "text"},
             {"name": "llama-3.1-8b-instant", "display": "LLaMA 3.1 8B Instant", "type": "text"},
             {"name": "gemma-7b-it", "display": "Gemma 7B", "type": "text"},
+            {"name": "llama-3.3-70b-specdec", "display": "LLaMA 3.3 70B SpecDec", "type": "text"},
+            {"name": "llama-guard-3-8b", "display": "LLaMA Guard 3 8B", "type": "text"},
+            {"name": "llama3-groq-70b-8192-tool-use-preview", "display": "LLaMA 3 Groq 70B Tool Use", "type": "text"},
+            {"name": "llama3-groq-8b-8192-tool-use-preview", "display": "LLaMA 3 Groq 8B Tool Use", "type": "text"},
+            {"name": "whisper-large-v3", "display": "Whisper Large v3", "type": "audio"},
+            {"name": "whisper-large-v3-turbo", "display": "Whisper Large v3 Turbo", "type": "audio"},
         ],
         "claude": [
             {"name": "claude-3-opus-20240229", "display": "Claude 3 Opus", "type": "text"},
