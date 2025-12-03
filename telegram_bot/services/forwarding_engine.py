@@ -6,6 +6,7 @@ Supports all media types including media groups, entities, and formatting
 Full detailed logging for every operation
 """
 import asyncio
+import os
 import traceback
 from datetime import datetime
 from typing import List, Dict, Any, Optional

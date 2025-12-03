@@ -375,5 +375,23 @@ class Database:
             status, result_json, error or "", job_id
         )
 
+    # Bot Settings
+    async def get_setting(self, key: str) -> Optional[str]:
+        """Get bot config setting by key"""
+        result = await self.fetchrow(
+            "SELECT value FROM bot_config WHERE key = $1",
+            key
+        )
+        return result["value"] if result else None
+    
+    async def set_setting(self, key: str, value: str, description: Optional[str] = None):
+        """Set bot config setting"""
+        return await self.execute(
+            """INSERT INTO bot_config (key, value, description)
+               VALUES ($1, $2, $3)
+               ON CONFLICT (key) DO UPDATE SET value = $2, updated_at = NOW()""",
+            key, value, description or ""
+        )
+
 # Global database instance
 db = Database()
