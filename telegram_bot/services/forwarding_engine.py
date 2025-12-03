@@ -145,6 +145,20 @@ class ForwardingEngine:
                                         
                                         if os.path.exists(video_path):
                                             try:
+                                                # Ensure mp4 extension
+                                                video_path = link_processor.ensure_mp4_extension(video_path)
+                                                
+                                                # Get video metadata (duration, width, height)
+                                                metadata = link_processor.get_video_metadata(video_path)
+                                                duration = metadata.get('duration', 0)
+                                                width = metadata.get('width', 0)
+                                                height = metadata.get('height', 0)
+                                                
+                                                # Generate thumbnail
+                                                thumb_path = await link_processor.generate_thumbnail(video_path)
+                                                
+                                                log_detailed("info", "forwarding_engine", "forward_message", f"Video metadata: duration={duration}s, {width}x{height}, thumb={thumb_path is not None}")
+                                                
                                                 # Truncate caption if too long (Telegram max is 1024)
                                                 send_caption = caption
                                                 if len(send_caption) > 1024:
@@ -152,10 +166,21 @@ class ForwardingEngine:
                                                 
                                                 log_detailed("info", "forwarding_engine", "forward_message", f"Sending video from link to {target_id} with caption ({len(send_caption)} chars)...")
                                                 
+                                                # Get filename from path
+                                                file_name = os.path.basename(video_path)
+                                                if not file_name.lower().endswith('.mp4'):
+                                                    file_name = file_name.rsplit('.', 1)[0] + '.mp4'
+                                                
                                                 await self.client.send_video(
                                                     chat_id=target_identifier,
                                                     video=video_path,
-                                                    caption=send_caption
+                                                    caption=send_caption,
+                                                    duration=duration,
+                                                    width=width,
+                                                    height=height,
+                                                    thumb=thumb_path,
+                                                    file_name=file_name,
+                                                    supports_streaming=True
                                                 )
                                                 
                                                 log_detailed("info", "forwarding_engine", "forward_message", f"✓ Video sent successfully to {target_id}")
@@ -165,6 +190,9 @@ class ForwardingEngine:
                                                     if os.path.exists(video_path):
                                                         os.remove(video_path)
                                                         log_detailed("info", "forwarding_engine", "forward_message", f"Cleaned up video file after sending")
+                                                    if thumb_path and os.path.exists(thumb_path):
+                                                        os.remove(thumb_path)
+                                                        log_detailed("info", "forwarding_engine", "forward_message", f"Cleaned up thumbnail after sending")
                                                 except Exception as cleanup_err:
                                                     log_detailed("warning", "forwarding_engine", "forward_message", f"Failed to cleanup video: {str(cleanup_err)}")
                                                 

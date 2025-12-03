@@ -732,22 +732,42 @@ export default function TasksPage() {
                     </div>
 
                     {formData.linkVideoDownloadEnabled && (
-                      <div>
-                        <Label>دقة الفيديو</Label>
-                        <Select
-                          value={formData.linkVideoQuality}
-                          onValueChange={(value) => setFormData({...formData, linkVideoQuality: value})}
-                        >
-                          <SelectTrigger className="mt-1" data-testid="select-link-video-quality">
-                            <SelectValue placeholder="اختر الدقة" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="low">منخفضة (480p)</SelectItem>
-                            <SelectItem value="medium">متوسطة (720p)</SelectItem>
-                            <SelectItem value="high">عالية (1080p)</SelectItem>
-                            <SelectItem value="best">أعلى دقة (أفضل متاح)</SelectItem>
-                          </SelectContent>
-                        </Select>
+                      <div className="space-y-3">
+                        <Label className="flex items-center gap-2">
+                          <Video className="h-4 w-4 text-emerald-500" />
+                          دقة الفيديو
+                        </Label>
+                        <div className="grid grid-cols-2 gap-2">
+                          {[
+                            { value: 'low', label: 'منخفضة', resolution: '480p', size: '~15MB', color: 'from-gray-500/20 to-gray-500/5 border-gray-500/30', icon: '📱' },
+                            { value: 'medium', label: 'متوسطة', resolution: '720p', size: '~30MB', color: 'from-blue-500/20 to-blue-500/5 border-blue-500/30', icon: '💻' },
+                            { value: 'high', label: 'عالية', resolution: '1080p', size: '~50MB', color: 'from-purple-500/20 to-purple-500/5 border-purple-500/30', icon: '🖥️' },
+                            { value: 'best', label: 'أفضل متاح', resolution: '4K+', size: '~100MB', color: 'from-emerald-500/20 to-emerald-500/5 border-emerald-500/30', icon: '✨' },
+                          ].map((quality) => (
+                            <button
+                              key={quality.value}
+                              type="button"
+                              onClick={() => setFormData({...formData, linkVideoQuality: quality.value})}
+                              className={`p-3 rounded-lg border-2 transition-all duration-200 text-right ${
+                                formData.linkVideoQuality === quality.value 
+                                  ? `bg-gradient-to-br ${quality.color} ring-2 ring-offset-2 ring-offset-background ring-primary/50`
+                                  : 'bg-muted/30 border-border hover:border-primary/50 hover:bg-muted/50'
+                              }`}
+                              data-testid={`quality-${quality.value}`}
+                            >
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="text-lg">{quality.icon}</span>
+                                <span className="text-xs font-medium text-muted-foreground">{quality.resolution}</span>
+                              </div>
+                              <div className="font-semibold text-sm">{quality.label}</div>
+                              <div className="text-xs text-muted-foreground mt-1">≈ {quality.size}</div>
+                            </button>
+                          ))}
+                        </div>
+                        <p className="text-xs text-muted-foreground flex items-center gap-1">
+                          <span className="text-amber-500">⚡</span>
+                          سيتم تجربة دقة أقل تلقائياً إذا لم تتوفر الدقة المختارة
+                        </p>
                       </div>
                     )}
 

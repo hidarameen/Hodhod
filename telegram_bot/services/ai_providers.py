@@ -310,35 +310,85 @@ class AIManager:
         provider: str,
         model: str,
         custom_rule: Optional[str] = None,
-        system_prompt: Optional[str] = None
+        system_prompt: Optional[str] = None,
+        max_tokens: Optional[int] = None
     ) -> str:
-        """Summarize text using AI - combines system prompt and custom rule"""
-        # Use system prompt if provided, otherwise use default
+        """
+        Summarize text using AI - combines system prompt and custom rule
+        
+        Args:
+            text: The text to summarize
+            provider: AI provider name (openai, groq, claude, huggingface)
+            model: Model name to use
+            custom_rule: Custom rule/prompt for summarization
+            system_prompt: System prompt to override default
+            max_tokens: Maximum tokens for response (auto-calculated if not provided)
+        """
+        if not text or not text.strip():
+            error_logger.log_warning("[AIManager] Empty text provided for summarization")
+            return text or ""
+        
+        text = text.strip()
+        text_length = len(text)
+        
+        if text_length < 50:
+            error_logger.log_info(f"[AIManager] Text too short for summarization ({text_length} chars), returning as-is")
+            return text
+        
         base_prompt = system_prompt or "قم بتلخيص النص التالي بشكل موجز ومفيد:"
         
-        # If there's a custom rule, combine it with the system prompt
-        if custom_rule:
-            final_prompt = f"{base_prompt}\n\n{custom_rule}"
+        if custom_rule and custom_rule.strip():
+            final_prompt = f"{base_prompt}\n\n{custom_rule.strip()}"
         else:
             final_prompt = base_prompt
             
         prompt = f"{final_prompt}\n\n{text}"
         
-        error_logger.log_info(f"[AIManager] Starting summarization | Provider: {provider} | Model: {model} | Input: {len(text)} chars")
+        if max_tokens is None:
+            if text_length < 500:
+                max_tokens = 300
+            elif text_length < 1500:
+                max_tokens = 600
+            elif text_length < 4000:
+                max_tokens = 1000
+            else:
+                max_tokens = 1500
         
-        result = await self.generate(
-            provider=provider,
-            model=model,
-            prompt=prompt,
-            max_tokens=500
-        )
+        error_logger.log_info(f"[AIManager] Starting summarization | Provider: {provider} | Model: {model} | Input: {text_length} chars | Max tokens: {max_tokens}")
         
-        if result:
-            error_logger.log_info(f"[AIManager] ✅ Summarization complete | Provider: {provider} | Model: {model} | Output: {len(result)} chars | Reduction: {len(text) - len(result)} chars ({100 - (len(result) * 100 // len(text))}%)")
+        result = None
+        retry_count = 0
+        max_retries = 2
+        
+        while retry_count <= max_retries:
+            try:
+                result = await self.generate(
+                    provider=provider,
+                    model=model,
+                    prompt=prompt,
+                    max_tokens=max_tokens
+                )
+                if result and result.strip():
+                    break
+            except Exception as e:
+                error_logger.log_warning(f"[AIManager] Summarization attempt {retry_count + 1} failed: {str(e)}")
+            retry_count += 1
+            if retry_count <= max_retries:
+                await asyncio.sleep(1)
+        
+        if result and result.strip():
+            result = result.strip()
+            result_length = len(result)
+            if text_length > 0:
+                reduction_percent = max(0, min(100, 100 - (result_length * 100 // text_length)))
+            else:
+                reduction_percent = 0
+            
+            error_logger.log_info(f"[AIManager] ✅ Summarization complete | Provider: {provider} | Model: {model} | Output: {result_length} chars | Reduction: {text_length - result_length} chars ({reduction_percent}%)")
             error_logger.log_info(f"[AIManager] Summary preview: {result[:150]}")
             return result
         else:
-            error_logger.log_info(f"[AIManager] ⚠️ Summarization failed, returning original text | Provider: {provider} | Model: {model}")
+            error_logger.log_info(f"[AIManager] ⚠️ Summarization failed after {max_retries + 1} attempts, returning original text | Provider: {provider} | Model: {model}")
             return text
     
     @handle_errors("ai_manager", "transcribe_audio")

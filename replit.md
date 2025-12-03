@@ -116,6 +116,24 @@ Video messages flow through a multi-stage pipeline:
 
 **Architecture Decision**: Video processing runs asynchronously in the queue system to avoid blocking message forwarding, with temporary file cleanup after processing.
 
+## Link Processing Pipeline (Enhanced Dec 2024)
+
+Link processing for social media videos (YouTube, TikTok, Instagram, etc.):
+
+1. **Download**: yt-dlp with format fallback mechanism (4 quality levels)
+2. **Audio Extraction**: FFmpeg for MP3 extraction
+3. **Transcription**: Groq Whisper API (whisper-large-v3-turbo)
+4. **Summarization**: AI provider with video-specific rules
+5. **Telegraph**: Create page with full transcript
+6. **Video Send**: With thumbnail, duration, and metadata
+
+**Recent Improvements (Dec 2024)**:
+- Format fallback: Prioritizes single-file formats with embedded audio (`acodec!=none`)
+- Thumbnail generation: Auto-generate preview image from video
+- Video metadata: Duration, width, height properly extracted via ffprobe
+- Rule separation: Video rules are now separate from text summarization rules
+- Quality selection UI: Improved visual design with icons and size estimates
+
 # External Dependencies
 
 ## Third-Party Services
