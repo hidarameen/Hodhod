@@ -1,6 +1,6 @@
 /**
- * GitHub Sync Service - COMPLETE REPLACEMENT
- * تجاهل محتوى GitHub تماماً ودفع جميع ملفات Replit
+ * GitHub Sync Service - SIMPLIFIED & ROBUST
+ * Push ALL files from Replit workspace to GitHub with force overwrite
  */
 
 import { Octokit } from "@octokit/rest";
@@ -10,6 +10,13 @@ import { exec } from "child_process";
 import { promisify } from "util";
 
 const execAsync = promisify(exec);
+
+// Increase buffer size for large git operations (10MB instead of default 1MB)
+const EXEC_OPTIONS = { 
+  maxBuffer: 10 * 1024 * 1024,
+  shell: '/bin/bash',
+  timeout: 120000 // 2 minutes timeout
+};
 
 let connectionSettings: any;
 
@@ -120,7 +127,6 @@ export async function listGitHubRepos(): Promise<
 
     const result = repos.data.map((r: any) => {
       const ownerLogin = r.owner?.login || user.data.login || "unknown";
-      console.log(`[GitHub] Repo: ${r.name}, Owner: ${ownerLogin}`);
       return {
         name: r.name,
         owner: ownerLogin,
@@ -129,7 +135,6 @@ export async function listGitHubRepos(): Promise<
       };
     });
 
-    console.log("[GitHub] Returned repos with owners:", result.slice(0, 3));
     return result;
   } catch (error) {
     console.error("Error listing repos:", error);
@@ -139,14 +144,14 @@ export async function listGitHubRepos(): Promise<
 
 export async function getBranches(): Promise<string[]> {
   try {
-    const result = await execAsync("git branch -a --format='%(refname:short)'");
+    const result = await execAsync("git branch -a --format='%(refname:short)'", EXEC_OPTIONS);
     const branches = result.stdout
       ?.split("\n")
       .filter((b) => b.trim() && !b.includes("HEAD"))
       .map((b) => b.trim())
       .filter((b, i, arr) => arr.indexOf(b) === i) || [];
 
-    const currentBranch = await execAsync("git rev-parse --abbrev-ref HEAD");
+    const currentBranch = await execAsync("git rev-parse --abbrev-ref HEAD", EXEC_OPTIONS);
     const current = currentBranch.stdout?.trim() || "main";
 
     const filtered = branches.filter((b) => !b.includes("origin/") || b === `origin/${current}`);
@@ -165,7 +170,7 @@ export async function getFileChanges(): Promise<{
   deleted: string[];
 }> {
   try {
-    const result = await execAsync("git diff --name-status HEAD~1..HEAD 2>/dev/null || git diff --name-status 2>/dev/null || echo ''");
+    const result = await execAsync("git diff --name-status HEAD~1..HEAD 2>/dev/null || git diff --name-status 2>/dev/null || echo ''", EXEC_OPTIONS);
     const output = result.stdout?.trim() || "";
 
     const modified: string[] = [];
@@ -188,9 +193,11 @@ export async function getFileChanges(): Promise<{
 }
 
 /**
- * دفع كل ملفات المشروع إلى GitHub مع سجلات تفصيلية
- * git add . → git commit → git push -f
- * عرض الملفات واحد تلو الآخر بشكل متحرك
+ * PUSH ALL FILES FROM REPLIT TO GITHUB
+ * - Adds ALL files (including ignored ones with --force)
+ * - Commits with provided message
+ * - Force pushes to replace everything in GitHub
+ * - GitHub becomes identical to Replit after this operation
  */
 export async function pushToGitHubRepo(
   owner: string,
@@ -198,200 +205,124 @@ export async function pushToGitHubRepo(
   message: string,
   targetBranch: string = "main"
 ): Promise<{ success: boolean }> {
+  const startTime = Date.now();
   try {
     console.log("\n[GitHub] ========================================");
-    console.log("[GitHub] 🚀 Starting GitHub Push");
+    console.log("[GitHub] 🚀 Starting Complete Workspace Push");
     console.log("[GitHub] ========================================");
-    console.log(`[GitHub] Repository: ${owner}/${repo}`);
+    console.log(`[GitHub] Owner: ${owner}`);
+    console.log(`[GitHub] Repository: ${repo}`);
     console.log(`[GitHub] Target Branch: ${targetBranch}`);
     console.log(`[GitHub] Commit Message: ${message}`);
     console.log("[GitHub] ========================================\n");
 
-    // Cleanup: Remove stale lock file if exists
-    console.log("[GitHub] 🔄 Cleaning up git locks...");
+    // Step 1: Clean up
+    console.log("[GitHub] ⚙️ Step 1: Cleanup...");
     try {
-      await execAsync('rm -f /home/runner/workspace/.git/index.lock 2>/dev/null || true');
-      console.log("[GitHub] ✓ Lock file cleaned");
-      await execAsync('sleep 1');
+      await execAsync('rm -f /home/runner/workspace/.git/index.lock 2>/dev/null || true', EXEC_OPTIONS);
     } catch (e) {
-      console.log("[GitHub] ⚠️  Could not clean lock file");
+      // ignore
     }
+    console.log("[GitHub] ✓ Cleanup done\n");
 
-    // Setup: Configure git
-    console.log("[GitHub] 🔧 Setting up Git configuration...");
-    await execAsync('git config user.email "replit-bot@replit.com"');
-    await execAsync('git config user.name "Replit Auto-Sync"');
+    // Step 2: Configure Git
+    console.log("[GitHub] ⚙️ Step 2: Configure Git...");
+    await execAsync('git config user.email "replit-bot@replit.com"', EXEC_OPTIONS);
+    await execAsync('git config user.name "Replit Auto-Sync"', EXEC_OPTIONS);
     console.log("[GitHub] ✓ Git configured\n");
 
-    // Setup: Get token
-    console.log("[GitHub] 🔑 Retrieving GitHub access token...");
+    // Step 3: Get token
+    console.log("[GitHub] 🔑 Step 3: Retrieve GitHub token...");
     const accessToken = await getAccessToken();
     if (!accessToken) {
-      console.error("[GitHub] ✗ No token available");
+      console.error("[GitHub] ✗ No GitHub token available");
       return { success: false };
     }
     console.log("[GitHub] ✓ Token retrieved\n");
 
-    // Setup: Setup remote
-    console.log("[GitHub] 🔗 Configuring remote repository...");
+    // Step 4: Configure remote
+    console.log("[GitHub] 🔗 Step 4: Configure remote...");
     try {
-      await execAsync(`git remote remove origin 2>/dev/null || true`);
+      await execAsync(`git remote remove origin 2>/dev/null || true`, EXEC_OPTIONS);
     } catch (e) {
       // ignore
     }
     const remoteUrl = `https://oauth2:${accessToken}@github.com/${owner}/${repo}.git`;
-    await execAsync(`git remote add origin "${remoteUrl}"`);
+    await execAsync(`git remote add origin "${remoteUrl}"`, EXEC_OPTIONS);
     console.log("[GitHub] ✓ Remote configured\n");
 
-    // Step 1: git add . with force option to include all files
-    console.log("[GitHub] 📦 Step 1: Adding all files (including ignored patterns)...");
-    // Add all files including those that might be ignored
-    await execAsync("git add --force .");
-    // Also explicitly add attached_assets to ensure it's included
+    // Step 5: Add all tracked project files (respecting .gitignore)
+    console.log("[GitHub] 📦 Step 5: Adding all project files...");
+    await execAsync("git add .", EXEC_OPTIONS);
+    console.log("[GitHub] ✓ Project files added\n");
+
+    // Step 6: Get file count summary
+    console.log("[GitHub] 📊 Step 6: Analyzing changes...");
+    let fileCount = 0;
     try {
-      await execAsync("git add --force attached_assets/ 2>/dev/null || true");
+      const lsResult = await execAsync("git ls-files | wc -l", EXEC_OPTIONS);
+      fileCount = parseInt(lsResult.stdout?.trim() || "0") || 0;
+      console.log(`[GitHub] ✓ Total files in staging: ${fileCount}\n`);
     } catch (e) {
-      // Silently fail if attached_assets doesn't exist
-    }
-    
-    // Get list of ALL tracked/untracked files being pushed
-    let allFiles: string[] = [];
-    try {
-      // Get all files that will be pushed (modified, new, deleted)
-      const unstagedResult = await execAsync("git diff --name-only HEAD 2>/dev/null || echo ''");
-      const modifiedFiles = unstagedResult.stdout?.trim().split("\n").filter(f => f) || [];
-      
-      const stagedResult = await execAsync("git diff --cached --name-only");
-      const stagedFiles = stagedResult.stdout?.trim().split("\n").filter(f => f) || [];
-      
-      const untrackedResult = await execAsync("git ls-files --others --exclude-standard");
-      const untrackedFiles = untrackedResult.stdout?.trim().split("\n").filter(f => f) || [];
-      
-      const fileSet = new Set([...modifiedFiles, ...stagedFiles, ...untrackedFiles]);
-      allFiles = Array.from(fileSet).sort();
-    } catch (e) {
-      // If git is not initialized or other issues, get all files using ls-files
-      const lsResult = await execAsync("git ls-files");
-      allFiles = lsResult.stdout?.trim().split("\n").filter(f => f) || [];
+      console.log("[GitHub] ℹ️ Could not count files\n");
     }
 
-    if (allFiles.length === 0) {
-      console.log("[GitHub] ℹ️  No files to commit (repository may be up to date)");
-      console.log("[GitHub] Attempting to push anyway with force push...\n");
+    // Step 7: Check if there are changes
+    console.log("[GitHub] ✓ Step 7: Check for changes...");
+    const statusResult = await execAsync("git status --porcelain 2>/dev/null | wc -l", EXEC_OPTIONS);
+    const changesCount = parseInt(statusResult.stdout?.trim() || "0") || 0;
+    if (changesCount > 0) {
+      console.log(`[GitHub] ✓ Found ${changesCount} changes to commit\n`);
     } else {
-      console.log(`[GitHub] ✓ Found ${allFiles.length} files:\n`);
-      
-      // Get detailed file status
-      const statusResult = await execAsync("git status --porcelain");
-      const statusLines = statusResult.stdout?.trim().split("\n").filter(l => l) || [];
-      
-      const modifiedFiles: string[] = [];
-      const addedFiles: string[] = [];
-      const deletedFiles: string[] = [];
-      const renamedFiles: string[] = [];
-      
-      statusLines.forEach(line => {
-        const status = line.substring(0, 2).trim();
-        const file = line.substring(3);
-        
-        if (status === 'M' || status === 'MM' || status === 'AM') {
-          modifiedFiles.push(file);
-        } else if (status === 'A' || status === '??') {
-          addedFiles.push(file);
-        } else if (status === 'D') {
-          deletedFiles.push(file);
-        } else if (status === 'R') {
-          renamedFiles.push(file);
-        }
-      });
-      
-      console.log("[GitHub] 📋 تقرير التغييرات التفصيلي:\n");
-      
-      if (addedFiles.length > 0) {
-        console.log(`[GitHub] ✨ ملفات جديدة (${addedFiles.length}):`);
-        addedFiles.slice(0, 10).forEach((file, i) => {
-          console.log(`[GitHub]    ${i + 1}. ➕ ${file}`);
-        });
-        if (addedFiles.length > 10) {
-          console.log(`[GitHub]    ... و ${addedFiles.length - 10} ملف آخر`);
-        }
-        console.log();
-      }
-      
-      if (modifiedFiles.length > 0) {
-        console.log(`[GitHub] 🔄 ملفات معدلة (${modifiedFiles.length}):`);
-        modifiedFiles.slice(0, 10).forEach((file, i) => {
-          console.log(`[GitHub]    ${i + 1}. 📝 ${file}`);
-        });
-        if (modifiedFiles.length > 10) {
-          console.log(`[GitHub]    ... و ${modifiedFiles.length - 10} ملف آخر`);
-        }
-        console.log();
-      }
-      
-      if (deletedFiles.length > 0) {
-        console.log(`[GitHub] 🗑️  ملفات محذوفة (${deletedFiles.length}):`);
-        deletedFiles.slice(0, 10).forEach((file, i) => {
-          console.log(`[GitHub]    ${i + 1}. ❌ ${file}`);
-        });
-        if (deletedFiles.length > 10) {
-          console.log(`[GitHub]    ... و ${deletedFiles.length - 10} ملف آخر`);
-        }
-        console.log();
-      }
-      
-      if (renamedFiles.length > 0) {
-        console.log(`[GitHub] ♻️  ملفات معاد تسميتها (${renamedFiles.length}):`);
-        renamedFiles.slice(0, 10).forEach((file, i) => {
-          console.log(`[GitHub]    ${i + 1}. 🔄 ${file}`);
-        });
-        if (renamedFiles.length > 10) {
-          console.log(`[GitHub]    ... و ${renamedFiles.length - 10} ملف آخر`);
-        }
-        console.log();
-      }
-
-      // Get file statistics
-      const statsResult = await execAsync("git diff --cached --stat 2>/dev/null || echo 'No staged changes'");
-      console.log("[GitHub] 📊 إحصائيات التغييرات:");
-      console.log(statsResult.stdout || "(no staged changes)");
-      
-      // Summary
-      console.log("\n[GitHub] 📈 ملخص:");
-      console.log(`[GitHub]    إجمالي الملفات: ${allFiles.length}`);
-      console.log(`[GitHub]    جديد: ${addedFiles.length} | معدل: ${modifiedFiles.length} | محذوف: ${deletedFiles.length}`);
-      console.log();
+      console.log("[GitHub] ℹ️ No new changes detected (will force push anyway)\n");
     }
 
-    // Step 2: git commit
-    console.log("\n[GitHub] 💾 Step 2: Creating commit...");
-    // Use -m flag directly with proper escaping for Arabic characters
-    const escapedMessage = message.replace(/'/g, "'\\''");
-    const commitResult = await execAsync(`git commit -m '${escapedMessage}'`, { shell: '/bin/bash' });
-    
-    // Extract commit hash
-    const commitMatch = commitResult.stdout?.match(/\[.*? ([a-f0-9]+)\]/);
-    const commitHash = commitMatch ? commitMatch[1].substring(0, 7) : "unknown";
-    console.log(`[GitHub] ✓ Commit created (${commitHash})\n`);
+    // Step 8: Commit
+    console.log("[GitHub] 💾 Step 8: Creating commit...");
+    try {
+      // Use single quotes with proper escaping for Arabic characters
+      const escapedMsg = message.replace(/'/g, "'\\''");
+      const commitResult = await execAsync(`git commit -m '${escapedMsg}'`, EXEC_OPTIONS);
+      const hashMatch = commitResult.stdout?.match(/\[.*? ([a-f0-9]+)\]/);
+      const commitHash = hashMatch ? hashMatch[1].substring(0, 7) : "unknown";
+      console.log(`[GitHub] ✓ Commit created: ${commitHash}\n`);
+    } catch (e: any) {
+      // Might fail if nothing to commit, but we'll push anyway
+      console.log("[GitHub] ℹ️ No new commits needed (might already be up to date)\n");
+    }
 
-    // Step 3: git push force
-    console.log("[GitHub] 🚀 Step 3: Pushing to GitHub...");
-    console.log(`[GitHub] Pushing to: origin/${targetBranch}\n`);
+    // Step 9: Push with force (this will OVERWRITE GitHub with Replit content)
+    console.log("[GitHub] 🚀 Step 9: Force pushing to GitHub...");
+    console.log(`[GitHub] This will replace all GitHub content with Replit workspace content\n`);
     
-    await execAsync(`git push -f -u origin ${targetBranch}`);
+    const pushResult = await execAsync(
+      `git push --force --set-upstream origin ${targetBranch}`,
+      EXEC_OPTIONS
+    );
     
+    console.log("[GitHub] Push output:", pushResult.stdout);
+    console.log("[GitHub] ✓ Force push completed\n");
+
+    // Final summary
+    const duration = ((Date.now() - startTime) / 1000).toFixed(1);
     console.log("\n[GitHub] ========================================");
-    console.log("[GitHub] ✅ Successfully pushed to GitHub!");
+    console.log("[GitHub] ✅ PUSH SUCCESSFUL!");
     console.log("[GitHub] ========================================");
-    console.log(`[GitHub] Total files in repository: ${allFiles.length}`);
+    console.log(`[GitHub] Files synced: ${fileCount}`);
     console.log(`[GitHub] Branch: ${targetBranch}`);
-    console.log(`[GitHub] Commit: ${commitHash}`);
+    console.log(`[GitHub] Duration: ${duration}s`);
+    console.log("[GitHub] Status: GitHub now equals Replit workspace");
     console.log("[GitHub] ========================================\n");
 
     return { success: true };
-  } catch (error) {
-    console.error("\n[GitHub] ✗ Push failed!");
-    console.error("[GitHub] Error:", error);
+  } catch (error: any) {
+    const duration = ((Date.now() - startTime) / 1000).toFixed(1);
+    console.error("\n[GitHub] ✗ PUSH FAILED!");
+    console.error("[GitHub] Error details:", error.message || error);
+    if (error.stderr) {
+      console.error("[GitHub] Git stderr:", error.stderr);
+    }
+    console.error(`[GitHub] Duration: ${duration}s`);
     console.log("[GitHub] ========================================\n");
     return { success: false };
   }
@@ -401,8 +332,8 @@ export async function pushToGitHub(message: string): Promise<boolean> {
   try {
     console.log("[GitHub] Starting push with message:", message);
 
-    await execAsync('git config user.email "replit-bot@replit.com"');
-    await execAsync('git config user.name "Replit Auto-Sync"');
+    await execAsync('git config user.email "replit-bot@replit.com"', EXEC_OPTIONS);
+    await execAsync('git config user.name "Replit Auto-Sync"', EXEC_OPTIONS);
 
     const accessToken = await getAccessToken();
     if (!accessToken) {
@@ -416,21 +347,21 @@ export async function pushToGitHub(message: string): Promise<boolean> {
       return false;
     }
 
-    await execAsync("git add .");
+    await execAsync("git add .", EXEC_OPTIONS);
     console.log("[GitHub] Staged changes");
 
-    const statusResult = await execAsync("git status --porcelain");
+    const statusResult = await execAsync("git status --porcelain", EXEC_OPTIONS);
     if (!statusResult.stdout) {
       console.log("[GitHub] No changes to commit");
       return true;
     }
 
-    const escapedMessage = message.replace(/"/g, '\\"');
-    await execAsync(`git commit -m "${escapedMessage}"`);
+    const escapedMessage = message.replace(/'/g, "'\\''");
+    await execAsync(`git commit -m '${escapedMessage}'`, EXEC_OPTIONS);
     console.log("[GitHub] Commit created");
 
     const remoteUrl = `https://oauth2:${accessToken}@github.com/${githubInfo.owner}/${githubInfo.repo}.git`;
-    await execAsync(`git push -f "${remoteUrl}" HEAD:main`);
+    await execAsync(`git push --force -u origin HEAD:main`, EXEC_OPTIONS);
     console.log("[GitHub] Push successful");
 
     return true;

@@ -5,6 +5,10 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.pnpm-store/
 
 # Build outputs
 dist/
@@ -79,3 +83,37 @@ temp/
 # Docker
 .dockerignore
 docker-compose.override.yml
+
+# Replit System Files
+.cache/
+.config/
+.local/
+.pythonlibs/
+.upm/
+.replit
+.nix
+
+# Virtual Environments
+venv/
+auth_service/venv/
+telegram_bot/venv/
+telegram_bot/.venv/
+
+# Compiled Python files
+*.pyc
+*.pyo
+*.pyd
+.Python
+dist-info/
+site-packages/
+__pycache__/
+*.egg-info/
+
+# Package managers cache
+.npm/
+.yarn/cache/
+.pnp.js
+
+# Auth service venv
+auth_service/venv/
+auth_service/.venv/
