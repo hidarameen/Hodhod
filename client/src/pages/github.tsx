@@ -37,6 +37,26 @@ export default function GitHubPage() {
   useEffect(() => {
     loadGitHubInfo();
     loadLinkedRepo();
+
+    // Auto-refresh GitHub info every 5 seconds to show real-time connection status
+    const statusCheckInterval = setInterval(() => {
+      fetch("/api/github/info")
+        .then((res) => res.json())
+        .then((data) => {
+          setInfo((prevInfo: any) => {
+            // Only update if status changed to show connection update
+            if (prevInfo?.status !== data.status) {
+              return data;
+            }
+            return prevInfo;
+          });
+        })
+        .catch(() => {
+          // Silently fail on network errors
+        });
+    }, 5000);
+
+    return () => clearInterval(statusCheckInterval);
   }, []);
 
   const loadLinkedRepo = async () => {

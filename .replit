@@ -1,10 +1,11 @@
 modules = ["nodejs-20", "python-3.11", "web", "bash", "postgresql-16"]
 [agent]
 expertMode = true
+integrations = ["github:1.0.0"]
 
 [nix]
 channel = "stable-25_05"
-packages = ["ffmpeg-full", "freetype", "lcms2", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "openjpeg", "postgresql", "tcl", "tk", "yt-dlp", "zlib", "jq"]
+packages = ["ffmpeg-full", "freetype", "jq", "lcms2", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "openjpeg", "postgresql", "tcl", "tk", "yt-dlp", "zlib"]
 
 [userenv]
 
@@ -40,6 +41,10 @@ outputType = "webview"
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 36447
+externalPort = 3001
 
 [[ports]]
 localPort = 39733
