@@ -8795,3 +8795,40 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-03 22:27:41,619 - task_4 - INFO - Message forwarded to 1/1 targets
 2025-12-03 22:27:41,619 - forwarding_engine - INFO - [2025-12-03 22:27:41.619] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
 2025-12-03 22:27:41,619 - main - INFO - [2025-12-03 22:27:41.619] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-03 22:33:26,307 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-03 22:33:26,310 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-03 22:33:26,312 - main - INFO - [2025-12-03 22:33:26.312] [INFO] [main::entry] Bot script started | {}
+2025-12-03 22:33:26,312 - main - INFO - [2025-12-03 22:33:26.312] [INFO] [main::startup] Validating settings... | {}
+2025-12-03 22:33:26,312 - main - WARNING - [2025-12-03 22:33:26.312] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-03 22:33:26,313 - main - INFO - [2025-12-03 22:33:26.313] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-03 22:33:26,313 - main - INFO - [2025-12-03 22:33:26.313] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-03 22:33:26,313 - main - INFO - [2025-12-03 22:33:26.313] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-03 22:33:26,313 - queue_system - INFO - Queue manager stopped | {}
+2025-12-03 22:33:26,313 - main - INFO - [2025-12-03 22:33:26.313] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-03 22:33:26,313 - main - INFO - [2025-12-03 22:33:26.313] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-03 22:33:26,313 - main - INFO - [2025-12-03 22:33:26.313] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-03 22:33:26,313 - main - INFO - [2025-12-03 22:33:26.313] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-03 22:33:32,573 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-03 22:33:32,574 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-03 22:33:32,575 - main - INFO - [2025-12-03 22:33:32.575] [INFO] [main::entry] Bot script started | {}
+2025-12-03 22:33:32,575 - main - INFO - [2025-12-03 22:33:32.575] [INFO] [main::startup] Validating settings... | {}
+2025-12-03 22:33:32,575 - main - WARNING - [2025-12-03 22:33:32.575] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-03 22:33:32,575 - main - INFO - [2025-12-03 22:33:32.575] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-03 22:33:32,575 - main - INFO - [2025-12-03 22:33:32.575] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-03 22:33:32,575 - main - INFO - [2025-12-03 22:33:32.575] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-03 22:33:32,575 - queue_system - INFO - Queue manager stopped | {}
+2025-12-03 22:33:32,575 - main - INFO - [2025-12-03 22:33:32.575] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-03 22:33:32,576 - main - INFO - [2025-12-03 22:33:32.575] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-03 22:33:32,576 - main - INFO - [2025-12-03 22:33:32.576] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-03 22:33:32,576 - main - INFO - [2025-12-03 22:33:32.576] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-03 22:33:47,563 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-03 22:33:47,564 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-03 22:33:47,566 - main - INFO - [2025-12-03 22:33:47.566] [INFO] [main::entry] Bot script started | {}
+2025-12-03 22:33:47,567 - main - INFO - [2025-12-03 22:33:47.567] [INFO] [main::startup] Validating settings... | {}
+2025-12-03 22:33:47,567 - main - INFO - [2025-12-03 22:33:47.567] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-03 22:33:47,570 - main - INFO - [2025-12-03 22:33:47.569] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-03 22:33:49,446 - database - INFO - Database connected successfully | {}
+2025-12-03 22:33:49,874 - main - INFO - [2025-12-03 22:33:49.874] [INFO] [session::load] Found active session in database | {}
+2025-12-03 22:33:49,875 - main - INFO - [2025-12-03 22:33:49.875] [INFO] [main::init] Creating Pyrofork client | Data: {'api_id': 24343527, 'has_session': True, 'api_hash_set': True} | {}
+2025-12-03 22:33:51,673 - main - INFO - [2025-12-03 22:33:51.673] [INFO] [main::initialize_bot] Starting bot initialization... | {}
+2025-12-03 22:33:51,674 - main - INFO - [2025-12-03 22:33:51.674] [INFO] [database::connect] Connecting to database... | {}
