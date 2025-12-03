@@ -141,8 +141,9 @@ export default function TasksPage() {
   const createMutation = useMutation({
     mutationFn: (data: TaskFormData) => api.createTask(data),
     onSuccess: (newTask: any) => {
-      toast.success("تم إنشاء المهمة بنجاح! يمكنك الآن إضافة القواعس");
-      setSelectedTaskId(newTask.id);
+      toast.success("تم إنشاء المهمة بنجاح!");
+      setIsOpen(false);
+      setSelectedTaskId(null);
       setFormData(initialFormData);
       setEditMode(false);
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
@@ -156,7 +157,11 @@ export default function TasksPage() {
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Partial<TaskFormData> }) => api.updateTask(id, data),
     onSuccess: () => {
-      toast.success("تم تحديث المهمة بنجاح! يمكنك الآن إضافة القواعس");
+      toast.success("تم تحديث المهمة بنجاح!");
+      setIsOpen(false);
+      setSelectedTaskId(null);
+      setFormData(initialFormData);
+      setEditMode(false);
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
       refetchRules();
