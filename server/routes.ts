@@ -337,6 +337,58 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   });
 
   // ============ Userbot ============
+  
+  // Get userbot status
+  app.get("/api/userbot/status", async (req: Request, res: Response) => {
+    try {
+      const session = await storage.getActiveUserbotSession();
+      if (session && session.isActive) {
+        res.json({ 
+          status: "connected", 
+          phoneNumber: session.phoneNumber,
+          lastLoginAt: session.lastLoginAt 
+        });
+      } else {
+        res.json({ status: "disconnected" });
+      }
+    } catch (error) {
+      res.json({ status: "disconnected" });
+    }
+  });
+
+  // Start login (alias for request)
+  app.post("/api/userbot/login/start", async (req: Request, res: Response) => {
+    try {
+      const { phoneNumber } = req.body;
+      if (!phoneNumber) {
+        return res.status(400).json({ status: "error", message: "رقم الهاتف مطلوب" });
+      }
+      const response = await authServiceManager.startLogin(phoneNumber);
+      res.json(response.data);
+    } catch (error) {
+      console.error("Login start error:", error);
+      res.json({ status: "error", message: "فشل في إرسال رمز التحقق" });
+    }
+  });
+
+  // Verify OTP code
+  app.post("/api/userbot/login/verify", async (req: Request, res: Response) => {
+    try {
+      const { phoneNumber, code } = req.body;
+      if (!phoneNumber || !code) {
+        return res.status(400).json({ status: "error", message: "رقم الهاتف ورمز التحقق مطلوبان" });
+      }
+      const response = await authServiceManager.verifyCode(phoneNumber, code);
+      if (response.data.status === "success" && response.data.session_string) {
+        await storage.activateUserbotSession(phoneNumber, response.data.session_string);
+      }
+      res.json(response.data);
+    } catch (error) {
+      console.error("Verify code error:", error);
+      res.json({ status: "error", message: "رمز التحقق غير صحيح" });
+    }
+  });
+
   app.post("/api/userbot/login/request", async (req: Request, res: Response) => {
     try {
       const { phoneNumber } = req.body;

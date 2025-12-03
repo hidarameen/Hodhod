@@ -1,5 +1,5 @@
-import { neon } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
+import postgres from "postgres";
+import { drizzle } from "drizzle-orm/postgres-js";
 import { eq, desc, and, sql } from "drizzle-orm";
 import * as schema from "@shared/schema";
 import type {
@@ -26,35 +26,32 @@ import type {
   InsertGithubSettings,
 } from "@shared/schema";
 
-/**
- * Sanitize DATABASE_URL that may contain multiple hosts
- * Some providers provide URLs with multiple hosts (primary,read)
- * which is not supported by standard URL parsers
- */
-function sanitizeDatabaseUrl(url: string): string {
-  if (!url) return url;
+function getLocalDatabaseUrl(): string {
+  if (process.env.PGHOST && process.env.PGUSER && process.env.PGPASSWORD && process.env.PGDATABASE) {
+    const port = process.env.PGPORT || "5432";
+    return `postgresql://${process.env.PGUSER}:${process.env.PGPASSWORD}@${process.env.PGHOST}:${port}/${process.env.PGDATABASE}`;
+  }
   
-  // Pattern: protocol://credentials@host1:port,host2:port/database?params
-  const multiHostPattern = /^(postgresql|postgres):\/\/([^@]+)@([^\/]+)\/(.+)$/;
-  const match = url.match(multiHostPattern);
+  const dbUrl = process.env.DATABASE_URL || "";
+  if (!dbUrl) return "";
   
-  if (!match) return url;
+  if (dbUrl.includes(',')) {
+    const match = dbUrl.match(/^(postgresql|postgres):\/\/([^@]+)@([^\/,]+)/);
+    if (match) {
+      const [, protocol, credentials, host] = match;
+      const dbMatch = dbUrl.match(/\/([^?]+)/);
+      const db = dbMatch ? dbMatch[1] : "";
+      console.log('[DB] Using primary host from multi-host URL');
+      return `${protocol}://${credentials}@${host}/${db}`;
+    }
+  }
   
-  const [, protocol, credentials, hosts, rest] = match;
-  
-  if (!hosts.includes(',')) return url;
-  
-  // Take only the first host (primary)
-  const primaryHost = hosts.split(',')[0].trim();
-  const sanitizedUrl = `${protocol}://${credentials}@${primaryHost}/${rest}`;
-  
-  console.log('[DB] Using primary host from multi-host URL');
-  return sanitizedUrl;
+  return dbUrl;
 }
 
-// Database connection using neon http
-const connectionString = sanitizeDatabaseUrl(process.env.DATABASE_URL!);
-const queryClient = neon(connectionString);
+const connectionString = getLocalDatabaseUrl();
+console.log('[DB] Connecting to database...');
+const queryClient = postgres(connectionString);
 export const database = drizzle(queryClient, { schema });
 
 export interface IStorage {

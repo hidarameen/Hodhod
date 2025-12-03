@@ -11,22 +11,29 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def sanitize_database_url(url: str) -> str:
+def get_database_url() -> str:
     """
-    Sanitize DATABASE_URL that may contain multiple hosts.
-    Some providers (like Northflank) provide URLs with multiple hosts
-    (primary,read) which is not supported by standard URL parsers.
-    
-    Example input:
-    postgresql://user:pass@host1:5432,host2:5432/dbname?sslmode=require
-    
-    Example output:
-    postgresql://user:pass@host1:5432/dbname?sslmode=require
+    Get database URL, preferring local Replit database if available.
+    Falls back to DATABASE_URL with multi-host sanitization.
     """
+    pghost = os.getenv("PGHOST")
+    pguser = os.getenv("PGUSER")
+    pgpassword = os.getenv("PGPASSWORD")
+    pgdatabase = os.getenv("PGDATABASE")
+    pgport = os.getenv("PGPORT", "5432")
+    
+    if pghost and pguser and pgpassword and pgdatabase:
+        local_url = f"postgresql://{pguser}:{pgpassword}@{pghost}:{pgport}/{pgdatabase}"
+        print(f"[Settings] Using local Replit database")
+        return local_url
+    
+    url = os.getenv("DATABASE_URL", "")
     if not url:
         return url
     
-    # Pattern: protocol://credentials@host1:port,host2:port/database?params
+    if ',' not in url:
+        return url
+    
     pattern = r'^(postgresql|postgres)://([^@]+)@([^/]+)/(.+)$'
     match = re.match(pattern, url)
     
@@ -34,11 +41,6 @@ def sanitize_database_url(url: str) -> str:
         return url
     
     protocol, credentials, hosts, rest = match.groups()
-    
-    if ',' not in hosts:
-        return url
-    
-    # Take only the first host (primary)
     primary_host = hosts.split(',')[0].strip()
     sanitized_url = f"{protocol}://{credentials}@{primary_host}/{rest}"
     
@@ -60,8 +62,8 @@ class Settings:
     PHONE_NUMBER: Optional[str] = os.getenv("PHONE_NUMBER")
     SESSION_STRING: Optional[str] = os.getenv("SESSION_STRING")
     
-    # Database (sanitize multi-host URLs)
-    DATABASE_URL: str = sanitize_database_url(os.getenv("DATABASE_URL", ""))
+    # Database (use local Replit database if available)
+    DATABASE_URL: str = get_database_url()
     
     # AI Providers
     OPENAI_API_KEY: Optional[str] = os.getenv("OPENAI_API_KEY")
