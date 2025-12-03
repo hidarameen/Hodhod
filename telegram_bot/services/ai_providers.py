@@ -3,7 +3,7 @@ AI Providers Integration
 Support for OpenAI, Groq, Claude, and HuggingFace
 """
 import asyncio
-from typing import Optional, Dict, Any, Tuple
+from typing import Optional, Dict, Any
 from config.settings import settings
 from utils.error_handler import handle_errors, ErrorLogger
 
@@ -293,15 +293,8 @@ class AIManager:
     ) -> Optional[str]:
         """Generate text using specified provider"""
         if provider not in self.providers:
-            available_providers = list(self.providers.keys()) if self.providers else []
-            error_msg = f"Provider '{provider}' is not available. "
-            if available_providers:
-                error_msg += f"Available providers: {', '.join(available_providers)}. "
-            else:
-                error_msg += "No providers are configured. Please set up API keys for at least one provider (OpenAI, Groq, Claude, or HuggingFace). "
-            error_msg += "Check your environment variables or database configuration."
-            error_logger.log_warning(f"[AIManager] {error_msg}")
-            raise ValueError(error_msg)
+            error_logger.log_warning(f"Provider {provider} not available")
+            return None
         
         return await self.providers[provider].generate_text(
             prompt=prompt,
@@ -327,12 +320,10 @@ class AIManager:
             text: The text to summarize
             provider: AI provider name (openai, groq, claude, huggingface)
             model: Model name to use
-            custom_rule: Custom rule/prompt for summarization (also used for post-processing text replacements)
+            custom_rule: Custom rule/prompt for summarization
             system_prompt: System prompt to override default
             max_tokens: Maximum tokens for response (auto-calculated if not provided)
         """
-        # Store custom_rule for post-processing
-        self._current_custom_rule = custom_rule
         if not text or not text.strip():
             error_logger.log_warning("[AIManager] Empty text provided for summarization")
             return text or ""
@@ -387,28 +378,15 @@ class AIManager:
         
         if result and result.strip():
             result = result.strip()
-            
-            # Lazy import to avoid circular import at module load time
-            from services.ai_enhancement import ai_enhancer
-            
-            # Enhance result with validation, cleaning, quality scoring, and TEXT REPLACEMENTS
-            enhanced_result, quality_score, metadata = await ai_enhancer.enhance_result(
-                original_text=text,
-                ai_result=result,
-                task_type="summarization",
-                custom_rule=custom_rule  # Pass custom_rule for direct text replacements
-            )
-            
-            result_length = len(enhanced_result)
+            result_length = len(result)
             if text_length > 0:
                 reduction_percent = max(0, min(100, 100 - (result_length * 100 // text_length)))
             else:
                 reduction_percent = 0
             
-            error_logger.log_info(f"[AIManager] ✅ Summarization complete | Provider: {provider} | Model: {model} | Output: {result_length} chars | Reduction: {text_length - result_length} chars ({reduction_percent}%) | Quality: {quality_score:.2f}")
-            error_logger.log_info(f"[AIManager] Metadata: {metadata}")
-            error_logger.log_info(f"[AIManager] Summary preview: {enhanced_result[:150]}")
-            return enhanced_result
+            error_logger.log_info(f"[AIManager] ✅ Summarization complete | Provider: {provider} | Model: {model} | Output: {result_length} chars | Reduction: {text_length - result_length} chars ({reduction_percent}%)")
+            error_logger.log_info(f"[AIManager] Summary preview: {result[:150]}")
+            return result
         else:
             error_logger.log_info(f"[AIManager] ⚠️ Summarization failed after {max_retries + 1} attempts, returning original text | Provider: {provider} | Model: {model}")
             return text

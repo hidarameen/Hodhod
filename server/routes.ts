@@ -6,9 +6,6 @@ import bcrypt from "bcryptjs";
 import { insertUserSchema, insertForwardingTaskSchema, insertChannelSchema, insertAiRuleSchema } from "@shared/schema";
 import { z } from "zod";
 import { pushToGitHub, getGitHubInfo, listGitHubRepos, pushToGitHubRepo, getBranches, getFileChanges } from "./github-sync";
-import { database as db } from "./storage";
-import { forwardingTasks as tasks, channels, aiProviders as providers, aiModels as models, botConfig as settings, errorLogs, aiRules as taskRules } from "../shared/schema";
-import { eq, desc } from "drizzle-orm";
 
 const handleError = (res: Response, error: unknown, message: string = "An error occurred") => {
   console.error(error);
@@ -17,28 +14,28 @@ const handleError = (res: Response, error: unknown, message: string = "An error 
 
 export async function registerRoutes(httpServer: Server, app: Express): Promise<Server> {
   // ============ Authentication ============
-
+  
   app.post("/api/auth/admin-login", async (req: Request, res: Response) => {
     try {
       const { username, password } = req.body;
-
+      
       if (!username || !password) {
         return res.status(400).json({ error: "Username and password are required" });
       }
-
+      
       const secretUsername = process.env.ADMIN_USERNAME;
       const secretPassword = process.env.ADMIN_PASSWORD;
-
+      
       if (!secretUsername || !secretPassword) {
         console.error("[Auth] Admin credentials not configured in secrets");
         return res.status(500).json({ error: "Admin authentication not configured" });
       }
-
+      
       if (username !== secretUsername || password !== secretPassword) {
         return res.status(401).json({ error: "Invalid credentials" });
       }
-
-      res.json({
+      
+      res.json({ 
         admin: true,
         username: secretUsername,
         message: "Admin login successful",
@@ -149,78 +146,17 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
-  // Delete task
-  app.delete("/api/tasks/:id", async (req, res) => {
+  app.delete("/api/tasks/:id", async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
-      await db.delete(tasks).where(eq(tasks.id, id));
-      res.json({ message: "Task deleted successfully" });
+      await storage.deleteTask(id);
+      res.json({ message: "Task deleted" });
     } catch (error) {
-      console.error("Error deleting task:", error);
-      res.status(500).json({ error: "Internal server error" });
+      handleError(res, error, "Failed to delete task");
     }
   });
 
-  // Get task rules
-  app.get("/api/tasks/:id/rules", async (req, res) => {
-    try {
-      const taskId = parseInt(req.params.id);
-      const rules = await db.select().from(taskRules)
-        .where(eq(taskRules.taskId, taskId))
-        .orderBy(desc(taskRules.priority), taskRules.createdAt);
-      res.json(rules);
-    } catch (error) {
-      console.error("Error fetching task rules:", error);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  });
-
-  // Add task rule
-  app.post("/api/tasks/:id/rules", async (req, res) => {
-    try {
-      const taskId = parseInt(req.params.id);
-      const ruleData = {
-        ...req.body,
-        taskId: taskId,
-        createdAt: new Date(),
-      };
-
-      const [newRule] = await db.insert(taskRules).values(ruleData).returning();
-      res.json(newRule);
-    } catch (error) {
-      console.error("Error adding task rule:", error);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  });
-
-  // Update task rule
-  app.put("/api/task-rules/:id", async (req, res) => {
-    try {
-      const ruleId = parseInt(req.params.id);
-      const [updatedRule] = await db.update(taskRules)
-        .set({ ...req.body, updatedAt: new Date() })
-        .where(eq(taskRules.id, ruleId))
-        .returning();
-      res.json(updatedRule);
-    } catch (error) {
-      console.error("Error updating task rule:", error);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  });
-
-  // Delete task rule
-  app.delete("/api/task-rules/:id", async (req, res) => {
-    try {
-      const ruleId = parseInt(req.params.id);
-      await db.delete(taskRules).where(eq(taskRules.id, ruleId));
-      res.json({ message: "Task rule deleted successfully" });
-    } catch (error) {
-      console.error("Error deleting task rule:", error);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  });
-
-  // Task Rules endpoints (These are now redundant with the new routes above, but kept for now to avoid breaking changes if they are used elsewhere)
+  // Task Rules endpoints
   app.get("/api/tasks/:taskId/rules", async (req: Request, res: Response) => {
     try {
       const taskId = parseInt(req.params.taskId);
@@ -411,15 +347,15 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   });
 
   // ============ Userbot ============
-
+  
   app.get("/api/userbot/status", async (req: Request, res: Response) => {
     try {
       const session = await storage.getActiveUserbotSession();
       if (session && session.isActive) {
-        res.json({
-          status: "connected",
+        res.json({ 
+          status: "connected", 
           phoneNumber: session.phoneNumber,
-          lastLoginAt: session.lastLoginAt
+          lastLoginAt: session.lastLoginAt 
         });
       } else {
         res.json({ status: "disconnected" });
@@ -435,13 +371,13 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       if (!phoneNumber) {
         return res.status(400).json({ status: "error", message: "رقم الهاتف مطلوب" });
       }
-
+      
       const phoneRegex = /^\+?[1-9]\d{6,14}$/;
       const cleanPhone = phoneNumber.replace(/[\s-]/g, '');
       if (!phoneRegex.test(cleanPhone)) {
         return res.status(400).json({ status: "error", message: "رقم الهاتف غير صالح" });
       }
-
+      
       const response = await authServiceManager.startLogin(phoneNumber);
       res.json(response.data);
     } catch (error: any) {
@@ -457,13 +393,13 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       if (!phoneNumber || !code) {
         return res.status(400).json({ status: "error", message: "رقم الهاتف ورمز التحقق مطلوبان" });
       }
-
+      
       const response = await authServiceManager.verifyCode(phoneNumber, code);
-
+      
       if (response.data.status === "success" && response.data.session_string) {
         await storage.activateUserbotSession(phoneNumber, response.data.session_string);
       }
-
+      
       res.json(response.data);
     } catch (error: any) {
       console.error("Verify code error:", error);
@@ -478,13 +414,13 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       if (!phoneNumber || !password) {
         return res.status(400).json({ status: "error", message: "رقم الهاتف وكلمة المرور مطلوبان" });
       }
-
+      
       const response = await authServiceManager.verify2FA(phoneNumber, password);
-
+      
       if (response.data.status === "success" && response.data.session_string) {
         await storage.activateUserbotSession(phoneNumber, response.data.session_string);
       }
-
+      
       res.json(response.data);
     } catch (error: any) {
       console.error("2FA verification error:", error);
@@ -499,7 +435,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       if (!phoneNumber) {
         return res.status(400).json({ status: "error", message: "رقم الهاتف مطلوب" });
       }
-
+      
       const response = await authServiceManager.cancelLogin(phoneNumber);
       res.json(response.data);
     } catch (error: any) {
@@ -511,15 +447,15 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   app.post("/api/userbot/logout", async (req: Request, res: Response) => {
     try {
       const session = await storage.getActiveUserbotSession();
-
+      
       try {
         await authServiceManager.logout(session?.phoneNumber);
       } catch (authError) {
         console.warn("Auth service logout warning:", authError);
       }
-
+      
       await storage.deactivateUserbotSession();
-
+      
       res.json({ status: "success", message: "تم تسجيل الخروج بنجاح" });
     } catch (error) {
       handleError(res, error, "Failed to logout");
@@ -561,7 +497,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   app.get("/api/github/changes", async (req: Request, res: Response) => {
     try {
       const changes = await getFileChanges();
-      res.json({
+      res.json({ 
         status: "success",
         changes,
         summary: `${changes.modified.length} modified, ${changes.created.length} created, ${changes.deleted.length} deleted`
@@ -574,7 +510,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   app.post("/api/github/push", async (req: Request, res: Response) => {
     try {
       const { message, owner, repo, branch } = req.body;
-
+      
       if (!message) {
         return res.status(400).json({ error: "Commit message is required" });
       }

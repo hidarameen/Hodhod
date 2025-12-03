@@ -149,45 +149,34 @@ class ApiClient {
   }
 
   // AI Rules
-  async getTaskRules(taskId: number): Promise<any[]> {
-    const response = await fetch(`/api/tasks/${taskId}/rules`);
-    if (!response.ok) throw new Error('Failed to fetch task rules');
-    return response.json();
+  async getTaskRules(taskId: number) {
+    return this.request<any[]>(`/tasks/${taskId}/rules`);
   }
 
-  async createTaskRule(taskId: number, rule: any): Promise<any> {
-    const response = await fetch(`/api/tasks/${taskId}/rules`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(rule),
+  async createRule(taskId: number, data: any) {
+    return this.request<any>(`/tasks/${taskId}/rules`, {
+      method: "POST",
+      body: JSON.stringify(data),
     });
-    if (!response.ok) throw new Error('Failed to create task rule');
-    return response.json();
   }
 
-  async updateTaskRule(id: number, rule: any): Promise<any> {
-    const response = await fetch(`/api/task-rules/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(rule),
+  async updateRule(ruleId: number, data: any) {
+    return this.request<any>(`/rules/${ruleId}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
     });
-    if (!response.ok) throw new Error('Failed to update task rule');
-    return response.json();
   }
 
-  async deleteTaskRule(id: number): Promise<void> {
-    const response = await fetch(`/api/task-rules/${id}`, {
-      method: 'DELETE',
+  async toggleRule(ruleId: number) {
+    return this.request<any>(`/rules/${ruleId}/toggle`, {
+      method: "POST",
     });
-    if (!response.ok) throw new Error('Failed to delete task rule');
   }
 
-  async toggleTaskRule(id: number): Promise<any> {
-    const response = await fetch(`/api/rules/${id}/toggle`, {
-      method: 'POST',
+  async deleteRule(ruleId: number) {
+    return this.request<{ message: string }>(`/rules/${ruleId}`, {
+      method: "DELETE",
     });
-    if (!response.ok) throw new Error('Failed to toggle task rule');
-    return response.json();
   }
 
   // Admins

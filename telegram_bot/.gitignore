@@ -1,8 +1,0 @@
-
-# Yemen Analyzer system
-*.pyc
-__pycache__/
-
-# Cache and temp
-.cache/
-*.tmp
