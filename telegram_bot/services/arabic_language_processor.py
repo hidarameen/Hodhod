@@ -90,9 +90,28 @@ class ArabicLanguageProcessor:
         # Normalize spaces
         text = re.sub(r' +', ' ', text)
         
-        # Normalize quotes
-        text = text.replace(""", '"').replace(""", '"')
-        text = text.replace("'", "'").replace("'", "'")
+        # Normalize quotes - fix: replace curly quotes with standard ASCII quotes
+        text = text.replace('"', '"').replace('"', '"')
+        text = text.replace(''', "'").replace(''', "'")
+        
+        # Normalize Arabic-specific characters
+        # Normalize different forms of Alef
+        text = text.replace('أ', 'ا').replace('إ', 'ا').replace('آ', 'ا').replace('ٱ', 'ا')
+        
+        # Normalize Taa Marbouta and Haa
+        text = text.replace('ة', 'ه')
+        
+        # Normalize Yaa forms
+        text = text.replace('ى', 'ي').replace('ئ', 'ي')
+        
+        # Normalize Arabic comma and semicolon
+        text = text.replace('،', ',').replace('؛', ';')
+        
+        # Normalize Arabic question mark
+        text = text.replace('؟', '?')
+        
+        # Remove tatweel (kashida)
+        text = text.replace('ـ', '')
         
         return text.strip()
     
@@ -113,15 +132,25 @@ class ArabicLanguageProcessor:
                 improved = re.sub(pattern, replacement, improved, flags=re.IGNORECASE)
         
         elif target_style == "news":
-            # Make it more news-like
-            improved = re.sub(r'قال', 'أفادت المصادر', improved, count=1)
+            # Make it more news-like - only replace if not inside quotes
+            # Check if 'قال' appears outside of quoted text to avoid damaging actual quotes
+            if 'قال' in improved:
+                # Only apply if the word appears at the start of a sentence or after punctuation
+                # and is not followed by a colon (which indicates an actual quote attribution)
+                improved = re.sub(r'(?<!["\'])قال(?![:\s]*["\'])', 'أفادت المصادر', improved, count=1)
         
         return improved.strip()
+    
+    def _split_sentences(self, text: str) -> List[str]:
+        """Split text into sentences using Arabic punctuation marks"""
+        # Split on multiple separators: '.', '۔' (Urdu), '!', '؟' (Arabic question mark), '?' and newlines
+        sentences = re.split(r'[.۔!؟?\n]+', text)
+        return [s.strip() for s in sentences if s.strip()]
     
     def analyze_readability(self, text: str) -> Dict[str, Any]:
         """Analyze text readability"""
         
-        sentences = [s.strip() for s in text.split('۔') if s.strip()]
+        sentences = self._split_sentences(text)
         words = text.split()
         
         avg_sentence_length = len(words) / len(sentences) if sentences else 0

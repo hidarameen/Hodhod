@@ -85,27 +85,26 @@ class YemenPoliticalAnalyzer:
             "dates": []
         }
         
-        text_lower = text.lower()
-        
-        # Extract actors
+        # Extract actors - use original text since Arabic has no case distinction
         for category, names in self.yemen_actors.items():
             for name in names:
-                if name in text_lower:
+                if name in text:
                     if name not in entities["actors"]:
                         entities["actors"].append(name)
         
-        # Extract events
+        # Extract events - use original text since Arabic has no case distinction
         for category, keywords in self.political_events.items():
             for keyword in keywords:
-                if keyword in text_lower:
+                if keyword in text:
                     if keyword not in entities["events"]:
                         entities["events"].append(keyword)
         
-        # Extract Yemen locations
+        # Extract Yemen locations - use original text
         yemen_locations = ["صنعاء", "عدن", "تعز", "حضرموت", "مأرب", "الحديدة", "إب", "ذمار"]
         for location in yemen_locations:
             if location in text:
-                entities["locations"].append(location)
+                if location not in entities["locations"]:
+                    entities["locations"].append(location)
         
         # Extract dates
         dates = re.findall(r'\d{1,2}[-/]\d{1,2}[-/]\d{2,4}', text)
@@ -208,27 +207,45 @@ class YemenPoliticalAnalyzer:
             # 3. Identify importance
             analysis["importance"] = self.identify_importance_level(text, analysis["entities"])
             
-            # 4. Generate Yemen-expert summary
+            # 4. Generate Yemen-expert summary with proper error handling
             summary_prompt = self._build_summary_prompt(text, analysis, source_type)
-            summary = await ai_manager.generate(
-                provider=provider,
-                model=model,
-                prompt=summary_prompt,
-                max_tokens=400,
-                temperature=0.5
-            )
-            analysis["summary"] = summary.strip() if summary else ""
+            try:
+                summary = await ai_manager.generate(
+                    provider=provider,
+                    model=model,
+                    prompt=summary_prompt,
+                    max_tokens=400,
+                    temperature=0.5
+                )
+                if summary is not None and isinstance(summary, str) and summary.strip():
+                    analysis["summary"] = summary.strip()
+                else:
+                    analysis["summary"] = ""
+                    error_logger.log_info("[Yemen Analyzer] ⚠️ AI returned empty summary")
+            except Exception as ai_error:
+                error_logger.log_info(f"[Yemen Analyzer] ⚠️ AI summary generation failed: {str(ai_error)}")
+                analysis["summary"] = ""
+                analysis["ai_errors"] = analysis.get("ai_errors", []) + [f"Summary generation failed: {str(ai_error)}"]
             
-            # 5. Generate detailed political analysis
+            # 5. Generate detailed political analysis with proper error handling
             analysis_prompt = self._build_analysis_prompt(text, analysis, source_type)
-            detailed_analysis = await ai_manager.generate(
-                provider=provider,
-                model=model,
-                prompt=analysis_prompt,
-                max_tokens=600,
-                temperature=0.7
-            )
-            analysis["analysis"] = detailed_analysis.strip() if detailed_analysis else ""
+            try:
+                detailed_analysis = await ai_manager.generate(
+                    provider=provider,
+                    model=model,
+                    prompt=analysis_prompt,
+                    max_tokens=600,
+                    temperature=0.7
+                )
+                if detailed_analysis is not None and isinstance(detailed_analysis, str) and detailed_analysis.strip():
+                    analysis["analysis"] = detailed_analysis.strip()
+                else:
+                    analysis["analysis"] = ""
+                    error_logger.log_info("[Yemen Analyzer] ⚠️ AI returned empty analysis")
+            except Exception as ai_error:
+                error_logger.log_info(f"[Yemen Analyzer] ⚠️ AI analysis generation failed: {str(ai_error)}")
+                analysis["analysis"] = ""
+                analysis["ai_errors"] = analysis.get("ai_errors", []) + [f"Analysis generation failed: {str(ai_error)}"]
             
             # 6. Determine if fact-check needed
             analysis["fact_check_needed"] = self._should_fact_check(text, analysis)
@@ -236,7 +253,11 @@ class YemenPoliticalAnalyzer:
             # 7. Generate recommendations
             analysis["recommendations"] = self._generate_recommendations(analysis)
             
-            error_logger.log_info(f"[Yemen Analyzer] ✅ Analysis complete | Importance: {analysis['importance']} | Entities: {len(analysis['entities']['actors'])} actors")
+            # Log success or partial success
+            if analysis.get("ai_errors"):
+                error_logger.log_info(f"[Yemen Analyzer] ⚠️ Partial analysis complete with AI errors | Importance: {analysis['importance']}")
+            else:
+                error_logger.log_info(f"[Yemen Analyzer] ✅ Analysis complete | Importance: {analysis['importance']} | Entities: {len(analysis['entities']['actors'])} actors")
             
             return analysis
             

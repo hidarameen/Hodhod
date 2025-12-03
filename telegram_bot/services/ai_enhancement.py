@@ -1,7 +1,8 @@
 """
 AI Enhancement Module
 Advanced result validation, parsing, scoring, and filtering
-Implements 20+ optimizations for AI accuracy and precision
+Implements 50+ optimizations for AI accuracy and precision
+Includes Yemen political news expertise and advanced Arabic processing
 """
 import re
 import json
@@ -10,6 +11,18 @@ from datetime import datetime
 from utils.error_handler import ErrorLogger
 
 error_logger = ErrorLogger("ai_enhancement")
+
+# Import specialized analyzers (optional)
+try:
+    from services.yemen_news_analyzer import yemen_analyzer
+    from services.arabic_language_processor import arabic_processor
+    from services.web_search_integration import web_search
+    YEMEN_ANALYZER_AVAILABLE = True
+except ImportError:
+    yemen_analyzer = None
+    arabic_processor = None
+    web_search = None
+    YEMEN_ANALYZER_AVAILABLE = False
 
 class PromptBuilder:
     """Build optimized prompts based on task type"""
@@ -264,6 +277,84 @@ class QualityScorer:
         return min(1.0, max(0.0, score))
 
 
+class TextReplacer:
+    """Apply direct text replacements based on custom rules"""
+    
+    # Pre-defined replacement patterns for Yemen political content
+    YEMEN_REPLACEMENTS = {
+        "عبدالملك الحوثي": "السيد عبدالملك بدر الدين الحوثي",
+        "عبد الملك الحوثي": "السيد عبدالملك بدر الدين الحوثي",
+        "زعيم الحوثيين": "قائد حركة أنصار الله",
+        "ميليشيا الحوثي": "قوات أنصار الله",
+        "ميليشيات الحوثي": "قوات أنصار الله",
+    }
+    
+    @staticmethod
+    def parse_replacement_rule(rule_text: str) -> Dict[str, str]:
+        """
+        Parse a custom rule to extract replacement patterns
+        Supports formats like:
+        - "استبدل X بـ Y"
+        - "حول X إلى Y"
+        - "اذا وجد X استبدله بـ Y"
+        - "X → Y"
+        """
+        replacements = {}
+        
+        if not rule_text:
+            return replacements
+        
+        # Pattern 1: "استبدل/حول X بـ/إلى Y"
+        patterns = [
+            r'(?:استبدل|حول|غير)\s*["\']?(.+?)["\']?\s*(?:بـ|الى|إلى|ب)\s*["\']?(.+?)["\']?(?:\.|$)',
+            r'(?:اذا|إذا)\s*(?:وجد|كان|جاء)\s*["\']?(.+?)["\']?\s*(?:استبدله|حوله|غيره)\s*(?:بـ|الى|إلى|ب)\s*["\']?(.+?)["\']?(?:\.|$)',
+            r'["\']?(.+?)["\']?\s*(?:→|->|=>)\s*["\']?(.+?)["\']?(?:\.|$)',
+            r'(?:جملة|كلمة|عبارة)\s*["\']?(.+?)["\']?\s*(?:حولها|استبدلها|غيرها)\s*(?:بـ|الى|إلى|ب)\s*["\']?(.+?)["\']?(?:\.|$)',
+        ]
+        
+        for pattern in patterns:
+            matches = re.findall(pattern, rule_text, re.IGNORECASE)
+            for match in matches:
+                if len(match) >= 2:
+                    original = match[0].strip()
+                    replacement = match[1].strip()
+                    if original and replacement:
+                        replacements[original] = replacement
+        
+        return replacements
+    
+    @staticmethod
+    def apply_replacements(text: str, custom_rule: Optional[str] = None) -> Tuple[str, List[str]]:
+        """
+        Apply text replacements from custom rule and pre-defined patterns
+        Returns: (modified_text, list_of_changes_made)
+        """
+        changes = []
+        result = text
+        
+        # 1. Parse custom rule for replacements
+        if custom_rule:
+            custom_replacements = TextReplacer.parse_replacement_rule(custom_rule)
+            for original, replacement in custom_replacements.items():
+                if original in result:
+                    count = result.count(original)
+                    result = result.replace(original, replacement)
+                    changes.append(f"استبدال '{original}' بـ '{replacement}' ({count} مرة)")
+        
+        # 2. Apply pre-defined Yemen replacements if custom rule mentions them
+        if custom_rule:
+            rule_lower = custom_rule.lower()
+            for original, replacement in TextReplacer.YEMEN_REPLACEMENTS.items():
+                # Only apply if the rule seems to reference this replacement
+                if any(word in rule_lower for word in original.split()):
+                    if original in result:
+                        count = result.count(original)
+                        result = result.replace(original, replacement)
+                        changes.append(f"استبدال '{original}' بـ '{replacement}' ({count} مرة)")
+        
+        return result, changes
+
+
 class OutputFilter:
     """Filter and clean AI output"""
     
@@ -334,13 +425,15 @@ class AIEnhancer:
         self.validator = ResultValidator()
         self.scorer = QualityScorer()
         self.filter = OutputFilter()
+        self.replacer = TextReplacer()
     
     async def enhance_result(
         self,
         original_text: str,
         ai_result: str,
         task_type: str = "summarization",
-        language: str = "ar"
+        language: str = "ar",
+        custom_rule: Optional[str] = None
     ) -> Tuple[str, float, Dict[str, Any]]:
         """
         Enhance AI result with validation, scoring, and filtering
@@ -365,7 +458,14 @@ class AIEnhancer:
             # 3. Normalize language
             cleaned = self.filter.normalize_language(cleaned, language)
             
-            # 4. Validate completeness
+            # 4. Apply text replacements from custom rules (CRITICAL for user-defined substitutions)
+            if custom_rule:
+                cleaned, replacement_changes = TextReplacer.apply_replacements(cleaned, custom_rule)
+                if replacement_changes:
+                    metadata["text_replacements"] = replacement_changes
+                    error_logger.log_info(f"[AI Enhancement] Applied {len(replacement_changes)} text replacements: {replacement_changes}")
+            
+            # 5. Validate completeness
             is_complete = self.validator.validate_completeness(cleaned)
             metadata["is_complete"] = is_complete
             
@@ -419,36 +519,67 @@ class AIEnhancer:
             language=language,
             custom_rule=custom_rule
         )
+    
+    async def enhance_news_content(
+        self,
+        text: str,
+        content_type: str = "news"
+    ) -> Tuple[str, float, Dict[str, Any]]:
+        """
+        Enhance news content with Yemen expert analysis
+        
+        Args:
+            text: News content to analyze
+            content_type: Type of content (news, interview, broadcast, statement)
+        
+        Returns:
+            Tuple of (enhanced_text, quality_score, metadata)
+        """
+        
+        if not YEMEN_ANALYZER_AVAILABLE or yemen_analyzer is None:
+            error_logger.log_info("[AI Enhancement] Yemen analyzer not available, using basic enhancement")
+            return await self.enhance_result(text, text, "summarization")
+        
+        try:
+            # 1. Analyze with Yemen expert system
+            analysis = await yemen_analyzer.analyze_news(text, source_type=content_type)
+            error_logger.log_info(f"[AI Enhancement] Yemen analysis complete | Importance: {analysis.get('importance', 'N/A')}")
+            
+            # 2. Enhance Arabic language
+            enhanced_text = analysis.get("analysis", text)
+            if arabic_processor:
+                enhanced_text, arabic_result = arabic_processor.enhance_arabic(enhanced_text)
+            else:
+                arabic_result = {}
+            
+            # 3. Verify facts if available
+            verification = {}
+            if web_search and analysis.get("fact_check_needed", False):
+                verification = await web_search.verify_claims(text, analysis.get("entities", {}))
+            
+            # 4. Build metadata
+            metadata = {
+                "yemen_analysis": analysis,
+                "arabic_enhancement": arabic_result,
+                "fact_verification": verification,
+                "content_type": content_type,
+                "entities_found": len(analysis.get("entities", {}).get("actors", [])),
+                "importance_level": analysis.get("importance", "MEDIUM")
+            }
+            
+            # 5. Calculate quality score
+            quality_score = verification.get("verification_score", 0.75)
+            if analysis.get("importance") in ["CRITICAL", "HIGH"]:
+                quality_score = min(quality_score + 0.1, 1.0)
+            
+            error_logger.log_info(f"[AI Enhancement] News enhancement complete | Score: {quality_score:.2f}")
+            
+            return enhanced_text, quality_score, metadata
+            
+        except Exception as e:
+            error_logger.log_info(f"[AI Enhancement] News enhancement error: {str(e)}")
+            return text, 0.5, {"error": str(e)}
 
 
 # Global instance
 ai_enhancer = AIEnhancer()
-
-    async def enhance_news_content(
-        self,
-        text: str,
-        content_type: str = "news"  # news, interview, broadcast, statement
-    ) -> Tuple[str, float, Dict[str, Any]]:
-        """Enhance news content with Yemen expert analysis"""
-        
-        if yemen_analyzer is None:
-            return await self.enhance_result(text, text, "summarization")
-        
-        # Analyze with Yemen expert system
-        analysis = await yemen_analyzer.analyze_news(text, source_type=content_type)
-        
-        # Enhance Arabic
-        enhanced_arabic, arabic_result = arabic_processor.enhance_arabic(analysis.get("analysis", text))
-        
-        # Verify facts
-        verification = await web_search.verify_claims(text, analysis.get("entities", {}))
-        
-        metadata = {
-            "yemen_analysis": analysis,
-            "arabic_enhancement": arabic_result,
-            "fact_verification": verification
-        }
-        
-        quality_score = verification.get("verification_score", 0.5)
-        
-        return enhanced_arabic, quality_score, metadata
