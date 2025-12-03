@@ -243,9 +243,16 @@ export async function pushToGitHubRepo(
     await execAsync(`git remote add origin "${remoteUrl}"`);
     console.log("[GitHub] ✓ Remote configured\n");
 
-    // Step 1: git add .
-    console.log("[GitHub] 📦 Step 1: Adding files...");
-    await execAsync("git add .");
+    // Step 1: git add . with force option to include all files
+    console.log("[GitHub] 📦 Step 1: Adding all files (including ignored patterns)...");
+    // Add all files including those that might be ignored
+    await execAsync("git add --force .");
+    // Also explicitly add attached_assets to ensure it's included
+    try {
+      await execAsync("git add --force attached_assets/ 2>/dev/null || true");
+    } catch (e) {
+      // Silently fail if attached_assets doesn't exist
+    }
     
     // Get list of ALL tracked/untracked files being pushed
     let allFiles: string[] = [];
@@ -358,8 +365,9 @@ export async function pushToGitHubRepo(
 
     // Step 2: git commit
     console.log("\n[GitHub] 💾 Step 2: Creating commit...");
-    // Use echo to safely handle special characters including Arabic
-    const commitResult = await execAsync(`echo "${message.replace(/"/g, '\\"')}" | git commit -F -`, { shell: '/bin/bash' });
+    // Use -m flag directly with proper escaping for Arabic characters
+    const escapedMessage = message.replace(/'/g, "'\\''");
+    const commitResult = await execAsync(`git commit -m '${escapedMessage}'`, { shell: '/bin/bash' });
     
     // Extract commit hash
     const commitMatch = commitResult.stdout?.match(/\[.*? ([a-f0-9]+)\]/);
