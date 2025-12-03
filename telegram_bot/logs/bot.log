@@ -7401,3 +7401,15 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-03 20:51:19,642 - main - INFO - [2025-12-03 20:51:19.642] [INFO] [session::load] No active session found - userbot login required | {}
 2025-12-03 20:51:32,570 - database - INFO - Database connected successfully | {}
 2025-12-03 20:51:33,289 - main - INFO - [2025-12-03 20:51:33.289] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 20:53:03,010 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-03 20:53:03,012 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-03 20:53:03,015 - main - INFO - [2025-12-03 20:53:03.015] [INFO] [main::entry] Bot script started | {}
+2025-12-03 20:53:03,016 - main - INFO - [2025-12-03 20:53:03.016] [INFO] [main::startup] Validating settings... | {}
+2025-12-03 20:53:03,016 - main - INFO - [2025-12-03 20:53:03.016] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-03 20:53:03,016 - main - INFO - [2025-12-03 20:53:03.016] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-03 20:53:06,200 - database - INFO - Database connected successfully | {}
+2025-12-03 20:53:06,902 - main - INFO - [2025-12-03 20:53:06.902] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-03 20:53:06,902 - main - INFO - [2025-12-03 20:53:06.902] [WARNING] [session::missing] ⚠️ No active session found! Please login via the web interface. | {}
+2025-12-03 20:53:09,902 - database - INFO - Database connected successfully | {}
+2025-12-03 20:53:22,943 - database - INFO - Database connected successfully | {}
+2025-12-03 20:53:23,644 - main - INFO - [2025-12-03 20:53:23.644] [INFO] [session::load] No active session found - userbot login required | {}
