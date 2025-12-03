@@ -393,5 +393,287 @@ class Database:
             key, value, description or ""
         )
 
+    # ============================================
+    # Advanced AI Rules - Entity Replacements
+    # ============================================
+    
+    async def get_entity_replacements(self, task_id: int) -> List[Dict[str, Any]]:
+        """Get entity replacement rules for a task"""
+        return await self.fetch(
+            """SELECT * FROM ai_entity_replacements 
+               WHERE task_id = $1 AND is_active = true
+               ORDER BY priority DESC, created_at ASC""",
+            task_id
+        )
+    
+    async def add_entity_replacement(self, data: Dict[str, Any]) -> int:
+        """Add new entity replacement rule"""
+        return await self.fetchval(
+            """INSERT INTO ai_entity_replacements 
+               (task_id, entity_type, original_text, replacement_text, 
+                case_sensitive, use_context, is_active, priority)
+               VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id""",
+            data["task_id"],
+            data.get("entity_type", "custom"),
+            data["original_text"],
+            data["replacement_text"],
+            data.get("case_sensitive", False),
+            data.get("use_context", True),
+            data.get("is_active", True),
+            data.get("priority", 0)
+        )
+    
+    async def update_entity_replacement(self, replacement_id: int, data: Dict[str, Any]):
+        """Update entity replacement rule"""
+        fields = []
+        values = []
+        param_count = 1
+        
+        allowed_fields = ['entity_type', 'original_text', 'replacement_text', 
+                          'case_sensitive', 'use_context', 'is_active', 'priority']
+        
+        for field in allowed_fields:
+            if field in data:
+                fields.append(f"{field} = ${param_count}")
+                values.append(data[field])
+                param_count += 1
+        
+        if not fields:
+            return
+        
+        values.append(replacement_id)
+        query = f"UPDATE ai_entity_replacements SET {', '.join(fields)} WHERE id = ${param_count}"
+        return await self.execute(query, *values)
+    
+    async def delete_entity_replacement(self, replacement_id: int):
+        """Delete entity replacement rule"""
+        return await self.execute(
+            "DELETE FROM ai_entity_replacements WHERE id = $1",
+            replacement_id
+        )
+    
+    # ============================================
+    # Advanced AI Rules - Context Rules
+    # ============================================
+    
+    async def get_context_rules(self, task_id: int) -> List[Dict[str, Any]]:
+        """Get context modification rules for a task"""
+        return await self.fetch(
+            """SELECT * FROM ai_context_rules 
+               WHERE task_id = $1 AND is_active = true
+               ORDER BY priority DESC, created_at ASC""",
+            task_id
+        )
+    
+    async def add_context_rule(self, data: Dict[str, Any]) -> int:
+        """Add new context rule"""
+        examples = json.dumps(data.get("examples", [])) if data.get("examples") else None
+        
+        return await self.fetchval(
+            """INSERT INTO ai_context_rules 
+               (task_id, rule_type, trigger_pattern, target_sentiment, 
+                instructions, examples, is_active, priority)
+               VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id""",
+            data["task_id"],
+            data["rule_type"],
+            data.get("trigger_pattern"),
+            data.get("target_sentiment"),
+            data["instructions"],
+            examples,
+            data.get("is_active", True),
+            data.get("priority", 0)
+        )
+    
+    async def update_context_rule(self, rule_id: int, data: Dict[str, Any]):
+        """Update context rule"""
+        fields = []
+        values = []
+        param_count = 1
+        
+        allowed_fields = ['rule_type', 'trigger_pattern', 'target_sentiment', 
+                          'instructions', 'is_active', 'priority']
+        
+        for field in allowed_fields:
+            if field in data:
+                fields.append(f"{field} = ${param_count}")
+                values.append(data[field])
+                param_count += 1
+        
+        if 'examples' in data:
+            fields.append(f"examples = ${param_count}")
+            values.append(json.dumps(data['examples']) if data['examples'] else None)
+            param_count += 1
+        
+        if not fields:
+            return
+        
+        values.append(rule_id)
+        query = f"UPDATE ai_context_rules SET {', '.join(fields)} WHERE id = ${param_count}"
+        return await self.execute(query, *values)
+    
+    async def delete_context_rule(self, rule_id: int):
+        """Delete context rule"""
+        return await self.execute(
+            "DELETE FROM ai_context_rules WHERE id = $1",
+            rule_id
+        )
+    
+    # ============================================
+    # Advanced AI Rules - Training Examples
+    # ============================================
+    
+    async def get_training_examples(self, task_id: Optional[int] = None, 
+                                     example_type: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Get training examples"""
+        if task_id and example_type:
+            return await self.fetch(
+                """SELECT * FROM ai_training_examples 
+                   WHERE task_id = $1 AND example_type = $2 AND is_active = true
+                   ORDER BY use_count DESC, created_at DESC""",
+                task_id, example_type
+            )
+        elif task_id:
+            return await self.fetch(
+                """SELECT * FROM ai_training_examples 
+                   WHERE task_id = $1 AND is_active = true
+                   ORDER BY use_count DESC, created_at DESC""",
+                task_id
+            )
+        elif example_type:
+            return await self.fetch(
+                """SELECT * FROM ai_training_examples 
+                   WHERE example_type = $1 AND is_active = true
+                   ORDER BY use_count DESC, created_at DESC""",
+                example_type
+            )
+        else:
+            return await self.fetch(
+                """SELECT * FROM ai_training_examples 
+                   WHERE is_active = true
+                   ORDER BY use_count DESC, created_at DESC
+                   LIMIT 100"""
+            )
+    
+    async def add_training_example(self, data: Dict[str, Any]) -> int:
+        """Add new training example"""
+        tags = json.dumps(data.get("tags", [])) if data.get("tags") else None
+        
+        return await self.fetchval(
+            """INSERT INTO ai_training_examples 
+               (task_id, example_type, input_text, expected_output, 
+                explanation, tags, is_active)
+               VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id""",
+            data.get("task_id"),
+            data["example_type"],
+            data["input_text"],
+            data["expected_output"],
+            data.get("explanation"),
+            tags,
+            data.get("is_active", True)
+        )
+    
+    async def increment_example_use_count(self, example_id: int):
+        """Increment use count for training example"""
+        return await self.execute(
+            "UPDATE ai_training_examples SET use_count = use_count + 1 WHERE id = $1",
+            example_id
+        )
+    
+    async def delete_training_example(self, example_id: int):
+        """Delete training example"""
+        return await self.execute(
+            "DELETE FROM ai_training_examples WHERE id = $1",
+            example_id
+        )
+    
+    # ============================================
+    # Advanced AI Rules - Processing Config
+    # ============================================
+    
+    async def get_processing_config(self, task_id: Optional[int] = None) -> Optional[Dict[str, Any]]:
+        """Get processing configuration"""
+        if task_id:
+            config = await self.fetchrow(
+                """SELECT * FROM ai_processing_config 
+                   WHERE task_id = $1""",
+                task_id
+            )
+            if config:
+                return dict(config)
+        
+        global_config = await self.fetchrow(
+            """SELECT * FROM ai_processing_config 
+               WHERE config_type = 'global' AND task_id IS NULL"""
+        )
+        return dict(global_config) if global_config else None
+    
+    async def save_processing_config(self, data: Dict[str, Any]) -> int:
+        """Save processing configuration"""
+        task_id = data.get("task_id")
+        config_type = data.get("config_type", "task_specific" if task_id else "global")
+        
+        existing = None
+        if task_id:
+            existing = await self.fetchrow(
+                "SELECT id FROM ai_processing_config WHERE task_id = $1",
+                task_id
+            )
+        else:
+            existing = await self.fetchrow(
+                "SELECT id FROM ai_processing_config WHERE config_type = 'global' AND task_id IS NULL"
+            )
+        
+        if existing:
+            return await self.fetchval(
+                """UPDATE ai_processing_config SET
+                   enable_entity_extraction = $1,
+                   enable_sentiment_analysis = $2,
+                   enable_keyword_detection = $3,
+                   max_retries = $4,
+                   timeout_seconds = $5,
+                   preserve_formatting = $6,
+                   enable_output_validation = $7,
+                   enable_rule_verification = $8,
+                   output_format = $9,
+                   temperature = $10,
+                   quality_level = $11,
+                   updated_at = NOW()
+                   WHERE id = $12 RETURNING id""",
+                data.get("enable_entity_extraction", True),
+                data.get("enable_sentiment_analysis", True),
+                data.get("enable_keyword_detection", True),
+                data.get("max_retries", 3),
+                data.get("timeout_seconds", 60),
+                data.get("preserve_formatting", True),
+                data.get("enable_output_validation", True),
+                data.get("enable_rule_verification", True),
+                data.get("output_format", "markdown"),
+                str(data.get("temperature", "0.7")),
+                data.get("quality_level", "balanced"),
+                existing["id"]
+            )
+        else:
+            return await self.fetchval(
+                """INSERT INTO ai_processing_config 
+                   (task_id, config_type, enable_entity_extraction, enable_sentiment_analysis,
+                    enable_keyword_detection, max_retries, timeout_seconds, preserve_formatting,
+                    enable_output_validation, enable_rule_verification, output_format,
+                    temperature, quality_level)
+                   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING id""",
+                task_id,
+                config_type,
+                data.get("enable_entity_extraction", True),
+                data.get("enable_sentiment_analysis", True),
+                data.get("enable_keyword_detection", True),
+                data.get("max_retries", 3),
+                data.get("timeout_seconds", 60),
+                data.get("preserve_formatting", True),
+                data.get("enable_output_validation", True),
+                data.get("enable_rule_verification", True),
+                data.get("output_format", "markdown"),
+                str(data.get("temperature", "0.7")),
+                data.get("quality_level", "balanced")
+            )
+
 # Global database instance
 db = Database()

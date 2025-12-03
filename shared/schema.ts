@@ -91,16 +91,89 @@ export const forwardingTasks = pgTable("forwarding_tasks", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-// AI Rules for Tasks
+// AI Rules for Tasks (Enhanced with multiple rule types)
 export const aiRules = pgTable("ai_rules", {
   id: serial("id").primaryKey(),
   taskId: integer("task_id").notNull().references(() => forwardingTasks.id, { onDelete: 'cascade' }),
-  type: text("type").notNull(), // 'summarize' | 'transform' | 'filter'
+  type: text("type").notNull(), // 'summarize' | 'transform' | 'filter' | 'video_summarize' | 'entity_replace' | 'context_neutralize' | 'sentiment_adjust' | 'format'
+  category: text("category").notNull().default("general"), // 'preprocessing' | 'processing' | 'postprocessing' | 'general'
   name: text("name").notNull(),
   prompt: text("prompt").notNull(),
+  config: jsonb("config"), // Additional configuration for the rule
   isActive: boolean("is_active").notNull().default(true),
   priority: integer("priority").notNull().default(0),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// Entity Replacement Rules (for name substitutions like "محمد مصطفى" → "البطل محمد مصطفى")
+export const aiEntityReplacements = pgTable("ai_entity_replacements", {
+  id: serial("id").primaryKey(),
+  taskId: integer("task_id").notNull().references(() => forwardingTasks.id, { onDelete: 'cascade' }),
+  entityType: text("entity_type").notNull(), // 'person' | 'organization' | 'location' | 'event' | 'custom'
+  originalText: text("original_text").notNull(),
+  replacementText: text("replacement_text").notNull(),
+  caseSensitive: boolean("case_sensitive").notNull().default(false),
+  useContext: boolean("use_context").notNull().default(true), // AI analyzes context before replacing
+  isActive: boolean("is_active").notNull().default(true),
+  priority: integer("priority").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// Context Rules (for sentiment/tone adjustments)
+export const aiContextRules = pgTable("ai_context_rules", {
+  id: serial("id").primaryKey(),
+  taskId: integer("task_id").notNull().references(() => forwardingTasks.id, { onDelete: 'cascade' }),
+  ruleType: text("rule_type").notNull(), // 'neutralize_negative' | 'enhance_positive' | 'formal_tone' | 'remove_bias' | 'custom'
+  triggerPattern: text("trigger_pattern"), // Regex or keywords that trigger this rule
+  targetSentiment: text("target_sentiment"), // 'neutral' | 'positive' | 'formal' | 'professional'
+  instructions: text("instructions").notNull(), // AI instructions for this context rule
+  examples: jsonb("examples"), // Example transformations for AI learning
+  isActive: boolean("is_active").notNull().default(true),
+  priority: integer("priority").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// AI Training Examples (for learning user preferences)
+export const aiTrainingExamples = pgTable("ai_training_examples", {
+  id: serial("id").primaryKey(),
+  taskId: integer("task_id").references(() => forwardingTasks.id, { onDelete: 'cascade' }),
+  exampleType: text("example_type").notNull(), // 'correction' | 'preference' | 'style' | 'terminology'
+  inputText: text("input_text").notNull(),
+  expectedOutput: text("expected_output").notNull(),
+  explanation: text("explanation"), // Why this transformation is preferred
+  tags: jsonb("tags"), // ['politics', 'sports', 'formal']
+  useCount: integer("use_count").notNull().default(0),
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// AI Processing Configuration (global and per-task settings)
+export const aiProcessingConfig = pgTable("ai_processing_config", {
+  id: serial("id").primaryKey(),
+  taskId: integer("task_id").references(() => forwardingTasks.id, { onDelete: 'cascade' }),
+  configType: text("config_type").notNull(), // 'global' | 'task_specific'
+  
+  // Preprocessing options
+  enableEntityExtraction: boolean("enable_entity_extraction").notNull().default(true),
+  enableSentimentAnalysis: boolean("enable_sentiment_analysis").notNull().default(true),
+  enableKeywordDetection: boolean("enable_keyword_detection").notNull().default(true),
+  
+  // Processing options
+  maxRetries: integer("max_retries").notNull().default(3),
+  timeoutSeconds: integer("timeout_seconds").notNull().default(60),
+  preserveFormatting: boolean("preserve_formatting").notNull().default(true),
+  
+  // Postprocessing options
+  enableOutputValidation: boolean("enable_output_validation").notNull().default(true),
+  enableRuleVerification: boolean("enable_rule_verification").notNull().default(true),
+  outputFormat: text("output_format").notNull().default("markdown"), // 'plain' | 'markdown' | 'html'
+  
+  // Quality settings
+  temperature: text("temperature").notNull().default("0.7"),
+  qualityLevel: text("quality_level").notNull().default("balanced"), // 'fast' | 'balanced' | 'high_quality'
+  
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 // Task Logs
@@ -200,6 +273,10 @@ export const insertForwardingTaskSchema = createInsertSchema(forwardingTasks).om
   lastForwardedAt: true 
 });
 export const insertAiRuleSchema = createInsertSchema(aiRules).omit({ id: true, createdAt: true });
+export const insertAiEntityReplacementSchema = createInsertSchema(aiEntityReplacements).omit({ id: true, createdAt: true });
+export const insertAiContextRuleSchema = createInsertSchema(aiContextRules).omit({ id: true, createdAt: true });
+export const insertAiTrainingExampleSchema = createInsertSchema(aiTrainingExamples).omit({ id: true, createdAt: true, useCount: true });
+export const insertAiProcessingConfigSchema = createInsertSchema(aiProcessingConfig).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertTaskLogSchema = createInsertSchema(taskLogs).omit({ id: true, timestamp: true });
 export const insertErrorLogSchema = createInsertSchema(errorLogs).omit({ id: true, timestamp: true });
 export const insertTaskStatsSchema = createInsertSchema(taskStats).omit({ id: true });
@@ -247,6 +324,18 @@ export type InsertForwardingTask = z.infer<typeof insertForwardingTaskSchema>;
 
 export type AiRule = typeof aiRules.$inferSelect;
 export type InsertAiRule = z.infer<typeof insertAiRuleSchema>;
+
+export type AiEntityReplacement = typeof aiEntityReplacements.$inferSelect;
+export type InsertAiEntityReplacement = z.infer<typeof insertAiEntityReplacementSchema>;
+
+export type AiContextRule = typeof aiContextRules.$inferSelect;
+export type InsertAiContextRule = z.infer<typeof insertAiContextRuleSchema>;
+
+export type AiTrainingExample = typeof aiTrainingExamples.$inferSelect;
+export type InsertAiTrainingExample = z.infer<typeof insertAiTrainingExampleSchema>;
+
+export type AiProcessingConfig = typeof aiProcessingConfig.$inferSelect;
+export type InsertAiProcessingConfig = z.infer<typeof insertAiProcessingConfigSchema>;
 
 export type TaskLog = typeof taskLogs.$inferSelect;
 export type InsertTaskLog = z.infer<typeof insertTaskLogSchema>;

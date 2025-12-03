@@ -7820,3 +7820,81 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-03 22:35:47,031 - main - INFO - [2025-12-03 22:35:47.031] [INFO] [warmup::cached] ✅ اختبار 2 already in peer cache | {}
 2025-12-03 22:35:47,031 - main - INFO - [2025-12-03 22:35:47.031] [INFO] [warmup::complete] ✅ Warmup complete: 2 success, 0 failed | {}
 2025-12-03 22:35:47,032 - main - INFO - [2025-12-03 22:35:47.032] [INFO] [main::idle] Userbot is now running and waiting for messages... | {}
+2025-12-03 23:16:57,363 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-03 23:16:57,366 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-03 23:16:57,370 - main - INFO - [2025-12-03 23:16:57.370] [INFO] [main::entry] Bot script started | {}
+2025-12-03 23:16:57,370 - main - INFO - [2025-12-03 23:16:57.370] [INFO] [main::startup] Validating settings... | {}
+2025-12-03 23:16:57,370 - main - WARNING - [2025-12-03 23:16:57.370] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-03 23:16:57,371 - main - INFO - [2025-12-03 23:16:57.371] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-03 23:16:57,371 - main - INFO - [2025-12-03 23:16:57.371] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-03 23:16:57,371 - main - INFO - [2025-12-03 23:16:57.371] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-03 23:16:57,371 - queue_system - INFO - Queue manager stopped | {}
+2025-12-03 23:16:57,371 - main - INFO - [2025-12-03 23:16:57.371] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-03 23:16:57,371 - main - INFO - [2025-12-03 23:16:57.371] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-03 23:16:57,371 - main - INFO - [2025-12-03 23:16:57.371] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-03 23:16:57,371 - main - INFO - [2025-12-03 23:16:57.371] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-03 23:17:03,848 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-03 23:17:03,849 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-03 23:17:03,850 - main - INFO - [2025-12-03 23:17:03.850] [INFO] [main::entry] Bot script started | {}
+2025-12-03 23:17:03,850 - main - INFO - [2025-12-03 23:17:03.850] [INFO] [main::startup] Validating settings... | {}
+2025-12-03 23:17:03,851 - main - WARNING - [2025-12-03 23:17:03.851] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-03 23:17:03,851 - main - INFO - [2025-12-03 23:17:03.851] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-03 23:17:03,851 - main - INFO - [2025-12-03 23:17:03.851] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-03 23:17:03,851 - main - INFO - [2025-12-03 23:17:03.851] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-03 23:17:03,851 - queue_system - INFO - Queue manager stopped | {}
+2025-12-03 23:17:03,852 - main - INFO - [2025-12-03 23:17:03.851] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-03 23:17:03,852 - main - INFO - [2025-12-03 23:17:03.852] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-03 23:17:03,852 - main - INFO - [2025-12-03 23:17:03.852] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-03 23:17:03,852 - main - INFO - [2025-12-03 23:17:03.852] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-03 23:17:10,385 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-03 23:17:10,386 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-03 23:17:10,387 - main - INFO - [2025-12-03 23:17:10.387] [INFO] [main::entry] Bot script started | {}
+2025-12-03 23:17:10,387 - main - INFO - [2025-12-03 23:17:10.387] [INFO] [main::startup] Validating settings... | {}
+2025-12-03 23:17:10,387 - main - WARNING - [2025-12-03 23:17:10.387] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-03 23:17:10,387 - main - INFO - [2025-12-03 23:17:10.387] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-03 23:17:10,387 - main - INFO - [2025-12-03 23:17:10.387] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-03 23:17:10,387 - main - INFO - [2025-12-03 23:17:10.387] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-03 23:17:10,388 - queue_system - INFO - Queue manager stopped | {}
+2025-12-03 23:17:10,388 - main - INFO - [2025-12-03 23:17:10.388] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-03 23:17:10,388 - main - INFO - [2025-12-03 23:17:10.388] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-03 23:17:10,388 - main - INFO - [2025-12-03 23:17:10.388] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-03 23:17:10,388 - main - INFO - [2025-12-03 23:17:10.388] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-03 23:17:16,908 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-03 23:17:16,909 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-03 23:17:16,911 - main - INFO - [2025-12-03 23:17:16.910] [INFO] [main::entry] Bot script started | {}
+2025-12-03 23:17:16,911 - main - INFO - [2025-12-03 23:17:16.911] [INFO] [main::startup] Validating settings... | {}
+2025-12-03 23:17:16,911 - main - WARNING - [2025-12-03 23:17:16.911] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-03 23:17:16,911 - main - INFO - [2025-12-03 23:17:16.911] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-03 23:17:16,911 - main - INFO - [2025-12-03 23:17:16.911] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-03 23:17:16,911 - main - INFO - [2025-12-03 23:17:16.911] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-03 23:17:16,911 - queue_system - INFO - Queue manager stopped | {}
+2025-12-03 23:17:16,911 - main - INFO - [2025-12-03 23:17:16.911] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-03 23:17:16,912 - main - INFO - [2025-12-03 23:17:16.912] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-03 23:17:16,912 - main - INFO - [2025-12-03 23:17:16.912] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-03 23:17:16,912 - main - INFO - [2025-12-03 23:17:16.912] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-03 23:17:23,450 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-03 23:17:23,452 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-03 23:17:23,454 - main - INFO - [2025-12-03 23:17:23.454] [INFO] [main::entry] Bot script started | {}
+2025-12-03 23:17:23,455 - main - INFO - [2025-12-03 23:17:23.455] [INFO] [main::startup] Validating settings... | {}
+2025-12-03 23:17:23,455 - main - WARNING - [2025-12-03 23:17:23.455] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-03 23:17:23,456 - main - INFO - [2025-12-03 23:17:23.456] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-03 23:17:23,456 - main - INFO - [2025-12-03 23:17:23.456] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-03 23:17:23,456 - main - INFO - [2025-12-03 23:17:23.456] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-03 23:17:23,456 - queue_system - INFO - Queue manager stopped | {}
+2025-12-03 23:17:23,456 - main - INFO - [2025-12-03 23:17:23.456] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-03 23:17:23,456 - main - INFO - [2025-12-03 23:17:23.456] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-03 23:17:23,456 - main - INFO - [2025-12-03 23:17:23.456] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-03 23:17:23,456 - main - INFO - [2025-12-03 23:17:23.456] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-03 23:17:30,059 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-03 23:17:30,059 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-03 23:17:30,061 - main - INFO - [2025-12-03 23:17:30.061] [INFO] [main::entry] Bot script started | {}
+2025-12-03 23:17:30,061 - main - INFO - [2025-12-03 23:17:30.061] [INFO] [main::startup] Validating settings... | {}
+2025-12-03 23:17:30,062 - main - WARNING - [2025-12-03 23:17:30.061] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-03 23:17:30,062 - main - INFO - [2025-12-03 23:17:30.062] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-03 23:17:30,062 - main - INFO - [2025-12-03 23:17:30.062] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-03 23:17:30,062 - main - INFO - [2025-12-03 23:17:30.062] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-03 23:17:30,062 - queue_system - INFO - Queue manager stopped | {}
+2025-12-03 23:17:30,062 - main - INFO - [2025-12-03 23:17:30.062] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-03 23:17:30,062 - main - INFO - [2025-12-03 23:17:30.062] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-03 23:17:30,062 - main - INFO - [2025-12-03 23:17:30.062] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-03 23:17:30,062 - main - INFO - [2025-12-03 23:17:30.062] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}

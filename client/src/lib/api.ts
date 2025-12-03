@@ -242,6 +242,100 @@ class ApiClient {
   async healthCheck() {
     return this.request<{ status: string; timestamp: string }>("/health");
   }
+
+  // ============================================
+  // Advanced AI Rules - Entity Replacements
+  // ============================================
+  
+  async getEntityReplacements(taskId: number) {
+    return this.request<any[]>(`/tasks/${taskId}/entity-replacements`);
+  }
+
+  async createEntityReplacement(data: any) {
+    return this.request<any>(`/tasks/${data.taskId}/entity-replacements`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateEntityReplacement(id: number, data: any) {
+    return this.request<any>(`/entity-replacements/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteEntityReplacement(id: number) {
+    return this.request<{ message: string }>(`/entity-replacements/${id}`, {
+      method: "DELETE",
+    });
+  }
+
+  // ============================================
+  // Advanced AI Rules - Context Rules
+  // ============================================
+  
+  async getContextRules(taskId: number) {
+    return this.request<any[]>(`/tasks/${taskId}/context-rules`);
+  }
+
+  async createContextRule(data: any) {
+    return this.request<any>(`/tasks/${data.taskId}/context-rules`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateContextRule(id: number, data: any) {
+    return this.request<any>(`/context-rules/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteContextRule(id: number) {
+    return this.request<{ message: string }>(`/context-rules/${id}`, {
+      method: "DELETE",
+    });
+  }
+
+  // ============================================
+  // Advanced AI Rules - Training Examples
+  // ============================================
+  
+  async getTrainingExamples(taskId?: number | null) {
+    const url = taskId ? `/training-examples?taskId=${taskId}` : `/training-examples`;
+    return this.request<any[]>(url);
+  }
+
+  async createTrainingExample(data: any) {
+    return this.request<any>(`/training-examples`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteTrainingExample(id: number) {
+    return this.request<{ message: string }>(`/training-examples/${id}`, {
+      method: "DELETE",
+    });
+  }
+
+  // ============================================
+  // Advanced AI Rules - Processing Config
+  // ============================================
+  
+  async getProcessingConfig(taskId?: number) {
+    const url = taskId ? `/processing-config?taskId=${taskId}` : `/processing-config`;
+    return this.request<any>(url);
+  }
+
+  async saveProcessingConfig(data: any) {
+    return this.request<any>(`/processing-config`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
 }
 
 export const api = new ApiClient();

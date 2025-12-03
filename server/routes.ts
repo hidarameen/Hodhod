@@ -568,5 +568,140 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
+  // ============ Advanced AI Rules - Entity Replacements ============
+  app.get("/api/tasks/:taskId/entity-replacements", async (req: Request, res: Response) => {
+    try {
+      const taskId = parseInt(req.params.taskId);
+      const replacements = await storage.getEntityReplacements(taskId);
+      res.json(replacements);
+    } catch (error) {
+      handleError(res, error, "Failed to get entity replacements");
+    }
+  });
+
+  app.post("/api/tasks/:taskId/entity-replacements", async (req: Request, res: Response) => {
+    try {
+      const taskId = parseInt(req.params.taskId);
+      const data = { ...req.body, taskId };
+      const replacement = await storage.createEntityReplacement(data);
+      res.json(replacement);
+    } catch (error) {
+      handleError(res, error, "Failed to create entity replacement");
+    }
+  });
+
+  app.patch("/api/entity-replacements/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.updateEntityReplacement(id, req.body);
+      res.json({ message: "Entity replacement updated" });
+    } catch (error) {
+      handleError(res, error, "Failed to update entity replacement");
+    }
+  });
+
+  app.delete("/api/entity-replacements/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteEntityReplacement(id);
+      res.json({ message: "Entity replacement deleted" });
+    } catch (error) {
+      handleError(res, error, "Failed to delete entity replacement");
+    }
+  });
+
+  // ============ Advanced AI Rules - Context Rules ============
+  app.get("/api/tasks/:taskId/context-rules", async (req: Request, res: Response) => {
+    try {
+      const taskId = parseInt(req.params.taskId);
+      const rules = await storage.getContextRules(taskId);
+      res.json(rules);
+    } catch (error) {
+      handleError(res, error, "Failed to get context rules");
+    }
+  });
+
+  app.post("/api/tasks/:taskId/context-rules", async (req: Request, res: Response) => {
+    try {
+      const taskId = parseInt(req.params.taskId);
+      const data = { ...req.body, taskId };
+      const rule = await storage.createContextRule(data);
+      res.json(rule);
+    } catch (error) {
+      handleError(res, error, "Failed to create context rule");
+    }
+  });
+
+  app.patch("/api/context-rules/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.updateContextRule(id, req.body);
+      res.json({ message: "Context rule updated" });
+    } catch (error) {
+      handleError(res, error, "Failed to update context rule");
+    }
+  });
+
+  app.delete("/api/context-rules/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteContextRule(id);
+      res.json({ message: "Context rule deleted" });
+    } catch (error) {
+      handleError(res, error, "Failed to delete context rule");
+    }
+  });
+
+  // ============ Advanced AI Rules - Training Examples ============
+  app.get("/api/training-examples", async (req: Request, res: Response) => {
+    try {
+      const taskId = req.query.taskId ? parseInt(req.query.taskId as string) : undefined;
+      const exampleType = req.query.exampleType as string | undefined;
+      const examples = await storage.getTrainingExamples(taskId, exampleType);
+      res.json(examples);
+    } catch (error) {
+      handleError(res, error, "Failed to get training examples");
+    }
+  });
+
+  app.post("/api/training-examples", async (req: Request, res: Response) => {
+    try {
+      const example = await storage.createTrainingExample(req.body);
+      res.json(example);
+    } catch (error) {
+      handleError(res, error, "Failed to create training example");
+    }
+  });
+
+  app.delete("/api/training-examples/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteTrainingExample(id);
+      res.json({ message: "Training example deleted" });
+    } catch (error) {
+      handleError(res, error, "Failed to delete training example");
+    }
+  });
+
+  // ============ Advanced AI Rules - Processing Config ============
+  app.get("/api/processing-config", async (req: Request, res: Response) => {
+    try {
+      const taskId = req.query.taskId ? parseInt(req.query.taskId as string) : undefined;
+      const config = await storage.getProcessingConfig(taskId);
+      res.json(config || {});
+    } catch (error) {
+      handleError(res, error, "Failed to get processing config");
+    }
+  });
+
+  app.post("/api/processing-config", async (req: Request, res: Response) => {
+    try {
+      const configId = await storage.saveProcessingConfig(req.body);
+      res.json({ id: configId, message: "Processing config saved" });
+    } catch (error) {
+      handleError(res, error, "Failed to save processing config");
+    }
+  });
+
   return httpServer;
 }

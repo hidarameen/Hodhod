@@ -137,6 +137,27 @@ export interface IStorage {
 
   // Dashboard Stats
   getDashboardStats(): Promise<any>;
+
+  // Advanced AI Rules - Entity Replacements
+  getEntityReplacements(taskId: number): Promise<any[]>;
+  createEntityReplacement(data: any): Promise<any>;
+  updateEntityReplacement(id: number, data: any): Promise<void>;
+  deleteEntityReplacement(id: number): Promise<void>;
+
+  // Advanced AI Rules - Context Rules
+  getContextRules(taskId: number): Promise<any[]>;
+  createContextRule(data: any): Promise<any>;
+  updateContextRule(id: number, data: any): Promise<void>;
+  deleteContextRule(id: number): Promise<void>;
+
+  // Advanced AI Rules - Training Examples
+  getTrainingExamples(taskId?: number, exampleType?: string): Promise<any[]>;
+  createTrainingExample(data: any): Promise<any>;
+  deleteTrainingExample(id: number): Promise<void>;
+
+  // Advanced AI Rules - Processing Config
+  getProcessingConfig(taskId?: number): Promise<any>;
+  saveProcessingConfig(data: any): Promise<number>;
 }
 
 export class DbStorage implements IStorage {
@@ -545,6 +566,249 @@ export class DbStorage implements IStorage {
       aiEnabledTasks: tasks.filter(t => t.aiEnabled).length,
       videoEnabledTasks: tasks.filter(t => t.videoProcessingEnabled).length,
     };
+  }
+
+  // ============ Advanced AI Rules - Entity Replacements ============
+  async getEntityReplacements(taskId: number): Promise<any[]> {
+    return await database
+      .select()
+      .from(schema.aiEntityReplacements)
+      .where(
+        and(
+          eq(schema.aiEntityReplacements.taskId, taskId),
+          eq(schema.aiEntityReplacements.isActive, true)
+        )
+      )
+      .orderBy(desc(schema.aiEntityReplacements.priority));
+  }
+
+  async createEntityReplacement(data: any): Promise<any> {
+    const result = await database
+      .insert(schema.aiEntityReplacements)
+      .values({
+        taskId: data.taskId,
+        entityType: data.entityType || 'custom',
+        originalText: data.originalText,
+        replacementText: data.replacementText,
+        caseSensitive: data.caseSensitive ?? false,
+        useContext: data.useContext ?? true,
+        isActive: data.isActive ?? true,
+        priority: data.priority ?? 0,
+      })
+      .returning();
+    return result[0];
+  }
+
+  async updateEntityReplacement(id: number, data: any): Promise<void> {
+    await database
+      .update(schema.aiEntityReplacements)
+      .set({
+        ...data,
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.aiEntityReplacements.id, id));
+  }
+
+  async deleteEntityReplacement(id: number): Promise<void> {
+    await database
+      .delete(schema.aiEntityReplacements)
+      .where(eq(schema.aiEntityReplacements.id, id));
+  }
+
+  // ============ Advanced AI Rules - Context Rules ============
+  async getContextRules(taskId: number): Promise<any[]> {
+    return await database
+      .select()
+      .from(schema.aiContextRules)
+      .where(
+        and(
+          eq(schema.aiContextRules.taskId, taskId),
+          eq(schema.aiContextRules.isActive, true)
+        )
+      )
+      .orderBy(desc(schema.aiContextRules.priority));
+  }
+
+  async createContextRule(data: any): Promise<any> {
+    const result = await database
+      .insert(schema.aiContextRules)
+      .values({
+        taskId: data.taskId,
+        ruleType: data.ruleType,
+        triggerPattern: data.triggerPattern || null,
+        targetSentiment: data.targetSentiment || 'neutral',
+        instructions: data.instructions,
+        examples: data.examples || null,
+        isActive: data.isActive ?? true,
+        priority: data.priority ?? 0,
+      })
+      .returning();
+    return result[0];
+  }
+
+  async updateContextRule(id: number, data: any): Promise<void> {
+    await database
+      .update(schema.aiContextRules)
+      .set({
+        ...data,
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.aiContextRules.id, id));
+  }
+
+  async deleteContextRule(id: number): Promise<void> {
+    await database
+      .delete(schema.aiContextRules)
+      .where(eq(schema.aiContextRules.id, id));
+  }
+
+  // ============ Advanced AI Rules - Training Examples ============
+  async getTrainingExamples(taskId?: number, exampleType?: string): Promise<any[]> {
+    let query = database.select().from(schema.aiTrainingExamples);
+    
+    if (taskId && exampleType) {
+      return await query.where(
+        and(
+          eq(schema.aiTrainingExamples.taskId, taskId),
+          eq(schema.aiTrainingExamples.exampleType, exampleType),
+          eq(schema.aiTrainingExamples.isActive, true)
+        )
+      ).orderBy(desc(schema.aiTrainingExamples.useCount));
+    } else if (taskId) {
+      return await query.where(
+        and(
+          eq(schema.aiTrainingExamples.taskId, taskId),
+          eq(schema.aiTrainingExamples.isActive, true)
+        )
+      ).orderBy(desc(schema.aiTrainingExamples.useCount));
+    } else if (exampleType) {
+      return await query.where(
+        and(
+          eq(schema.aiTrainingExamples.exampleType, exampleType),
+          eq(schema.aiTrainingExamples.isActive, true)
+        )
+      ).orderBy(desc(schema.aiTrainingExamples.useCount));
+    }
+    
+    return await query
+      .where(eq(schema.aiTrainingExamples.isActive, true))
+      .orderBy(desc(schema.aiTrainingExamples.useCount))
+      .limit(100);
+  }
+
+  async createTrainingExample(data: any): Promise<any> {
+    const result = await database
+      .insert(schema.aiTrainingExamples)
+      .values({
+        taskId: data.taskId || null,
+        exampleType: data.exampleType,
+        inputText: data.inputText,
+        expectedOutput: data.expectedOutput,
+        explanation: data.explanation || null,
+        tags: data.tags || null,
+        isActive: data.isActive ?? true,
+      })
+      .returning();
+    return result[0];
+  }
+
+  async deleteTrainingExample(id: number): Promise<void> {
+    await database
+      .delete(schema.aiTrainingExamples)
+      .where(eq(schema.aiTrainingExamples.id, id));
+  }
+
+  // ============ Advanced AI Rules - Processing Config ============
+  async getProcessingConfig(taskId?: number): Promise<any> {
+    if (taskId) {
+      const result = await database
+        .select()
+        .from(schema.aiProcessingConfig)
+        .where(eq(schema.aiProcessingConfig.taskId, taskId))
+        .limit(1);
+      if (result[0]) return result[0];
+    }
+    
+    const globalConfig = await database
+      .select()
+      .from(schema.aiProcessingConfig)
+      .where(
+        and(
+          eq(schema.aiProcessingConfig.configType, 'global'),
+          sql`${schema.aiProcessingConfig.taskId} IS NULL`
+        )
+      )
+      .limit(1);
+    
+    return globalConfig[0] || null;
+  }
+
+  async saveProcessingConfig(data: any): Promise<number> {
+    const taskId = data.taskId || null;
+    const configType = data.configType || (taskId ? 'task_specific' : 'global');
+    
+    let existing = null;
+    if (taskId) {
+      const result = await database
+        .select()
+        .from(schema.aiProcessingConfig)
+        .where(eq(schema.aiProcessingConfig.taskId, taskId))
+        .limit(1);
+      existing = result[0];
+    } else {
+      const result = await database
+        .select()
+        .from(schema.aiProcessingConfig)
+        .where(
+          and(
+            eq(schema.aiProcessingConfig.configType, 'global'),
+            sql`${schema.aiProcessingConfig.taskId} IS NULL`
+          )
+        )
+        .limit(1);
+      existing = result[0];
+    }
+    
+    if (existing) {
+      await database
+        .update(schema.aiProcessingConfig)
+        .set({
+          enableEntityExtraction: data.enableEntityExtraction ?? true,
+          enableSentimentAnalysis: data.enableSentimentAnalysis ?? true,
+          enableKeywordDetection: data.enableKeywordDetection ?? true,
+          maxRetries: data.maxRetries ?? 3,
+          timeoutSeconds: data.timeoutSeconds ?? 60,
+          preserveFormatting: data.preserveFormatting ?? true,
+          enableOutputValidation: data.enableOutputValidation ?? true,
+          enableRuleVerification: data.enableRuleVerification ?? true,
+          outputFormat: data.outputFormat ?? 'markdown',
+          temperature: data.temperature?.toString() ?? '0.7',
+          qualityLevel: data.qualityLevel ?? 'balanced',
+          updatedAt: new Date(),
+        })
+        .where(eq(schema.aiProcessingConfig.id, existing.id));
+      return existing.id;
+    } else {
+      const result = await database
+        .insert(schema.aiProcessingConfig)
+        .values({
+          taskId: taskId,
+          configType: configType,
+          enableEntityExtraction: data.enableEntityExtraction ?? true,
+          enableSentimentAnalysis: data.enableSentimentAnalysis ?? true,
+          enableKeywordDetection: data.enableKeywordDetection ?? true,
+          maxRetries: data.maxRetries ?? 3,
+          timeoutSeconds: data.timeoutSeconds ?? 60,
+          preserveFormatting: data.preserveFormatting ?? true,
+          enableOutputValidation: data.enableOutputValidation ?? true,
+          enableRuleVerification: data.enableRuleVerification ?? true,
+          outputFormat: data.outputFormat ?? 'markdown',
+          temperature: data.temperature?.toString() ?? '0.7',
+          qualityLevel: data.qualityLevel ?? 'balanced',
+        })
+        .returning();
+      return result[0].id;
+    }
   }
 }
 
