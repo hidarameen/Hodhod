@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { insertUserSchema, insertForwardingTaskSchema, insertChannelSchema, insertAiRuleSchema } from "@shared/schema";
 import { z } from "zod";
 import { pushToGitHub, getGitHubInfo, listGitHubRepos, pushToGitHubRepo, getBranches, getFileChanges } from "./github-sync";
+import { consoleLogger } from "./console-logger";
 
 const handleError = (res: Response, error: unknown, message: string = "An error occurred") => {
   console.error(error);
@@ -14,27 +15,27 @@ const handleError = (res: Response, error: unknown, message: string = "An error 
 
 export async function registerRoutes(httpServer: Server, app: Express): Promise<Server> {
   // ============ Authentication ============
-  
+
   app.post("/api/auth/admin-login", async (req: Request, res: Response) => {
     try {
       const { username, password } = req.body;
-      
+
       if (!username || !password) {
         return res.status(400).json({ error: "Username and password are required" });
       }
-      
+
       const secretUsername = process.env.ADMIN_USERNAME;
       const secretPassword = process.env.ADMIN_PASSWORD;
-      
+
       if (!secretUsername || !secretPassword) {
         console.error("[Auth] Admin credentials not configured in secrets");
         return res.status(500).json({ error: "Admin authentication not configured" });
       }
-      
+
       if (username !== secretUsername || password !== secretPassword) {
         return res.status(401).json({ error: "Invalid credentials" });
       }
-      
+
       res.json({ 
         admin: true,
         username: secretUsername,
@@ -346,8 +347,40 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
+  // ============ Console Logs ============
+  app.get("/api/console-logs", async (req: Request, res: Response) => {
+    try {
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 200;
+      const source = req.query.source as string | undefined;
+      const level = req.query.level as string | undefined;
+
+      const logs = consoleLogger.getLogs(limit, source, level);
+      res.json(logs);
+    } catch (error: any) {
+      handleError(res, error, "Failed to get console logs");
+    }
+  });
+
+  app.get("/api/console-logs/stats", async (req: Request, res: Response) => {
+    try {
+      const stats = consoleLogger.getStats();
+      res.json(stats);
+    } catch (error: any) {
+      handleError(res, error, "Failed to get console log stats");
+    }
+  });
+
+  app.delete("/api/console-logs", async (req: Request, res: Response) => {
+    try {
+      consoleLogger.clearLogs();
+      res.json({ message: "Console logs cleared successfully" });
+    } catch (error: any) {
+      handleError(res, error, "Failed to clear console logs");
+    }
+  });
+
   // ============ Userbot ============
-  
+
   app.get("/api/userbot/status", async (req: Request, res: Response) => {
     try {
       const session = await storage.getActiveUserbotSession();
@@ -371,13 +404,13 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       if (!phoneNumber) {
         return res.status(400).json({ status: "error", message: "رقم الهاتف مطلوب" });
       }
-      
+
       const phoneRegex = /^\+?[1-9]\d{6,14}$/;
       const cleanPhone = phoneNumber.replace(/[\s-]/g, '');
       if (!phoneRegex.test(cleanPhone)) {
         return res.status(400).json({ status: "error", message: "رقم الهاتف غير صالح" });
       }
-      
+
       const response = await authServiceManager.startLogin(phoneNumber);
       res.json(response.data);
     } catch (error: any) {
@@ -393,13 +426,13 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       if (!phoneNumber || !code) {
         return res.status(400).json({ status: "error", message: "رقم الهاتف ورمز التحقق مطلوبان" });
       }
-      
+
       const response = await authServiceManager.verifyCode(phoneNumber, code);
-      
+
       if (response.data.status === "success" && response.data.session_string) {
         await storage.activateUserbotSession(phoneNumber, response.data.session_string);
       }
-      
+
       res.json(response.data);
     } catch (error: any) {
       console.error("Verify code error:", error);
@@ -414,13 +447,13 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       if (!phoneNumber || !password) {
         return res.status(400).json({ status: "error", message: "رقم الهاتف وكلمة المرور مطلوبان" });
       }
-      
+
       const response = await authServiceManager.verify2FA(phoneNumber, password);
-      
+
       if (response.data.status === "success" && response.data.session_string) {
         await storage.activateUserbotSession(phoneNumber, response.data.session_string);
       }
-      
+
       res.json(response.data);
     } catch (error: any) {
       console.error("2FA verification error:", error);
@@ -435,7 +468,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       if (!phoneNumber) {
         return res.status(400).json({ status: "error", message: "رقم الهاتف مطلوب" });
       }
-      
+
       const response = await authServiceManager.cancelLogin(phoneNumber);
       res.json(response.data);
     } catch (error: any) {
@@ -447,15 +480,15 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   app.post("/api/userbot/logout", async (req: Request, res: Response) => {
     try {
       const session = await storage.getActiveUserbotSession();
-      
+
       try {
         await authServiceManager.logout(session?.phoneNumber);
       } catch (authError) {
         console.warn("Auth service logout warning:", authError);
       }
-      
+
       await storage.deactivateUserbotSession();
-      
+
       res.json({ status: "success", message: "تم تسجيل الخروج بنجاح" });
     } catch (error) {
       handleError(res, error, "Failed to logout");
@@ -510,7 +543,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   app.post("/api/github/push", async (req: Request, res: Response) => {
     try {
       const { message, owner, repo, branch } = req.body;
-      
+
       if (!message) {
         return res.status(400).json({ error: "Commit message is required" });
       }

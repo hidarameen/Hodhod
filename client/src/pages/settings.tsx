@@ -22,9 +22,20 @@ import {
   AlertCircle,
   Smartphone,
   XCircle,
-  RefreshCw
+  RefreshCw,
+  Terminal,
+  Filter,
+  Download
 } from "lucide-react";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
 
 interface Admin {
   id: number;
@@ -51,6 +62,9 @@ export default function SettingsPage() {
   const [loginStep, setLoginStep] = useState<"phone" | "otp" | "2fa">("phone");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [phoneError, setPhoneError] = useState("");
+  
+  const [logFilter, setLogFilter] = useState({ source: "", level: "" });
+  const [showConsoleLogs, setShowConsoleLogs] = useState(false);
 
   const { data: admins = [], isLoading: loadingAdmins } = useQuery({
     queryKey: ["admins"],
@@ -69,6 +83,24 @@ export default function SettingsPage() {
       return res.json();
     },
     refetchInterval: 10000,
+  });
+
+  const { data: consoleLogs = [], isLoading: loadingLogs, refetch: refetchLogs } = useQuery({
+    queryKey: ["console-logs", logFilter],
+    queryFn: () => api.getConsoleLogs({ 
+      limit: 200, 
+      source: logFilter.source || undefined,
+      level: logFilter.level || undefined
+    }),
+    enabled: showConsoleLogs,
+    refetchInterval: showConsoleLogs ? 3000 : false,
+  });
+
+  const { data: logsStats } = useQuery({
+    queryKey: ["console-logs-stats"],
+    queryFn: () => api.getConsoleLogsStats(),
+    enabled: showConsoleLogs,
+    refetchInterval: showConsoleLogs ? 5000 : false,
   });
 
   const createAdminMutation = useMutation({
@@ -101,6 +133,14 @@ export default function SettingsPage() {
     onSuccess: () => {
       toast.success("تم حفظ الإعدادات");
       queryClient.invalidateQueries({ queryKey: ["settings"] });
+    },
+  });
+
+  const clearLogsMutation = useMutation({
+    mutationFn: () => api.clearConsoleLogs(),
+    onSuccess: () => {
+      toast.success("تم مسح السجلات");
+      queryClient.invalidateQueries({ queryKey: ["console-logs"] });
     },
   });
 
@@ -292,6 +332,33 @@ export default function SettingsPage() {
   };
 
   const isConnected = userbotStatus?.status === "connected" || userbotStatus?.status === "active";
+
+  const getLogLevelBadge = (level: string) => {
+    switch (level) {
+      case 'error':
+        return 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20';
+      case 'warn':
+        return 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20';
+      case 'info':
+        return 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20';
+      default:
+        return 'bg-gray-500/10 text-gray-600 dark:text-gray-400 border-gray-500/20';
+    }
+  };
+
+  const handleDownloadLogs = () => {
+    const logsText = consoleLogs.map((log: any) => 
+      `[${new Date(log.timestamp).toLocaleString('ar')}] [${log.level.toUpperCase()}] [${log.source}] ${log.message}`
+    ).join('\n');
+    
+    const blob = new Blob([logsText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `console-logs-${new Date().toISOString()}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="space-y-6 md:space-y-8 max-w-4xl mx-auto">
@@ -675,6 +742,153 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
       </div>
+
+      <Card className="border shadow-sm">
+        <CardHeader className="cursor-pointer" onClick={() => setShowConsoleLogs(!showConsoleLogs)}>
+          <CardTitle className="flex items-center justify-between text-foreground">
+            <span className="flex items-center gap-2">
+              <Terminal className="h-4 w-4 text-green-600 dark:text-green-400" /> سجل الكونسول المباشر
+            </span>
+            <div className="flex items-center gap-2">
+              {logsStats && (
+                <div className="flex gap-2 text-xs">
+                  <Badge variant="secondary" className="bg-blue-500/10 text-blue-600">
+                    {logsStats.info} معلومات
+                  </Badge>
+                  {logsStats.warnings > 0 && (
+                    <Badge variant="secondary" className="bg-yellow-500/10 text-yellow-600">
+                      {logsStats.warnings} تحذير
+                    </Badge>
+                  )}
+                  {logsStats.errors > 0 && (
+                    <Badge variant="secondary" className="bg-red-500/10 text-red-600">
+                      {logsStats.errors} خطأ
+                    </Badge>
+                  )}
+                </div>
+              )}
+              <Button variant="ghost" size="sm">
+                {showConsoleLogs ? "إخفاء" : "عرض"}
+              </Button>
+            </div>
+          </CardTitle>
+          <CardDescription>
+            عرض السجلات المباشرة للنظام والبوت مع التحديث التلقائي
+          </CardDescription>
+        </CardHeader>
+
+        {showConsoleLogs && (
+          <CardContent className="space-y-4">
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Select value={logFilter.level} onValueChange={(value) => setLogFilter({...logFilter, level: value})}>
+                <SelectTrigger className="w-full sm:w-40">
+                  <SelectValue placeholder="كل المستويات" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">الكل</SelectItem>
+                  <SelectItem value="info">معلومات</SelectItem>
+                  <SelectItem value="warn">تحذيرات</SelectItem>
+                  <SelectItem value="error">أخطاء</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={logFilter.source} onValueChange={(value) => setLogFilter({...logFilter, source: value})}>
+                <SelectTrigger className="w-full sm:w-40">
+                  <SelectValue placeholder="كل المصادر" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">الكل</SelectItem>
+                  <SelectItem value="telegram-bot">البوت</SelectItem>
+                  <SelectItem value="express">السيرفر</SelectItem>
+                  <SelectItem value="auth-service">المصادقة</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <div className="flex gap-2 flex-1">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => refetchLogs()}
+                  disabled={loadingLogs}
+                  className="flex-1 sm:flex-none"
+                >
+                  <RefreshCw className={`h-4 w-4 mr-1 ${loadingLogs ? 'animate-spin' : ''}`} />
+                  تحديث
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={handleDownloadLogs}
+                  disabled={consoleLogs.length === 0}
+                  className="flex-1 sm:flex-none"
+                >
+                  <Download className="h-4 w-4 mr-1" />
+                  تحميل
+                </Button>
+                <Button 
+                  variant="destructive" 
+                  size="sm"
+                  onClick={() => clearLogsMutation.mutate()}
+                  disabled={clearLogsMutation.isPending}
+                  className="flex-1 sm:flex-none"
+                >
+                  <Trash2 className="h-4 w-4 mr-1" />
+                  مسح
+                </Button>
+              </div>
+            </div>
+
+            <div className="bg-black/95 rounded-lg p-4 max-h-96 overflow-y-auto font-mono text-xs">
+              {loadingLogs ? (
+                <div className="flex items-center justify-center p-8">
+                  <Loader className="h-6 w-6 animate-spin text-green-500" />
+                </div>
+              ) : consoleLogs.length === 0 ? (
+                <div className="text-center text-gray-500 p-4">
+                  لا توجد سجلات متاحة
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  {consoleLogs.map((log: any) => (
+                    <div 
+                      key={log.id}
+                      className="flex gap-2 hover:bg-white/5 px-2 py-1 rounded transition-colors"
+                    >
+                      <span className="text-gray-500 shrink-0">
+                        {new Date(log.timestamp).toLocaleTimeString('ar', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          second: '2-digit'
+                        })}
+                      </span>
+                      <Badge 
+                        variant="outline" 
+                        className={`shrink-0 text-xs h-5 ${getLogLevelBadge(log.level)}`}
+                      >
+                        {log.level}
+                      </Badge>
+                      <span className="text-cyan-400 shrink-0">[{log.source}]</span>
+                      <span className={`
+                        break-all
+                        ${log.level === 'error' ? 'text-red-400' : 
+                          log.level === 'warn' ? 'text-yellow-400' : 
+                          'text-green-400'}
+                      `}>
+                        {log.message}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+              <span>التحديث التلقائي كل 3 ثوان • عرض آخر {consoleLogs.length} سجل</span>
+            </div>
+          </CardContent>
+        )}
+      </Card>
     </div>
   );
 }

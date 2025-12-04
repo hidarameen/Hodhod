@@ -102,9 +102,34 @@ class ApiClient {
     return this.request<any[]>(`/tasks/${id}/logs?limit=${limit}`);
   }
 
-  async getErrorLogs(limit: number = 100) {
-    return this.request<any[]>(`/error-logs?limit=${limit}`);
+  async getErrorLogs() {
+    const response = await fetch("/api/error-logs");
+    if (!response.ok) throw new Error("Failed to fetch error logs");
+    return response.json();
   }
+
+  async getConsoleLogs(params?: { limit?: number; source?: string; level?: string }) {
+    const queryParams = new URLSearchParams();
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.source) queryParams.append('source', params.source);
+    if (params?.level) queryParams.append('level', params.level);
+
+    const response = await fetch(`/api/console-logs?${queryParams}`);
+    if (!response.ok) throw new Error("Failed to fetch console logs");
+    return response.json();
+  },
+
+  async getConsoleLogsStats() {
+    const response = await fetch("/api/console-logs/stats");
+    if (!response.ok) throw new Error("Failed to fetch console logs stats");
+    return response.json();
+  },
+
+  async clearConsoleLogs() {
+    const response = await fetch("/api/console-logs", { method: "DELETE" });
+    if (!response.ok) throw new Error("Failed to clear console logs");
+    return response.json();
+  },
 
   // Channels
   async getChannels() {
@@ -246,7 +271,7 @@ class ApiClient {
   // ============================================
   // Advanced AI Rules - Entity Replacements
   // ============================================
-  
+
   async getEntityReplacements(taskId: number) {
     return this.request<any[]>(`/tasks/${taskId}/entity-replacements`);
   }
@@ -274,7 +299,7 @@ class ApiClient {
   // ============================================
   // Advanced AI Rules - Context Rules
   // ============================================
-  
+
   async getContextRules(taskId: number) {
     return this.request<any[]>(`/tasks/${taskId}/context-rules`);
   }
@@ -302,7 +327,7 @@ class ApiClient {
   // ============================================
   // Advanced AI Rules - Training Examples
   // ============================================
-  
+
   async getTrainingExamples(taskId?: number | null) {
     const url = taskId ? `/training-examples?taskId=${taskId}` : `/training-examples`;
     return this.request<any[]>(url);
@@ -324,7 +349,7 @@ class ApiClient {
   // ============================================
   // Advanced AI Rules - Processing Config
   // ============================================
-  
+
   async getProcessingConfig(taskId?: number) {
     const url = taskId ? `/processing-config?taskId=${taskId}` : `/processing-config`;
     return this.request<any>(url);
@@ -340,7 +365,7 @@ class ApiClient {
   // ============================================
   // Content Filters
   // ============================================
-  
+
   async getContentFilters(taskId: number) {
     return this.request<any[]>(`/tasks/${taskId}/content-filters`);
   }
@@ -361,7 +386,7 @@ class ApiClient {
   // ============================================
   // Publishing Templates
   // ============================================
-  
+
   async getPublishingTemplates(taskId: number) {
     return this.request<any[]>(`/tasks/${taskId}/publishing-templates`);
   }
