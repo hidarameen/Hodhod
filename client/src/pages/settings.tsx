@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,10 +10,11 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Shield, 
-  UserPlus, 
-  Bell, 
+import { Separator } from "@/components/ui/separator";
+import {
+  Shield,
+  UserPlus,
+  Bell,
   Database,
   Save,
   Trash2,
@@ -33,7 +35,12 @@ import {
   ChevronDown,
   Clock,
   AlertTriangle,
-  Info
+  Info,
+  Search,
+  Play,
+  Pause,
+  Trash,
+  Terminal
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -44,6 +51,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+
 
 interface Admin {
   id: number;
@@ -55,6 +64,22 @@ interface Admin {
 
 export default function SettingsPage() {
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
+  const { toast } = useToast();
+  const consoleEndRef = useRef<HTMLDivElement>(null);
+  const consoleContainerRef = useRef<HTMLDivElement>(null);
+
+  // Event Logs State
+  const [logFilter, setLogFilter] = useState<string>("");
+  const [logLevelFilter, setLogLevelFilter] = useState<string>("all");
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [expandedLog, setExpandedLog] = useState<number | null>(null);
+
+  // Console states
+  const [consoleAutoScroll, setConsoleAutoScroll] = useState(true);
+  const [consolePaused, setConsolePaused] = useState(false);
+  const [consoleFilter, setConsoleFilter] = useState("");
+
   const [newAdminId, setNewAdminId] = useState("");
   const [newAdminUsername, setNewAdminUsername] = useState("");
   const [addAdminDialogOpen, setAddAdminDialogOpen] = useState(false);
@@ -63,7 +88,7 @@ export default function SettingsPage() {
     taskCompletion: false,
     autoBackup: true
   });
-  
+
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otpCode, setOtpCode] = useState("");
   const [twoFaPassword, setTwoFaPassword] = useState("");
@@ -71,11 +96,6 @@ export default function SettingsPage() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [phoneError, setPhoneError] = useState("");
 
-  // Event Logs State
-  const [logFilter, setLogFilter] = useState<string>("");
-  const [logLevelFilter, setLogLevelFilter] = useState<string>("all");
-  const [autoRefresh, setAutoRefresh] = useState(true);
-  const [expandedLog, setExpandedLog] = useState<number | null>(null);
 
   const { data: admins = [], isLoading: loadingAdmins } = useQuery({
     queryKey: ["admins"],
@@ -100,6 +120,13 @@ export default function SettingsPage() {
     queryKey: ["error-logs"],
     queryFn: () => api.getErrorLogs(500),
     refetchInterval: autoRefresh ? 5000 : false,
+  });
+
+  // Fetch console logs with auto-refresh and pause functionality
+  const { data: consoleLogs = [], isLoading: consoleLogsLoading, refetch: refetchConsoleLogs } = useQuery({
+    queryKey: ["console-logs"],
+    queryFn: () => api.getConsoleLogs(), // Assuming this endpoint exists
+    refetchInterval: consolePaused ? false : 2000, // Refetch every 2 seconds if not paused
   });
 
   const createAdminMutation = useMutation({
@@ -132,6 +159,14 @@ export default function SettingsPage() {
     onSuccess: () => {
       toast.success("تم حفظ الإعدادات");
       queryClient.invalidateQueries({ queryKey: ["settings"] });
+    },
+  });
+
+  const clearErrorLogsMutation = useMutation({
+    mutationFn: () => api.clearErrorLogs(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["error-logs"] });
+      toast.success("تم مسح جميع سجلات الأخطاء");
     },
   });
 
@@ -173,19 +208,19 @@ export default function SettingsPage() {
 
   const handleStartLogin = async () => {
     setPhoneError("");
-    
+
     if (!phoneNumber) {
       setPhoneError("يرجى إدخال رقم الهاتف");
       toast.error("يرجى إدخال رقم الهاتف");
       return;
     }
-    
+
     if (!validatePhoneNumber(phoneNumber)) {
       setPhoneError("رقم الهاتف غير صالح - تأكد من إضافة رمز الدولة");
       toast.error("رقم الهاتف غير صالح");
       return;
     }
-    
+
     setIsLoggingIn(true);
     try {
       const res = await fetch("/api/userbot/login/start", {
@@ -194,7 +229,7 @@ export default function SettingsPage() {
         body: JSON.stringify({ phoneNumber }),
       });
       const data = await res.json();
-      
+
       if (data.status === "code_sent") {
         toast.success(data.message || "تم إرسال رمز التحقق");
         setLoginStep("otp");
@@ -216,7 +251,7 @@ export default function SettingsPage() {
       toast.error("يرجى إدخال رمز التحقق");
       return;
     }
-    
+
     setIsLoggingIn(true);
     try {
       const res = await fetch("/api/userbot/login/verify", {
@@ -225,7 +260,7 @@ export default function SettingsPage() {
         body: JSON.stringify({ phoneNumber, code: otpCode }),
       });
       const data = await res.json();
-      
+
       if (data.status === "success") {
         toast.success(data.message || "تم تسجيل الدخول بنجاح");
         resetLoginForm();
@@ -251,7 +286,7 @@ export default function SettingsPage() {
       toast.error("يرجى إدخال كلمة المرور");
       return;
     }
-    
+
     setIsLoggingIn(true);
     try {
       const res = await fetch("/api/userbot/login/2fa", {
@@ -260,7 +295,7 @@ export default function SettingsPage() {
         body: JSON.stringify({ phoneNumber, password: twoFaPassword }),
       });
       const data = await res.json();
-      
+
       if (data.status === "success") {
         toast.success(data.message || "تم تسجيل الدخول بنجاح");
         resetLoginForm();
@@ -283,7 +318,7 @@ export default function SettingsPage() {
       resetLoginForm();
       return;
     }
-    
+
     setIsLoggingIn(true);
     try {
       await fetch("/api/userbot/login/cancel", {
@@ -305,7 +340,7 @@ export default function SettingsPage() {
     try {
       const res = await fetch("/api/userbot/logout", { method: "POST" });
       const data = await res.json();
-      
+
       if (data.status === "success") {
         toast.success(data.message || "تم تسجيل الخروج");
         refetchUserbot();
@@ -339,16 +374,66 @@ export default function SettingsPage() {
     return <Clock className="h-4 w-4" />;
   };
 
-  const filteredLogs = eventLogs.filter((log: any) => {
-    const matchesSearch = !logFilter || 
+  // Auto scroll to bottom when new logs arrive
+  useEffect(() => {
+    if (consoleAutoScroll && !consolePaused && consoleEndRef.current) {
+      consoleEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [consoleLogs, consoleAutoScroll, consolePaused]);
+
+  // Detect manual scrolling
+  useEffect(() => {
+    const container = consoleContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const isAtBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 50;
+      setConsoleAutoScroll(isAtBottom);
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const filteredConsoleLogs = consoleLogs.filter((log: any) => {
+    const searchText = consoleFilter.toLowerCase();
+    return (
+      log.component?.toLowerCase().includes(searchText) ||
+      log.function?.toLowerCase().includes(searchText) ||
+      log.errorMessage?.toLowerCase().includes(searchText)
+    );
+  });
+
+  const filteredEventLogs = eventLogs.filter((log: any) => {
+    const matchesSearch = !logFilter ||
       log.component?.toLowerCase().includes(logFilter.toLowerCase()) ||
       log.errorMessage?.toLowerCase().includes(logFilter.toLowerCase()) ||
       log.function?.toLowerCase().includes(logFilter.toLowerCase());
-    
+
     const matchesLevel = logLevelFilter === "all" || log.errorType?.includes(logLevelFilter.toUpperCase());
-    
+
     return matchesSearch && matchesLevel;
   });
+
+  const getLogColor = (log: any) => {
+    const msg = log.errorMessage?.toLowerCase() || "";
+    const type = log.errorType?.toLowerCase() || "";
+
+    if (msg.includes("error") || type.includes("error")) return "text-red-500";
+    if (msg.includes("warning") || msg.includes("warn") || type.includes("warn")) return "text-yellow-500";
+    if (msg.includes("success") || msg.includes("✅") || msg.includes("completed")) return "text-green-500";
+    if (msg.includes("info") || type.includes("info")) return "text-blue-500";
+    return "text-muted-foreground";
+  };
+
+  const formatTimestamp = (timestamp: string) => {
+    const date = new Date(timestamp);
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    const ms = String(date.getMilliseconds()).padStart(3, '0');
+    return `${hours}:${minutes}:${seconds}.${ms}`;
+  };
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -356,10 +441,10 @@ export default function SettingsPage() {
   };
 
   const downloadLogs = () => {
-    const logsText = filteredLogs.map((log: any) => 
+    const logsText = filteredEventLogs.map((log: any) =>
       `[${log.timestamp}] ${log.errorType} - ${log.component} - ${log.errorMessage}`
     ).join("\n");
-    
+
     const element = document.createElement("a");
     element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(logsText));
     element.setAttribute("download", `event-logs-${new Date().toISOString()}.txt`);
@@ -377,7 +462,7 @@ export default function SettingsPage() {
           <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground tracking-wide">إعدادات النظام</h2>
           <p className="text-muted-foreground mt-1 text-sm md:text-base">إدارة التحكم بالوصول والإشعارات وتفضيلات النظام</p>
         </div>
-        <Button 
+        <Button
           onClick={handleSaveSettings}
           className="bg-primary text-primary-foreground font-bold hover:bg-primary/90 w-full sm:w-auto"
           disabled={saveSettingMutation.isPending}
@@ -386,7 +471,7 @@ export default function SettingsPage() {
           {saveSettingMutation.isPending ? (
             <Loader className="h-3 w-3 mr-2 animate-spin" />
           ) : (
-            <Save className="h-3 w-3 mr-2" />
+            <Save className="h-3 w-3 mr-1" />
           )}
           حفظ التغييرات
         </Button>
@@ -439,8 +524,8 @@ export default function SettingsPage() {
                         </p>
                       )}
                     </div>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       onClick={handleLogout}
                       disabled={isLoggingIn}
@@ -494,7 +579,7 @@ export default function SettingsPage() {
                           </p>
                         )}
                       </div>
-                      <Button 
+                      <Button
                         onClick={handleStartLogin}
                         className="w-full"
                         disabled={isLoggingIn}
@@ -535,7 +620,7 @@ export default function SettingsPage() {
                         />
                       </div>
                       <div className="flex gap-2">
-                        <Button 
+                        <Button
                           variant="outline"
                           onClick={handleCancelLogin}
                           className="flex-1"
@@ -544,7 +629,7 @@ export default function SettingsPage() {
                           <XCircle className="h-4 w-4 mr-1" />
                           إلغاء
                         </Button>
-                        <Button 
+                        <Button
                           onClick={handleVerifyCode}
                           className="flex-1"
                           disabled={isLoggingIn || !otpCode}
@@ -554,7 +639,7 @@ export default function SettingsPage() {
                           تحقق
                         </Button>
                       </div>
-                      <Button 
+                      <Button
                         variant="ghost"
                         onClick={handleStartLogin}
                         className="w-full text-sm"
@@ -586,7 +671,7 @@ export default function SettingsPage() {
                         />
                       </div>
                       <div className="flex gap-2">
-                        <Button 
+                        <Button
                           variant="outline"
                           onClick={handleCancelLogin}
                           className="flex-1"
@@ -595,7 +680,7 @@ export default function SettingsPage() {
                           <XCircle className="h-4 w-4 mr-1" />
                           إلغاء
                         </Button>
-                        <Button 
+                        <Button
                           onClick={handleVerify2FA}
                           className="flex-1"
                           disabled={isLoggingIn || !twoFaPassword}
@@ -691,7 +776,7 @@ export default function SettingsPage() {
                         data-testid="input-admin-username"
                       />
                     </div>
-                    <Button 
+                    <Button
                       onClick={handleAddAdmin}
                       className="w-full"
                       disabled={createAdminMutation.isPending}
@@ -703,7 +788,7 @@ export default function SettingsPage() {
                   </div>
                 </DialogContent>
               </Dialog>
-              
+
               <div className="space-y-2">
                 {loadingAdmins ? (
                   <div className="flex justify-center p-4">
@@ -715,8 +800,8 @@ export default function SettingsPage() {
                   </div>
                 ) : (
                   admins.map((admin: Admin) => (
-                    <div 
-                      key={admin.id} 
+                    <div
+                      key={admin.id}
                       className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded bg-muted/50 border border-border hover:border-primary/50 transition-colors"
                       data-testid={`admin-row-${admin.id}`}
                     >
@@ -833,7 +918,7 @@ export default function SettingsPage() {
               </div>
 
               <div className="text-sm text-muted-foreground">
-                عرض <span className="font-semibold text-foreground">{filteredLogs.length}</span> من <span className="font-semibold text-foreground">{eventLogs.length}</span> سجل
+                عرض <span className="font-semibold text-foreground">{filteredEventLogs.length}</span> من <span className="font-semibold text-foreground">{eventLogs.length}</span> سجل
               </div>
 
               <div className="space-y-2 max-h-[500px] overflow-y-auto">
@@ -841,13 +926,13 @@ export default function SettingsPage() {
                   <div className="flex justify-center p-8">
                     <Loader className="h-6 w-6 animate-spin text-primary" />
                   </div>
-                ) : filteredLogs.length === 0 ? (
+                ) : filteredEventLogs.length === 0 ? (
                   <div className="p-8 text-center text-muted-foreground rounded-lg border border-dashed">
                     <ScrollText className="h-8 w-8 mx-auto mb-2 opacity-50" />
                     لا توجد أحداث حالياً
                   </div>
                 ) : (
-                  filteredLogs.map((log: any, idx: number) => (
+                  filteredEventLogs.map((log: any, idx: number) => (
                     <div
                       key={idx}
                       className={`p-3 rounded-lg border transition-all cursor-pointer hover:border-primary/50 ${getLogLevelColor(log.errorType)}`}
@@ -870,7 +955,7 @@ export default function SettingsPage() {
                             </span>
                           </div>
                           <p className="text-sm mt-1 line-clamp-2">{log.errorMessage}</p>
-                          
+
                           {expandedLog === idx && (
                             <div className="mt-3 pt-3 border-t border-current opacity-50 space-y-2 text-xs">
                               {log.stackTrace && (
@@ -909,6 +994,218 @@ export default function SettingsPage() {
                   ))
                 )}
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Console Logs Tab (New) */}
+        <TabsContent value="console" className="space-y-4">
+          <Card className="border shadow-sm">
+            <CardHeader className="pb-3 border-b">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Terminal className="h-5 w-5 text-primary" />
+                  <CardTitle>الكونسول المباشر</CardTitle>
+                  <Badge variant={consolePaused ? "secondary" : "default"} className="text-xs">
+                    {consolePaused ? "متوقف" : "مباشر"}
+                  </Badge>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="relative">
+                    <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="text"
+                      placeholder="بحث..."
+                      value={consoleFilter}
+                      onChange={(e) => setConsoleFilter(e.target.value)}
+                      className="pr-10 w-64"
+                    />
+                  </div>
+                  <Button
+                    size="sm"
+                    variant={consolePaused ? "default" : "secondary"}
+                    onClick={() => setConsolePaused(!consolePaused)}
+                  >
+                    {consolePaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => queryClient.invalidateQueries({ queryKey: ["console-logs"] })}
+                  >
+                    <Trash className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div
+                ref={consoleContainerRef}
+                className="h-[600px] overflow-y-auto bg-black/95 text-white font-mono text-xs p-4 space-y-1"
+                style={{ direction: 'ltr', textAlign: 'left' }}
+              >
+                {consoleLogsLoading ? (
+                  <div className="flex justify-center items-center h-full">
+                    <Loader className="h-6 w-6 animate-spin text-gray-500" />
+                  </div>
+                ) : filteredConsoleLogs.length === 0 ? (
+                  <div className="text-center text-gray-500 py-8">
+                    {consoleFilter ? "لا توجد نتائج للبحث" : "لا توجد سجلات"}
+                  </div>
+                ) : (
+                  filteredConsoleLogs.map((log: any, idx: number) => (
+                    <div key={idx} className="flex gap-2 hover:bg-white/5 px-2 py-1 rounded">
+                      <span className="text-gray-500 flex-shrink-0">
+                        {formatTimestamp(log.timestamp)}
+                      </span>
+                      <span className="text-cyan-400 flex-shrink-0">
+                        [{log.component}::{log.function}]
+                      </span>
+                      <span className={getLogColor(log)}>
+                        {log.errorMessage}
+                      </span>
+                    </div>
+                  ))
+                )}
+                <div ref={consoleEndRef} />
+              </div>
+              {!consoleAutoScroll && !consolePaused && (
+                <div className="sticky bottom-0 bg-blue-500/10 border-t border-blue-500/20 p-2 text-center">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => {
+                      setConsoleAutoScroll(true);
+                      consoleEndRef.current?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    className="text-blue-400 hover:text-blue-300"
+                  >
+                    التمرير للأسفل للسجلات الجديدة
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Error Logs Tab */}
+        <TabsContent value="errors" className="space-y-4">
+          <Card className="border shadow-sm">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <CardTitle>سجل الأخطاء</CardTitle>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <div className="relative">
+                    <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="text"
+                      placeholder="بحث في الأخطاء..."
+                      value={logFilter}
+                      onChange={(e) => setLogFilter(e.target.value)}
+                      className="pr-10"
+                    />
+                  </div>
+                  <select
+                    value={logLevelFilter}
+                    onChange={(e) => setLogLevelFilter(e.target.value)}
+                    className="px-3 py-2 rounded-md border border-input bg-background text-sm font-medium"
+                  >
+                    <option value="all">جميع المستويات</option>
+                    <option value="error">أخطاء</option>
+                    <option value="warn">تحذيرات</option>
+                    <option value="info">معلومات</option>
+                  </select>
+                  {(logFilter || logLevelFilter !== "all") && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        setLogFilter("");
+                        setLogLevelFilter("all");
+                      }}
+                      className="text-xs"
+                    >
+                      <X className="h-3 w-3 mr-1" /> مسح الفلاتر
+                    </Button>
+                  )}
+                </div>
+              </div>
+
+              <div className="text-sm text-muted-foreground">
+                عرض <span className="font-semibold text-foreground">{filteredEventLogs.length}</span> من <span className="font-semibold text-foreground">{eventLogs.length}</span> سجل
+              </div>
+
+              <div className="flex items-center gap-2 pt-2">
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={() => clearErrorLogsMutation.mutate()}
+                  disabled={clearErrorLogsMutation.isPending || eventLogs.length === 0}
+                >
+                  {clearErrorLogsMutation.isPending ? (
+                    <Loader className="h-4 w-4 animate-spin mr-1" />
+                  ) : (
+                    <Trash className="h-4 w-4 mr-1" />
+                  )}
+                  مسح جميع السجلات
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-2 max-h-[600px] overflow-y-auto">
+              {eventLogs.length === 0 ? (
+                <div className="text-center text-muted-foreground py-8">
+                  {logFilter || logLevelFilter !== "all" ? "لا توجد نتائج للبحث" : "لا توجد أخطاء مسجلة ✅"}
+                </div>
+              ) : (
+                filteredEventLogs.map((log: any, idx: number) => {
+                  const isError = log.errorType?.toLowerCase().includes("error");
+                  const isWarning = log.errorType?.toLowerCase().includes("warn");
+                  const bgColor = isError ? "bg-red-500/10 border-red-500/20" : isWarning ? "bg-yellow-500/10 border-yellow-500/20" : "bg-blue-500/10 border-blue-500/20";
+                  const textColor = isError ? "text-red-600 dark:text-red-400" : isWarning ? "text-yellow-600 dark:text-yellow-400" : "text-blue-600 dark:text-blue-400";
+
+                  return (
+                    <div
+                      key={idx}
+                      className={`p-3 rounded-lg border ${bgColor} ${textColor} cursor-pointer transition-all hover:scale-[1.01]`}
+                      onClick={() => setExpandedLog(expandedLog === idx ? null : idx)}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <Badge className="flex-shrink-0" variant="secondary">
+                          {log.component}
+                        </Badge>
+                        <span className="text-xs font-mono flex-shrink-0">
+                          {log.function}
+                        </span>
+                        <span className="text-xs text-muted-foreground ml-auto">
+                          {new Date(log.timestamp).toLocaleTimeString('ar')}
+                        </span>
+                      </div>
+                      <p className="text-sm mt-1 line-clamp-2">{log.errorMessage}</p>
+
+                      {expandedLog === idx && (
+                        <div className="mt-3 pt-3 border-t border-current opacity-50 space-y-2 text-xs">
+                          {log.stackTrace && (
+                            <div>
+                              <p className="font-semibold">Stack Trace:</p>
+                              <pre className="bg-black/10 p-2 rounded overflow-x-auto max-h-32 overflow-y-auto">
+                                {log.stackTrace}
+                              </pre>
+                            </div>
+                          )}
+                          {log.metadata && (
+                            <div>
+                              <p className="font-semibold">Metadata:</p>
+                              <pre className="bg-black/10 p-2 rounded overflow-x-auto">
+                                {JSON.stringify(log.metadata, null, 2)}
+                              </pre>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })
+              )}
             </CardContent>
           </Card>
         </TabsContent>
