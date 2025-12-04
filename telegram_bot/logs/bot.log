@@ -10695,3 +10695,605 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-04 02:08:52,848 - main - INFO - [2025-12-04 02:08:52.848] [INFO] [warmup::cached] ✅ اختبار 2 already in peer cache | {}
 2025-12-04 02:08:52,849 - main - INFO - [2025-12-04 02:08:52.848] [INFO] [warmup::complete] ✅ Warmup complete: 2 success, 0 failed | {}
 2025-12-04 02:08:52,850 - main - INFO - [2025-12-04 02:08:52.850] [INFO] [main::idle] Userbot is now running and waiting for messages... | {}
+2025-12-04 02:18:36,421 - main - INFO - [2025-12-04 02:18:36.421] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2299, 'message_type': 'media', 'has_text': False, 'has_caption': True, 'media_type': 'MessageMediaType.VIDEO', 'media_group_id': None} | {}
+2025-12-04 02:18:36,421 - main - INFO - [2025-12-04 02:18:36.421] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 02:18:36,978 - main - INFO - [2025-12-04 02:18:36.978] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 02:18:36,978 - main - INFO - [2025-12-04 02:18:36.978] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 02:18:37,395 - main - INFO - [2025-12-04 02:18:37.395] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 02:18:37,396 - main - INFO - [2025-12-04 02:18:37.396] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 02:18:37,396 - main - INFO - [2025-12-04 02:18:37.396] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 02:18:37,396 - forwarding_engine - INFO - [2025-12-04 02:18:37.396] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2299, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': False, 'has_caption': True, 'has_media': True, 'media_type': 'MessageMediaType.VIDEO', 'media_group_id': None} | {}
+2025-12-04 02:18:37,396 - forwarding_engine - INFO - [2025-12-04 02:18:37.396] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 02:18:37,396 - forwarding_engine - INFO - [2025-12-04 02:18:37.396] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': False, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 02:18:37,396 - forwarding_engine - INFO - [2025-12-04 02:18:37.396] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 02:18:37,396 - forwarding_engine - INFO - [2025-12-04 02:18:37.396] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': False, 'has_caption': True, 'has_video': True, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 02:18:37,396 - forwarding_engine - INFO - [2025-12-04 02:18:37.396] [INFO] [forwarding_engine::_process_message] Text length: 20 chars | {}
+2025-12-04 02:18:37,815 - forwarding_engine - INFO - [2025-12-04 02:18:37.815] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 02:18:38,234 - forwarding_engine - INFO - [2025-12-04 02:18:38.234] [INFO] [forwarding_engine::_process_message] Using model: moonshotai/kimi-k2-instruct | {}
+2025-12-04 02:18:38,651 - forwarding_engine - INFO - [2025-12-04 02:18:38.651] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 02:18:39,069 - forwarding_engine - INFO - [2025-12-04 02:18:39.069] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 02:18:39,905 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 20 | {}
+2025-12-04 02:18:39,915 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 0 | Sentiment: neutral | Keywords: 3 | Time: 0.009s | {}
+2025-12-04 02:18:39,915 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 0 | Sentiment: neutral | {}
+2025-12-04 02:18:40,333 - ai_rule_engine - INFO - [RuleEngine] Loaded 4 entity rules for task 4 from DB | {}
+2025-12-04 02:18:40,335 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 0 | {}
+2025-12-04 02:18:40,754 - ai_rule_engine - INFO - [RuleEngine] Loaded 1 context rules for task 4 from DB | {}
+2025-12-04 02:18:40,754 - ai_rule_engine - INFO - [RuleEngine] Applying 1 context rules | {}
+2025-12-04 02:18:40,755 - ai_rule_engine - INFO - [RuleEngine] Processing rule 2: type=neutralize_negative, instructions=اجعل النص محايد ... | {}
+2025-12-04 02:18:40,755 - ai_rule_engine - INFO - [RuleEngine] Neutralized 0 terms | {}
+2025-12-04 02:18:40,756 - ai_rule_engine - INFO - [RuleEngine] Context rules result: 1 applied, 1 AI instructions | {}
+2025-12-04 02:18:40,756 - ai_rule_engine - INFO - [RuleEngine] Context modifications: 1, AI instructions: 1 | {}
+2025-12-04 02:18:41,035 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 1 | Replacements: 0 | {}
+2025-12-04 02:18:41,036 - ai_pipeline - INFO - [Pipeline] Added 1 context instructions to prompt | {}
+2025-12-04 02:18:41,392 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 500 | Temperature: 0.7 | Input length: 562 chars | {}
+2025-12-04 02:18:43,255 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 02:18:43,288 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 454 chars | First 100 chars: - معسكر العرين أصبح مركزاً لإنتاج «ألواح الطاقة» محلية الصنع بقدرة 1 ميجا واط/ساعة يومياً.  
+- يُدار | {}
+2025-12-04 02:18:43,288 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 454 | {}
+2025-12-04 02:18:43,292 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 0.93 | {}
+2025-12-04 02:18:43,292 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 4.22s | Quality: 0.93 | Original: 20 → Final: 454 chars | {}
+2025-12-04 02:18:43,292 - forwarding_engine - INFO - [2025-12-04 02:18:43.292] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 20, 'final_length': 454, 'stages': 4, 'rules_applied': 1, 'quality_score': 0.9299999999999999, 'total_time': '4.22s'} | {}
+2025-12-04 02:18:43,292 - forwarding_engine - INFO - [2025-12-04 02:18:43.292] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.01s) | {}
+2025-12-04 02:18:43,293 - forwarding_engine - INFO - [2025-12-04 02:18:43.293] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (1.12s) | {}
+2025-12-04 02:18:43,293 - forwarding_engine - INFO - [2025-12-04 02:18:43.293] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (2.25s) | {}
+2025-12-04 02:18:43,293 - forwarding_engine - INFO - [2025-12-04 02:18:43.293] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 02:18:44,156 - task_4 - INFO - AI Pipeline completed | From 20 → 454 chars
+2025-12-04 02:18:45,022 - forwarding_engine - INFO - [2025-12-04 02:18:45.022] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 20, 'processed_length': 454, 'total_reduction': -434, 'reduction_percent': -2170, 'final_preview': '- معسكر العرين أصبح مركزاً لإنتاج «ألواح الطاقة» محلية الصنع بقدرة 1 ميجا واط/ساعة يومياً.  \n- يُدار خط التجميع بكوادر فلسطينية شبابية، ويُعدّ أول مشر'} | {}
+2025-12-04 02:18:45,023 - forwarding_engine - INFO - [2025-12-04 02:18:45.023] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 02:18:45,024 - forwarding_engine - INFO - [2025-12-04 02:18:45.024] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2299, 'has_processed_text': True} | {}
+2025-12-04 02:18:45,456 - forwarding_engine - INFO - [2025-12-04 02:18:45.456] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 02:18:45,493 - pyrogram.connection.connection - INFO - Connecting...
+2025-12-04 02:18:45,682 - pyrogram.connection.connection - INFO - Connected! Production DC4 (media) - IPv4
+2025-12-04 02:18:45,684 - pyrogram.session.session - INFO - NetworkTask started
+2025-12-04 02:18:46,495 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-12-04 02:18:46,497 - pyrogram.session.session - INFO - Device: CPython 3.11.13 - Pyrogram 2.0.106
+2025-12-04 02:18:46,498 - pyrogram.session.session - INFO - System: Linux 6.14.11 (en)
+2025-12-04 02:18:46,498 - pyrogram.session.session - INFO - Session started
+2025-12-04 02:18:46,501 - pyrogram.session.session - INFO - PingTask started
+2025-12-04 02:18:48,162 - pyrogram.session.session - INFO - PingTask stopped
+2025-12-04 02:18:48,162 - pyrogram.connection.connection - INFO - Disconnected
+2025-12-04 02:18:48,163 - pyrogram.session.session - INFO - NetworkTask stopped
+2025-12-04 02:18:48,163 - pyrogram.session.session - INFO - Session stopped
+2025-12-04 02:18:50,179 - forwarding_engine - INFO - [2025-12-04 02:18:50.179] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 20, 'final_length': 528, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 02:18:50,179 - forwarding_engine - INFO - [2025-12-04 02:18:50.179] [INFO] [forwarding_engine::_forward_to_target] Sending video... | {}
+2025-12-04 02:18:50,433 - forwarding_engine - INFO - [2025-12-04 02:18:50.433] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 02:18:50,434 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 02:18:50,435 - forwarding_engine - INFO - [2025-12-04 02:18:50.435] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 02:18:51,830 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 02:18:51,831 - forwarding_engine - INFO - [2025-12-04 02:18:51.831] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 02:18:51,831 - main - INFO - [2025-12-04 02:18:51.831] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 02:19:35,731 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 02:19:35,732 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 02:19:35,736 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 02:19:35,739 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 02:19:35,741 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 02:19:35,743 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 02:19:35,746 - main - INFO - [2025-12-04 02:19:35.746] [INFO] [main::entry] Bot script started | {}
+2025-12-04 02:19:35,747 - main - INFO - [2025-12-04 02:19:35.747] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 02:19:35,747 - main - INFO - [2025-12-04 02:19:35.747] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-04 02:19:35,747 - main - INFO - [2025-12-04 02:19:35.747] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-04 02:19:37,634 - database - INFO - Database connected successfully | {}
+2025-12-04 02:19:38,074 - main - INFO - [2025-12-04 02:19:38.074] [INFO] [session::load] Found active session in database | {}
+2025-12-04 02:19:38,075 - main - INFO - [2025-12-04 02:19:38.074] [INFO] [main::init] Creating Pyrofork client | Data: {'api_id': 24343527, 'has_session': True, 'api_hash_set': True} | {}
+2025-12-04 02:19:39,858 - main - INFO - [2025-12-04 02:19:39.858] [INFO] [main::initialize_bot] Starting bot initialization... | {}
+2025-12-04 02:19:39,859 - main - INFO - [2025-12-04 02:19:39.859] [INFO] [database::connect] Connecting to database... | {}
+2025-12-04 02:19:41,725 - database - INFO - Database connected successfully | {}
+2025-12-04 02:19:41,725 - main - INFO - [2025-12-04 02:19:41.725] [INFO] [database::connect] Database connected successfully | {}
+2025-12-04 02:19:41,725 - main - INFO - [2025-12-04 02:19:41.725] [INFO] [ai_manager::init] Loading AI providers from database... | {}
+2025-12-04 02:19:42,162 - ai_providers - WARNING - No API key found for provider: claude | {}
+2025-12-04 02:19:42,162 - ai_providers - INFO - Loaded Groq provider from database | {}
+2025-12-04 02:19:42,162 - ai_providers - INFO - Loaded HuggingFace provider from database | {}
+2025-12-04 02:19:42,162 - main - INFO - [2025-12-04 02:19:42.162] [INFO] [ai_manager::init] AI providers loaded successfully | {}
+2025-12-04 02:19:42,163 - main - INFO - [2025-12-04 02:19:42.163] [INFO] [admin::check] Checking admin status for ID: 6556918772 | {}
+2025-12-04 02:19:42,605 - main - INFO - [2025-12-04 02:19:42.604] [INFO] [admin::check] Admin already exists: 6556918772 | {}
+2025-12-04 02:19:42,605 - main - INFO - [2025-12-04 02:19:42.605] [INFO] [forwarding_engine::init] Initializing forwarding engine... | {}
+2025-12-04 02:19:42,605 - forwarding_engine - INFO - [2025-12-04 02:19:42.605] [INFO] [forwarding_engine::__init__] Forwarding engine initialized | {}
+2025-12-04 02:19:42,605 - main - INFO - [2025-12-04 02:19:42.605] [INFO] [forwarding_engine::init] Forwarding engine initialized successfully | {}
+2025-12-04 02:19:42,605 - main - INFO - [2025-12-04 02:19:42.605] [INFO] [queue_manager::register] Registering job handlers... | {}
+2025-12-04 02:19:42,605 - queue_system - INFO - Registered handler for job type: forward | {}
+2025-12-04 02:19:42,606 - queue_system - INFO - Registered handler for job type: ai_process | {}
+2025-12-04 02:19:42,606 - queue_system - INFO - Registered handler for job type: video_process | {}
+2025-12-04 02:19:42,606 - main - INFO - [2025-12-04 02:19:42.606] [INFO] [queue_manager::register] All handlers registered: forward, ai_process, video_process | {}
+2025-12-04 02:19:42,606 - main - INFO - [2025-12-04 02:19:42.606] [INFO] [queue_manager::start] Starting queue manager... | {}
+2025-12-04 02:19:42,606 - queue_system - INFO - Queue manager started with 10 max workers | {}
+2025-12-04 02:19:42,607 - main - INFO - [2025-12-04 02:19:42.607] [INFO] [queue_manager::start] Queue manager started with 10 workers | {}
+2025-12-04 02:19:42,607 - main - INFO - [2025-12-04 02:19:42.607] [INFO] [tasks::load] Loading active tasks from database... | {}
+2025-12-04 02:19:43,043 - main - INFO - [2025-12-04 02:19:43.043] [INFO] [tasks::load] Found 1 tasks in database | {}
+2025-12-04 02:19:43,044 - main - INFO - [2025-12-04 02:19:43.044] [INFO] [tasks::check] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'is_active': True, 'source_channels': [4], 'target_channels': [5]} | {}
+2025-12-04 02:19:43,044 - forwarding_engine - INFO - [2025-12-04 02:19:43.044] [INFO] [forwarding_engine::start_task_monitoring] Started monitoring task 4 | {}
+2025-12-04 02:19:43,045 - main - INFO - [2025-12-04 02:19:43.045] [INFO] [tasks::monitor] Started monitoring task: توجيه الأخبار  | Data: {'task_id': 4} | {}
+2025-12-04 02:19:43,046 - main - INFO - [2025-12-04 02:19:43.046] [INFO] [tasks::load] Loaded 1 active tasks for monitoring | {}
+2025-12-04 02:19:43,046 - main - INFO - [2025-12-04 02:19:43.046] [INFO] [main::initialize_bot] ✅ Bot initialization completed successfully | {}
+2025-12-04 02:19:43,047 - main - INFO - [2025-12-04 02:19:43.047] [INFO] [pyrogram::start] Starting Pyrofork userbot client... | {}
+2025-12-04 02:19:43,391 - pyrogram.connection.connection - INFO - Connecting...
+2025-12-04 02:19:43,580 - pyrogram.connection.connection - INFO - Connected! Production DC4 - IPv4
+2025-12-04 02:19:43,581 - pyrogram.session.session - INFO - NetworkTask started
+2025-12-04 02:19:44,384 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-12-04 02:19:44,384 - pyrogram.session.session - INFO - Device: CPython 3.11.13 - Pyrogram 2.0.106
+2025-12-04 02:19:44,384 - pyrogram.session.session - INFO - System: Linux 6.14.11 (en)
+2025-12-04 02:19:44,384 - pyrogram.session.session - INFO - Session started
+2025-12-04 02:19:44,388 - pyrogram.session.session - INFO - PingTask started
+2025-12-04 02:19:44,785 - pyrogram.dispatcher - INFO - Started 12 HandlerTasks
+2025-12-04 02:19:44,988 - main - INFO - [2025-12-04 02:19:44.988] [INFO] [pyrogram::connected] ✅ Userbot connected to Telegram | Data: {'user_id': 7831798910, 'username': 'TTT1234TTTT', 'first_name': 'V'} | {}
+2025-12-04 02:19:44,988 - main - INFO - [2025-12-04 02:19:44.988] [INFO] [handlers::register] Registering message handlers... | {}
+2025-12-04 02:19:44,989 - main - INFO - [2025-12-04 02:19:44.989] [INFO] [handlers::register] ✅ All handlers registered successfully | {}
+2025-12-04 02:19:44,989 - main - INFO - [2025-12-04 02:19:44.989] [INFO] [warmup::post_connect] Starting post-connection warmup... | {}
+2025-12-04 02:19:44,989 - main - INFO - [2025-12-04 02:19:44.989] [INFO] [warmup::start] Starting channel peer warmup... | {}
+2025-12-04 02:19:44,989 - main - INFO - [2025-12-04 02:19:44.989] [INFO] [warmup::dialogs] Loading all dialogs to populate peer cache... | {}
+2025-12-04 02:19:47,292 - main - INFO - [2025-12-04 02:19:47.292] [DEBUG] [warmup::dialogs] Loaded 50 dialogs... | {}
+2025-12-04 02:19:47,293 - main - INFO - [2025-12-04 02:19:47.292] [DEBUG] [warmup::dialogs] Loaded 100 dialogs... | {}
+2025-12-04 02:19:47,612 - main - INFO - [2025-12-04 02:19:47.612] [DEBUG] [warmup::dialogs] Loaded 150 dialogs... | {}
+2025-12-04 02:19:47,869 - main - INFO - [2025-12-04 02:19:47.869] [INFO] [warmup::dialogs] ✅ Cached 164 dialogs in peer cache | {}
+2025-12-04 02:19:48,315 - main - INFO - [2025-12-04 02:19:48.315] [INFO] [warmup::channels] Found 2 channels to verify | {}
+2025-12-04 02:19:48,315 - main - INFO - [2025-12-04 02:19:48.315] [INFO] [warmup::cached] ✅ اختبار 1 already in peer cache | {}
+2025-12-04 02:19:48,315 - main - INFO - [2025-12-04 02:19:48.315] [INFO] [warmup::cached] ✅ اختبار 2 already in peer cache | {}
+2025-12-04 02:19:48,315 - main - INFO - [2025-12-04 02:19:48.315] [INFO] [warmup::complete] ✅ Warmup complete: 2 success, 0 failed | {}
+2025-12-04 02:19:48,316 - main - INFO - [2025-12-04 02:19:48.316] [INFO] [main::idle] Userbot is now running and waiting for messages... | {}
+2025-12-04 02:20:05,833 - main - INFO - [2025-12-04 02:20:05.833] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2300, 'message_type': 'media', 'has_text': False, 'has_caption': True, 'media_type': 'MessageMediaType.PHOTO', 'media_group_id': None} | {}
+2025-12-04 02:20:05,834 - main - INFO - [2025-12-04 02:20:05.834] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 02:20:06,123 - main - INFO - [2025-12-04 02:20:06.123] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 02:20:06,125 - main - INFO - [2025-12-04 02:20:06.124] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 02:20:06,562 - main - INFO - [2025-12-04 02:20:06.562] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 02:20:06,562 - main - INFO - [2025-12-04 02:20:06.562] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 02:20:06,562 - main - INFO - [2025-12-04 02:20:06.562] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 02:20:06,562 - forwarding_engine - INFO - [2025-12-04 02:20:06.562] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2300, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': False, 'has_caption': True, 'has_media': True, 'media_type': 'MessageMediaType.PHOTO', 'media_group_id': None} | {}
+2025-12-04 02:20:06,562 - forwarding_engine - INFO - [2025-12-04 02:20:06.562] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 02:20:06,562 - forwarding_engine - INFO - [2025-12-04 02:20:06.562] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': False, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 02:20:06,562 - forwarding_engine - INFO - [2025-12-04 02:20:06.562] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 02:20:06,562 - forwarding_engine - INFO - [2025-12-04 02:20:06.562] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': False, 'has_caption': True, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 02:20:06,563 - forwarding_engine - INFO - [2025-12-04 02:20:06.563] [INFO] [forwarding_engine::_process_message] Text length: 533 chars | {}
+2025-12-04 02:20:06,999 - forwarding_engine - INFO - [2025-12-04 02:20:06.999] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 02:20:07,437 - forwarding_engine - INFO - [2025-12-04 02:20:07.436] [INFO] [forwarding_engine::_process_message] Using model: moonshotai/kimi-k2-instruct | {}
+2025-12-04 02:20:07,872 - forwarding_engine - INFO - [2025-12-04 02:20:07.872] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 02:20:08,307 - forwarding_engine - INFO - [2025-12-04 02:20:08.307] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 02:20:09,179 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 533 | {}
+2025-12-04 02:20:09,187 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 1 | Sentiment: positive | Keywords: 20 | Time: 0.008s | {}
+2025-12-04 02:20:09,187 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 1 | Sentiment: positive | {}
+2025-12-04 02:20:09,624 - ai_rule_engine - INFO - [RuleEngine] Loaded 4 entity rules for task 4 from DB | {}
+2025-12-04 02:20:09,626 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 0 | {}
+2025-12-04 02:20:10,060 - ai_rule_engine - INFO - [RuleEngine] Loaded 1 context rules for task 4 from DB | {}
+2025-12-04 02:20:10,061 - ai_rule_engine - INFO - [RuleEngine] Applying 1 context rules | {}
+2025-12-04 02:20:10,061 - ai_rule_engine - INFO - [RuleEngine] Processing rule 2: type=neutralize_negative, instructions=اجعل النص محايد ... | {}
+2025-12-04 02:20:10,061 - ai_rule_engine - INFO - [RuleEngine] Neutralized 0 terms | {}
+2025-12-04 02:20:10,061 - ai_rule_engine - INFO - [RuleEngine] Context rules result: 1 applied, 1 AI instructions | {}
+2025-12-04 02:20:10,061 - ai_rule_engine - INFO - [RuleEngine] Context modifications: 1, AI instructions: 1 | {}
+2025-12-04 02:20:10,352 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 1 | Replacements: 0 | {}
+2025-12-04 02:20:10,352 - ai_pipeline - INFO - [Pipeline] Added 1 context instructions to prompt | {}
+2025-12-04 02:20:10,570 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 500 | Temperature: 0.7 | Input length: 1075 chars | {}
+2025-12-04 02:20:11,993 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 02:20:12,010 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 541 chars | First 100 chars: - الناطق باسم لجنة اعتصام #المهرة علي بن محامد يؤكد أن ما حدث في وادي حضرموت كان عملية استلام وتسليم | {}
+2025-12-04 02:20:12,011 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 541 | {}
+2025-12-04 02:20:12,013 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 1.00 | {}
+2025-12-04 02:20:12,013 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 3.71s | Quality: 1.00 | Original: 533 → Final: 541 chars | {}
+2025-12-04 02:20:12,013 - forwarding_engine - INFO - [2025-12-04 02:20:12.013] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 533, 'final_length': 541, 'stages': 4, 'rules_applied': 1, 'quality_score': 1.0, 'total_time': '3.71s'} | {}
+2025-12-04 02:20:12,014 - forwarding_engine - INFO - [2025-12-04 02:20:12.014] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.01s) | {}
+2025-12-04 02:20:12,014 - forwarding_engine - INFO - [2025-12-04 02:20:12.014] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (1.16s) | {}
+2025-12-04 02:20:12,014 - forwarding_engine - INFO - [2025-12-04 02:20:12.014] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (1.66s) | {}
+2025-12-04 02:20:12,014 - forwarding_engine - INFO - [2025-12-04 02:20:12.014] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 02:20:12,883 - task_4 - INFO - AI Pipeline completed | From 533 → 541 chars
+2025-12-04 02:20:13,754 - forwarding_engine - INFO - [2025-12-04 02:20:13.754] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 533, 'processed_length': 541, 'total_reduction': -8, 'reduction_percent': -1, 'final_preview': '- الناطق باسم لجنة اعتصام #المهرة علي بن محامد يؤكد أن ما حدث في وادي حضرموت كان عملية استلام وتسليم بإشراف #الاحتلال_السعودي_الإماراتي دون أي مواجهة '} | {}
+2025-12-04 02:20:13,754 - forwarding_engine - INFO - [2025-12-04 02:20:13.754] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 02:20:13,755 - forwarding_engine - INFO - [2025-12-04 02:20:13.755] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2300, 'has_processed_text': True} | {}
+2025-12-04 02:20:14,192 - forwarding_engine - INFO - [2025-12-04 02:20:14.192] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 02:20:14,205 - pyrogram.connection.connection - INFO - Connecting...
+2025-12-04 02:20:14,394 - pyrogram.connection.connection - INFO - Connected! Production DC4 (media) - IPv4
+2025-12-04 02:20:14,396 - pyrogram.session.session - INFO - NetworkTask started
+2025-12-04 02:20:15,200 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-12-04 02:20:15,200 - pyrogram.session.session - INFO - Device: CPython 3.11.13 - Pyrogram 2.0.106
+2025-12-04 02:20:15,201 - pyrogram.session.session - INFO - System: Linux 6.14.11 (en)
+2025-12-04 02:20:15,201 - pyrogram.session.session - INFO - Session started
+2025-12-04 02:20:15,203 - pyrogram.session.session - INFO - PingTask started
+2025-12-04 02:20:15,824 - pyrogram.session.session - INFO - PingTask stopped
+2025-12-04 02:20:15,825 - pyrogram.connection.connection - INFO - Disconnected
+2025-12-04 02:20:15,826 - pyrogram.session.session - INFO - NetworkTask stopped
+2025-12-04 02:20:15,827 - pyrogram.session.session - INFO - Session stopped
+2025-12-04 02:20:17,034 - forwarding_engine - INFO - [2025-12-04 02:20:17.034] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 533, 'final_length': 615, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 02:20:17,035 - forwarding_engine - INFO - [2025-12-04 02:20:17.035] [INFO] [forwarding_engine::_forward_to_target] Sending photo... | {}
+2025-12-04 02:20:17,285 - forwarding_engine - INFO - [2025-12-04 02:20:17.285] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 02:20:17,287 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 02:20:17,288 - forwarding_engine - INFO - [2025-12-04 02:20:17.288] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 02:20:18,597 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 02:20:18,598 - forwarding_engine - INFO - [2025-12-04 02:20:18.597] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 02:20:18,598 - main - INFO - [2025-12-04 02:20:18.598] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 02:20:43,254 - main - INFO - [2025-12-04 02:20:43.254] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2301, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 02:20:43,255 - main - INFO - [2025-12-04 02:20:43.254] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 02:20:43,690 - main - INFO - [2025-12-04 02:20:43.690] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 02:20:43,691 - main - INFO - [2025-12-04 02:20:43.691] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 02:20:43,981 - main - INFO - [2025-12-04 02:20:43.981] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 02:20:43,981 - main - INFO - [2025-12-04 02:20:43.981] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 02:20:43,981 - main - INFO - [2025-12-04 02:20:43.981] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 02:20:43,982 - forwarding_engine - INFO - [2025-12-04 02:20:43.981] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2301, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': True, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 02:20:43,982 - forwarding_engine - INFO - [2025-12-04 02:20:43.982] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 02:20:43,982 - forwarding_engine - INFO - [2025-12-04 02:20:43.982] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': False, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 02:20:43,987 - forwarding_engine - INFO - [2025-12-04 02:20:43.987] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 02:20:43,989 - forwarding_engine - INFO - [2025-12-04 02:20:43.989] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 02:20:43,990 - forwarding_engine - INFO - [2025-12-04 02:20:43.990] [INFO] [forwarding_engine::_process_message] Text length: 1068 chars | {}
+2025-12-04 02:20:44,447 - forwarding_engine - INFO - [2025-12-04 02:20:44.447] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 02:20:44,884 - forwarding_engine - INFO - [2025-12-04 02:20:44.883] [INFO] [forwarding_engine::_process_message] Using model: moonshotai/kimi-k2-instruct | {}
+2025-12-04 02:20:45,318 - forwarding_engine - INFO - [2025-12-04 02:20:45.318] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 02:20:45,753 - forwarding_engine - INFO - [2025-12-04 02:20:45.753] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 02:20:46,623 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 1068 | {}
+2025-12-04 02:20:46,624 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 4 | Sentiment: neutral | Keywords: 20 | Time: 0.001s | {}
+2025-12-04 02:20:46,624 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 4 | Sentiment: neutral | {}
+2025-12-04 02:20:47,060 - ai_rule_engine - INFO - [RuleEngine] Loaded 4 entity rules for task 4 from DB | {}
+2025-12-04 02:20:47,061 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 0 | {}
+2025-12-04 02:20:47,496 - ai_rule_engine - INFO - [RuleEngine] Loaded 1 context rules for task 4 from DB | {}
+2025-12-04 02:20:47,498 - ai_rule_engine - INFO - [RuleEngine] Applying 1 context rules | {}
+2025-12-04 02:20:47,499 - ai_rule_engine - INFO - [RuleEngine] Processing rule 2: type=neutralize_negative, instructions=اجعل النص محايد ... | {}
+2025-12-04 02:20:47,500 - ai_rule_engine - INFO - [RuleEngine] Neutralized 0 terms | {}
+2025-12-04 02:20:47,501 - ai_rule_engine - INFO - [RuleEngine] Context rules result: 1 applied, 1 AI instructions | {}
+2025-12-04 02:20:47,502 - ai_rule_engine - INFO - [RuleEngine] Context modifications: 1, AI instructions: 1 | {}
+2025-12-04 02:20:47,793 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 1 | Replacements: 0 | {}
+2025-12-04 02:20:47,795 - ai_pipeline - INFO - [Pipeline] Added 1 context instructions to prompt | {}
+2025-12-04 02:20:47,795 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 534 | Temperature: 0.7 | Input length: 1610 chars | {}
+2025-12-04 02:20:48,680 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 02:20:48,685 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 312 chars | First 100 chars: - سيطرت مليشيا الانتقالي على مطار سيئون دون مقاومة.  
+- نُهبت محتويات المطار بالكامل، من أجهزة X-Ray | {}
+2025-12-04 02:20:48,685 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 312 | {}
+2025-12-04 02:20:48,686 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 1.00 | {}
+2025-12-04 02:20:48,686 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 2.93s | Quality: 1.00 | Original: 1068 → Final: 312 chars | {}
+2025-12-04 02:20:48,687 - forwarding_engine - INFO - [2025-12-04 02:20:48.687] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 1068, 'final_length': 312, 'stages': 4, 'rules_applied': 1, 'quality_score': 1.0, 'total_time': '2.93s'} | {}
+2025-12-04 02:20:48,687 - forwarding_engine - INFO - [2025-12-04 02:20:48.687] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.00s) | {}
+2025-12-04 02:20:48,687 - forwarding_engine - INFO - [2025-12-04 02:20:48.687] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (1.17s) | {}
+2025-12-04 02:20:48,687 - forwarding_engine - INFO - [2025-12-04 02:20:48.687] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (0.89s) | {}
+2025-12-04 02:20:48,687 - forwarding_engine - INFO - [2025-12-04 02:20:48.687] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 02:20:49,267 - task_4 - INFO - AI Pipeline completed | From 1068 → 312 chars
+2025-12-04 02:20:49,847 - forwarding_engine - INFO - [2025-12-04 02:20:49.847] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 1068, 'processed_length': 312, 'total_reduction': 756, 'reduction_percent': 71, 'final_preview': '- سيطرت مليشيا الانتقالي على مطار سيئون دون مقاومة.  \n- نُهبت محتويات المطار بالكامل، من أجهزة X-Ray إلى السيرفرات ومعدات الإطفاء.  \n- أُزيلت أنظمة ال'} | {}
+2025-12-04 02:20:49,848 - forwarding_engine - INFO - [2025-12-04 02:20:49.848] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 02:20:49,848 - forwarding_engine - INFO - [2025-12-04 02:20:49.848] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2301, 'has_processed_text': True} | {}
+2025-12-04 02:20:50,138 - forwarding_engine - INFO - [2025-12-04 02:20:50.138] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 02:20:50,362 - forwarding_engine - INFO - [2025-12-04 02:20:50.361] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 1068, 'final_length': 386, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 02:20:50,362 - forwarding_engine - INFO - [2025-12-04 02:20:50.362] [INFO] [forwarding_engine::_forward_to_target] Sending text message... | {}
+2025-12-04 02:20:50,603 - forwarding_engine - INFO - [2025-12-04 02:20:50.603] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 02:20:50,603 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 02:20:50,603 - forwarding_engine - INFO - [2025-12-04 02:20:50.603] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 02:20:51,913 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 02:20:51,913 - forwarding_engine - INFO - [2025-12-04 02:20:51.913] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 02:20:51,914 - main - INFO - [2025-12-04 02:20:51.913] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 02:21:12,846 - main - INFO - [2025-12-04 02:21:12.846] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003119954858', 'chat_title': 'شبكة الفرقان copy', 'message_id': 2054, 'message_type': 'media', 'has_text': False, 'has_caption': True, 'media_type': 'MessageMediaType.PHOTO', 'media_group_id': None} | {}
+2025-12-04 02:21:12,847 - main - INFO - [2025-12-04 02:21:12.847] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 02:21:13,140 - main - INFO - [2025-12-04 02:21:13.139] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 02:21:13,140 - main - INFO - [2025-12-04 02:21:13.140] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 02:21:13,298 - main - INFO - [2025-12-04 02:21:13.298] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 17881, 'message_type': 'media', 'has_text': False, 'has_caption': True, 'media_type': 'MessageMediaType.PHOTO', 'media_group_id': None} | {}
+2025-12-04 02:21:13,301 - main - INFO - [2025-12-04 02:21:13.301] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 02:21:13,429 - main - INFO - [2025-12-04 02:21:13.429] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003119954858', 'match': False} | {}
+2025-12-04 02:21:13,430 - main - INFO - [2025-12-04 02:21:13.430] [INFO] [message_handler::skip] No matching task for chat: شبكة الفرقان copy | Data: {'chat_id': '-1003119954858'} | {}
+2025-12-04 02:21:13,593 - main - INFO - [2025-12-04 02:21:13.593] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 02:21:13,594 - main - INFO - [2025-12-04 02:21:13.593] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 02:21:13,885 - main - INFO - [2025-12-04 02:21:13.885] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 02:21:13,885 - main - INFO - [2025-12-04 02:21:13.885] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 02:21:40,068 - main - INFO - [2025-12-04 02:21:40.068] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2302, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 02:21:40,068 - main - INFO - [2025-12-04 02:21:40.068] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 02:21:40,068 - main - INFO - [2025-12-04 02:21:40.068] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2303, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 02:21:40,069 - main - INFO - [2025-12-04 02:21:40.069] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 02:21:40,070 - main - INFO - [2025-12-04 02:21:40.070] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2304, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 02:21:40,070 - main - INFO - [2025-12-04 02:21:40.070] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 02:21:40,072 - main - INFO - [2025-12-04 02:21:40.071] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2305, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 02:21:40,072 - main - INFO - [2025-12-04 02:21:40.072] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 02:21:40,073 - main - INFO - [2025-12-04 02:21:40.073] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2306, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 02:21:40,074 - main - INFO - [2025-12-04 02:21:40.074] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 02:21:40,357 - main - INFO - [2025-12-04 02:21:40.357] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 02:21:40,358 - main - INFO - [2025-12-04 02:21:40.358] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 02:21:40,359 - main - INFO - [2025-12-04 02:21:40.359] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 02:21:40,360 - main - INFO - [2025-12-04 02:21:40.359] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 02:21:40,507 - main - INFO - [2025-12-04 02:21:40.506] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 02:21:40,507 - main - INFO - [2025-12-04 02:21:40.507] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 02:21:40,508 - main - INFO - [2025-12-04 02:21:40.508] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 02:21:40,508 - main - INFO - [2025-12-04 02:21:40.508] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 02:21:40,508 - main - INFO - [2025-12-04 02:21:40.508] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 02:21:40,508 - main - INFO - [2025-12-04 02:21:40.508] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 02:21:40,647 - main - INFO - [2025-12-04 02:21:40.647] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 02:21:40,649 - main - INFO - [2025-12-04 02:21:40.649] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 02:21:40,649 - main - INFO - [2025-12-04 02:21:40.649] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 02:21:40,649 - forwarding_engine - INFO - [2025-12-04 02:21:40.649] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2302, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 02:21:40,649 - forwarding_engine - INFO - [2025-12-04 02:21:40.649] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 02:21:40,650 - forwarding_engine - INFO - [2025-12-04 02:21:40.650] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': False, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 02:21:40,650 - forwarding_engine - INFO - [2025-12-04 02:21:40.650] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 02:21:40,650 - forwarding_engine - INFO - [2025-12-04 02:21:40.650] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 02:21:40,650 - forwarding_engine - INFO - [2025-12-04 02:21:40.650] [INFO] [forwarding_engine::_process_message] Text length: 256 chars | {}
+2025-12-04 02:21:40,650 - main - INFO - [2025-12-04 02:21:40.650] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 02:21:40,650 - main - INFO - [2025-12-04 02:21:40.650] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 02:21:40,651 - main - INFO - [2025-12-04 02:21:40.651] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 02:21:40,651 - forwarding_engine - INFO - [2025-12-04 02:21:40.651] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2303, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 02:21:40,651 - forwarding_engine - INFO - [2025-12-04 02:21:40.651] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 02:21:40,651 - forwarding_engine - INFO - [2025-12-04 02:21:40.651] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': False, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 02:21:40,652 - forwarding_engine - INFO - [2025-12-04 02:21:40.652] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 02:21:40,652 - forwarding_engine - INFO - [2025-12-04 02:21:40.652] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 02:21:40,652 - forwarding_engine - INFO - [2025-12-04 02:21:40.652] [INFO] [forwarding_engine::_process_message] Text length: 377 chars | {}
+2025-12-04 02:21:40,939 - forwarding_engine - INFO - [2025-12-04 02:21:40.939] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 02:21:40,940 - main - INFO - [2025-12-04 02:21:40.940] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 02:21:40,941 - main - INFO - [2025-12-04 02:21:40.941] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 02:21:40,941 - main - INFO - [2025-12-04 02:21:40.941] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 02:21:40,941 - forwarding_engine - INFO - [2025-12-04 02:21:40.941] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2305, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': True, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 02:21:40,941 - forwarding_engine - INFO - [2025-12-04 02:21:40.941] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 02:21:40,941 - forwarding_engine - INFO - [2025-12-04 02:21:40.941] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': False, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 02:21:40,941 - forwarding_engine - INFO - [2025-12-04 02:21:40.941] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 02:21:40,941 - forwarding_engine - INFO - [2025-12-04 02:21:40.941] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 02:21:40,942 - forwarding_engine - INFO - [2025-12-04 02:21:40.942] [INFO] [forwarding_engine::_process_message] Text length: 2406 chars | {}
+2025-12-04 02:21:40,942 - main - INFO - [2025-12-04 02:21:40.942] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 02:21:40,942 - main - INFO - [2025-12-04 02:21:40.942] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 02:21:40,942 - main - INFO - [2025-12-04 02:21:40.942] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 02:21:40,942 - forwarding_engine - INFO - [2025-12-04 02:21:40.942] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2304, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': True, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 02:21:40,942 - forwarding_engine - INFO - [2025-12-04 02:21:40.942] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 02:21:40,942 - forwarding_engine - INFO - [2025-12-04 02:21:40.942] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': False, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 02:21:40,943 - forwarding_engine - INFO - [2025-12-04 02:21:40.943] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 02:21:40,943 - forwarding_engine - INFO - [2025-12-04 02:21:40.943] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 02:21:40,943 - forwarding_engine - INFO - [2025-12-04 02:21:40.943] [INFO] [forwarding_engine::_process_message] Text length: 1391 chars | {}
+2025-12-04 02:21:40,943 - main - INFO - [2025-12-04 02:21:40.943] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 02:21:40,943 - main - INFO - [2025-12-04 02:21:40.943] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 02:21:40,943 - main - INFO - [2025-12-04 02:21:40.943] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 02:21:40,943 - forwarding_engine - INFO - [2025-12-04 02:21:40.943] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2306, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': True, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 02:21:40,944 - forwarding_engine - INFO - [2025-12-04 02:21:40.944] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 02:21:40,944 - forwarding_engine - INFO - [2025-12-04 02:21:40.944] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': False, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 02:21:40,944 - forwarding_engine - INFO - [2025-12-04 02:21:40.944] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 02:21:40,944 - forwarding_engine - INFO - [2025-12-04 02:21:40.944] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 02:21:40,944 - forwarding_engine - INFO - [2025-12-04 02:21:40.944] [INFO] [forwarding_engine::_process_message] Text length: 1045 chars | {}
+2025-12-04 02:21:40,945 - forwarding_engine - INFO - [2025-12-04 02:21:40.945] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 02:21:41,231 - forwarding_engine - INFO - [2025-12-04 02:21:41.230] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 02:21:41,232 - forwarding_engine - INFO - [2025-12-04 02:21:41.232] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 02:21:41,373 - forwarding_engine - INFO - [2025-12-04 02:21:41.373] [INFO] [forwarding_engine::_process_message] Using model: moonshotai/kimi-k2-instruct | {}
+2025-12-04 02:21:41,377 - forwarding_engine - INFO - [2025-12-04 02:21:41.377] [INFO] [forwarding_engine::_process_message] Using model: moonshotai/kimi-k2-instruct | {}
+2025-12-04 02:21:41,378 - forwarding_engine - INFO - [2025-12-04 02:21:41.378] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 02:21:41,521 - forwarding_engine - INFO - [2025-12-04 02:21:41.521] [INFO] [forwarding_engine::_process_message] Using model: moonshotai/kimi-k2-instruct | {}
+2025-12-04 02:21:41,522 - forwarding_engine - INFO - [2025-12-04 02:21:41.522] [INFO] [forwarding_engine::_process_message] Using model: moonshotai/kimi-k2-instruct | {}
+2025-12-04 02:21:41,667 - forwarding_engine - INFO - [2025-12-04 02:21:41.667] [INFO] [forwarding_engine::_process_message] Using model: moonshotai/kimi-k2-instruct | {}
+2025-12-04 02:21:41,808 - forwarding_engine - INFO - [2025-12-04 02:21:41.807] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 02:21:41,810 - forwarding_engine - INFO - [2025-12-04 02:21:41.810] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 02:21:41,811 - forwarding_engine - INFO - [2025-12-04 02:21:41.811] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 02:21:41,812 - forwarding_engine - INFO - [2025-12-04 02:21:41.812] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 02:21:42,100 - forwarding_engine - INFO - [2025-12-04 02:21:42.100] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 02:21:42,104 - forwarding_engine - INFO - [2025-12-04 02:21:42.103] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 02:21:42,104 - forwarding_engine - INFO - [2025-12-04 02:21:42.104] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 02:21:42,242 - forwarding_engine - INFO - [2025-12-04 02:21:42.242] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 02:21:42,247 - forwarding_engine - INFO - [2025-12-04 02:21:42.247] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 02:21:42,395 - forwarding_engine - INFO - [2025-12-04 02:21:42.394] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 02:21:42,681 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 2403 | {}
+2025-12-04 02:21:42,683 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 4 | Sentiment: neutral | Keywords: 20 | Time: 0.002s | {}
+2025-12-04 02:21:42,683 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 4 | Sentiment: neutral | {}
+2025-12-04 02:21:42,972 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 1391 | {}
+2025-12-04 02:21:42,974 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 7 | Sentiment: positive | Keywords: 20 | Time: 0.002s | {}
+2025-12-04 02:21:42,974 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 7 | Sentiment: positive | {}
+2025-12-04 02:21:42,974 - ai_rule_engine - INFO - [RuleEngine] Loaded 4 entity rules for task 4 from DB | {}
+2025-12-04 02:21:42,974 - ai_rule_engine - INFO - [RuleEngine] Replaced 'المجلس الانتقالي ' with 'ما يسمى بالمجلس الانتقالي ' (2 times) | {}
+2025-12-04 02:21:42,974 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 2 | {}
+2025-12-04 02:21:42,983 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 1045 | {}
+2025-12-04 02:21:42,985 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 1 | Sentiment: neutral | Keywords: 20 | Time: 0.001s | {}
+2025-12-04 02:21:42,985 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 1 | Sentiment: neutral | {}
+2025-12-04 02:21:42,985 - ai_rule_engine - INFO - [RuleEngine] Using cached entity rules for task 4 (4 rules) | {}
+2025-12-04 02:21:42,985 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 0 | {}
+2025-12-04 02:21:43,092 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 377 | {}
+2025-12-04 02:21:43,094 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 2 | Sentiment: neutral | Keywords: 20 | Time: 0.001s | {}
+2025-12-04 02:21:43,094 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 2 | Sentiment: neutral | {}
+2025-12-04 02:21:43,094 - ai_rule_engine - INFO - [RuleEngine] Using cached entity rules for task 4 (4 rules) | {}
+2025-12-04 02:21:43,094 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 0 | {}
+2025-12-04 02:21:43,105 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 256 | {}
+2025-12-04 02:21:43,106 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 1 | Sentiment: neutral | Keywords: 20 | Time: 0.000s | {}
+2025-12-04 02:21:43,107 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 1 | Sentiment: neutral | {}
+2025-12-04 02:21:43,107 - ai_rule_engine - INFO - [RuleEngine] Using cached entity rules for task 4 (4 rules) | {}
+2025-12-04 02:21:43,108 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 0 | {}
+2025-12-04 02:21:43,263 - ai_rule_engine - INFO - [RuleEngine] Loaded 1 context rules for task 4 from DB | {}
+2025-12-04 02:21:43,264 - ai_rule_engine - INFO - [RuleEngine] Applying 1 context rules | {}
+2025-12-04 02:21:43,264 - ai_rule_engine - INFO - [RuleEngine] Processing rule 2: type=neutralize_negative, instructions=اجعل النص محايد ... | {}
+2025-12-04 02:21:43,264 - ai_rule_engine - INFO - [RuleEngine] Neutralized 0 terms | {}
+2025-12-04 02:21:43,264 - ai_rule_engine - INFO - [RuleEngine] Context rules result: 1 applied, 1 AI instructions | {}
+2025-12-04 02:21:43,264 - ai_rule_engine - INFO - [RuleEngine] Context modifications: 1, AI instructions: 1 | {}
+2025-12-04 02:21:43,275 - ai_rule_engine - INFO - [RuleEngine] Loaded 1 context rules for task 4 from DB | {}
+2025-12-04 02:21:43,275 - ai_rule_engine - INFO - [RuleEngine] Applying 1 context rules | {}
+2025-12-04 02:21:43,275 - ai_rule_engine - INFO - [RuleEngine] Processing rule 2: type=neutralize_negative, instructions=اجعل النص محايد ... | {}
+2025-12-04 02:21:43,276 - ai_rule_engine - INFO - [RuleEngine] Neutralized 0 terms | {}
+2025-12-04 02:21:43,276 - ai_rule_engine - INFO - [RuleEngine] Context rules result: 1 applied, 1 AI instructions | {}
+2025-12-04 02:21:43,276 - ai_rule_engine - INFO - [RuleEngine] Context modifications: 1, AI instructions: 1 | {}
+2025-12-04 02:21:43,392 - ai_rule_engine - INFO - [RuleEngine] Loaded 4 entity rules for task 4 from DB | {}
+2025-12-04 02:21:43,393 - ai_rule_engine - INFO - [RuleEngine] Replaced 'المجلس الانتقالي ' with 'ما يسمى بالمجلس الانتقالي ' (2 times) | {}
+2025-12-04 02:21:43,393 - ai_rule_engine - INFO - [RuleEngine] Replaced 'رشاد العليمي ' with 'المرتزق رشاد العليمي ' (1 times) | {}
+2025-12-04 02:21:43,393 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 3 | {}
+2025-12-04 02:21:43,394 - ai_rule_engine - INFO - [RuleEngine] Using cached context rules for task 4 (1 rules) | {}
+2025-12-04 02:21:43,394 - ai_rule_engine - INFO - [RuleEngine] Applying 1 context rules | {}
+2025-12-04 02:21:43,394 - ai_rule_engine - INFO - [RuleEngine] Processing rule 2: type=neutralize_negative, instructions=اجعل النص محايد ... | {}
+2025-12-04 02:21:43,394 - ai_rule_engine - INFO - [RuleEngine] Neutralized 0 terms | {}
+2025-12-04 02:21:43,394 - ai_rule_engine - INFO - [RuleEngine] Context rules result: 1 applied, 1 AI instructions | {}
+2025-12-04 02:21:43,395 - ai_rule_engine - INFO - [RuleEngine] Context modifications: 1, AI instructions: 1 | {}
+2025-12-04 02:21:43,513 - ai_rule_engine - INFO - [RuleEngine] Loaded 1 context rules for task 4 from DB | {}
+2025-12-04 02:21:43,513 - ai_rule_engine - INFO - [RuleEngine] Applying 1 context rules | {}
+2025-12-04 02:21:43,513 - ai_rule_engine - INFO - [RuleEngine] Processing rule 2: type=neutralize_negative, instructions=اجعل النص محايد ... | {}
+2025-12-04 02:21:43,513 - ai_rule_engine - INFO - [RuleEngine] Neutralized 0 terms | {}
+2025-12-04 02:21:43,513 - ai_rule_engine - INFO - [RuleEngine] Context rules result: 1 applied, 1 AI instructions | {}
+2025-12-04 02:21:43,513 - ai_rule_engine - INFO - [RuleEngine] Context modifications: 1, AI instructions: 1 | {}
+2025-12-04 02:21:43,553 - ai_rule_engine - INFO - [RuleEngine] Loaded 1 context rules for task 4 from DB | {}
+2025-12-04 02:21:43,554 - ai_rule_engine - INFO - [RuleEngine] Applying 1 context rules | {}
+2025-12-04 02:21:43,554 - ai_rule_engine - INFO - [RuleEngine] Processing rule 2: type=neutralize_negative, instructions=اجعل النص محايد ... | {}
+2025-12-04 02:21:43,558 - ai_rule_engine - INFO - [RuleEngine] Neutralized 0 terms | {}
+2025-12-04 02:21:43,560 - ai_rule_engine - INFO - [RuleEngine] Context rules result: 1 applied, 1 AI instructions | {}
+2025-12-04 02:21:43,562 - ai_rule_engine - INFO - [RuleEngine] Context modifications: 1, AI instructions: 1 | {}
+2025-12-04 02:21:43,565 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 2 | Replacements: 2 | {}
+2025-12-04 02:21:43,566 - ai_pipeline - INFO - [Pipeline] Added 1 context instructions to prompt | {}
+2025-12-04 02:21:43,568 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 1210 | Temperature: 0.7 | Input length: 3061 chars | {}
+2025-12-04 02:21:43,573 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 1 | Replacements: 0 | {}
+2025-12-04 02:21:43,574 - ai_pipeline - INFO - [Pipeline] Added 1 context instructions to prompt | {}
+2025-12-04 02:21:43,575 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 522 | Temperature: 0.7 | Input length: 1587 chars | {}
+2025-12-04 02:21:43,792 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 1 | Replacements: 0 | {}
+2025-12-04 02:21:43,794 - ai_pipeline - INFO - [Pipeline] Added 1 context instructions to prompt | {}
+2025-12-04 02:21:43,795 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 500 | Temperature: 0.7 | Input length: 919 chars | {}
+2025-12-04 02:21:43,831 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 3 | Replacements: 3 | {}
+2025-12-04 02:21:43,831 - ai_pipeline - INFO - [Pipeline] Added 1 context instructions to prompt | {}
+2025-12-04 02:21:43,831 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 708 | Temperature: 0.7 | Input length: 2111 chars | {}
+2025-12-04 02:21:43,852 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 1 | Replacements: 0 | {}
+2025-12-04 02:21:43,854 - ai_pipeline - INFO - [Pipeline] Added 1 context instructions to prompt | {}
+2025-12-04 02:21:43,854 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 500 | Temperature: 0.7 | Input length: 798 chars | {}
+2025-12-04 02:21:44,922 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 02:21:44,924 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 427 chars | First 100 chars: - مواطن من سيئون يطلب إعادة بضائع ومعدات سُرقت من مستودعه قرب صالة الزين خلال أحداث الشغب.  
+- أعلن  | {}
+2025-12-04 02:21:44,925 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 427 | {}
+2025-12-04 02:21:44,928 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 1.00 | {}
+2025-12-04 02:21:44,928 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 2.52s | Quality: 1.00 | Original: 1045 → Final: 427 chars | {}
+2025-12-04 02:21:44,928 - forwarding_engine - INFO - [2025-12-04 02:21:44.928] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 1045, 'final_length': 427, 'stages': 4, 'rules_applied': 1, 'quality_score': 1.0, 'total_time': '2.52s'} | {}
+2025-12-04 02:21:44,928 - forwarding_engine - INFO - [2025-12-04 02:21:44.928] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.00s) | {}
+2025-12-04 02:21:44,929 - forwarding_engine - INFO - [2025-12-04 02:21:44.929] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (0.59s) | {}
+2025-12-04 02:21:44,929 - forwarding_engine - INFO - [2025-12-04 02:21:44.929] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (1.35s) | {}
+2025-12-04 02:21:44,929 - forwarding_engine - INFO - [2025-12-04 02:21:44.929] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 02:21:45,063 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 02:21:45,065 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 464 chars | First 100 chars: - مصدر عسكري رفيع بالمنطقة العسكرية الأولى يصف ما جرى في وادي حضرموت بأنه عملية استلام وتسليم بعد اش | {}
+2025-12-04 02:21:45,065 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 464 | {}
+2025-12-04 02:21:45,066 - ai_postprocessing - INFO - [Postprocessing] Entity replacement not verified: المجلس الانتقالي  → ما يسمى بالمجلس الانتقالي  | {}
+2025-12-04 02:21:45,066 - ai_postprocessing - INFO - [Postprocessing] Entity replacement not verified: رشاد العليمي  → المرتزق رشاد العليمي  | {}
+2025-12-04 02:21:45,066 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 0.80 | {}
+2025-12-04 02:21:45,066 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 2.96s | Quality: 0.80 | Original: 1391 → Final: 464 chars | {}
+2025-12-04 02:21:45,066 - forwarding_engine - INFO - [2025-12-04 02:21:45.066] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 1391, 'final_length': 464, 'stages': 4, 'rules_applied': 3, 'quality_score': 0.7999999999999999, 'total_time': '2.96s'} | {}
+2025-12-04 02:21:45,066 - forwarding_engine - INFO - [2025-12-04 02:21:45.066] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.00s) | {}
+2025-12-04 02:21:45,067 - forwarding_engine - INFO - [2025-12-04 02:21:45.067] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (0.86s) | {}
+2025-12-04 02:21:45,067 - forwarding_engine - INFO - [2025-12-04 02:21:45.067] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (1.23s) | {}
+2025-12-04 02:21:45,067 - forwarding_engine - INFO - [2025-12-04 02:21:45.067] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 02:21:45,067 - forwarding_engine - INFO - [2025-12-04 02:21:45.067] [INFO] [forwarding_engine::_process_message]   ├─ Entity replacements (organization): 1 | {}
+2025-12-04 02:21:45,067 - forwarding_engine - INFO - [2025-12-04 02:21:45.067] [INFO] [forwarding_engine::_process_message]   ├─ Entity replacements (person): 1 | {}
+2025-12-04 02:21:45,267 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 02:21:45,268 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 396 chars | First 100 chars: - رئيس هيئة الأركان يغادر البلاد لزيارة أسرته المقيمة في الخارج وسط أحداث عسكرية حرجة.  
+- منتقدون ي | {}
+2025-12-04 02:21:45,268 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 396 | {}
+2025-12-04 02:21:45,269 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 0.93 | {}
+2025-12-04 02:21:45,269 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 3.03s | Quality: 0.93 | Original: 256 → Final: 396 chars | {}
+2025-12-04 02:21:45,269 - forwarding_engine - INFO - [2025-12-04 02:21:45.269] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 256, 'final_length': 396, 'stages': 4, 'rules_applied': 1, 'quality_score': 0.9299999999999999, 'total_time': '3.03s'} | {}
+2025-12-04 02:21:45,269 - forwarding_engine - INFO - [2025-12-04 02:21:45.269] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.00s) | {}
+2025-12-04 02:21:45,269 - forwarding_engine - INFO - [2025-12-04 02:21:45.269] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (0.74s) | {}
+2025-12-04 02:21:45,270 - forwarding_engine - INFO - [2025-12-04 02:21:45.270] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (1.41s) | {}
+2025-12-04 02:21:45,270 - forwarding_engine - INFO - [2025-12-04 02:21:45.270] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 02:21:45,534 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 02:21:45,535 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 572 chars | First 100 chars: - انهارت سلسلة القيادة داخل المنطقة العسكرية الأولى واللواء 135؛ فلم يحصل القادة الميدانيون على رد م | {}
+2025-12-04 02:21:45,535 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 572 | {}
+2025-12-04 02:21:45,536 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 0.93 | {}
+2025-12-04 02:21:45,536 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 3.29s | Quality: 0.93 | Original: 377 → Final: 572 chars | {}
+2025-12-04 02:21:45,536 - forwarding_engine - INFO - [2025-12-04 02:21:45.536] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 377, 'final_length': 572, 'stages': 4, 'rules_applied': 1, 'quality_score': 0.9299999999999999, 'total_time': '3.29s'} | {}
+2025-12-04 02:21:45,536 - forwarding_engine - INFO - [2025-12-04 02:21:45.536] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.00s) | {}
+2025-12-04 02:21:45,536 - forwarding_engine - INFO - [2025-12-04 02:21:45.536] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (0.70s) | {}
+2025-12-04 02:21:45,536 - forwarding_engine - INFO - [2025-12-04 02:21:45.536] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (1.74s) | {}
+2025-12-04 02:21:45,537 - forwarding_engine - INFO - [2025-12-04 02:21:45.537] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 02:21:45,742 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 02:21:45,745 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 870 chars | First 100 chars: - سيطرت قوات ما يسمى بالمجلس الانتقالي المدعومة من الإمارات خلال دقائق على مواقع المنطقة العسكرية ال | {}
+2025-12-04 02:21:45,745 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 870 | {}
+2025-12-04 02:21:45,746 - ai_postprocessing - INFO - [Postprocessing] Entity replacement not verified: المجلس الانتقالي  → ما يسمى بالمجلس الانتقالي  | {}
+2025-12-04 02:21:45,747 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 0.85 | {}
+2025-12-04 02:21:45,748 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 3.65s | Quality: 0.85 | Original: 2406 → Final: 870 chars | {}
+2025-12-04 02:21:45,748 - forwarding_engine - INFO - [2025-12-04 02:21:45.748] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 2406, 'final_length': 870, 'stages': 4, 'rules_applied': 2, 'quality_score': 0.85, 'total_time': '3.65s'} | {}
+2025-12-04 02:21:45,748 - forwarding_engine - INFO - [2025-12-04 02:21:45.748] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.00s) | {}
+2025-12-04 02:21:45,748 - forwarding_engine - INFO - [2025-12-04 02:21:45.748] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (0.88s) | {}
+2025-12-04 02:21:45,748 - forwarding_engine - INFO - [2025-12-04 02:21:45.748] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (2.18s) | {}
+2025-12-04 02:21:45,748 - forwarding_engine - INFO - [2025-12-04 02:21:45.748] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 02:21:45,748 - forwarding_engine - INFO - [2025-12-04 02:21:45.748] [INFO] [forwarding_engine::_process_message]   ├─ Entity replacements (organization): 1 | {}
+2025-12-04 02:21:45,793 - task_4 - INFO - AI Pipeline completed | From 1045 → 427 chars
+2025-12-04 02:21:45,903 - task_4 - INFO - AI Pipeline completed | From 1391 → 464 chars
+2025-12-04 02:21:46,105 - task_4 - INFO - AI Pipeline completed | From 256 → 396 chars
+2025-12-04 02:21:46,407 - task_4 - INFO - AI Pipeline completed | From 377 → 572 chars
+2025-12-04 02:21:48,268 - forwarding_engine - INFO - [2025-12-04 02:21:48.268] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 1391, 'processed_length': 464, 'total_reduction': 927, 'reduction_percent': 67, 'final_preview': '- مصدر عسكري رفيع بالمنطقة العسكرية الأولى يصف ما جرى في وادي حضرموت بأنه عملية استلام وتسليم بعد اشتباكات محدودة.\n- قيادة المنطقة حاولت الاتصال بوزير'} | {}
+2025-12-04 02:21:48,268 - forwarding_engine - INFO - [2025-12-04 02:21:48.268] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 02:21:48,269 - forwarding_engine - INFO - [2025-12-04 02:21:48.269] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2304, 'has_processed_text': True} | {}
+2025-12-04 02:21:48,333 - forwarding_engine - INFO - [2025-12-04 02:21:48.332] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 256, 'processed_length': 396, 'total_reduction': -140, 'reduction_percent': -54, 'final_preview': '- رئيس هيئة الأركان يغادر البلاد لزيارة أسرته المقيمة في الخارج وسط أحداث عسكرية حرجة.  \n- منتقدون يرون أن تجنُّب قادة الصف الأول لأهلهم في الداخل يُف'} | {}
+2025-12-04 02:21:48,333 - forwarding_engine - INFO - [2025-12-04 02:21:48.333] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 02:21:48,333 - forwarding_engine - INFO - [2025-12-04 02:21:48.333] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2302, 'has_processed_text': True} | {}
+2025-12-04 02:21:48,380 - forwarding_engine - INFO - [2025-12-04 02:21:48.379] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 1045, 'processed_length': 427, 'total_reduction': 618, 'reduction_percent': 60, 'final_preview': '- مواطن من سيئون يطلب إعادة بضائع ومعدات سُرقت من مستودعه قرب صالة الزين خلال أحداث الشغب.  \n- أعلن مسامحته التامة عن كل من أخذ الممتلكات شريطة إرجاعه'} | {}
+2025-12-04 02:21:48,380 - forwarding_engine - INFO - [2025-12-04 02:21:48.380] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 02:21:48,380 - forwarding_engine - INFO - [2025-12-04 02:21:48.380] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2306, 'has_processed_text': True} | {}
+2025-12-04 02:21:48,687 - forwarding_engine - INFO - [2025-12-04 02:21:48.687] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 02:21:48,893 - forwarding_engine - INFO - [2025-12-04 02:21:48.893] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 1391, 'final_length': 538, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 02:21:48,893 - forwarding_engine - INFO - [2025-12-04 02:21:48.893] [INFO] [forwarding_engine::_forward_to_target] Sending text message... | {}
+2025-12-04 02:21:48,895 - forwarding_engine - INFO - [2025-12-04 02:21:48.895] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 02:21:49,101 - forwarding_engine - INFO - [2025-12-04 02:21:49.101] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 256, 'final_length': 470, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 02:21:49,102 - forwarding_engine - INFO - [2025-12-04 02:21:49.102] [INFO] [forwarding_engine::_forward_to_target] Sending text message... | {}
+2025-12-04 02:21:49,104 - forwarding_engine - INFO - [2025-12-04 02:21:49.104] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 02:21:49,311 - forwarding_engine - INFO - [2025-12-04 02:21:49.311] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 1045, 'final_length': 501, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 02:21:49,311 - forwarding_engine - INFO - [2025-12-04 02:21:49.311] [INFO] [forwarding_engine::_forward_to_target] Sending text message... | {}
+2025-12-04 02:21:49,556 - forwarding_engine - INFO - [2025-12-04 02:21:49.555] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 02:21:49,564 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 02:21:49,564 - forwarding_engine - INFO - [2025-12-04 02:21:49.564] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 02:21:49,576 - forwarding_engine - INFO - [2025-12-04 02:21:49.576] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 02:21:49,576 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 02:21:49,577 - forwarding_engine - INFO - [2025-12-04 02:21:49.577] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 02:21:49,747 - forwarding_engine - INFO - [2025-12-04 02:21:49.747] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 02:21:49,748 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 02:21:49,748 - forwarding_engine - INFO - [2025-12-04 02:21:49.748] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 02:21:49,749 - task_4 - INFO - AI Pipeline completed | From 2406 → 870 chars
+2025-12-04 02:21:50,330 - forwarding_engine - INFO - [2025-12-04 02:21:50.330] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 377, 'processed_length': 572, 'total_reduction': -195, 'reduction_percent': -51, 'final_preview': '- انهارت سلسلة القيادة داخل المنطقة العسكرية الأولى واللواء 135؛ فلم يحصل القادة الميدانيون على رد من وزير الدفاع أو من قيادة المجلس.  \n- بتعليمات «با'} | {}
+2025-12-04 02:21:50,334 - forwarding_engine - INFO - [2025-12-04 02:21:50.334] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 02:21:50,334 - forwarding_engine - INFO - [2025-12-04 02:21:50.334] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2303, 'has_processed_text': True} | {}
+2025-12-04 02:21:50,621 - forwarding_engine - INFO - [2025-12-04 02:21:50.620] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 2406, 'processed_length': 870, 'total_reduction': 1536, 'reduction_percent': 64, 'final_preview': '- سيطرت قوات ما يسمى بالمجلس الانتقالي المدعومة من الإمارات خلال دقائق على مواقع المنطقة العسكرية الأولى في وادي وصحراء حضرموت دون اشتباك مع معسكرات "'} | {}
+2025-12-04 02:21:50,622 - forwarding_engine - INFO - [2025-12-04 02:21:50.622] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 02:21:50,622 - forwarding_engine - INFO - [2025-12-04 02:21:50.622] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2305, 'has_processed_text': True} | {}
+2025-12-04 02:21:50,770 - forwarding_engine - INFO - [2025-12-04 02:21:50.770] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 02:21:50,995 - forwarding_engine - INFO - [2025-12-04 02:21:50.995] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 377, 'final_length': 646, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 02:21:50,995 - forwarding_engine - INFO - [2025-12-04 02:21:50.995] [INFO] [forwarding_engine::_forward_to_target] Sending text message... | {}
+2025-12-04 02:21:50,997 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 02:21:50,999 - forwarding_engine - INFO - [2025-12-04 02:21:50.999] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 02:21:50,999 - main - INFO - [2025-12-04 02:21:50.999] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 02:21:51,000 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 02:21:51,000 - forwarding_engine - INFO - [2025-12-04 02:21:51.000] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 02:21:51,002 - main - INFO - [2025-12-04 02:21:51.002] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 02:21:51,137 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 02:21:51,139 - forwarding_engine - INFO - [2025-12-04 02:21:51.139] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 02:21:51,140 - main - INFO - [2025-12-04 02:21:51.140] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 02:21:51,142 - forwarding_engine - INFO - [2025-12-04 02:21:51.142] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 02:21:51,550 - forwarding_engine - INFO - [2025-12-04 02:21:51.550] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 2406, 'final_length': 944, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 02:21:51,550 - forwarding_engine - INFO - [2025-12-04 02:21:51.550] [INFO] [forwarding_engine::_forward_to_target] Sending text message... | {}
+2025-12-04 02:21:51,552 - forwarding_engine - INFO - [2025-12-04 02:21:51.552] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 02:21:51,553 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 02:21:51,554 - forwarding_engine - INFO - [2025-12-04 02:21:51.554] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 02:21:51,797 - forwarding_engine - INFO - [2025-12-04 02:21:51.796] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 02:21:51,797 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 02:21:51,798 - forwarding_engine - INFO - [2025-12-04 02:21:51.798] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 02:21:52,671 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 02:21:52,675 - forwarding_engine - INFO - [2025-12-04 02:21:52.674] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 02:21:52,677 - main - INFO - [2025-12-04 02:21:52.677] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 02:21:52,859 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 02:21:52,860 - forwarding_engine - INFO - [2025-12-04 02:21:52.860] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 02:21:52,860 - main - INFO - [2025-12-04 02:21:52.860] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 02:27:06,582 - main - INFO - [2025-12-04 02:27:06.582] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2307, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 02:27:06,583 - main - INFO - [2025-12-04 02:27:06.583] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 02:27:07,020 - main - INFO - [2025-12-04 02:27:07.020] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 02:27:07,020 - main - INFO - [2025-12-04 02:27:07.020] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 02:27:07,454 - main - INFO - [2025-12-04 02:27:07.454] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 02:27:07,454 - main - INFO - [2025-12-04 02:27:07.454] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 02:27:07,454 - main - INFO - [2025-12-04 02:27:07.454] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 02:27:07,455 - forwarding_engine - INFO - [2025-12-04 02:27:07.454] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2307, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': True, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 02:27:07,455 - forwarding_engine - INFO - [2025-12-04 02:27:07.455] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 02:27:07,455 - forwarding_engine - INFO - [2025-12-04 02:27:07.455] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': False, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 02:27:07,455 - forwarding_engine - INFO - [2025-12-04 02:27:07.455] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 02:27:07,455 - forwarding_engine - INFO - [2025-12-04 02:27:07.455] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 02:27:07,455 - forwarding_engine - INFO - [2025-12-04 02:27:07.455] [INFO] [forwarding_engine::_process_message] Text length: 1045 chars | {}
+2025-12-04 02:27:07,891 - forwarding_engine - INFO - [2025-12-04 02:27:07.891] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 02:27:08,325 - forwarding_engine - INFO - [2025-12-04 02:27:08.325] [INFO] [forwarding_engine::_process_message] Using model: moonshotai/kimi-k2-instruct | {}
+2025-12-04 02:27:08,760 - forwarding_engine - INFO - [2025-12-04 02:27:08.759] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 02:27:09,194 - forwarding_engine - INFO - [2025-12-04 02:27:09.194] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 02:27:10,070 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 1045 | {}
+2025-12-04 02:27:10,072 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 1 | Sentiment: neutral | Keywords: 20 | Time: 0.002s | {}
+2025-12-04 02:27:10,073 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 1 | Sentiment: neutral | {}
+2025-12-04 02:27:10,507 - ai_rule_engine - INFO - [RuleEngine] Loaded 4 entity rules for task 4 from DB | {}
+2025-12-04 02:27:10,507 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 0 | {}
+2025-12-04 02:27:10,942 - ai_rule_engine - INFO - [RuleEngine] Loaded 1 context rules for task 4 from DB | {}
+2025-12-04 02:27:10,942 - ai_rule_engine - INFO - [RuleEngine] Applying 1 context rules | {}
+2025-12-04 02:27:10,942 - ai_rule_engine - INFO - [RuleEngine] Processing rule 2: type=neutralize_negative, instructions=اجعل النص محايد ... | {}
+2025-12-04 02:27:10,942 - ai_rule_engine - INFO - [RuleEngine] Neutralized 0 terms | {}
+2025-12-04 02:27:10,942 - ai_rule_engine - INFO - [RuleEngine] Context rules result: 1 applied, 1 AI instructions | {}
+2025-12-04 02:27:10,942 - ai_rule_engine - INFO - [RuleEngine] Context modifications: 1, AI instructions: 1 | {}
+2025-12-04 02:27:11,232 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 1 | Replacements: 0 | {}
+2025-12-04 02:27:11,232 - ai_pipeline - INFO - [Pipeline] Added 1 context instructions to prompt | {}
+2025-12-04 02:27:11,233 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 522 | Temperature: 0.7 | Input length: 1587 chars | {}
+2025-12-04 02:27:12,437 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 02:27:12,439 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 407 chars | First 100 chars: - مواطن في سيئون يعلن مسامحته لمن نهبوا مستودعه القريب من صالة الزين شريطة إعادة المسروقات إلى الهنج | {}
+2025-12-04 02:27:12,439 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 407 | {}
+2025-12-04 02:27:12,440 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 1.00 | {}
+2025-12-04 02:27:12,440 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 3.25s | Quality: 1.00 | Original: 1045 → Final: 407 chars | {}
+2025-12-04 02:27:12,441 - forwarding_engine - INFO - [2025-12-04 02:27:12.440] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 1045, 'final_length': 407, 'stages': 4, 'rules_applied': 1, 'quality_score': 1.0, 'total_time': '3.25s'} | {}
+2025-12-04 02:27:12,441 - forwarding_engine - INFO - [2025-12-04 02:27:12.441] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.00s) | {}
+2025-12-04 02:27:12,441 - forwarding_engine - INFO - [2025-12-04 02:27:12.441] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (1.16s) | {}
+2025-12-04 02:27:12,441 - forwarding_engine - INFO - [2025-12-04 02:27:12.441] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (1.21s) | {}
+2025-12-04 02:27:12,441 - forwarding_engine - INFO - [2025-12-04 02:27:12.441] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 02:27:13,314 - task_4 - INFO - AI Pipeline completed | From 1045 → 407 chars
+2025-12-04 02:27:14,184 - forwarding_engine - INFO - [2025-12-04 02:27:14.183] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 1045, 'processed_length': 407, 'total_reduction': 638, 'reduction_percent': 62, 'final_preview': '- مواطن في سيئون يعلن مسامحته لمن نهبوا مستودعه القريب من صالة الزين شريطة إعادة المسروقات إلى الهنجر.  \n- المستودع كان يحتوي بضائع ومعدات جرى أخذها أ'} | {}
+2025-12-04 02:27:14,187 - forwarding_engine - INFO - [2025-12-04 02:27:14.187] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 02:27:14,189 - forwarding_engine - INFO - [2025-12-04 02:27:14.188] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2307, 'has_processed_text': True} | {}
+2025-12-04 02:27:14,479 - forwarding_engine - INFO - [2025-12-04 02:27:14.479] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 02:27:14,685 - forwarding_engine - INFO - [2025-12-04 02:27:14.684] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 1045, 'final_length': 481, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 02:27:14,687 - forwarding_engine - INFO - [2025-12-04 02:27:14.687] [INFO] [forwarding_engine::_forward_to_target] Sending text message... | {}
+2025-12-04 02:27:14,937 - forwarding_engine - INFO - [2025-12-04 02:27:14.936] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 02:27:14,937 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 02:27:14,937 - forwarding_engine - INFO - [2025-12-04 02:27:14.937] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 02:27:16,184 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 02:27:16,186 - forwarding_engine - INFO - [2025-12-04 02:27:16.186] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 02:27:16,188 - main - INFO - [2025-12-04 02:27:16.187] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
