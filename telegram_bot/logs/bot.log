@@ -15269,3 +15269,168 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-04 17:56:35,389 - database - INFO - Database connected successfully | {}
 2025-12-04 17:56:35,808 - main - INFO - [2025-12-04 17:56:35.808] [INFO] [session::load] No active session found - userbot login required | {}
 2025-12-04 17:56:35,808 - main - INFO - [2025-12-04 17:56:35.808] [WARNING] [session::missing] ⚠️ No active session found! Please login via the web interface. | {}
+2025-12-04 17:56:38,111 - database - INFO - Database connected successfully | {}
+2025-12-04 17:56:49,951 - database - INFO - Database connected successfully | {}
+2025-12-04 17:56:50,383 - main - INFO - [2025-12-04 17:56:50.383] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:57:02,184 - database - INFO - Database connected successfully | {}
+2025-12-04 17:57:02,601 - main - INFO - [2025-12-04 17:57:02.601] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:57:14,428 - database - INFO - Database connected successfully | {}
+2025-12-04 17:57:14,856 - main - INFO - [2025-12-04 17:57:14.856] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:57:26,668 - database - INFO - Database connected successfully | {}
+2025-12-04 17:57:27,095 - main - INFO - [2025-12-04 17:57:27.095] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:57:38,952 - database - INFO - Database connected successfully | {}
+2025-12-04 17:57:39,382 - main - INFO - [2025-12-04 17:57:39.382] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:57:51,195 - database - INFO - Database connected successfully | {}
+2025-12-04 17:57:51,621 - main - INFO - [2025-12-04 17:57:51.621] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:58:03,443 - database - INFO - Database connected successfully | {}
+2025-12-04 17:58:03,875 - main - INFO - [2025-12-04 17:58:03.875] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:58:15,687 - database - INFO - Database connected successfully | {}
+2025-12-04 17:58:16,117 - main - INFO - [2025-12-04 17:58:16.117] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:58:27,922 - database - INFO - Database connected successfully | {}
+2025-12-04 17:58:28,347 - main - INFO - [2025-12-04 17:58:28.347] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:58:40,159 - database - INFO - Database connected successfully | {}
+2025-12-04 17:58:40,572 - main - INFO - [2025-12-04 17:58:40.572] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:58:52,367 - database - INFO - Database connected successfully | {}
+2025-12-04 17:58:52,787 - main - INFO - [2025-12-04 17:58:52.787] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:59:04,624 - database - INFO - Database connected successfully | {}
+2025-12-04 17:59:05,050 - main - INFO - [2025-12-04 17:59:05.050] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:59:16,866 - database - INFO - Database connected successfully | {}
+2025-12-04 17:59:17,279 - main - INFO - [2025-12-04 17:59:17.279] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:59:29,119 - database - INFO - Database connected successfully | {}
+2025-12-04 17:59:29,543 - main - INFO - [2025-12-04 17:59:29.543] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:59:41,366 - database - INFO - Database connected successfully | {}
+2025-12-04 17:59:41,798 - main - INFO - [2025-12-04 17:59:41.798] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:59:53,620 - database - INFO - Database connected successfully | {}
+2025-12-04 17:59:54,053 - main - INFO - [2025-12-04 17:59:54.053] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:00:05,966 - database - INFO - Database connected successfully | {}
+2025-12-04 18:00:06,380 - main - INFO - [2025-12-04 18:00:06.380] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:00:18,176 - database - INFO - Database connected successfully | {}
+2025-12-04 18:00:18,602 - main - INFO - [2025-12-04 18:00:18.602] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:00:30,404 - database - INFO - Database connected successfully | {}
+2025-12-04 18:00:30,819 - main - INFO - [2025-12-04 18:00:30.818] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:00:42,632 - database - INFO - Database connected successfully | {}
+2025-12-04 18:00:43,063 - main - INFO - [2025-12-04 18:00:43.063] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:00:54,885 - database - INFO - Database connected successfully | {}
+2025-12-04 18:00:55,301 - main - INFO - [2025-12-04 18:00:55.301] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:01:07,123 - database - INFO - Database connected successfully | {}
+2025-12-04 18:01:07,547 - main - INFO - [2025-12-04 18:01:07.547] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:01:19,380 - database - INFO - Database connected successfully | {}
+2025-12-04 18:01:19,813 - main - INFO - [2025-12-04 18:01:19.813] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:01:31,628 - database - INFO - Database connected successfully | {}
+2025-12-04 18:01:32,056 - main - INFO - [2025-12-04 18:01:32.056] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:01:43,862 - database - INFO - Database connected successfully | {}
+2025-12-04 18:01:44,279 - main - INFO - [2025-12-04 18:01:44.279] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:01:56,130 - database - INFO - Database connected successfully | {}
+2025-12-04 18:01:56,563 - main - INFO - [2025-12-04 18:01:56.563] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:02:08,343 - database - INFO - Database connected successfully | {}
+2025-12-04 18:02:08,756 - main - INFO - [2025-12-04 18:02:08.756] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:02:20,608 - database - INFO - Database connected successfully | {}
+2025-12-04 18:02:21,034 - main - INFO - [2025-12-04 18:02:21.034] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:02:32,818 - database - INFO - Database connected successfully | {}
+2025-12-04 18:02:33,234 - main - INFO - [2025-12-04 18:02:33.234] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:02:45,082 - database - INFO - Database connected successfully | {}
+2025-12-04 18:02:45,513 - main - INFO - [2025-12-04 18:02:45.513] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:02:57,298 - database - INFO - Database connected successfully | {}
+2025-12-04 18:02:57,712 - main - INFO - [2025-12-04 18:02:57.712] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:03:09,491 - database - INFO - Database connected successfully | {}
+2025-12-04 18:03:09,908 - main - INFO - [2025-12-04 18:03:09.907] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:03:21,729 - database - INFO - Database connected successfully | {}
+2025-12-04 18:03:22,157 - main - INFO - [2025-12-04 18:03:22.157] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:03:33,971 - database - INFO - Database connected successfully | {}
+2025-12-04 18:03:34,387 - main - INFO - [2025-12-04 18:03:34.386] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:03:46,191 - database - INFO - Database connected successfully | {}
+2025-12-04 18:03:46,609 - main - INFO - [2025-12-04 18:03:46.608] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:03:58,430 - database - INFO - Database connected successfully | {}
+2025-12-04 18:03:58,861 - main - INFO - [2025-12-04 18:03:58.861] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:04:10,648 - database - INFO - Database connected successfully | {}
+2025-12-04 18:04:11,077 - main - INFO - [2025-12-04 18:04:11.077] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:04:23,109 - database - INFO - Database connected successfully | {}
+2025-12-04 18:04:23,556 - main - INFO - [2025-12-04 18:04:23.553] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:04:35,429 - database - INFO - Database connected successfully | {}
+2025-12-04 18:04:35,863 - main - INFO - [2025-12-04 18:04:35.863] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:04:47,966 - database - INFO - Database connected successfully | {}
+2025-12-04 18:04:48,384 - main - INFO - [2025-12-04 18:04:48.384] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:05:00,229 - database - INFO - Database connected successfully | {}
+2025-12-04 18:05:00,642 - main - INFO - [2025-12-04 18:05:00.642] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:05:12,440 - database - INFO - Database connected successfully | {}
+2025-12-04 18:05:12,853 - main - INFO - [2025-12-04 18:05:12.852] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:05:24,670 - database - INFO - Database connected successfully | {}
+2025-12-04 18:05:25,097 - main - INFO - [2025-12-04 18:05:25.097] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:05:36,896 - database - INFO - Database connected successfully | {}
+2025-12-04 18:05:37,309 - main - INFO - [2025-12-04 18:05:37.309] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:05:49,108 - database - INFO - Database connected successfully | {}
+2025-12-04 18:05:49,520 - main - INFO - [2025-12-04 18:05:49.520] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:06:01,427 - database - INFO - Database connected successfully | {}
+2025-12-04 18:06:01,857 - main - INFO - [2025-12-04 18:06:01.857] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:06:13,613 - database - INFO - Database connected successfully | {}
+2025-12-04 18:06:14,024 - main - INFO - [2025-12-04 18:06:14.024] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:06:25,856 - database - INFO - Database connected successfully | {}
+2025-12-04 18:06:26,283 - main - INFO - [2025-12-04 18:06:26.283] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:06:38,132 - database - INFO - Database connected successfully | {}
+2025-12-04 18:06:38,564 - main - INFO - [2025-12-04 18:06:38.564] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:06:50,357 - database - INFO - Database connected successfully | {}
+2025-12-04 18:06:50,770 - main - INFO - [2025-12-04 18:06:50.770] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:07:02,598 - database - INFO - Database connected successfully | {}
+2025-12-04 18:07:03,014 - main - INFO - [2025-12-04 18:07:03.014] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:07:14,861 - database - INFO - Database connected successfully | {}
+2025-12-04 18:07:15,289 - main - INFO - [2025-12-04 18:07:15.289] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:07:27,137 - database - INFO - Database connected successfully | {}
+2025-12-04 18:07:27,568 - main - INFO - [2025-12-04 18:07:27.568] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:07:39,389 - database - INFO - Database connected successfully | {}
+2025-12-04 18:07:39,817 - main - INFO - [2025-12-04 18:07:39.817] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:07:51,619 - database - INFO - Database connected successfully | {}
+2025-12-04 18:07:52,037 - main - INFO - [2025-12-04 18:07:52.037] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:08:03,873 - database - INFO - Database connected successfully | {}
+2025-12-04 18:08:04,304 - main - INFO - [2025-12-04 18:08:04.304] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:08:16,095 - database - INFO - Database connected successfully | {}
+2025-12-04 18:08:16,508 - main - INFO - [2025-12-04 18:08:16.508] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:08:31,643 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 18:08:31,646 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 18:08:31,657 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 18:08:31,661 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 18:08:31,665 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 18:08:31,667 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 18:08:31,671 - main - INFO - [2025-12-04 18:08:31.671] [INFO] [main::entry] Bot script started | {}
+2025-12-04 18:08:31,672 - main - INFO - [2025-12-04 18:08:31.672] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 18:08:31,672 - main - INFO - [2025-12-04 18:08:31.672] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-04 18:08:31,672 - main - INFO - [2025-12-04 18:08:31.672] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-04 18:08:33,979 - database - INFO - Database connected successfully | {}
+2025-12-04 18:08:34,407 - main - INFO - [2025-12-04 18:08:34.407] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:08:34,407 - main - INFO - [2025-12-04 18:08:34.407] [WARNING] [session::missing] ⚠️ No active session found! Please login via the web interface. | {}
+2025-12-04 18:08:36,229 - database - INFO - Database connected successfully | {}
+2025-12-04 18:08:48,032 - database - INFO - Database connected successfully | {}
+2025-12-04 18:08:48,461 - main - INFO - [2025-12-04 18:08:48.461] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:09:00,267 - database - INFO - Database connected successfully | {}
+2025-12-04 18:09:00,676 - main - INFO - [2025-12-04 18:09:00.676] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:09:12,479 - database - INFO - Database connected successfully | {}
+2025-12-04 18:09:12,890 - main - INFO - [2025-12-04 18:09:12.890] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:09:24,758 - database - INFO - Database connected successfully | {}
+2025-12-04 18:09:25,190 - main - INFO - [2025-12-04 18:09:25.190] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:09:37,005 - database - INFO - Database connected successfully | {}
+2025-12-04 18:09:37,435 - main - INFO - [2025-12-04 18:09:37.435] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:09:49,394 - database - INFO - Database connected successfully | {}
+2025-12-04 18:09:49,824 - main - INFO - [2025-12-04 18:09:49.824] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:10:01,700 - database - INFO - Database connected successfully | {}
+2025-12-04 18:10:02,135 - main - INFO - [2025-12-04 18:10:02.134] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:10:14,054 - database - INFO - Database connected successfully | {}
+2025-12-04 18:10:14,484 - main - INFO - [2025-12-04 18:10:14.484] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:10:26,287 - database - INFO - Database connected successfully | {}
+2025-12-04 18:10:26,698 - main - INFO - [2025-12-04 18:10:26.698] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:10:38,480 - database - INFO - Database connected successfully | {}
+2025-12-04 18:10:38,896 - main - INFO - [2025-12-04 18:10:38.896] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:10:50,734 - database - INFO - Database connected successfully | {}
+2025-12-04 18:10:51,150 - main - INFO - [2025-12-04 18:10:51.150] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:11:02,923 - database - INFO - Database connected successfully | {}
+2025-12-04 18:11:03,337 - main - INFO - [2025-12-04 18:11:03.337] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:11:15,153 - database - INFO - Database connected successfully | {}
+2025-12-04 18:11:15,566 - main - INFO - [2025-12-04 18:11:15.566] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:11:27,437 - database - INFO - Database connected successfully | {}
+2025-12-04 18:11:27,868 - main - INFO - [2025-12-04 18:11:27.868] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:11:39,724 - database - INFO - Database connected successfully | {}
+2025-12-04 18:11:40,190 - main - INFO - [2025-12-04 18:11:40.190] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:11:52,102 - database - INFO - Database connected successfully | {}
+2025-12-04 18:11:52,530 - main - INFO - [2025-12-04 18:11:52.530] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:12:04,420 - database - INFO - Database connected successfully | {}
+2025-12-04 18:12:04,857 - main - INFO - [2025-12-04 18:12:04.856] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:12:16,675 - database - INFO - Database connected successfully | {}
+2025-12-04 18:12:17,086 - main - INFO - [2025-12-04 18:12:17.086] [INFO] [session::load] No active session found - userbot login required | {}

@@ -176,6 +176,32 @@ export const aiProcessingConfig = pgTable("ai_processing_config", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
+// AI Usage Statistics
+export const aiUsageStats = pgTable("ai_usage_stats", {
+  id: serial("id").primaryKey(),
+  providerId: integer("provider_id").notNull().references(() => aiProviders.id),
+  modelId: integer("model_id").references(() => aiModels.id),
+  modelName: text("model_name").notNull(),
+  taskId: integer("task_id").references(() => forwardingTasks.id),
+  
+  // Usage metrics
+  requestCount: integer("request_count").notNull().default(0),
+  totalTokensInput: integer("total_tokens_input").notNull().default(0),
+  totalTokensOutput: integer("total_tokens_output").notNull().default(0),
+  totalCost: text("total_cost"),
+  
+  // Time tracking
+  usageDate: timestamp("usage_date").notNull(),
+  
+  // Additional metadata
+  avgLatency: integer("avg_latency"),
+  errorCount: integer("error_count").notNull().default(0),
+  successCount: integer("success_count").notNull().default(0),
+  
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
 // Task Logs
 export const taskLogs = pgTable("task_logs", {
   id: serial("id").primaryKey(),
@@ -355,6 +381,7 @@ export const insertAiEntityReplacementSchema = createInsertSchema(aiEntityReplac
 export const insertAiContextRuleSchema = createInsertSchema(aiContextRules).omit({ id: true, createdAt: true });
 export const insertAiTrainingExampleSchema = createInsertSchema(aiTrainingExamples).omit({ id: true, createdAt: true, useCount: true });
 export const insertAiProcessingConfigSchema = createInsertSchema(aiProcessingConfig).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertAiUsageStatsSchema = createInsertSchema(aiUsageStats).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertTaskLogSchema = createInsertSchema(taskLogs).omit({ id: true, timestamp: true });
 export const insertErrorLogSchema = createInsertSchema(errorLogs).omit({ id: true, timestamp: true });
 export const insertTaskStatsSchema = createInsertSchema(taskStats).omit({ id: true });
@@ -417,6 +444,9 @@ export type InsertAiTrainingExample = z.infer<typeof insertAiTrainingExampleSche
 
 export type AiProcessingConfig = typeof aiProcessingConfig.$inferSelect;
 export type InsertAiProcessingConfig = z.infer<typeof insertAiProcessingConfigSchema>;
+
+export type AiUsageStats = typeof aiUsageStats.$inferSelect;
+export type InsertAiUsageStats = z.infer<typeof insertAiUsageStatsSchema>;
 
 export type TaskLog = typeof taskLogs.$inferSelect;
 export type InsertTaskLog = z.infer<typeof insertTaskLogSchema>;
