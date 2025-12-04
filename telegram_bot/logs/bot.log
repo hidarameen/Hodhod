@@ -16945,3 +16945,435 @@ openai.BadRequestError: Error code: 400 - {'error': {'message': "Unsupported par
 2025-12-04 21:04:51,775 - forwarding_engine - INFO - [2025-12-04 21:04:51.775] [INFO] [forwarding_engine::_process_message] Text length: 1003 chars | {}
 2025-12-04 21:04:52,220 - forwarding_engine - INFO - [2025-12-04 21:04:52.219] [INFO] [forwarding_engine::_process_message] Using provider: openai | {}
 2025-12-04 21:04:52,685 - forwarding_engine - INFO - [2025-12-04 21:04:52.685] [INFO] [forwarding_engine::_process_message] Using model: gpt-5-nano | {}
+2025-12-04 21:04:53,117 - forwarding_engine - INFO - [2025-12-04 21:04:53.117] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 21:04:53,579 - forwarding_engine - INFO - [2025-12-04 21:04:53.579] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 21:04:54,440 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 1003 | {}
+2025-12-04 21:04:54,451 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 0 | Sentiment: neutral | Keywords: 20 | Time: 0.010s | {}
+2025-12-04 21:04:54,451 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 0 | Sentiment: neutral | {}
+2025-12-04 21:04:54,905 - ai_rule_engine - INFO - [RuleEngine] Loaded 5 entity rules for task 4 from DB | {}
+2025-12-04 21:04:54,921 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 0 | {}
+2025-12-04 21:04:55,350 - ai_rule_engine - INFO - [RuleEngine] Loaded 0 context rules for task 4 from DB | {}
+2025-12-04 21:04:55,637 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 0 | Replacements: 0 | {}
+2025-12-04 21:04:57,722 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 400 Bad Request"
+2025-12-04 21:04:57,724 - ai_providers - INFO - OpenAI error: Error code: 400 - {'error': {'message': "Unsupported value: 'temperature' does not support 0.7 with this model. Only the default (1) value is supported.", 'type': 'invalid_request_error', 'param': 'temperature', 'code': 'unsupported_value'}} | {}
+2025-12-04 21:04:57,727 - ai_providers - ERROR - Error in openai_generate: Error code: 400 - {'error': {'message': "Unsupported value: 'temperature' does not support 0.7 with this model. Only the default (1) value is supported.", 'type': 'invalid_request_error', 'param': 'temperature', 'code': 'unsupported_value'}}
+Stack trace: Traceback (most recent call last):
+  File "/home/runner/workspace/telegram_bot/utils/error_handler.py", line 85, in async_wrapper
+    return await func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/telegram_bot/services/ai_providers.py", line 65, in generate_text
+    response = await self.client.chat.completions.create(**request_params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/venv/lib/python3.11/site-packages/openai/resources/chat/completions/completions.py", line 2672, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/venv/lib/python3.11/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/venv/lib/python3.11/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': "Unsupported value: 'temperature' does not support 0.7 with this model. Only the default (1) value is supported.", 'type': 'invalid_request_error', 'param': 'temperature', 'code': 'unsupported_value'}}
+
+2025-12-04 21:04:57,728 - ai_manager - ERROR - Error in generate: Error code: 400 - {'error': {'message': "Unsupported value: 'temperature' does not support 0.7 with this model. Only the default (1) value is supported.", 'type': 'invalid_request_error', 'param': 'temperature', 'code': 'unsupported_value'}}
+Stack trace: Traceback (most recent call last):
+  File "/home/runner/workspace/telegram_bot/utils/error_handler.py", line 85, in async_wrapper
+    return await func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/telegram_bot/services/ai_providers.py", line 307, in generate
+    return await self.providers[provider].generate_text(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/telegram_bot/utils/error_handler.py", line 85, in async_wrapper
+    return await func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/telegram_bot/services/ai_providers.py", line 65, in generate_text
+    response = await self.client.chat.completions.create(**request_params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/venv/lib/python3.11/site-packages/openai/resources/chat/completions/completions.py", line 2672, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/venv/lib/python3.11/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/venv/lib/python3.11/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': "Unsupported value: 'temperature' does not support 0.7 with this model. Only the default (1) value is supported.", 'type': 'invalid_request_error', 'param': 'temperature', 'code': 'unsupported_value'}}
+
+2025-12-04 21:04:57,728 - ai_pipeline - WARNING - [Pipeline] AI generation failed: Error code: 400 - {'error': {'message': "Unsupported value: 'temperature' does not support 0.7 with this model. Only the default (1) value is supported.", 'type': 'invalid_request_error', 'param': 'temperature', 'code': 'unsupported_value'}} | {}
+2025-12-04 21:04:57,728 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 1003 | {}
+2025-12-04 21:04:57,732 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 0.90 | {}
+2025-12-04 21:04:57,732 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 4.15s | Quality: 0.90 | Original: 1003 → Final: 992 chars | {}
+2025-12-04 21:04:57,732 - forwarding_engine - INFO - [2025-12-04 21:04:57.732] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 1003, 'final_length': 992, 'stages': 4, 'rules_applied': 0, 'quality_score': 0.9, 'total_time': '4.15s'} | {}
+2025-12-04 21:04:57,732 - forwarding_engine - INFO - [2025-12-04 21:04:57.732] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.01s) | {}
+2025-12-04 21:04:57,732 - forwarding_engine - INFO - [2025-12-04 21:04:57.732] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (1.19s) | {}
+2025-12-04 21:04:57,732 - forwarding_engine - INFO - [2025-12-04 21:04:57.732] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ❌ (2.09s) | {}
+2025-12-04 21:04:57,733 - forwarding_engine - INFO - [2025-12-04 21:04:57.733] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 21:04:58,159 - task_4 - INFO - AI Pipeline completed | From 1003 → 992 chars
+2025-12-04 21:04:59,012 - forwarding_engine - INFO - [2025-12-04 21:04:59.011] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 1003, 'processed_length': 992, 'total_reduction': 11, 'reduction_percent': 2, 'final_preview': 'مصادر: البحسني يقود تحركات تهدف لتفجير الصراع مع حلف قبائل حضرموت\n\nالمصدر / الموقع بوست\n\nhttps://almawqeapost.net/news/115646\n\nكشفت مصادر متطابقة، عن '} | {}
+2025-12-04 21:04:59,012 - forwarding_engine - INFO - [2025-12-04 21:04:59.012] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 21:04:59,012 - forwarding_engine - INFO - [2025-12-04 21:04:59.012] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2389, 'has_processed_text': True, 'task_id': 4} | {}
+2025-12-04 21:04:59,439 - forwarding_engine - INFO - [2025-12-04 21:04:59.439] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 21:04:59,439 - forwarding_engine - INFO - [2025-12-04 21:04:59.439] [INFO] [forwarding_engine::_forward_to_target] Applying publishing template as final step... | {}
+2025-12-04 21:05:01,728 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 400 Bad Request"
+2025-12-04 21:05:01,729 - ai_providers - INFO - OpenAI error: Error code: 400 - {'error': {'message': "Unsupported value: 'temperature' does not support 0.3 with this model. Only the default (1) value is supported.", 'type': 'invalid_request_error', 'param': 'temperature', 'code': 'unsupported_value'}} | {}
+2025-12-04 21:05:01,731 - ai_providers - ERROR - Error in openai_generate: Error code: 400 - {'error': {'message': "Unsupported value: 'temperature' does not support 0.3 with this model. Only the default (1) value is supported.", 'type': 'invalid_request_error', 'param': 'temperature', 'code': 'unsupported_value'}}
+Stack trace: Traceback (most recent call last):
+  File "/home/runner/workspace/telegram_bot/utils/error_handler.py", line 85, in async_wrapper
+    return await func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/telegram_bot/services/ai_providers.py", line 65, in generate_text
+    response = await self.client.chat.completions.create(**request_params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/venv/lib/python3.11/site-packages/openai/resources/chat/completions/completions.py", line 2672, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/venv/lib/python3.11/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/venv/lib/python3.11/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': "Unsupported value: 'temperature' does not support 0.3 with this model. Only the default (1) value is supported.", 'type': 'invalid_request_error', 'param': 'temperature', 'code': 'unsupported_value'}}
+
+2025-12-04 21:05:01,733 - ai_manager - ERROR - Error in generate: Error code: 400 - {'error': {'message': "Unsupported value: 'temperature' does not support 0.3 with this model. Only the default (1) value is supported.", 'type': 'invalid_request_error', 'param': 'temperature', 'code': 'unsupported_value'}}
+Stack trace: Traceback (most recent call last):
+  File "/home/runner/workspace/telegram_bot/utils/error_handler.py", line 85, in async_wrapper
+    return await func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/telegram_bot/services/ai_providers.py", line 307, in generate
+    return await self.providers[provider].generate_text(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/telegram_bot/utils/error_handler.py", line 85, in async_wrapper
+    return await func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/telegram_bot/services/ai_providers.py", line 65, in generate_text
+    response = await self.client.chat.completions.create(**request_params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/venv/lib/python3.11/site-packages/openai/resources/chat/completions/completions.py", line 2672, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/venv/lib/python3.11/site-packages/openai/_base_client.py", line 1794, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/venv/lib/python3.11/site-packages/openai/_base_client.py", line 1594, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': "Unsupported value: 'temperature' does not support 0.3 with this model. Only the default (1) value is supported.", 'type': 'invalid_request_error', 'param': 'temperature', 'code': 'unsupported_value'}}
+
+2025-12-04 21:05:01,734 - forwarding_engine - WARNING - [2025-12-04 21:05:01.734] [ERROR] [forwarding_engine::_extract_fields_with_ai] AI extraction error: Error code: 400 - {'error': {'message': "Unsupported value: 'temperature' does not support 0.3 with this model. Only the default (1) value is supported.", 'type': 'invalid_request_error', 'param': 'temperature', 'code': 'unsupported_value'}} | {}
+2025-12-04 21:05:01,734 - forwarding_engine - INFO - [2025-12-04 21:05:01.734] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التلخيص | Data: {'formatting': 'quote', 'original_length': 992, 'formatted_length': 1017, 'has_html_tags': True, 'formatted_preview': '<blockquote>مصادر: البحسني يقود تحركات تهدف لتفجير الصراع مع حلف قبائل حضرموت\n\nالمصدر / الموقع بوست\n'} | {}
+2025-12-04 21:05:01,735 - forwarding_engine - INFO - [2025-12-04 21:05:01.735] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التاريخ_ | Data: {'formatting': 'none', 'original_length': 10, 'formatted_length': 10, 'has_html_tags': False, 'formatted_preview': '2025-12-04'} | {}
+2025-12-04 21:05:01,735 - forwarding_engine - INFO - [2025-12-04 21:05:01.735] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المختص | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'حيدر '} | {}
+2025-12-04 21:05:01,735 - forwarding_engine - INFO - [2025-12-04 21:05:01.735] [INFO] [forwarding_engine::_apply_publishing_template] Template applied: تلخيص2 | Data: {'output_length': 1051, 'fields_count': 6, 'extracted_count': 6} | {}
+2025-12-04 21:05:01,736 - forwarding_engine - INFO - [2025-12-04 21:05:01.736] [INFO] [forwarding_engine::_forward_to_target] Template applied successfully | Data: {'original_length': 1003, 'final_length': 1051} | {}
+2025-12-04 21:05:01,893 - forwarding_engine - INFO - [2025-12-04 21:05:01.893] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 1003, 'final_length': 1125, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 21:05:01,893 - forwarding_engine - INFO - [2025-12-04 21:05:01.893] [INFO] [forwarding_engine::_forward_to_target] Sending text message... | Data: {'use_parse_mode': True, 'text_preview': '<blockquote>مصادر: البحسني يقود تحركات تهدف لتفجير الصراع مع حلف قبائل حضرموت\n\nالمصدر / الموقع بوست\n\nhttps://almawqeapost.net/news/115646\n\nكشفت مصادر متطابقة، عن تحركات يقودها عضو مجلس القيادة الرئاسي فرج البحسني، بهدف تفجير الصراع مع حلف قبائل حضرموت، بالتزامن مع إعلان اتفاق بين الحلف والسلطات المح', 'has_html_tags': True} | {}
+2025-12-04 21:05:02,137 - forwarding_engine - INFO - [2025-12-04 21:05:02.137] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 21:05:02,137 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 21:05:02,137 - forwarding_engine - INFO - [2025-12-04 21:05:02.137] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 21:05:03,440 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 21:05:03,440 - forwarding_engine - INFO - [2025-12-04 21:05:03.440] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 21:05:03,440 - main - INFO - [2025-12-04 21:05:03.440] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 21:07:42,765 - main - INFO - [2025-12-04 21:07:42.764] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2390, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 21:07:42,765 - main - INFO - [2025-12-04 21:07:42.765] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 21:07:43,052 - main - INFO - [2025-12-04 21:07:43.052] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 21:07:43,052 - main - INFO - [2025-12-04 21:07:43.052] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 21:07:43,335 - main - INFO - [2025-12-04 21:07:43.335] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 21:07:43,335 - main - INFO - [2025-12-04 21:07:43.335] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 21:07:43,335 - main - INFO - [2025-12-04 21:07:43.335] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 21:07:43,336 - forwarding_engine - INFO - [2025-12-04 21:07:43.335] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2390, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': True, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 21:07:43,336 - forwarding_engine - INFO - [2025-12-04 21:07:43.336] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 21:07:43,336 - forwarding_engine - INFO - [2025-12-04 21:07:43.336] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': True, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 21:07:43,336 - forwarding_engine - INFO - [2025-12-04 21:07:43.336] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 21:07:43,336 - forwarding_engine - INFO - [2025-12-04 21:07:43.336] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 21:07:43,336 - forwarding_engine - INFO - [2025-12-04 21:07:43.336] [INFO] [forwarding_engine::_process_message] Text length: 1003 chars | {}
+2025-12-04 21:07:43,618 - forwarding_engine - INFO - [2025-12-04 21:07:43.618] [INFO] [forwarding_engine::_process_message] Using provider: openai | {}
+2025-12-04 21:07:43,900 - forwarding_engine - INFO - [2025-12-04 21:07:43.900] [INFO] [forwarding_engine::_process_message] Using model: gpt-4.1-nano | {}
+2025-12-04 21:07:44,324 - forwarding_engine - INFO - [2025-12-04 21:07:44.324] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 21:07:44,747 - forwarding_engine - INFO - [2025-12-04 21:07:44.747] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 21:07:45,595 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 1003 | {}
+2025-12-04 21:07:45,596 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 0 | Sentiment: neutral | Keywords: 20 | Time: 0.001s | {}
+2025-12-04 21:07:45,597 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 0 | Sentiment: neutral | {}
+2025-12-04 21:07:46,021 - ai_rule_engine - INFO - [RuleEngine] Loaded 5 entity rules for task 4 from DB | {}
+2025-12-04 21:07:46,021 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 0 | {}
+2025-12-04 21:07:46,444 - ai_rule_engine - INFO - [RuleEngine] Loaded 0 context rules for task 4 from DB | {}
+2025-12-04 21:07:46,726 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 0 | Replacements: 0 | {}
+2025-12-04 21:07:49,185 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 21:07:49,193 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 301 | {}
+2025-12-04 21:07:49,194 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 1.00 | {}
+2025-12-04 21:07:49,194 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 4.45s | Quality: 1.00 | Original: 1003 → Final: 301 chars | {}
+2025-12-04 21:07:49,194 - forwarding_engine - INFO - [2025-12-04 21:07:49.194] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 1003, 'final_length': 301, 'stages': 4, 'rules_applied': 0, 'quality_score': 1.0, 'total_time': '4.45s'} | {}
+2025-12-04 21:07:49,194 - forwarding_engine - INFO - [2025-12-04 21:07:49.194] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.00s) | {}
+2025-12-04 21:07:49,194 - forwarding_engine - INFO - [2025-12-04 21:07:49.194] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (1.13s) | {}
+2025-12-04 21:07:49,194 - forwarding_engine - INFO - [2025-12-04 21:07:49.194] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (2.47s) | {}
+2025-12-04 21:07:49,194 - forwarding_engine - INFO - [2025-12-04 21:07:49.194] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 21:07:49,477 - task_4 - INFO - AI Pipeline completed | From 1003 → 301 chars
+2025-12-04 21:07:50,042 - forwarding_engine - INFO - [2025-12-04 21:07:50.042] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 1003, 'processed_length': 301, 'total_reduction': 702, 'reduction_percent': 70, 'final_preview': 'تشهد حضرموت توتراً متصاعداً مع تحركات يقودها فرج البحسني، عضو مجلس القيادة الرئاسي، بهدف زعزعة الاستقرار وإرباك التهدئة بين السلطة المحلية وحلف قبائل '} | {}
+2025-12-04 21:07:50,042 - forwarding_engine - INFO - [2025-12-04 21:07:50.042] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 21:07:50,042 - forwarding_engine - INFO - [2025-12-04 21:07:50.042] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2390, 'has_processed_text': True, 'task_id': 4} | {}
+2025-12-04 21:07:50,324 - forwarding_engine - INFO - [2025-12-04 21:07:50.324] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 21:07:50,325 - forwarding_engine - INFO - [2025-12-04 21:07:50.325] [INFO] [forwarding_engine::_forward_to_target] Applying publishing template as final step... | {}
+2025-12-04 21:07:52,497 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 21:07:52,499 - forwarding_engine - INFO - [2025-12-04 21:07:52.499] [DEBUG] [forwarding_engine::_extract_fields_with_ai] AI response received | Data: {'response_length': 69, 'response_preview': '{\n  "رقم_القيد": 1,\n  "التصنيف_:": "أمني",\n  "المحافظه_:": "حضرموت"\n}'} | {}
+2025-12-04 21:07:52,499 - forwarding_engine - INFO - [2025-12-04 21:07:52.499] [INFO] [forwarding_engine::_extract_fields_with_ai] AI extracted fields | Data: {'ai_extracted': {'رقم_القيد': 1, 'التصنيف_:': 'أمني', 'المحافظه_:': 'حضرموت'}} | {}
+2025-12-04 21:07:52,499 - forwarding_engine - INFO - [2025-12-04 21:07:52.499] [INFO] [forwarding_engine::_extract_fields_with_ai] Final extracted fields | Data: {'extracted': {'التلخيص': 'تشهد حضرموت توتراً متصاعداً مع تحركات يقودها فرج البحسني، عضو مجلس القيادة الرئاسي، بهدف زعزعة الاستقرار وإرباك التهدئة بين السلطة المحلية وحلف قبائل حضرموت، برعاية السعودية. هذه التحركات تشمل تحريك مجاميع مسلحة لاستهداف قوات حماية حضرموت، ما يهدد اتفاق السلام ويزيد من خطر الفوضى والصراع في المحافظة.', 'التاريخ_': '2025-12-04', 'المختص': 'حيدر ', 'رقم_القيد': 1, 'التصنيف_': '', 'المحافظه_': ''}} | {}
+2025-12-04 21:07:52,499 - forwarding_engine - INFO - [2025-12-04 21:07:52.499] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: رقم_القيد | Data: {'formatting': 'bold', 'original_length': 1, 'formatted_length': 8, 'has_html_tags': True, 'formatted_preview': '<b>1</b>'} | {}
+2025-12-04 21:07:52,499 - forwarding_engine - INFO - [2025-12-04 21:07:52.499] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التلخيص | Data: {'formatting': 'quote', 'original_length': 301, 'formatted_length': 326, 'has_html_tags': True, 'formatted_preview': '<blockquote>تشهد حضرموت توتراً متصاعداً مع تحركات يقودها فرج البحسني، عضو مجلس القيادة الرئاسي، بهدف'} | {}
+2025-12-04 21:07:52,499 - forwarding_engine - INFO - [2025-12-04 21:07:52.499] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التاريخ_ | Data: {'formatting': 'none', 'original_length': 10, 'formatted_length': 10, 'has_html_tags': False, 'formatted_preview': '2025-12-04'} | {}
+2025-12-04 21:07:52,500 - forwarding_engine - INFO - [2025-12-04 21:07:52.500] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المختص | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'حيدر '} | {}
+2025-12-04 21:07:52,501 - forwarding_engine - INFO - [2025-12-04 21:07:52.501] [INFO] [forwarding_engine::_apply_publishing_template] Template applied: تلخيص2 | Data: {'output_length': 380, 'fields_count': 6, 'extracted_count': 6} | {}
+2025-12-04 21:07:52,501 - forwarding_engine - INFO - [2025-12-04 21:07:52.501] [INFO] [forwarding_engine::_forward_to_target] Template applied successfully | Data: {'original_length': 1003, 'final_length': 380} | {}
+2025-12-04 21:07:52,694 - forwarding_engine - INFO - [2025-12-04 21:07:52.694] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 1003, 'final_length': 454, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 21:07:52,694 - forwarding_engine - INFO - [2025-12-04 21:07:52.694] [INFO] [forwarding_engine::_forward_to_target] Sending text message... | Data: {'use_parse_mode': True, 'text_preview': 'رقم القيد: <b>1</b>\n<blockquote>تشهد حضرموت توتراً متصاعداً مع تحركات يقودها فرج البحسني، عضو مجلس القيادة الرئاسي، بهدف زعزعة الاستقرار وإرباك التهدئة بين السلطة المحلية وحلف قبائل حضرموت، برعاية السعودية. هذه التحركات تشمل تحريك مجاميع مسلحة لاستهداف قوات حماية حضرموت، ما يهدد اتفاق السلام ويزيد م', 'has_html_tags': True} | {}
+2025-12-04 21:07:52,935 - forwarding_engine - INFO - [2025-12-04 21:07:52.935] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 21:07:52,936 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 21:07:52,936 - forwarding_engine - INFO - [2025-12-04 21:07:52.936] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 21:07:54,206 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 21:07:54,206 - forwarding_engine - INFO - [2025-12-04 21:07:54.206] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 21:07:54,206 - main - INFO - [2025-12-04 21:07:54.206] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 21:09:18,935 - main - INFO - [2025-12-04 21:09:18.934] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003110660765', 'chat_title': 'Test2', 'message_id': 5662, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 21:09:18,935 - main - INFO - [2025-12-04 21:09:18.935] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 21:09:19,221 - main - INFO - [2025-12-04 21:09:19.221] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 21:09:19,222 - main - INFO - [2025-12-04 21:09:19.222] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 21:09:19,508 - main - INFO - [2025-12-04 21:09:19.508] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003110660765', 'match': False} | {}
+2025-12-04 21:09:19,508 - main - INFO - [2025-12-04 21:09:19.508] [INFO] [message_handler::skip] No matching task for chat: Test2 | Data: {'chat_id': '-1003110660765'} | {}
+2025-12-04 21:09:48,860 - main - INFO - [2025-12-04 21:09:48.860] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1002166935097', 'chat_title': 'قناة المسيرة', 'message_id': 95827, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 21:09:48,861 - main - INFO - [2025-12-04 21:09:48.861] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 21:09:49,727 - main - INFO - [2025-12-04 21:09:49.727] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 21:09:49,727 - main - INFO - [2025-12-04 21:09:49.727] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 21:09:50,009 - main - INFO - [2025-12-04 21:09:50.009] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1002166935097', 'match': False} | {}
+2025-12-04 21:09:50,009 - main - INFO - [2025-12-04 21:09:50.009] [INFO] [message_handler::skip] No matching task for chat: قناة المسيرة | Data: {'chat_id': '-1002166935097'} | {}
+2025-12-04 21:10:22,172 - main - INFO - [2025-12-04 21:10:22.172] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1001470989107', 'chat_title': 'مُنوعاتٌ جهاديَّة', 'message_id': 166252, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 21:10:22,173 - main - INFO - [2025-12-04 21:10:22.173] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 21:10:22,457 - main - INFO - [2025-12-04 21:10:22.457] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 21:10:22,458 - main - INFO - [2025-12-04 21:10:22.458] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 21:10:24,246 - main - INFO - [2025-12-04 21:10:24.246] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1001470989107', 'match': False} | {}
+2025-12-04 21:10:24,248 - main - INFO - [2025-12-04 21:10:24.248] [INFO] [message_handler::skip] No matching task for chat: مُنوعاتٌ جهاديَّة | Data: {'chat_id': '-1001470989107'} | {}
+2025-12-04 21:11:11,376 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 21:11:11,376 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 21:11:11,380 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 21:11:11,382 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 21:11:11,384 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 21:11:11,386 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 21:11:11,390 - main - INFO - [2025-12-04 21:11:11.390] [INFO] [main::entry] Bot script started | {}
+2025-12-04 21:11:11,390 - main - INFO - [2025-12-04 21:11:11.390] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 21:11:11,435 - main - INFO - [2025-12-04 21:11:11.390] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-04 21:11:11,435 - main - INFO - [2025-12-04 21:11:11.435] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-04 21:11:13,811 - database - INFO - Database connected successfully | {}
+2025-12-04 21:11:14,239 - main - INFO - [2025-12-04 21:11:14.239] [INFO] [session::load] Found active session in database | {}
+2025-12-04 21:11:14,239 - main - INFO - [2025-12-04 21:11:14.239] [INFO] [main::init] Creating Pyrofork client | Data: {'api_id': 24343527, 'has_session': True, 'api_hash_set': True} | {}
+2025-12-04 21:11:15,999 - main - INFO - [2025-12-04 21:11:15.999] [INFO] [main::initialize_bot] Starting bot initialization... | {}
+2025-12-04 21:11:15,999 - main - INFO - [2025-12-04 21:11:15.999] [INFO] [database::connect] Connecting to database... | {}
+2025-12-04 21:11:17,827 - database - INFO - Database connected successfully | {}
+2025-12-04 21:11:17,827 - main - INFO - [2025-12-04 21:11:17.827] [INFO] [database::connect] Database connected successfully | {}
+2025-12-04 21:11:17,827 - main - INFO - [2025-12-04 21:11:17.827] [INFO] [ai_manager::init] Loading AI providers from database... | {}
+2025-12-04 21:11:18,254 - ai_providers - INFO - Loaded OpenAI provider from database | {}
+2025-12-04 21:11:18,255 - ai_providers - INFO - Loaded Groq provider from database | {}
+2025-12-04 21:11:18,255 - ai_providers - WARNING - No API key found for provider: claude | {}
+2025-12-04 21:11:18,255 - ai_providers - INFO - Loaded HuggingFace provider from database | {}
+2025-12-04 21:11:18,255 - main - INFO - [2025-12-04 21:11:18.255] [INFO] [ai_manager::init] AI providers loaded successfully | {}
+2025-12-04 21:11:18,255 - main - INFO - [2025-12-04 21:11:18.255] [INFO] [admin::check] Checking admin status for ID: 6556918772 | {}
+2025-12-04 21:11:18,685 - main - INFO - [2025-12-04 21:11:18.685] [INFO] [admin::check] Admin already exists: 6556918772 | {}
+2025-12-04 21:11:18,685 - main - INFO - [2025-12-04 21:11:18.685] [INFO] [forwarding_engine::init] Initializing forwarding engine... | {}
+2025-12-04 21:11:18,685 - forwarding_engine - INFO - [2025-12-04 21:11:18.685] [INFO] [forwarding_engine::__init__] Forwarding engine initialized | {}
+2025-12-04 21:11:18,685 - main - INFO - [2025-12-04 21:11:18.685] [INFO] [forwarding_engine::init] Forwarding engine initialized successfully | {}
+2025-12-04 21:11:18,685 - main - INFO - [2025-12-04 21:11:18.685] [INFO] [queue_manager::register] Registering job handlers... | {}
+2025-12-04 21:11:18,686 - queue_system - INFO - Registered handler for job type: forward | {}
+2025-12-04 21:11:18,687 - queue_system - INFO - Registered handler for job type: ai_process | {}
+2025-12-04 21:11:18,687 - queue_system - INFO - Registered handler for job type: video_process | {}
+2025-12-04 21:11:18,687 - main - INFO - [2025-12-04 21:11:18.687] [INFO] [queue_manager::register] All handlers registered: forward, ai_process, video_process | {}
+2025-12-04 21:11:18,687 - main - INFO - [2025-12-04 21:11:18.687] [INFO] [queue_manager::start] Starting queue manager... | {}
+2025-12-04 21:11:18,688 - queue_system - INFO - Queue manager started with 10 max workers | {}
+2025-12-04 21:11:18,688 - main - INFO - [2025-12-04 21:11:18.688] [INFO] [queue_manager::start] Queue manager started with 10 workers | {}
+2025-12-04 21:11:18,688 - main - INFO - [2025-12-04 21:11:18.688] [INFO] [tasks::load] Loading active tasks from database... | {}
+2025-12-04 21:11:19,115 - main - INFO - [2025-12-04 21:11:19.115] [INFO] [tasks::load] Found 1 tasks in database | {}
+2025-12-04 21:11:19,115 - main - INFO - [2025-12-04 21:11:19.115] [INFO] [tasks::check] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'is_active': True, 'source_channels': [4], 'target_channels': [5]} | {}
+2025-12-04 21:11:19,115 - forwarding_engine - INFO - [2025-12-04 21:11:19.115] [INFO] [forwarding_engine::start_task_monitoring] Started monitoring task 4 | {}
+2025-12-04 21:11:19,115 - main - INFO - [2025-12-04 21:11:19.115] [INFO] [tasks::monitor] Started monitoring task: توجيه الأخبار  | Data: {'task_id': 4} | {}
+2025-12-04 21:11:19,115 - main - INFO - [2025-12-04 21:11:19.115] [INFO] [tasks::load] Loaded 1 active tasks for monitoring | {}
+2025-12-04 21:11:19,115 - main - INFO - [2025-12-04 21:11:19.115] [INFO] [main::initialize_bot] ✅ Bot initialization completed successfully | {}
+2025-12-04 21:11:19,115 - main - INFO - [2025-12-04 21:11:19.115] [INFO] [pyrogram::start] Starting Pyrofork userbot client... | {}
+2025-12-04 21:11:19,320 - pyrogram.connection.connection - INFO - Connecting...
+2025-12-04 21:11:19,463 - pyrogram.connection.connection - INFO - Connected! Production DC4 - IPv4
+2025-12-04 21:11:19,464 - pyrogram.session.session - INFO - NetworkTask started
+2025-12-04 21:11:20,129 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-12-04 21:11:20,130 - pyrogram.session.session - INFO - Device: CPython 3.11.13 - Pyrogram 2.0.106
+2025-12-04 21:11:20,130 - pyrogram.session.session - INFO - System: Linux 6.14.11 (en)
+2025-12-04 21:11:20,130 - pyrogram.session.session - INFO - Session started
+2025-12-04 21:11:20,132 - pyrogram.session.session - INFO - PingTask started
+2025-12-04 21:11:20,477 - pyrogram.dispatcher - INFO - Started 12 HandlerTasks
+2025-12-04 21:11:20,649 - main - INFO - [2025-12-04 21:11:20.648] [INFO] [pyrogram::connected] ✅ Userbot connected to Telegram | Data: {'user_id': 6660878563, 'username': 'Sheyyeeuu', 'first_name': 'Amir'} | {}
+2025-12-04 21:11:20,649 - main - INFO - [2025-12-04 21:11:20.649] [INFO] [handlers::register] Registering message handlers... | {}
+2025-12-04 21:11:20,649 - main - INFO - [2025-12-04 21:11:20.649] [INFO] [handlers::register] ✅ All handlers registered successfully | {}
+2025-12-04 21:11:20,649 - main - INFO - [2025-12-04 21:11:20.649] [INFO] [warmup::post_connect] Starting post-connection warmup... | {}
+2025-12-04 21:11:20,649 - main - INFO - [2025-12-04 21:11:20.649] [INFO] [warmup::start] Starting channel peer warmup... | {}
+2025-12-04 21:11:20,649 - main - INFO - [2025-12-04 21:11:20.649] [INFO] [warmup::dialogs] Loading all dialogs to populate peer cache... | {}
+2025-12-04 21:11:21,420 - pyrogram.session.session - WARNING - [userbot_forwarder] Waiting for 9 seconds before continuing (required by "channels.GetMessages")
+2025-12-04 21:11:31,308 - main - INFO - [2025-12-04 21:11:31.308] [DEBUG] [warmup::dialogs] Loaded 50 dialogs... | {}
+2025-12-04 21:11:31,309 - main - INFO - [2025-12-04 21:11:31.309] [DEBUG] [warmup::dialogs] Loaded 100 dialogs... | {}
+2025-12-04 21:11:32,110 - main - INFO - [2025-12-04 21:11:32.109] [DEBUG] [warmup::dialogs] Loaded 150 dialogs... | {}
+2025-12-04 21:11:32,279 - main - INFO - [2025-12-04 21:11:32.279] [INFO] [warmup::dialogs] ✅ Cached 172 dialogs in peer cache | {}
+2025-12-04 21:11:32,706 - main - INFO - [2025-12-04 21:11:32.705] [INFO] [warmup::channels] Found 2 channels to verify | {}
+2025-12-04 21:11:32,706 - main - INFO - [2025-12-04 21:11:32.706] [INFO] [warmup::cached] ✅ اختبار 1 already in peer cache | {}
+2025-12-04 21:11:32,707 - main - INFO - [2025-12-04 21:11:32.706] [INFO] [warmup::cached] ✅ اختبار 2 already in peer cache | {}
+2025-12-04 21:11:32,707 - main - INFO - [2025-12-04 21:11:32.707] [INFO] [warmup::complete] ✅ Warmup complete: 2 success, 0 failed | {}
+2025-12-04 21:11:32,709 - main - INFO - [2025-12-04 21:11:32.708] [INFO] [main::idle] Userbot is now running and waiting for messages... | {}
+2025-12-04 21:11:33,453 - main - INFO - [2025-12-04 21:11:33.453] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003110660765', 'chat_title': 'Test2', 'message_id': 5663, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 21:11:33,453 - main - INFO - [2025-12-04 21:11:33.453] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 21:11:33,737 - main - INFO - [2025-12-04 21:11:33.737] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 21:11:33,737 - main - INFO - [2025-12-04 21:11:33.737] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 21:11:34,163 - main - INFO - [2025-12-04 21:11:34.163] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003110660765', 'match': False} | {}
+2025-12-04 21:11:34,163 - main - INFO - [2025-12-04 21:11:34.163] [INFO] [message_handler::skip] No matching task for chat: Test2 | Data: {'chat_id': '-1003110660765'} | {}
+2025-12-04 21:12:03,986 - main - INFO - [2025-12-04 21:12:03.986] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2391, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 21:12:03,987 - main - INFO - [2025-12-04 21:12:03.987] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 21:12:04,270 - main - INFO - [2025-12-04 21:12:04.270] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 21:12:04,271 - main - INFO - [2025-12-04 21:12:04.271] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 21:12:04,555 - main - INFO - [2025-12-04 21:12:04.555] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 21:12:04,555 - main - INFO - [2025-12-04 21:12:04.555] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 21:12:04,555 - main - INFO - [2025-12-04 21:12:04.555] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 21:12:04,555 - forwarding_engine - INFO - [2025-12-04 21:12:04.555] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2391, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': True, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 21:12:04,555 - forwarding_engine - INFO - [2025-12-04 21:12:04.555] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 21:12:04,555 - forwarding_engine - INFO - [2025-12-04 21:12:04.555] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': True, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 21:12:04,558 - forwarding_engine - INFO - [2025-12-04 21:12:04.557] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 21:12:04,558 - forwarding_engine - INFO - [2025-12-04 21:12:04.558] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 21:12:04,558 - forwarding_engine - INFO - [2025-12-04 21:12:04.558] [INFO] [forwarding_engine::_process_message] Text length: 1045 chars | {}
+2025-12-04 21:12:05,036 - forwarding_engine - INFO - [2025-12-04 21:12:05.036] [INFO] [forwarding_engine::_process_message] Using provider: openai | {}
+2025-12-04 21:12:05,462 - forwarding_engine - INFO - [2025-12-04 21:12:05.462] [INFO] [forwarding_engine::_process_message] Using model: gpt-4.1-nano | {}
+2025-12-04 21:12:05,890 - forwarding_engine - INFO - [2025-12-04 21:12:05.890] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 21:12:06,316 - forwarding_engine - INFO - [2025-12-04 21:12:06.316] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 21:12:07,167 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 1045 | {}
+2025-12-04 21:12:07,173 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 1 | Sentiment: neutral | Keywords: 20 | Time: 0.006s | {}
+2025-12-04 21:12:07,174 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 1 | Sentiment: neutral | {}
+2025-12-04 21:12:07,601 - ai_rule_engine - INFO - [RuleEngine] Loaded 5 entity rules for task 4 from DB | {}
+2025-12-04 21:12:07,601 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 0 | {}
+2025-12-04 21:12:08,027 - ai_rule_engine - INFO - [RuleEngine] Loaded 0 context rules for task 4 from DB | {}
+2025-12-04 21:12:08,312 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 0 | Replacements: 0 | {}
+2025-12-04 21:12:11,191 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 21:12:11,203 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 265 | {}
+2025-12-04 21:12:11,206 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 1.00 | {}
+2025-12-04 21:12:11,206 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 4.89s | Quality: 1.00 | Original: 1045 → Final: 265 chars | {}
+2025-12-04 21:12:11,206 - forwarding_engine - INFO - [2025-12-04 21:12:11.206] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 1045, 'final_length': 265, 'stages': 4, 'rules_applied': 0, 'quality_score': 1.0, 'total_time': '4.89s'} | {}
+2025-12-04 21:12:11,206 - forwarding_engine - INFO - [2025-12-04 21:12:11.206] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.01s) | {}
+2025-12-04 21:12:11,206 - forwarding_engine - INFO - [2025-12-04 21:12:11.206] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (1.14s) | {}
+2025-12-04 21:12:11,206 - forwarding_engine - INFO - [2025-12-04 21:12:11.206] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (2.89s) | {}
+2025-12-04 21:12:11,207 - forwarding_engine - INFO - [2025-12-04 21:12:11.207] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 21:12:11,633 - task_4 - INFO - AI Pipeline completed | From 1045 → 265 chars
+2025-12-04 21:12:12,488 - forwarding_engine - INFO - [2025-12-04 21:12:12.488] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 1045, 'processed_length': 265, 'total_reduction': 780, 'reduction_percent': 75, 'final_preview': 'تُشير مصادر إلى أن فرج البحسني، نائب رئيس المجلس الانتقالي، يقود تحركات لزيادة التوتر مع حلف قبائل حضرموت، رغم توقيع اتفاق بين الطرفين برعاية السعودية'} | {}
+2025-12-04 21:12:12,488 - forwarding_engine - INFO - [2025-12-04 21:12:12.488] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 21:12:12,489 - forwarding_engine - INFO - [2025-12-04 21:12:12.488] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2391, 'has_processed_text': True, 'task_id': 4} | {}
+2025-12-04 21:12:12,773 - forwarding_engine - INFO - [2025-12-04 21:12:12.773] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 21:12:12,773 - forwarding_engine - INFO - [2025-12-04 21:12:12.773] [INFO] [forwarding_engine::_forward_to_target] Applying publishing template as final step... | {}
+2025-12-04 21:12:13,626 - forwarding_engine - INFO - [2025-12-04 21:12:13.626] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: رقم_القيد | {}
+2025-12-04 21:12:13,626 - forwarding_engine - INFO - [2025-12-04 21:12:13.626] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: التصنيف_ | {}
+2025-12-04 21:12:13,626 - forwarding_engine - INFO - [2025-12-04 21:12:13.626] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: المحافظه_ | {}
+2025-12-04 21:12:13,626 - forwarding_engine - INFO - [2025-12-04 21:12:13.626] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Auto-populated summary: التلخيص | {}
+2025-12-04 21:12:13,626 - forwarding_engine - INFO - [2025-12-04 21:12:13.626] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Set date field: التاريخ_ = 2025-12-04 | {}
+2025-12-04 21:12:13,627 - forwarding_engine - INFO - [2025-12-04 21:12:13.627] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Set static field: المختص = حيدر  | {}
+2025-12-04 21:12:13,627 - forwarding_engine - INFO - [2025-12-04 21:12:13.627] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: المصدر_ | {}
+2025-12-04 21:12:15,360 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 21:12:15,361 - forwarding_engine - INFO - [2025-12-04 21:12:15.361] [DEBUG] [forwarding_engine::_extract_fields_with_ai] AI response received | Data: {'response_length': 115, 'response_preview': '{\n  "رقم_القيد": "",\n  "التصنيف_:": "سياسي أمني",\n  "المحافظه_:": "حضرموت",\n  "المصدر_:": "مصادر إعلامية وتقارير"\n}'} | {}
+2025-12-04 21:12:15,361 - forwarding_engine - INFO - [2025-12-04 21:12:15.361] [INFO] [forwarding_engine::_extract_fields_with_ai] AI extracted fields | Data: {'ai_extracted': {'رقم_القيد': '', 'التصنيف_:': 'سياسي أمني', 'المحافظه_:': 'حضرموت', 'المصدر_:': 'مصادر إعلامية وتقارير'}} | {}
+2025-12-04 21:12:15,361 - forwarding_engine - INFO - [2025-12-04 21:12:15.361] [INFO] [forwarding_engine::_extract_fields_with_ai] Final extracted fields | Data: {'extracted': {'التلخيص': 'تُشير مصادر إلى أن فرج البحسني، نائب رئيس المجلس الانتقالي، يقود تحركات لزيادة التوتر مع حلف قبائل حضرموت، رغم توقيع اتفاق بين الطرفين برعاية السعودية. وتُحذر التقارير من محاولات لاستهداف قوات حضرموت ودفع الوضع نحو الانفجار، مما يهدد استقرار المحافظة وجهود التهدئة.', 'التاريخ_': '2025-12-04', 'المختص': 'حيدر ', 'رقم_القيد': '', 'التصنيف_': '', 'المحافظه_': '', 'المصدر_': ''}} | {}
+2025-12-04 21:12:15,363 - forwarding_engine - INFO - [2025-12-04 21:12:15.362] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: رقم_القيد | Data: {'has_value': False, 'value_preview': 'empty', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:12:15,363 - forwarding_engine - INFO - [2025-12-04 21:12:15.363] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التصنيف_ | Data: {'has_value': False, 'value_preview': 'empty', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:12:15,364 - forwarding_engine - INFO - [2025-12-04 21:12:15.364] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المحافظه_ | Data: {'has_value': False, 'value_preview': 'empty', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:12:15,364 - forwarding_engine - INFO - [2025-12-04 21:12:15.364] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التلخيص | Data: {'has_value': True, 'value_preview': 'تُشير مصادر إلى أن فرج البحسني، نائب رئيس المجلس ا', 'field_type': 'summary', 'use_default_if_empty': True} | {}
+2025-12-04 21:12:15,364 - forwarding_engine - INFO - [2025-12-04 21:12:15.364] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التلخيص | Data: {'formatting': 'quote', 'original_length': 265, 'formatted_length': 290, 'has_html_tags': True, 'formatted_preview': '<blockquote>تُشير مصادر إلى أن فرج البحسني، نائب رئيس المجلس الانتقالي، يقود تحركات لزيادة التوتر مع'} | {}
+2025-12-04 21:12:15,365 - forwarding_engine - INFO - [2025-12-04 21:12:15.365] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التاريخ_ | Data: {'has_value': True, 'value_preview': '2025-12-04', 'field_type': 'date_today', 'use_default_if_empty': True} | {}
+2025-12-04 21:12:15,365 - forwarding_engine - INFO - [2025-12-04 21:12:15.365] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التاريخ_ | Data: {'formatting': 'none', 'original_length': 10, 'formatted_length': 10, 'has_html_tags': False, 'formatted_preview': '2025-12-04'} | {}
+2025-12-04 21:12:15,366 - forwarding_engine - INFO - [2025-12-04 21:12:15.366] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المختص | Data: {'has_value': True, 'value_preview': 'حيدر ', 'field_type': 'static', 'use_default_if_empty': True} | {}
+2025-12-04 21:12:15,366 - forwarding_engine - INFO - [2025-12-04 21:12:15.366] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المختص | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'حيدر '} | {}
+2025-12-04 21:12:15,366 - forwarding_engine - INFO - [2025-12-04 21:12:15.366] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المصدر_ | Data: {'has_value': False, 'value_preview': 'empty', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:12:15,367 - forwarding_engine - INFO - [2025-12-04 21:12:15.367] [INFO] [forwarding_engine::_apply_publishing_template] Template applied: تلخيص2 | Data: {'output_length': 324, 'fields_count': 7, 'extracted_count': 7} | {}
+2025-12-04 21:12:15,368 - forwarding_engine - INFO - [2025-12-04 21:12:15.367] [INFO] [forwarding_engine::_forward_to_target] Template applied successfully | Data: {'original_length': 1045, 'final_length': 324} | {}
+2025-12-04 21:12:15,522 - forwarding_engine - INFO - [2025-12-04 21:12:15.522] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 1045, 'final_length': 398, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 21:12:15,523 - forwarding_engine - INFO - [2025-12-04 21:12:15.523] [INFO] [forwarding_engine::_forward_to_target] Sending text message... | Data: {'use_parse_mode': True, 'text_preview': '<blockquote>تُشير مصادر إلى أن فرج البحسني، نائب رئيس المجلس الانتقالي، يقود تحركات لزيادة التوتر مع حلف قبائل حضرموت، رغم توقيع اتفاق بين الطرفين برعاية السعودية. وتُحذر التقارير من محاولات لاستهداف قوات حضرموت ودفع الوضع نحو الانفجار، مما يهدد استقرار المحافظة وجهود التهدئة.</blockquote>\nالتاريخ :', 'has_html_tags': True} | {}
+2025-12-04 21:12:15,763 - forwarding_engine - INFO - [2025-12-04 21:12:15.763] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 21:12:15,763 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 21:12:15,763 - forwarding_engine - INFO - [2025-12-04 21:12:15.763] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 21:12:17,041 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 21:12:17,041 - forwarding_engine - INFO - [2025-12-04 21:12:17.041] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 21:12:17,041 - main - INFO - [2025-12-04 21:12:17.041] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 21:12:46,839 - main - INFO - [2025-12-04 21:12:46.838] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2392, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 21:12:46,841 - main - INFO - [2025-12-04 21:12:46.839] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 21:12:47,182 - main - INFO - [2025-12-04 21:12:47.182] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 21:12:47,182 - main - INFO - [2025-12-04 21:12:47.182] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 21:12:47,467 - main - INFO - [2025-12-04 21:12:47.467] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 21:12:47,467 - main - INFO - [2025-12-04 21:12:47.467] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 21:12:47,467 - main - INFO - [2025-12-04 21:12:47.467] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 21:12:47,467 - forwarding_engine - INFO - [2025-12-04 21:12:47.467] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2392, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': True, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 21:12:47,467 - forwarding_engine - INFO - [2025-12-04 21:12:47.467] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 21:12:47,467 - forwarding_engine - INFO - [2025-12-04 21:12:47.467] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': True, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 21:12:47,467 - forwarding_engine - INFO - [2025-12-04 21:12:47.467] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 21:12:47,467 - forwarding_engine - INFO - [2025-12-04 21:12:47.467] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 21:12:47,468 - forwarding_engine - INFO - [2025-12-04 21:12:47.468] [INFO] [forwarding_engine::_process_message] Text length: 1045 chars | {}
+2025-12-04 21:12:47,753 - forwarding_engine - INFO - [2025-12-04 21:12:47.752] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 21:12:48,037 - forwarding_engine - INFO - [2025-12-04 21:12:48.037] [INFO] [forwarding_engine::_process_message] Using model: qwen/qwen3-32b | {}
+2025-12-04 21:12:48,322 - forwarding_engine - INFO - [2025-12-04 21:12:48.322] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 21:12:48,607 - forwarding_engine - INFO - [2025-12-04 21:12:48.607] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 21:12:49,181 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 1045 | {}
+2025-12-04 21:12:49,184 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 1 | Sentiment: neutral | Keywords: 20 | Time: 0.002s | {}
+2025-12-04 21:12:49,184 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 1 | Sentiment: neutral | {}
+2025-12-04 21:12:49,469 - ai_rule_engine - INFO - [RuleEngine] Loaded 5 entity rules for task 4 from DB | {}
+2025-12-04 21:12:49,470 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 0 | {}
+2025-12-04 21:12:49,755 - ai_rule_engine - INFO - [RuleEngine] Loaded 0 context rules for task 4 from DB | {}
+2025-12-04 21:12:50,040 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 0 | Replacements: 0 | {}
+2025-12-04 21:12:50,086 - ai_providers - INFO - [Groq] Starting request | Model: qwen/qwen3-32b | Max Tokens: 522 | Temperature: 0.7 | Input length: 1583 chars | {}
+2025-12-04 21:12:51,158 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 21:12:59,482 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 21:12:59,483 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 21:12:59,538 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 21:12:59,540 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 21:12:59,543 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 21:12:59,545 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 21:12:59,548 - main - INFO - [2025-12-04 21:12:59.548] [INFO] [main::entry] Bot script started | {}
+2025-12-04 21:12:59,548 - main - INFO - [2025-12-04 21:12:59.548] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 21:12:59,549 - main - INFO - [2025-12-04 21:12:59.549] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-04 21:12:59,549 - main - INFO - [2025-12-04 21:12:59.549] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-04 21:13:01,832 - database - INFO - Database connected successfully | {}
+2025-12-04 21:13:02,279 - main - INFO - [2025-12-04 21:13:02.278] [INFO] [session::load] Found active session in database | {}
+2025-12-04 21:13:02,279 - main - INFO - [2025-12-04 21:13:02.279] [INFO] [main::init] Creating Pyrofork client | Data: {'api_id': 24343527, 'has_session': True, 'api_hash_set': True} | {}
+2025-12-04 21:13:04,061 - main - INFO - [2025-12-04 21:13:04.061] [INFO] [main::initialize_bot] Starting bot initialization... | {}
+2025-12-04 21:13:04,061 - main - INFO - [2025-12-04 21:13:04.061] [INFO] [database::connect] Connecting to database... | {}
+2025-12-04 21:13:05,892 - database - INFO - Database connected successfully | {}
+2025-12-04 21:13:05,892 - main - INFO - [2025-12-04 21:13:05.892] [INFO] [database::connect] Database connected successfully | {}
+2025-12-04 21:13:05,892 - main - INFO - [2025-12-04 21:13:05.892] [INFO] [ai_manager::init] Loading AI providers from database... | {}
+2025-12-04 21:13:06,322 - ai_providers - INFO - Loaded OpenAI provider from database | {}
+2025-12-04 21:13:06,322 - ai_providers - INFO - Loaded Groq provider from database | {}
+2025-12-04 21:13:06,322 - ai_providers - WARNING - No API key found for provider: claude | {}
+2025-12-04 21:13:06,322 - ai_providers - INFO - Loaded HuggingFace provider from database | {}
+2025-12-04 21:13:06,322 - main - INFO - [2025-12-04 21:13:06.322] [INFO] [ai_manager::init] AI providers loaded successfully | {}
+2025-12-04 21:13:06,322 - main - INFO - [2025-12-04 21:13:06.322] [INFO] [admin::check] Checking admin status for ID: 6556918772 | {}
+2025-12-04 21:13:06,755 - main - INFO - [2025-12-04 21:13:06.755] [INFO] [admin::check] Admin already exists: 6556918772 | {}
+2025-12-04 21:13:06,755 - main - INFO - [2025-12-04 21:13:06.755] [INFO] [forwarding_engine::init] Initializing forwarding engine... | {}
+2025-12-04 21:13:06,755 - forwarding_engine - INFO - [2025-12-04 21:13:06.755] [INFO] [forwarding_engine::__init__] Forwarding engine initialized | {}
+2025-12-04 21:13:06,755 - main - INFO - [2025-12-04 21:13:06.755] [INFO] [forwarding_engine::init] Forwarding engine initialized successfully | {}
+2025-12-04 21:13:06,755 - main - INFO - [2025-12-04 21:13:06.755] [INFO] [queue_manager::register] Registering job handlers... | {}
+2025-12-04 21:13:06,755 - queue_system - INFO - Registered handler for job type: forward | {}
+2025-12-04 21:13:06,755 - queue_system - INFO - Registered handler for job type: ai_process | {}
+2025-12-04 21:13:06,755 - queue_system - INFO - Registered handler for job type: video_process | {}
+2025-12-04 21:13:06,755 - main - INFO - [2025-12-04 21:13:06.755] [INFO] [queue_manager::register] All handlers registered: forward, ai_process, video_process | {}
+2025-12-04 21:13:06,755 - main - INFO - [2025-12-04 21:13:06.755] [INFO] [queue_manager::start] Starting queue manager... | {}
+2025-12-04 21:13:06,756 - queue_system - INFO - Queue manager started with 10 max workers | {}
+2025-12-04 21:13:06,757 - main - INFO - [2025-12-04 21:13:06.756] [INFO] [queue_manager::start] Queue manager started with 10 workers | {}
+2025-12-04 21:13:06,757 - main - INFO - [2025-12-04 21:13:06.757] [INFO] [tasks::load] Loading active tasks from database... | {}
+2025-12-04 21:13:07,185 - main - INFO - [2025-12-04 21:13:07.185] [INFO] [tasks::load] Found 1 tasks in database | {}
+2025-12-04 21:13:07,186 - main - INFO - [2025-12-04 21:13:07.185] [INFO] [tasks::check] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'is_active': True, 'source_channels': [4], 'target_channels': [5]} | {}
+2025-12-04 21:13:07,187 - forwarding_engine - INFO - [2025-12-04 21:13:07.187] [INFO] [forwarding_engine::start_task_monitoring] Started monitoring task 4 | {}
+2025-12-04 21:13:07,187 - main - INFO - [2025-12-04 21:13:07.187] [INFO] [tasks::monitor] Started monitoring task: توجيه الأخبار  | Data: {'task_id': 4} | {}
+2025-12-04 21:13:07,187 - main - INFO - [2025-12-04 21:13:07.187] [INFO] [tasks::load] Loaded 1 active tasks for monitoring | {}
+2025-12-04 21:13:07,188 - main - INFO - [2025-12-04 21:13:07.188] [INFO] [main::initialize_bot] ✅ Bot initialization completed successfully | {}
+2025-12-04 21:13:07,188 - main - INFO - [2025-12-04 21:13:07.188] [INFO] [pyrogram::start] Starting Pyrofork userbot client... | {}
+2025-12-04 21:13:07,421 - pyrogram.connection.connection - INFO - Connecting...
+2025-12-04 21:13:07,563 - pyrogram.connection.connection - INFO - Connected! Production DC4 - IPv4
+2025-12-04 21:13:07,564 - pyrogram.session.session - INFO - NetworkTask started
+2025-12-04 21:13:08,293 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-12-04 21:13:08,293 - pyrogram.session.session - INFO - Device: CPython 3.11.13 - Pyrogram 2.0.106
+2025-12-04 21:13:08,293 - pyrogram.session.session - INFO - System: Linux 6.14.11 (en)
+2025-12-04 21:13:08,293 - pyrogram.session.session - INFO - Session started
+2025-12-04 21:13:08,295 - pyrogram.session.session - INFO - PingTask started
+2025-12-04 21:13:08,622 - pyrogram.dispatcher - INFO - Started 12 HandlerTasks
+2025-12-04 21:13:08,781 - main - INFO - [2025-12-04 21:13:08.781] [INFO] [pyrogram::connected] ✅ Userbot connected to Telegram | Data: {'user_id': 6660878563, 'username': 'Sheyyeeuu', 'first_name': 'Amir'} | {}
+2025-12-04 21:13:08,781 - main - INFO - [2025-12-04 21:13:08.781] [INFO] [handlers::register] Registering message handlers... | {}
+2025-12-04 21:13:08,781 - main - INFO - [2025-12-04 21:13:08.781] [INFO] [handlers::register] ✅ All handlers registered successfully | {}
+2025-12-04 21:13:08,781 - main - INFO - [2025-12-04 21:13:08.781] [INFO] [warmup::post_connect] Starting post-connection warmup... | {}
+2025-12-04 21:13:08,781 - main - INFO - [2025-12-04 21:13:08.781] [INFO] [warmup::start] Starting channel peer warmup... | {}
+2025-12-04 21:13:08,782 - main - INFO - [2025-12-04 21:13:08.782] [INFO] [warmup::dialogs] Loading all dialogs to populate peer cache... | {}
+2025-12-04 21:13:09,555 - pyrogram.session.session - WARNING - [userbot_forwarder] Waiting for 21 seconds before continuing (required by "channels.GetMessages")

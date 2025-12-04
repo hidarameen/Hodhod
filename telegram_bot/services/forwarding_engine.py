@@ -832,18 +832,40 @@ class ForwardingEngine:
             if field_type == "summary" or field_type == "content":
                 # Summary/Content is the processed text itself (original or summarized message)
                 extracted[field_name] = text
+                log_detailed("debug", "forwarding_engine", "_extract_fields_with_ai",
+                            f"Auto-populated {field_type}: {field_name}")
             elif field_type == "date_today":
                 # Use today's date
                 extracted[field_name] = datetime.now().strftime("%Y-%m-%d")
+                log_detailed("debug", "forwarding_engine", "_extract_fields_with_ai",
+                            f"Set date field: {field_name} = {extracted[field_name]}")
             elif field_type == "date_time":
                 # Use current date and time
                 extracted[field_name] = datetime.now().strftime("%Y-%m-%d %H:%M")
+                log_detailed("debug", "forwarding_engine", "_extract_fields_with_ai",
+                            f"Set datetime field: {field_name} = {extracted[field_name]}")
             elif field_type == "static":
                 # Use default value as static
                 extracted[field_name] = field.get("default_value", "")
+                log_detailed("debug", "forwarding_engine", "_extract_fields_with_ai",
+                            f"Set static field: {field_name} = {extracted[field_name]}")
             elif field_type == "extracted":
-                # Need AI extraction
-                fields_to_extract.append(field)
+                # Need AI extraction only if has instructions
+                extraction_instructions = field.get("extraction_instructions", "").strip()
+                if extraction_instructions:
+                    fields_to_extract.append(field)
+                    log_detailed("debug", "forwarding_engine", "_extract_fields_with_ai",
+                                f"Will extract: {field_name}")
+                else:
+                    # No extraction instructions - use default or leave empty
+                    if field.get("use_default_if_empty") and field.get("default_value"):
+                        extracted[field_name] = field.get("default_value", "")
+                        log_detailed("debug", "forwarding_engine", "_extract_fields_with_ai",
+                                    f"No extraction instructions, using default: {field_name}")
+                    else:
+                        extracted[field_name] = ""
+                        log_detailed("debug", "forwarding_engine", "_extract_fields_with_ai",
+                                    f"No extraction instructions and no default: {field_name}")
         
         # Extract fields using AI if needed
         if fields_to_extract and ai_manager:
@@ -890,6 +912,12 @@ class ForwardingEngine:
                         model_name = model_info["model_name"]
                 
                 # Call AI to extract fields - use generate method (not generate_text)
+                log_detailed("debug", "forwarding_engine", "_extract_fields_with_ai",
+                            f"Extracting fields with {provider_name}/{model_name}", {
+                                "fields_count": len(fields_to_extract),
+                                "prompt_length": len(extraction_prompt)
+                            })
+                
                 ai_response = await ai_manager.generate(
                     provider=provider_name,
                     model=model_name,
@@ -1002,17 +1030,29 @@ class ForwardingEngine:
                 # Get the extracted value
                 value = extracted_data.get(field_name, "")
                 
+                # Fallback to default if no value
                 if not value and field.get("use_default_if_empty"):
                     value = field.get("default_value", "")
                 
-                if value:
-                    # Apply formatting to the value
-                    formatted_value = self._apply_formatting(str(value), formatting)
+                # Log field extraction status
+                log_detailed("debug", "forwarding_engine", "_apply_publishing_template",
+                            f"Processing field: {field_name}", {
+                                "has_value": bool(value),
+                                "value_preview": str(value)[:50] if value else "empty",
+                                "field_type": field.get("field_type", "extracted"),
+                                "use_default_if_empty": field.get("use_default_if_empty")
+                            })
+                
+                # Always add field if it has a value (including empty string defaults)
+                # Skip only if completely empty AND no default
+                if value or (field.get("use_default_if_empty") and field.get("default_value")):
+                    # Convert to string and apply formatting
+                    formatted_value = self._apply_formatting(str(value), formatting) if value else ""
                     
                     log_detailed("debug", "forwarding_engine", "_apply_publishing_template",
                                 f"Field formatted: {field_name}", {
                                     "formatting": formatting,
-                                    "original_length": len(str(value)),
+                                    "original_length": len(str(value)) if value else 0,
                                     "formatted_length": len(formatted_value),
                                     "has_html_tags": any(tag in formatted_value for tag in ['<b>', '<i>', '<blockquote>']),
                                     "formatted_preview": formatted_value[:100] if len(formatted_value) > 100 else formatted_value
@@ -1024,7 +1064,8 @@ class ForwardingEngine:
                     else:
                         field_text = f"{prefix}{formatted_value}{suffix}"
                     
-                    field_parts.append(field_text.strip())
+                    if field_text.strip():
+                        field_parts.append(field_text.strip())
             
             if field_parts:
                 result_parts.append(field_separator.join(field_parts))
