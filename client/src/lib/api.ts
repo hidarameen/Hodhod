@@ -117,19 +117,19 @@ class ApiClient {
     const response = await fetch(`/api/console-logs?${queryParams}`);
     if (!response.ok) throw new Error("Failed to fetch console logs");
     return response.json();
-  },
+  }
 
   async getConsoleLogsStats() {
     const response = await fetch("/api/console-logs/stats");
     if (!response.ok) throw new Error("Failed to fetch console logs stats");
     return response.json();
-  },
+  }
 
   async clearConsoleLogs() {
     const response = await fetch("/api/console-logs", { method: "DELETE" });
     if (!response.ok) throw new Error("Failed to clear console logs");
     return response.json();
-  },
+  }
 
   // Channels
   async getChannels() {
