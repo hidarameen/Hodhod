@@ -16483,3 +16483,33 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-04 20:41:00,438 - main - INFO - [2025-12-04 20:41:00.438] [INFO] [warmup::cached] ✅ اختبار 2 already in peer cache | {}
 2025-12-04 20:41:00,439 - main - INFO - [2025-12-04 20:41:00.439] [INFO] [warmup::complete] ✅ Warmup complete: 2 success, 0 failed | {}
 2025-12-04 20:41:00,439 - main - INFO - [2025-12-04 20:41:00.439] [INFO] [main::idle] Userbot is now running and waiting for messages... | {}
+2025-12-04 20:47:47,855 - main - INFO - [2025-12-04 20:47:47.854] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003110660765', 'chat_title': 'Test2', 'message_id': 5656, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 20:47:47,855 - main - INFO - [2025-12-04 20:47:47.855] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 20:47:48,282 - main - INFO - [2025-12-04 20:47:48.282] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 20:47:48,283 - main - INFO - [2025-12-04 20:47:48.283] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 20:47:48,738 - main - INFO - [2025-12-04 20:47:48.738] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003110660765', 'match': False} | {}
+2025-12-04 20:47:48,738 - main - INFO - [2025-12-04 20:47:48.738] [INFO] [message_handler::skip] No matching task for chat: Test2 | Data: {'chat_id': '-1003110660765'} | {}
+2025-12-04 20:47:48,852 - main - INFO - [2025-12-04 20:47:48.852] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1002166935097', 'chat_title': 'قناة المسيرة', 'message_id': 95825, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 20:47:48,852 - main - INFO - [2025-12-04 20:47:48.852] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 20:47:49,136 - main - INFO - [2025-12-04 20:47:49.136] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 20:47:49,137 - main - INFO - [2025-12-04 20:47:49.137] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 20:47:49,422 - main - INFO - [2025-12-04 20:47:49.422] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1002166935097', 'match': False} | {}
+2025-12-04 20:47:49,422 - main - INFO - [2025-12-04 20:47:49.422] [INFO] [message_handler::skip] No matching task for chat: قناة المسيرة | Data: {'chat_id': '-1002166935097'} | {}
+2025-12-04 20:48:18,158 - main - INFO - [2025-12-04 20:48:18.158] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003110660765', 'chat_title': 'Test2', 'message_id': 5657, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 20:48:18,158 - main - INFO - [2025-12-04 20:48:18.158] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 20:48:18,444 - main - INFO - [2025-12-04 20:48:18.444] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 20:48:18,444 - main - INFO - [2025-12-04 20:48:18.444] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 20:48:18,730 - main - INFO - [2025-12-04 20:48:18.729] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003110660765', 'match': False} | {}
+2025-12-04 20:48:18,730 - main - INFO - [2025-12-04 20:48:18.730] [INFO] [message_handler::skip] No matching task for chat: Test2 | Data: {'chat_id': '-1003110660765'} | {}
+2025-12-04 20:48:48,845 - main - INFO - [2025-12-04 20:48:48.845] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1002166935097', 'chat_title': 'قناة المسيرة', 'message_id': 95826, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 20:48:48,848 - main - INFO - [2025-12-04 20:48:48.848] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 20:48:49,271 - main - INFO - [2025-12-04 20:48:49.271] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 20:48:49,271 - main - INFO - [2025-12-04 20:48:49.271] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 20:48:49,695 - main - INFO - [2025-12-04 20:48:49.695] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1002166935097', 'match': False} | {}
+2025-12-04 20:48:49,696 - main - INFO - [2025-12-04 20:48:49.696] [INFO] [message_handler::skip] No matching task for chat: قناة المسيرة | Data: {'chat_id': '-1002166935097'} | {}
+2025-12-04 20:48:51,993 - main - INFO - [2025-12-04 20:48:51.992] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1001470989107', 'chat_title': 'مُنوعاتٌ جهاديَّة', 'message_id': 166251, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 20:48:51,993 - main - INFO - [2025-12-04 20:48:51.993] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 20:48:52,275 - main - INFO - [2025-12-04 20:48:52.275] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 20:48:52,275 - main - INFO - [2025-12-04 20:48:52.275] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 20:48:52,557 - main - INFO - [2025-12-04 20:48:52.557] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1001470989107', 'match': False} | {}
+2025-12-04 20:48:52,557 - main - INFO - [2025-12-04 20:48:52.557] [INFO] [message_handler::skip] No matching task for chat: مُنوعاتٌ جهاديَّة | Data: {'chat_id': '-1001470989107'} | {}
