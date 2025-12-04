@@ -764,9 +764,9 @@ class ForwardingEngine:
             if not template:
                 return text
             
-            header = template.get("header_template", "")
-            body = template.get("body_template", "{summary}")
-            footer = template.get("footer_template", "")
+            header = template.get("header_template") or ""
+            body = template.get("body_template") or "{summary}"
+            footer = template.get("footer_template") or ""
             use_markdown = template.get("use_markdown", True)
             use_bold = template.get("use_bold", True)
             max_length = template.get("max_length")
@@ -776,9 +776,12 @@ class ForwardingEngine:
             
             for key, value in extracted_data.items():
                 placeholder = "{" + key + "}"
-                header = header.replace(placeholder, str(value) if value else "")
-                body = body.replace(placeholder, str(value) if value else "")
-                footer = footer.replace(placeholder, str(value) if value else "")
+                if header:
+                    header = header.replace(placeholder, str(value) if value else "")
+                if body:
+                    body = body.replace(placeholder, str(value) if value else "")
+                if footer:
+                    footer = footer.replace(placeholder, str(value) if value else "")
             
             result_parts = []
             if header:
