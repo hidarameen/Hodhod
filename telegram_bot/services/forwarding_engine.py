@@ -12,7 +12,7 @@ from datetime import datetime
 from typing import List, Dict, Any, Optional
 from pyrogram.client import Client
 from pyrogram.types import Message, MessageEntity, InputMediaPhoto, InputMediaVideo, InputMediaDocument, InputMediaAudio
-from pyrogram.enums import MessageEntityType, MessageMediaType
+from pyrogram.enums import MessageEntityType, MessageMediaType, ParseMode
 from pyrogram.errors import FloodWait, RPCError, ChannelPrivate, ChatWriteForbidden
 import re
 from utils.error_handler import handle_errors, ErrorLogger, TaskLogger
@@ -135,11 +135,11 @@ class ForwardingEngine:
                                     except (ValueError, TypeError):
                                         target_identifier = target_channel["identifier"]
                                     
-                                    # Create caption with summary and Telegraph link
-                                    caption = f"🔗 **ملخص الفيديو من الرابط:**\n\n{summary}"
+                                    # Create caption with summary and Telegraph link (HTML format)
+                                    caption = f'🔗 <b>ملخص الفيديو من الرابط:</b>\n\n{summary}'
                                     
                                     if telegraph_url:
-                                        caption += f"\n\n📄 [اقرأ النص الأصلي الكامل]({telegraph_url})"
+                                        caption += f'\n\n📄 <a href="{telegraph_url}">اقرأ النص الأصلي الكامل</a>'
                                     
                                     # Check if video should be sent
                                     if video_path:
@@ -177,6 +177,7 @@ class ForwardingEngine:
                                                     chat_id=target_identifier,
                                                     video=video_path,
                                                     caption=send_caption,
+                                                    parse_mode=ParseMode.HTML,
                                                     duration=duration,
                                                     width=width,
                                                     height=height,
@@ -202,20 +203,23 @@ class ForwardingEngine:
                                                 log_detailed("error", "forwarding_engine", "forward_message", f"Failed to send video: {str(send_err)}, sending summary as text instead")
                                                 await self.client.send_message(
                                                     chat_id=target_identifier,
-                                                    text=caption
+                                                    text=caption,
+                                                    parse_mode=ParseMode.HTML
                                                 )
                                         else:
                                             log_detailed("error", "forwarding_engine", "forward_message", f"Video file not found (already deleted?): {video_path}")
                                             await self.client.send_message(
                                                 chat_id=target_identifier,
-                                                text=caption
+                                                text=caption,
+                                                parse_mode=ParseMode.HTML
                                             )
                                     else:
                                         # No video to send, send summary as text only
                                         log_detailed("info", "forwarding_engine", "forward_message", f"No video from link, sending summary as text only")
                                         await self.client.send_message(
                                             chat_id=target_identifier,
-                                            text=caption
+                                            text=caption,
+                                            parse_mode=ParseMode.HTML
                                         )
                             
                             await db.increment_task_counter(task_id)
@@ -266,23 +270,24 @@ class ForwardingEngine:
                         except (ValueError, TypeError):
                             target_identifier = target_channel["identifier"]
                         
-                        # Create caption with summary and Telegraph link
-                        caption = f"📹 **ملخص الفيديو:**\n\n{video_summary}"
+                        # Create caption with summary and Telegraph link (HTML format)
+                        caption = f'📹 <b>ملخص الفيديو:</b>\n\n{video_summary}'
                         
                         if telegraph_url:
-                            caption += f"\n\n📄 [اقرأ النص الأصلي الكامل]({telegraph_url})"
+                            caption += f'\n\n📄 <a href="{telegraph_url}">اقرأ النص الأصلي الكامل</a>'
                         
                         # Truncate caption if too long (Telegram limit is 1024 chars for caption)
                         if len(caption) > 1024:
                             caption = caption[:1020] + "..."
                         
                         try:
-                            # Forward the original video with the summary caption
+                            # Forward the original video with the summary caption (HTML format)
                             await self.client.copy_message(
                                 chat_id=target_identifier,
                                 from_chat_id=message.chat.id,
                                 message_id=message.id,
-                                caption=caption
+                                caption=caption,
+                                parse_mode=ParseMode.HTML
                             )
                             log_detailed("info", "forwarding_engine", "forward_message", f"Video forwarded to target {target_id} with summary and Telegraph link")
                         except Exception as copy_err:
@@ -290,7 +295,8 @@ class ForwardingEngine:
                             log_detailed("warning", "forwarding_engine", "forward_message", f"Failed to copy video: {str(copy_err)}, sending summary as text")
                             await self.client.send_message(
                                 chat_id=target_identifier,
-                                text=caption
+                                text=caption,
+                                parse_mode=ParseMode.HTML
                             )
                 
                 await db.increment_task_counter(task_id)
@@ -637,7 +643,7 @@ class ForwardingEngine:
                     download_func=download_func if (all_photos or all_videos) else None
                 )
                 if telegraph_url:
-                    final_caption = f"{processed_caption}\n\n📰 <a href=\"{telegraph_url}\">اقرأ كامل الخبر</a>"
+                    final_caption = f'{processed_caption}\n\n📰 <a href="{telegraph_url}">اقرأ كامل الخبر</a>'
                     log_detailed("info", "forwarding_engine", "_forward_media_group", "Added Telegraph link to album caption")
         
         # Build media list
@@ -768,23 +774,33 @@ class ForwardingEngine:
     
     def _apply_formatting(self, text: str, formatting: str) -> str:
         """
-        Apply Telegram entity formatting to text
+        Apply Telegram HTML entity formatting to text
         Supported: bold, italic, code, quote, spoiler, strikethrough, underline, none
+        Uses HTML format for full compatibility with Telegram
         """
         if not text or formatting == "none":
             return text
         
+        # Escape HTML special characters in the text first
+        escaped_text = self._escape_html(text)
+        
         formatting_map = {
-            "bold": f"**{text}**",
-            "italic": f"__{text}__",
-            "code": f"`{text}`",
-            "quote": f"> {text}",
-            "spoiler": f"||{text}||",
-            "strikethrough": f"~~{text}~~",
-            "underline": f"<u>{text}</u>",
+            "bold": f"<b>{escaped_text}</b>",
+            "italic": f"<i>{escaped_text}</i>",
+            "code": f"<code>{escaped_text}</code>",
+            "spoiler": f"<tg-spoiler>{escaped_text}</tg-spoiler>",
+            "strikethrough": f"<s>{escaped_text}</s>",
+            "underline": f"<u>{escaped_text}</u>",
+            "quote": f"<blockquote>{escaped_text}</blockquote>",
         }
         
-        return formatting_map.get(formatting, text)
+        return formatting_map.get(formatting, escaped_text)
+    
+    def _escape_html(self, text: str) -> str:
+        """Escape HTML special characters"""
+        if not text:
+            return text
+        return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     
     async def _extract_fields_with_ai(
         self, 
@@ -983,6 +999,15 @@ class ForwardingEngine:
                 if value:
                     # Apply formatting to the value
                     formatted_value = self._apply_formatting(str(value), formatting)
+                    
+                    log_detailed("debug", "forwarding_engine", "_apply_publishing_template",
+                                f"Field formatted: {field_name}", {
+                                    "formatting": formatting,
+                                    "original_length": len(str(value)),
+                                    "formatted_length": len(formatted_value),
+                                    "has_html_tags": any(tag in formatted_value for tag in ['<b>', '<i>', '<blockquote>']),
+                                    "formatted_preview": formatted_value[:100] if len(formatted_value) > 100 else formatted_value
+                                })
                     
                     # Build the field text
                     if show_label and field_label:
@@ -1275,7 +1300,7 @@ class ForwardingEngine:
                 
                 if telegraph_url:
                     print(f"[🔗 RESULT] ✅ Telegraph page created: {telegraph_url}")
-                    final_text = f"{final_text}\n\n📰 <a href=\"{telegraph_url}\">اقرأ كامل الخبر</a>"
+                    final_text = f'{final_text}\n\n📰 <a href="{telegraph_url}">اقرأ كامل الخبر</a>'
                 else:
                     print(f"[🔗 RESULT] ⚠️ Telegraph page creation failed")
                 
@@ -1288,54 +1313,104 @@ class ForwardingEngine:
                 "has_entities": bool(final_entities)
             })
             
-            # Handle different message types with entity preservation
+            # Determine if we should use parse_mode (when template applied) or entities
+            use_parse_mode = not final_entities
+            
+            # Handle different message types with entity preservation or parse_mode
             if message.photo:
                 log_detailed("info", "forwarding_engine", "_forward_to_target", "Sending photo...")
-                await self.client.send_photo(
-                    chat_id=target_identifier,
-                    photo=message.photo.file_id,
-                    caption=final_text or "",
-                    caption_entities=final_entities or []
-                )
+                if use_parse_mode:
+                    await self.client.send_photo(
+                        chat_id=target_identifier,
+                        photo=message.photo.file_id,
+                        caption=final_text or "",
+                        parse_mode=ParseMode.HTML
+                    )
+                else:
+                    await self.client.send_photo(
+                        chat_id=target_identifier,
+                        photo=message.photo.file_id,
+                        caption=final_text or "",
+                        caption_entities=final_entities
+                    )
             elif message.video:
                 log_detailed("info", "forwarding_engine", "_forward_to_target", "Sending video...")
-                await self.client.send_video(
-                    chat_id=target_identifier,
-                    video=message.video.file_id,
-                    caption=final_text or "",
-                    caption_entities=final_entities or [],
-                    duration=message.video.duration,
-                    width=message.video.width,
-                    height=message.video.height
-                )
+                if use_parse_mode:
+                    await self.client.send_video(
+                        chat_id=target_identifier,
+                        video=message.video.file_id,
+                        caption=final_text or "",
+                        parse_mode=ParseMode.HTML,
+                        duration=message.video.duration,
+                        width=message.video.width,
+                        height=message.video.height
+                    )
+                else:
+                    await self.client.send_video(
+                        chat_id=target_identifier,
+                        video=message.video.file_id,
+                        caption=final_text or "",
+                        caption_entities=final_entities,
+                        duration=message.video.duration,
+                        width=message.video.width,
+                        height=message.video.height
+                    )
             elif message.animation:
                 log_detailed("info", "forwarding_engine", "_forward_to_target", "Sending animation...")
-                await self.client.send_animation(
-                    chat_id=target_identifier,
-                    animation=message.animation.file_id,
-                    caption=final_text or "",
-                    caption_entities=final_entities or []
-                )
+                if use_parse_mode:
+                    await self.client.send_animation(
+                        chat_id=target_identifier,
+                        animation=message.animation.file_id,
+                        caption=final_text or "",
+                        parse_mode=ParseMode.HTML
+                    )
+                else:
+                    await self.client.send_animation(
+                        chat_id=target_identifier,
+                        animation=message.animation.file_id,
+                        caption=final_text or "",
+                        caption_entities=final_entities
+                    )
             elif message.audio:
                 log_detailed("info", "forwarding_engine", "_forward_to_target", "Sending audio...")
-                await self.client.send_audio(
-                    chat_id=target_identifier,
-                    audio=message.audio.file_id,
-                    caption=final_text or "",
-                    caption_entities=final_entities or [],
-                    duration=message.audio.duration,
-                    performer=message.audio.performer,
-                    title=message.audio.title
-                )
+                if use_parse_mode:
+                    await self.client.send_audio(
+                        chat_id=target_identifier,
+                        audio=message.audio.file_id,
+                        caption=final_text or "",
+                        parse_mode=ParseMode.HTML,
+                        duration=message.audio.duration,
+                        performer=message.audio.performer,
+                        title=message.audio.title
+                    )
+                else:
+                    await self.client.send_audio(
+                        chat_id=target_identifier,
+                        audio=message.audio.file_id,
+                        caption=final_text or "",
+                        caption_entities=final_entities,
+                        duration=message.audio.duration,
+                        performer=message.audio.performer,
+                        title=message.audio.title
+                    )
             elif message.voice:
                 log_detailed("info", "forwarding_engine", "_forward_to_target", "Sending voice...")
-                await self.client.send_voice(
-                    chat_id=target_identifier,
-                    voice=message.voice.file_id,
-                    caption=final_text or "",
-                    caption_entities=final_entities or [],
-                    duration=message.voice.duration
-                )
+                if use_parse_mode:
+                    await self.client.send_voice(
+                        chat_id=target_identifier,
+                        voice=message.voice.file_id,
+                        caption=final_text or "",
+                        parse_mode=ParseMode.HTML,
+                        duration=message.voice.duration
+                    )
+                else:
+                    await self.client.send_voice(
+                        chat_id=target_identifier,
+                        voice=message.voice.file_id,
+                        caption=final_text or "",
+                        caption_entities=final_entities,
+                        duration=message.voice.duration
+                    )
             elif message.video_note:
                 log_detailed("info", "forwarding_engine", "_forward_to_target", "Sending video note...")
                 await self.client.send_video_note(
@@ -1346,13 +1421,22 @@ class ForwardingEngine:
                 )
             elif message.document:
                 log_detailed("info", "forwarding_engine", "_forward_to_target", "Sending document...")
-                await self.client.send_document(
-                    chat_id=target_identifier,
-                    document=message.document.file_id,
-                    caption=final_text or "",
-                    caption_entities=final_entities or [],
-                    file_name=message.document.file_name
-                )
+                if use_parse_mode:
+                    await self.client.send_document(
+                        chat_id=target_identifier,
+                        document=message.document.file_id,
+                        caption=final_text or "",
+                        parse_mode=ParseMode.HTML,
+                        file_name=message.document.file_name
+                    )
+                else:
+                    await self.client.send_document(
+                        chat_id=target_identifier,
+                        document=message.document.file_id,
+                        caption=final_text or "",
+                        caption_entities=final_entities,
+                        file_name=message.document.file_name
+                    )
             elif message.sticker:
                 log_detailed("info", "forwarding_engine", "_forward_to_target", "Sending sticker...")
                 await self.client.send_sticker(
@@ -1401,14 +1485,26 @@ class ForwardingEngine:
                     emoji=message.dice.emoji
                 )
             elif final_text:
-                # Text message with entities preserved
-                log_detailed("info", "forwarding_engine", "_forward_to_target", "Sending text message...")
-                await self.client.send_message(
-                    chat_id=target_identifier,
-                    text=final_text,
-                    entities=final_entities or [],
-                    disable_web_page_preview=True
-                )
+                # Text message with entities preserved or parse_mode
+                log_detailed("info", "forwarding_engine", "_forward_to_target", "Sending text message...", {
+                    "use_parse_mode": use_parse_mode,
+                    "text_preview": final_text[:300] if len(final_text) > 300 else final_text,
+                    "has_html_tags": any(tag in final_text for tag in ['<b>', '<i>', '<blockquote>', '<u>', '<s>']),
+                })
+                if use_parse_mode:
+                    await self.client.send_message(
+                        chat_id=target_identifier,
+                        text=final_text,
+                        parse_mode=ParseMode.HTML,
+                        disable_web_page_preview=True
+                    )
+                else:
+                    await self.client.send_message(
+                        chat_id=target_identifier,
+                        text=final_text,
+                        entities=final_entities,
+                        disable_web_page_preview=True
+                    )
             else:
                 # Fallback: forward original message
                 log_detailed("info", "forwarding_engine", "_forward_to_target", "Using fallback forward...")
