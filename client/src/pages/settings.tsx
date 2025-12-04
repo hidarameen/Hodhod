@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -7,13 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { 
   Shield, 
   UserPlus, 
   Bell, 
-  Database,
   Save,
   Trash2,
   Loader,
@@ -25,25 +23,15 @@ import {
   Smartphone,
   XCircle,
   RefreshCw,
-  ScrollText,
   Copy,
   Download,
   Filter,
   X,
-  ChevronDown,
-  Clock,
   AlertTriangle,
-  Info
+  Info,
+  Clock
 } from "lucide-react";
 import { toast } from "sonner";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 interface Admin {
   id: number;
@@ -71,20 +59,15 @@ export default function SettingsPage() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [phoneError, setPhoneError] = useState("");
 
-  // Event Logs State
+  // Real-time Console State
   const [logFilter, setLogFilter] = useState<string>("");
   const [logLevelFilter, setLogLevelFilter] = useState<string>("all");
   const [autoRefresh, setAutoRefresh] = useState(true);
-  const [expandedLog, setExpandedLog] = useState<number | null>(null);
+  const [selectedTab, setSelectedTab] = useState<"general" | "console">("general");
 
   const { data: admins = [], isLoading: loadingAdmins } = useQuery({
     queryKey: ["admins"],
     queryFn: () => api.getAdmins(),
-  });
-
-  const { data: settings = [] } = useQuery({
-    queryKey: ["settings"],
-    queryFn: () => api.getSettings(),
   });
 
   const { data: userbotStatus, isLoading: loadingUserbot, refetch: refetchUserbot } = useQuery({
@@ -98,8 +81,8 @@ export default function SettingsPage() {
 
   const { data: eventLogs = [], isLoading: loadingLogs, refetch: refetchLogs } = useQuery({
     queryKey: ["error-logs"],
-    queryFn: () => api.getErrorLogs(500),
-    refetchInterval: autoRefresh ? 5000 : false,
+    queryFn: () => api.getErrorLogs(1000),
+    refetchInterval: autoRefresh ? 2000 : false,
   });
 
   const createAdminMutation = useMutation({
@@ -173,19 +156,16 @@ export default function SettingsPage() {
 
   const handleStartLogin = async () => {
     setPhoneError("");
-    
     if (!phoneNumber) {
       setPhoneError("يرجى إدخال رقم الهاتف");
       toast.error("يرجى إدخال رقم الهاتف");
       return;
     }
-    
     if (!validatePhoneNumber(phoneNumber)) {
       setPhoneError("رقم الهاتف غير صالح - تأكد من إضافة رمز الدولة");
       toast.error("رقم الهاتف غير صالح");
       return;
     }
-    
     setIsLoggingIn(true);
     try {
       const res = await fetch("/api/userbot/login/start", {
@@ -194,15 +174,11 @@ export default function SettingsPage() {
         body: JSON.stringify({ phoneNumber }),
       });
       const data = await res.json();
-      
       if (data.status === "code_sent") {
         toast.success(data.message || "تم إرسال رمز التحقق");
         setLoginStep("otp");
-      } else if (data.status === "error") {
+      } else {
         toast.error(data.message || "فشل إرسال الرمز");
-        if (data.error === "phone_invalid") {
-          setPhoneError("رقم الهاتف غير صحيح");
-        }
       }
     } catch (error) {
       toast.error("حدث خطأ في الاتصال");
@@ -216,7 +192,6 @@ export default function SettingsPage() {
       toast.error("يرجى إدخال رمز التحقق");
       return;
     }
-    
     setIsLoggingIn(true);
     try {
       const res = await fetch("/api/userbot/login/verify", {
@@ -225,19 +200,14 @@ export default function SettingsPage() {
         body: JSON.stringify({ phoneNumber, code: otpCode }),
       });
       const data = await res.json();
-      
       if (data.status === "success") {
         toast.success(data.message || "تم تسجيل الدخول بنجاح");
         resetLoginForm();
         refetchUserbot();
       } else if (data.status === "2fa_required") {
-        toast.info(data.message || "يتطلب كلمة مرور التحقق بخطوتين");
         setLoginStep("2fa");
-      } else if (data.status === "error") {
+      } else {
         toast.error(data.message || "رمز التحقق غير صحيح");
-        if (data.error === "session_expired" || data.error === "code_expired") {
-          resetLoginForm();
-        }
       }
     } catch (error) {
       toast.error("حدث خطأ في الاتصال");
@@ -251,7 +221,6 @@ export default function SettingsPage() {
       toast.error("يرجى إدخال كلمة المرور");
       return;
     }
-    
     setIsLoggingIn(true);
     try {
       const res = await fetch("/api/userbot/login/2fa", {
@@ -260,42 +229,16 @@ export default function SettingsPage() {
         body: JSON.stringify({ phoneNumber, password: twoFaPassword }),
       });
       const data = await res.json();
-      
       if (data.status === "success") {
         toast.success(data.message || "تم تسجيل الدخول بنجاح");
         resetLoginForm();
         refetchUserbot();
-      } else if (data.status === "error") {
+      } else {
         toast.error(data.message || "كلمة المرور غير صحيحة");
-        if (data.error === "session_expired") {
-          resetLoginForm();
-        }
       }
     } catch (error) {
       toast.error("حدث خطأ في الاتصال");
     } finally {
-      setIsLoggingIn(false);
-    }
-  };
-
-  const handleCancelLogin = async () => {
-    if (!phoneNumber) {
-      resetLoginForm();
-      return;
-    }
-    
-    setIsLoggingIn(true);
-    try {
-      await fetch("/api/userbot/login/cancel", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phoneNumber }),
-      });
-      toast.info("تم إلغاء عملية تسجيل الدخول");
-    } catch (error) {
-      console.error("Cancel error:", error);
-    } finally {
-      resetLoginForm();
       setIsLoggingIn(false);
     }
   };
@@ -305,7 +248,6 @@ export default function SettingsPage() {
     try {
       const res = await fetch("/api/userbot/logout", { method: "POST" });
       const data = await res.json();
-      
       if (data.status === "success") {
         toast.success(data.message || "تم تسجيل الخروج");
         refetchUserbot();
@@ -324,19 +266,18 @@ export default function SettingsPage() {
 
   const isConnected = userbotStatus?.status === "connected" || userbotStatus?.status === "active";
 
-  // Event Logs Helpers
   const getLogLevelColor = (level: string) => {
-    if (level?.includes("ERROR")) return "bg-red-500/10 text-red-700 dark:text-red-400 border-red-200 dark:border-red-900";
-    if (level?.includes("WARN")) return "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 border-yellow-200 dark:border-yellow-900";
-    if (level?.includes("INFO")) return "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-900";
-    return "bg-gray-500/10 text-gray-700 dark:text-gray-400 border-gray-200 dark:border-gray-900";
+    if (level?.includes("ERROR")) return "bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-900";
+    if (level?.includes("WARN")) return "bg-yellow-50 dark:bg-yellow-950/30 text-yellow-700 dark:text-yellow-400 border-yellow-200 dark:border-yellow-900";
+    if (level?.includes("INFO")) return "bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-900";
+    return "bg-gray-50 dark:bg-gray-950/30 text-gray-700 dark:text-gray-400 border-gray-200 dark:border-gray-900";
   };
 
   const getLogLevelIcon = (level: string) => {
-    if (level?.includes("ERROR")) return <AlertTriangle className="h-4 w-4" />;
-    if (level?.includes("WARN")) return <AlertCircle className="h-4 w-4" />;
-    if (level?.includes("INFO")) return <Info className="h-4 w-4" />;
-    return <Clock className="h-4 w-4" />;
+    if (level?.includes("ERROR")) return <AlertTriangle className="h-4 w-4 flex-shrink-0" />;
+    if (level?.includes("WARN")) return <AlertCircle className="h-4 w-4 flex-shrink-0" />;
+    if (level?.includes("INFO")) return <Info className="h-4 w-4 flex-shrink-0" />;
+    return <Clock className="h-4 w-4 flex-shrink-0" />;
   };
 
   const filteredLogs = eventLogs.filter((log: any) => {
@@ -350,6 +291,14 @@ export default function SettingsPage() {
     return matchesSearch && matchesLevel;
   });
 
+  // Auto-scroll to latest logs
+  useEffect(() => {
+    const element = document.getElementById("logs-container");
+    if (element) {
+      element.scrollTop = element.scrollHeight;
+    }
+  }, [filteredLogs]);
+
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     toast.success("تم نسخ إلى الحافظة");
@@ -357,7 +306,7 @@ export default function SettingsPage() {
 
   const downloadLogs = () => {
     const logsText = filteredLogs.map((log: any) => 
-      `[${log.timestamp}] ${log.errorType} - ${log.component} - ${log.errorMessage}`
+      `[${log.timestamp}] ${log.errorType} - ${log.component} - ${log.function} - ${log.errorMessage}`
     ).join("\n");
     
     const element = document.createElement("a");
@@ -371,240 +320,95 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-6 md:space-y-8 max-w-6xl mx-auto">
+    <div className="space-y-6 max-w-7xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground tracking-wide">إعدادات النظام</h2>
-          <p className="text-muted-foreground mt-1 text-sm md:text-base">إدارة التحكم بالوصول والإشعارات وتفضيلات النظام</p>
+          <h2 className="text-3xl font-bold text-foreground">إعدادات النظام</h2>
+          <p className="text-muted-foreground mt-1">إدارة التحكم والإشعارات وسجلات الأحداث الفورية</p>
         </div>
-        <Button 
-          onClick={handleSaveSettings}
-          className="bg-primary text-primary-foreground font-bold hover:bg-primary/90 w-full sm:w-auto"
-          disabled={saveSettingMutation.isPending}
-          data-testid="button-save-settings"
-        >
-          {saveSettingMutation.isPending ? (
-            <Loader className="h-3 w-3 mr-2 animate-spin" />
-          ) : (
-            <Save className="h-3 w-3 mr-2" />
-          )}
-          حفظ التغييرات
-        </Button>
       </div>
 
-      <Tabs defaultValue="general" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 lg:w-fit">
-          <TabsTrigger value="general" className="flex items-center gap-2">
-            <Shield className="h-4 w-4" />
-            <span className="hidden sm:inline">عام</span>
-          </TabsTrigger>
-          <TabsTrigger value="admins" className="flex items-center gap-2">
-            <UserPlus className="h-4 w-4" />
-            <span className="hidden sm:inline">مسؤولين</span>
-          </TabsTrigger>
-          <TabsTrigger value="logs" className="flex items-center gap-2">
-            <ScrollText className="h-4 w-4" />
-            <span className="hidden sm:inline">سجلات</span>
-          </TabsTrigger>
-        </TabsList>
-
-        {/* General Tab */}
-        <TabsContent value="general" className="space-y-6">
+      {selectedTab === "general" && (
+        <div className="space-y-6">
           <Card className="border shadow-sm border-primary/30">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-foreground">
+              <CardTitle className="flex items-center gap-2">
                 <Smartphone className="h-4 w-4 text-primary" /> تسجيل دخول اليوزربوت
               </CardTitle>
-              <CardDescription>
-                تسجيل الدخول بحساب تلغرام لتفعيل إعادة توجيه الرسائل من القنوات
-              </CardDescription>
+              <CardDescription>تسجيل الدخول بحساب تلغرام</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {loadingUserbot ? (
                 <div className="flex justify-center p-4">
-                  <Loader className="h-6 w-6 animate-spin text-primary" />
+                  <Loader className="h-6 w-6 animate-spin" />
                 </div>
               ) : isConnected ? (
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-lg">
-                    <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0" />
-                    <div className="flex-1">
-                      <p className="font-medium text-green-600 dark:text-green-400">متصل ويعمل</p>
-                      <p className="text-sm text-muted-foreground">
-                        رقم الهاتف: {userbotStatus.phoneNumber}
-                      </p>
-                      {userbotStatus.lastLoginAt && (
-                        <p className="text-xs text-muted-foreground">
-                          آخر تسجيل دخول: {new Date(userbotStatus.lastLoginAt).toLocaleString('ar')}
-                        </p>
-                      )}
+                <div className="flex items-center justify-between p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="h-6 w-6 text-green-500" />
+                    <div>
+                      <p className="font-medium text-green-600">متصل ويعمل</p>
+                      <p className="text-sm text-muted-foreground">{userbotStatus.phoneNumber}</p>
                     </div>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={handleLogout}
-                      disabled={isLoggingIn}
-                      className="text-red-600 border-red-500/30 hover:bg-red-500/10"
-                      data-testid="button-userbot-logout"
-                    >
-                      {isLoggingIn ? (
-                        <Loader className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <>
-                          <LogOut className="h-4 w-4 mr-1" /> تسجيل خروج
-                        </>
-                      )}
-                    </Button>
                   </div>
+                  <Button onClick={handleLogout} disabled={isLoggingIn} variant="outline" size="sm" className="text-red-600">
+                    {isLoggingIn ? <Loader className="h-4 w-4 animate-spin" /> : <LogOut className="h-4 w-4 mr-1" />}
+                    خروج
+                  </Button>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="flex items-center gap-2 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-                    <AlertCircle className="h-5 w-5 text-yellow-500 flex-shrink-0" />
-                    <p className="text-sm text-yellow-600 dark:text-yellow-400">
-                      يجب تسجيل الدخول لتفعيل إعادة توجيه الرسائل
-                    </p>
+                  <div className="text-sm text-yellow-600 bg-yellow-500/10 p-3 rounded border border-yellow-500/20">
+                    <AlertCircle className="h-4 w-4 inline mr-2" /> يجب تسجيل الدخول لتفعيل البوت
                   </div>
 
                   {loginStep === "phone" && (
                     <div className="space-y-3">
                       <div>
-                        <Label htmlFor="phone">رقم الهاتف (مع رمز الدولة)</Label>
-                        <div className="relative mt-1">
-                          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                          <Input
-                            id="phone"
-                            type="tel"
-                            value={phoneNumber}
-                            onChange={(e) => {
-                              setPhoneNumber(e.target.value);
-                              setPhoneError("");
-                            }}
-                            placeholder="+966512345678"
-                            className={`pl-10 ${phoneError ? 'border-red-500' : ''}`}
-                            dir="ltr"
-                            data-testid="input-phone-number"
-                          />
-                        </div>
-                        {phoneError ? (
-                          <p className="text-xs text-red-500 mt-1">{phoneError}</p>
-                        ) : (
-                          <p className="text-xs text-muted-foreground mt-1">
-                            مثال: +966512345678 أو +201012345678
-                          </p>
-                        )}
+                        <Label>رقم الهاتف (مع رمز الدولة)</Label>
+                        <Input
+                          type="tel"
+                          value={phoneNumber}
+                          onChange={(e) => setPhoneNumber(e.target.value)}
+                          placeholder="+966512345678"
+                          className="mt-1"
+                        />
                       </div>
-                      <Button 
-                        onClick={handleStartLogin}
-                        className="w-full"
-                        disabled={isLoggingIn}
-                        data-testid="button-send-code"
-                      >
-                        {isLoggingIn ? (
-                          <Loader className="h-4 w-4 mr-2 animate-spin" />
-                        ) : (
-                          <Key className="h-4 w-4 mr-2" />
-                        )}
-                        إرسال رمز التحقق
+                      <Button onClick={handleStartLogin} disabled={isLoggingIn} className="w-full">
+                        {isLoggingIn && <Loader className="h-4 w-4 mr-2 animate-spin" />}
+                        إرسال الرمز
                       </Button>
                     </div>
                   )}
 
                   {loginStep === "otp" && (
                     <div className="space-y-3">
-                      <div className="text-center p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-                        <p className="text-sm text-blue-600 dark:text-blue-400">
-                          تم إرسال رمز التحقق إلى تلغرام أو الرسائل النصية
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          رقم الهاتف: {phoneNumber}
-                        </p>
-                      </div>
                       <div>
-                        <Label htmlFor="otp">رمز التحقق</Label>
+                        <Label>رمز التحقق</Label>
                         <Input
-                          id="otp"
                           type="text"
                           value={otpCode}
                           onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
-                          placeholder="12345"
-                          className="mt-1 text-center text-2xl tracking-widest"
+                          placeholder="123456"
                           maxLength={6}
-                          dir="ltr"
-                          data-testid="input-otp-code"
+                          className="mt-1 text-center text-2xl"
                         />
                       </div>
-                      <div className="flex gap-2">
-                        <Button 
-                          variant="outline"
-                          onClick={handleCancelLogin}
-                          className="flex-1"
-                          disabled={isLoggingIn}
-                        >
-                          <XCircle className="h-4 w-4 mr-1" />
-                          إلغاء
-                        </Button>
-                        <Button 
-                          onClick={handleVerifyCode}
-                          className="flex-1"
-                          disabled={isLoggingIn || !otpCode}
-                          data-testid="button-verify-code"
-                        >
-                          {isLoggingIn && <Loader className="h-4 w-4 mr-2 animate-spin" />}
-                          تحقق
-                        </Button>
-                      </div>
-                      <Button 
-                        variant="ghost"
-                        onClick={handleStartLogin}
-                        className="w-full text-sm"
-                        disabled={isLoggingIn}
-                      >
-                        <RefreshCw className="h-3 w-3 mr-1" />
-                        إعادة إرسال الرمز
+                      <Button onClick={handleVerifyCode} disabled={isLoggingIn || !otpCode} className="w-full">
+                        تحقق
                       </Button>
                     </div>
                   )}
 
                   {loginStep === "2fa" && (
                     <div className="space-y-3">
-                      <div className="text-center p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg">
-                        <p className="text-sm text-purple-600 dark:text-purple-400">
-                          حسابك محمي بالتحقق بخطوتين - أدخل كلمة المرور
-                        </p>
-                      </div>
                       <div>
-                        <Label htmlFor="2fa">كلمة مرور التحقق بخطوتين</Label>
-                        <Input
-                          id="2fa"
-                          type="password"
-                          value={twoFaPassword}
-                          onChange={(e) => setTwoFaPassword(e.target.value)}
-                          placeholder="••••••••"
-                          className="mt-1"
-                          data-testid="input-2fa-password"
-                        />
+                        <Label>كلمة مرور التحقق</Label>
+                        <Input type="password" value={twoFaPassword} onChange={(e) => setTwoFaPassword(e.target.value)} className="mt-1" />
                       </div>
-                      <div className="flex gap-2">
-                        <Button 
-                          variant="outline"
-                          onClick={handleCancelLogin}
-                          className="flex-1"
-                          disabled={isLoggingIn}
-                        >
-                          <XCircle className="h-4 w-4 mr-1" />
-                          إلغاء
-                        </Button>
-                        <Button 
-                          onClick={handleVerify2FA}
-                          className="flex-1"
-                          disabled={isLoggingIn || !twoFaPassword}
-                          data-testid="button-verify-2fa"
-                        >
-                          {isLoggingIn && <Loader className="h-4 w-4 mr-2 animate-spin" />}
-                          تسجيل الدخول
-                        </Button>
-                      </div>
+                      <Button onClick={handleVerify2FA} disabled={isLoggingIn || !twoFaPassword} className="w-full">
+                        تسجيل دخول
+                      </Button>
                     </div>
                   )}
                 </div>
@@ -612,138 +416,65 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
 
-          <Card className="border shadow-sm">
+          <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-foreground">
-                <Bell className="h-4 w-4 text-primary" /> إشعارات وتنبيهات
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="h-4 w-4" /> إدارة المسؤولين
               </CardTitle>
-              <CardDescription>تخصيص إعدادات الإشعارات والنسخ الاحتياطية</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-4">
-                {[
-                  { key: "errorAlerts", label: "تنبيهات الأخطاء", desc: "تلقي إشعارات بالأخطاء الفورية" },
-                  { key: "taskCompletion", label: "إتمام المهام", desc: "إشعارات عند انتهاء المهام" },
-                  { key: "autoBackup", label: "النسخ الاحتياطية التلقائية", desc: "حفظ نسخة احتياطية تلقائية يومية" }
-                ].map(({ key, label, desc }) => (
-                  <div key={key} className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors">
-                    <div className="flex-1">
-                      <Label className="font-medium cursor-pointer">{label}</Label>
-                      <p className="text-xs text-muted-foreground">{desc}</p>
-                    </div>
-                    <Switch
-                      checked={notificationSettings[key as keyof typeof notificationSettings]}
-                      onCheckedChange={(checked) =>
-                        setNotificationSettings({
-                          ...notificationSettings,
-                          [key]: checked
-                        })
-                      }
-                    />
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Admins Tab */}
-        <TabsContent value="admins">
-          <Card className="border shadow-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-foreground">
-                <Shield className="h-4 w-4 text-primary" /> إدارة المسؤولين
-              </CardTitle>
-              <CardDescription>إدارة المستخدمين المصرح لهم ومسؤولي البوت</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
               <Dialog open={addAdminDialogOpen} onOpenChange={setAddAdminDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="outline" data-testid="button-add-admin">
-                    <UserPlus className="h-3 w-3 mr-2" /> إضافة مسؤول
+                  <Button variant="outline">
+                    <UserPlus className="h-4 w-4 mr-2" /> إضافة مسؤول
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>إضافة مسؤول جديد</DialogTitle>
-                    <DialogDescription>أدخل معرف تلغرام واسم المستخدم للمسؤول الجديد</DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="telegram-id">معرف تلغرام</Label>
-                      <Input
-                        id="telegram-id"
-                        value={newAdminId}
-                        onChange={(e) => setNewAdminId(e.target.value)}
-                        placeholder="123456789"
-                        className="mt-1"
-                        data-testid="input-admin-telegram-id"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="username">اسم المستخدم (اختياري)</Label>
-                      <Input
-                        id="username"
-                        value={newAdminUsername}
-                        onChange={(e) => setNewAdminUsername(e.target.value)}
-                        placeholder="@username"
-                        className="mt-1"
-                        data-testid="input-admin-username"
-                      />
-                    </div>
-                    <Button 
-                      onClick={handleAddAdmin}
-                      className="w-full"
-                      disabled={createAdminMutation.isPending}
-                      data-testid="button-submit-admin"
-                    >
-                      {createAdminMutation.isPending && <Loader className="h-4 w-4 mr-2 animate-spin" />}
-                      إضافة المسؤول
+                    <Input
+                      value={newAdminId}
+                      onChange={(e) => setNewAdminId(e.target.value)}
+                      placeholder="معرف تلغرام"
+                    />
+                    <Input
+                      value={newAdminUsername}
+                      onChange={(e) => setNewAdminUsername(e.target.value)}
+                      placeholder="اسم المستخدم (اختياري)"
+                    />
+                    <Button onClick={handleAddAdmin} className="w-full" disabled={createAdminMutation.isPending}>
+                      إضافة
                     </Button>
                   </div>
                 </DialogContent>
               </Dialog>
-              
+
               <div className="space-y-2">
                 {loadingAdmins ? (
-                  <div className="flex justify-center p-4">
-                    <Loader className="h-6 w-6 animate-spin text-primary" />
-                  </div>
+                  <div className="text-center p-4"><Loader className="h-6 w-6 animate-spin inline" /></div>
                 ) : admins.length === 0 ? (
-                  <div className="text-center p-4 text-muted-foreground">
-                    لا يوجد مسؤولون حالياً
-                  </div>
+                  <p className="text-center text-muted-foreground">لا يوجد مسؤولون</p>
                 ) : (
                   admins.map((admin: Admin) => (
-                    <div 
-                      key={admin.id} 
-                      className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded bg-muted/50 border border-border hover:border-primary/50 transition-colors"
-                      data-testid={`admin-row-${admin.id}`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-primary/40 to-primary/20 flex items-center justify-center text-primary font-bold">
+                    <div key={admin.id} className="flex items-center justify-between p-3 bg-muted rounded border">
+                      <div className="flex items-center gap-2">
+                        <div className="h-8 w-8 rounded bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">
                           {getInitial(admin.username)}
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-foreground">{admin.username || "غير معروف"}</p>
-                          <p className="text-xs text-muted-foreground font-mono">ID: {admin.telegramId}</p>
+                          <p className="text-sm font-medium">{admin.username || "غير معروف"}</p>
+                          <p className="text-xs text-muted-foreground">ID: {admin.telegramId}</p>
                         </div>
                       </div>
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => deleteAdminMutation.mutate(admin.id)}
-                        disabled={deleteAdminMutation.isPending}
-                        className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20"
-                        data-testid={`button-delete-admin-${admin.id}`}
+                        className="text-red-600"
                       >
-                        {deleteAdminMutation.isPending ? (
-                          <Loader className="h-4 w-4 animate-spin" />
-                        ) : (
-                          <>
-                            <Trash2 className="h-4 w-4 mr-1" /> حذف
-                          </>
-                        )}
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   ))
@@ -751,57 +482,66 @@ export default function SettingsPage() {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
 
-        {/* Logs Tab */}
-        <TabsContent value="logs" className="space-y-4">
-          <Card className="border shadow-sm">
-            <CardHeader className="pb-3">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <CardTitle className="flex items-center gap-2 text-foreground">
-                    <ScrollText className="h-4 w-4 text-primary" /> سجل الأحداث والكونسول
-                  </CardTitle>
-                  <CardDescription>عرض جميع أحداث النظام والرسائل التفصيلية</CardDescription>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Bell className="h-4 w-4" /> الإشعارات
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {[
+                { key: "errorAlerts", label: "تنبيهات الأخطاء" },
+                { key: "taskCompletion", label: "إتمام المهام" },
+                { key: "autoBackup", label: "النسخ الاحتياطية" }
+              ].map(({ key, label }) => (
+                <div key={key} className="flex items-center justify-between p-3 border rounded">
+                  <Label className="cursor-pointer">{label}</Label>
+                  <Switch
+                    checked={notificationSettings[key as keyof typeof notificationSettings]}
+                    onCheckedChange={(checked) =>
+                      setNotificationSettings({ ...notificationSettings, [key]: checked })
+                    }
+                  />
                 </div>
+              ))}
+              <Button onClick={handleSaveSettings} className="w-full" disabled={saveSettingMutation.isPending}>
+                <Save className="h-4 w-4 mr-2" /> حفظ
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {selectedTab === "console" && (
+        <Card className="border shadow-sm">
+          <CardHeader className="pb-3">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <CardTitle>سجل الأحداث Real-Time</CardTitle>
                 <div className="flex items-center gap-2">
                   <Button
                     size="sm"
                     variant={autoRefresh ? "default" : "outline"}
                     onClick={() => setAutoRefresh(!autoRefresh)}
-                    className="flex items-center gap-2"
                   >
-                    <RefreshCw className={`h-3 w-3 ${autoRefresh ? 'animate-spin' : ''}`} />
-                    تحديث تلقائي
+                    <RefreshCw className={`h-3 w-3 mr-1 ${autoRefresh ? 'animate-spin' : ''}`} />
+                    {autoRefresh ? "جاري" : "إيقاف"}
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => refetchLogs()}
-                    disabled={loadingLogs}
-                  >
-                    {loadingLogs ? <Loader className="h-3 w-3 animate-spin mr-1" /> : <RefreshCw className="h-3 w-3 mr-1" />}
+                  <Button size="sm" variant="outline" onClick={() => refetchLogs()} disabled={loadingLogs}>
                     تحديث
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={downloadLogs}
-                    className="flex items-center gap-1"
-                  >
+                  <Button size="sm" variant="outline" onClick={downloadLogs}>
                     <Download className="h-3 w-3" />
-                    تحميل
                   </Button>
                 </div>
               </div>
-            </CardHeader>
 
-            <CardContent className="space-y-4">
-              <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <div className="flex-1 relative">
                   <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="ابحث في الأحداث..."
+                    placeholder="ابحث..."
                     value={logFilter}
                     onChange={(e) => setLogFilter(e.target.value)}
                     className="pl-10"
@@ -810,109 +550,90 @@ export default function SettingsPage() {
                 <select
                   value={logLevelFilter}
                   onChange={(e) => setLogLevelFilter(e.target.value)}
-                  className="px-3 py-2 rounded-md border border-input bg-background text-sm font-medium"
+                  className="px-3 py-2 rounded-md border text-sm"
                 >
-                  <option value="all">جميع المستويات</option>
+                  <option value="all">الكل</option>
                   <option value="error">أخطاء</option>
                   <option value="warn">تحذيرات</option>
                   <option value="info">معلومات</option>
                 </select>
                 {(logFilter || logLevelFilter !== "all") && (
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => {
-                      setLogFilter("");
-                      setLogLevelFilter("all");
-                    }}
-                    className="text-xs"
-                  >
-                    <X className="h-3 w-3 mr-1" /> مسح الفلاتر
+                  <Button size="sm" variant="ghost" onClick={() => { setLogFilter(""); setLogLevelFilter("all"); }}>
+                    <X className="h-3 w-3" />
                   </Button>
                 )}
               </div>
 
-              <div className="text-sm text-muted-foreground">
-                عرض <span className="font-semibold text-foreground">{filteredLogs.length}</span> من <span className="font-semibold text-foreground">{eventLogs.length}</span> سجل
+              <div className="text-xs text-muted-foreground">
+                {filteredLogs.length} من {eventLogs.length} سجل
               </div>
+            </div>
+          </CardHeader>
 
-              <div className="space-y-2 max-h-[500px] overflow-y-auto">
-                {loadingLogs ? (
-                  <div className="flex justify-center p-8">
-                    <Loader className="h-6 w-6 animate-spin text-primary" />
-                  </div>
-                ) : filteredLogs.length === 0 ? (
-                  <div className="p-8 text-center text-muted-foreground rounded-lg border border-dashed">
-                    <ScrollText className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                    لا توجد أحداث حالياً
-                  </div>
-                ) : (
-                  filteredLogs.map((log: any, idx: number) => (
-                    <div
-                      key={idx}
-                      className={`p-3 rounded-lg border transition-all cursor-pointer hover:border-primary/50 ${getLogLevelColor(log.errorType)}`}
-                      onClick={() => setExpandedLog(expandedLog === idx ? null : idx)}
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className="flex-shrink-0 mt-0.5">
-                          {getLogLevelIcon(log.errorType)}
+          <CardContent>
+            <div id="logs-container" className="space-y-1 h-[600px] overflow-y-auto border rounded-lg p-4 bg-black/5 dark:bg-black/30 font-mono text-xs">
+              {loadingLogs ? (
+                <div className="flex justify-center py-8"><Loader className="h-6 w-6 animate-spin" /></div>
+              ) : filteredLogs.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">لا توجد أحداث</div>
+              ) : (
+                filteredLogs.map((log: any, idx: number) => (
+                  <div key={idx} className={`p-2 rounded border-l-2 ${getLogLevelColor(log.errorType)}`}>
+                    <div className="flex items-start gap-2">
+                      {getLogLevelIcon(log.errorType)}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-semibold">[{log.component}]</span>
+                          <span className="text-muted-foreground">{log.function}</span>
+                          <span className="ml-auto text-muted-foreground text-xs">
+                            {new Date(log.timestamp).toLocaleTimeString('ar')}
+                          </span>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <Badge variant="secondary" className="text-xs">
-                              {log.component}
-                            </Badge>
-                            <span className="text-xs font-mono text-muted-foreground">
-                              {log.function}
-                            </span>
-                            <span className="text-xs text-muted-foreground ml-auto">
-                              {new Date(log.timestamp).toLocaleTimeString('ar')}
-                            </span>
-                          </div>
-                          <p className="text-sm mt-1 line-clamp-2">{log.errorMessage}</p>
-                          
-                          {expandedLog === idx && (
-                            <div className="mt-3 pt-3 border-t border-current opacity-50 space-y-2 text-xs">
-                              {log.stackTrace && (
-                                <div>
-                                  <p className="font-semibold">Stack Trace:</p>
-                                  <pre className="bg-black/10 p-2 rounded overflow-x-auto max-h-32 overflow-y-auto">
-                                    {log.stackTrace}
-                                  </pre>
-                                  <Button
-                                    size="sm"
-                                    variant="ghost"
-                                    className="mt-1 h-6 text-xs"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      copyToClipboard(log.stackTrace);
-                                    }}
-                                  >
-                                    <Copy className="h-3 w-3 mr-1" /> نسخ
-                                  </Button>
-                                </div>
-                              )}
-                              {log.metadata && (
-                                <div>
-                                  <p className="font-semibold">البيانات:</p>
-                                  <pre className="bg-black/10 p-2 rounded overflow-x-auto max-h-32 overflow-y-auto">
-                                    {JSON.stringify(log.metadata, null, 2)}
-                                  </pre>
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                        <ChevronDown className={`h-4 w-4 flex-shrink-0 transition-transform ${expandedLog === idx ? 'rotate-180' : ''}`} />
+                        <p className="mt-1 break-words">{log.errorMessage}</p>
+                        {log.stackTrace && (
+                          <details className="mt-2 cursor-pointer">
+                            <summary className="text-xs text-muted-foreground hover:text-foreground">
+                              Stack Trace
+                            </summary>
+                            <pre className="mt-1 p-1 bg-black/10 rounded text-xs overflow-x-auto max-h-24 overflow-y-auto">
+                              {log.stackTrace}
+                            </pre>
+                          </details>
+                        )}
                       </div>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-6 w-6 p-0 flex-shrink-0"
+                        onClick={() => copyToClipboard(`[${log.timestamp}] ${log.errorType} - ${log.component} - ${log.errorMessage}`)}
+                      >
+                        <Copy className="h-3 w-3" />
+                      </Button>
                     </div>
-                  ))
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="fixed bottom-6 right-6 flex gap-2">
+        <Button
+          onClick={() => setSelectedTab("general")}
+          variant={selectedTab === "general" ? "default" : "outline"}
+          size="lg"
+        >
+          الإعدادات
+        </Button>
+        <Button
+          onClick={() => setSelectedTab("console")}
+          variant={selectedTab === "console" ? "default" : "outline"}
+          size="lg"
+        >
+          سجل الأحداث
+        </Button>
+      </div>
     </div>
   );
 }
