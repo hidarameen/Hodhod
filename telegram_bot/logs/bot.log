@@ -16059,3 +16059,39 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-04 16:52:23,275 - main - INFO - [2025-12-04 16:52:23.275] [INFO] [message_handler::skip] No matching task for chat: الإعلام الشعبي اليمني copy | Data: {'chat_id': '-1003285265410'} | {}
 2025-12-04 16:52:23,618 - main - INFO - [2025-12-04 16:52:23.618] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
 2025-12-04 16:52:23,618 - main - INFO - [2025-12-04 16:52:23.618] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:54:37,675 - main - INFO - [2025-12-04 16:54:37.675] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003285265410', 'chat_title': 'الإعلام الشعبي اليمني copy', 'message_id': 2253, 'message_type': 'media', 'has_text': False, 'has_caption': True, 'media_type': 'MessageMediaType.VIDEO', 'media_group_id': None} | {}
+2025-12-04 16:54:37,675 - main - INFO - [2025-12-04 16:54:37.675] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:54:37,963 - main - INFO - [2025-12-04 16:54:37.963] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:54:37,963 - main - INFO - [2025-12-04 16:54:37.963] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:54:38,146 - main - INFO - [2025-12-04 16:54:38.146] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18188, 'message_type': 'media', 'has_text': False, 'has_caption': True, 'media_type': 'MessageMediaType.VIDEO', 'media_group_id': None} | {}
+2025-12-04 16:54:38,146 - main - INFO - [2025-12-04 16:54:38.146] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:54:38,251 - main - INFO - [2025-12-04 16:54:38.251] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003285265410', 'match': False} | {}
+2025-12-04 16:54:38,251 - main - INFO - [2025-12-04 16:54:38.251] [INFO] [message_handler::skip] No matching task for chat: الإعلام الشعبي اليمني copy | Data: {'chat_id': '-1003285265410'} | {}
+2025-12-04 16:54:38,431 - main - INFO - [2025-12-04 16:54:38.431] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:54:38,432 - main - INFO - [2025-12-04 16:54:38.432] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:54:38,718 - main - INFO - [2025-12-04 16:54:38.718] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:54:38,718 - main - INFO - [2025-12-04 16:54:38.718] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:55:26,304 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 16:55:26,305 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 16:55:26,332 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 16:55:26,342 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 16:55:26,347 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 16:55:26,349 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 16:55:26,354 - main - INFO - [2025-12-04 16:55:26.353] [INFO] [main::entry] Bot script started | {}
+2025-12-04 16:55:26,355 - main - INFO - [2025-12-04 16:55:26.354] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 16:55:26,355 - main - INFO - [2025-12-04 16:55:26.355] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-04 16:55:26,355 - main - INFO - [2025-12-04 16:55:26.355] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-04 16:55:28,146 - database - INFO - Database connected successfully | {}
+2025-12-04 16:55:28,558 - main - INFO - [2025-12-04 16:55:28.558] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 16:55:28,558 - main - INFO - [2025-12-04 16:55:28.558] [WARNING] [session::missing] ⚠️ No active session found! Please login via the web interface. | {}
+2025-12-04 16:55:30,338 - database - INFO - Database connected successfully | {}
+2025-12-04 16:55:42,161 - database - INFO - Database connected successfully | {}
+2025-12-04 16:55:42,595 - main - INFO - [2025-12-04 16:55:42.595] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 16:55:54,501 - database - INFO - Database connected successfully | {}
+2025-12-04 16:55:54,938 - main - INFO - [2025-12-04 16:55:54.938] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 16:56:06,751 - database - INFO - Database connected successfully | {}
+2025-12-04 16:56:07,162 - main - INFO - [2025-12-04 16:56:07.162] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 16:56:18,958 - database - INFO - Database connected successfully | {}
+2025-12-04 16:56:19,371 - main - INFO - [2025-12-04 16:56:19.371] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 16:56:31,168 - database - INFO - Database connected successfully | {}
+2025-12-04 16:56:31,585 - main - INFO - [2025-12-04 16:56:31.585] [INFO] [session::load] No active session found - userbot login required | {}
