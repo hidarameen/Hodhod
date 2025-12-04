@@ -16109,3 +16109,350 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-04 16:57:45,314 - main - INFO - [2025-12-04 16:57:45.314] [INFO] [session::load] No active session found - userbot login required | {}
 2025-12-04 16:57:57,251 - database - INFO - Database connected successfully | {}
 2025-12-04 16:57:57,665 - main - INFO - [2025-12-04 16:57:57.665] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 16:58:09,486 - database - INFO - Database connected successfully | {}
+2025-12-04 16:58:09,913 - main - INFO - [2025-12-04 16:58:09.913] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 16:58:21,698 - database - INFO - Database connected successfully | {}
+2025-12-04 16:58:22,113 - main - INFO - [2025-12-04 16:58:22.113] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 16:58:33,922 - database - INFO - Database connected successfully | {}
+2025-12-04 16:58:34,338 - main - INFO - [2025-12-04 16:58:34.338] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 16:58:46,116 - database - INFO - Database connected successfully | {}
+2025-12-04 16:58:46,530 - main - INFO - [2025-12-04 16:58:46.529] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 16:58:58,306 - database - INFO - Database connected successfully | {}
+2025-12-04 16:58:58,724 - main - INFO - [2025-12-04 16:58:58.724] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 16:59:10,525 - database - INFO - Database connected successfully | {}
+2025-12-04 16:59:10,943 - main - INFO - [2025-12-04 16:59:10.943] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 16:59:22,735 - database - INFO - Database connected successfully | {}
+2025-12-04 16:59:23,160 - main - INFO - [2025-12-04 16:59:23.160] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 16:59:34,954 - database - INFO - Database connected successfully | {}
+2025-12-04 16:59:35,371 - main - INFO - [2025-12-04 16:59:35.371] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 16:59:47,200 - database - INFO - Database connected successfully | {}
+2025-12-04 16:59:47,630 - main - INFO - [2025-12-04 16:59:47.630] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 16:59:59,422 - database - INFO - Database connected successfully | {}
+2025-12-04 16:59:59,840 - main - INFO - [2025-12-04 16:59:59.839] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:00:11,710 - database - INFO - Database connected successfully | {}
+2025-12-04 17:00:12,135 - main - INFO - [2025-12-04 17:00:12.135] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:00:23,976 - database - INFO - Database connected successfully | {}
+2025-12-04 17:00:24,402 - main - INFO - [2025-12-04 17:00:24.402] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:00:36,203 - database - INFO - Database connected successfully | {}
+2025-12-04 17:00:36,631 - main - INFO - [2025-12-04 17:00:36.631] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:00:48,440 - database - INFO - Database connected successfully | {}
+2025-12-04 17:00:48,867 - main - INFO - [2025-12-04 17:00:48.867] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:01:00,702 - database - INFO - Database connected successfully | {}
+2025-12-04 17:01:01,119 - main - INFO - [2025-12-04 17:01:01.119] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:01:12,918 - database - INFO - Database connected successfully | {}
+2025-12-04 17:01:13,345 - main - INFO - [2025-12-04 17:01:13.345] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:01:25,169 - database - INFO - Database connected successfully | {}
+2025-12-04 17:01:25,600 - main - INFO - [2025-12-04 17:01:25.600] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:01:37,369 - database - INFO - Database connected successfully | {}
+2025-12-04 17:01:37,786 - main - INFO - [2025-12-04 17:01:37.786] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:01:49,615 - database - INFO - Database connected successfully | {}
+2025-12-04 17:01:50,031 - main - INFO - [2025-12-04 17:01:50.031] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:02:01,919 - database - INFO - Database connected successfully | {}
+2025-12-04 17:02:02,330 - main - INFO - [2025-12-04 17:02:02.330] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:02:14,164 - database - INFO - Database connected successfully | {}
+2025-12-04 17:02:14,580 - main - INFO - [2025-12-04 17:02:14.580] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:02:26,392 - database - INFO - Database connected successfully | {}
+2025-12-04 17:02:26,808 - main - INFO - [2025-12-04 17:02:26.808] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:02:38,764 - database - INFO - Database connected successfully | {}
+2025-12-04 17:02:39,180 - main - INFO - [2025-12-04 17:02:39.180] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:02:50,963 - database - INFO - Database connected successfully | {}
+2025-12-04 17:02:51,376 - main - INFO - [2025-12-04 17:02:51.376] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:03:03,185 - database - INFO - Database connected successfully | {}
+2025-12-04 17:03:03,609 - main - INFO - [2025-12-04 17:03:03.609] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:03:15,378 - database - INFO - Database connected successfully | {}
+2025-12-04 17:03:15,789 - main - INFO - [2025-12-04 17:03:15.789] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:03:27,621 - database - INFO - Database connected successfully | {}
+2025-12-04 17:03:28,055 - main - INFO - [2025-12-04 17:03:28.054] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:03:39,881 - database - INFO - Database connected successfully | {}
+2025-12-04 17:03:40,312 - main - INFO - [2025-12-04 17:03:40.312] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:03:52,726 - database - INFO - Database connected successfully | {}
+2025-12-04 17:03:53,314 - main - INFO - [2025-12-04 17:03:53.314] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:04:05,468 - database - INFO - Database connected successfully | {}
+2025-12-04 17:04:05,905 - main - INFO - [2025-12-04 17:04:05.905] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:04:18,014 - database - INFO - Database connected successfully | {}
+2025-12-04 17:04:18,434 - main - INFO - [2025-12-04 17:04:18.434] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:04:30,492 - database - INFO - Database connected successfully | {}
+2025-12-04 17:04:30,902 - main - INFO - [2025-12-04 17:04:30.902] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:04:43,012 - database - INFO - Database connected successfully | {}
+2025-12-04 17:04:43,443 - main - INFO - [2025-12-04 17:04:43.443] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:04:55,847 - database - INFO - Database connected successfully | {}
+2025-12-04 17:04:56,437 - main - INFO - [2025-12-04 17:04:56.437] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:05:08,509 - database - INFO - Database connected successfully | {}
+2025-12-04 17:05:08,920 - main - INFO - [2025-12-04 17:05:08.920] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:05:20,774 - database - INFO - Database connected successfully | {}
+2025-12-04 17:05:21,205 - main - INFO - [2025-12-04 17:05:21.205] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:05:33,648 - database - INFO - Database connected successfully | {}
+2025-12-04 17:05:34,233 - main - INFO - [2025-12-04 17:05:34.233] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:06:28,784 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 17:06:28,786 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 17:06:28,792 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 17:06:28,797 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 17:06:28,801 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 17:06:28,803 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 17:06:28,808 - main - INFO - [2025-12-04 17:06:28.807] [INFO] [main::entry] Bot script started | {}
+2025-12-04 17:06:28,809 - main - INFO - [2025-12-04 17:06:28.808] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 17:06:28,809 - main - WARNING - [2025-12-04 17:06:28.809] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-04 17:06:28,810 - main - INFO - [2025-12-04 17:06:28.809] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-04 17:06:28,810 - main - INFO - [2025-12-04 17:06:28.810] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-04 17:06:28,810 - main - INFO - [2025-12-04 17:06:28.810] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-04 17:06:28,810 - queue_system - INFO - Queue manager stopped | {}
+2025-12-04 17:06:28,810 - main - INFO - [2025-12-04 17:06:28.810] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-04 17:06:28,810 - main - INFO - [2025-12-04 17:06:28.810] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-04 17:06:28,810 - main - INFO - [2025-12-04 17:06:28.810] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-04 17:06:28,810 - main - INFO - [2025-12-04 17:06:28.810] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-04 17:06:35,452 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 17:06:35,452 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 17:06:35,456 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 17:06:35,458 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 17:06:35,460 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 17:06:35,462 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 17:06:35,464 - main - INFO - [2025-12-04 17:06:35.464] [INFO] [main::entry] Bot script started | {}
+2025-12-04 17:06:35,465 - main - INFO - [2025-12-04 17:06:35.465] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 17:06:35,465 - main - WARNING - [2025-12-04 17:06:35.465] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-04 17:06:35,465 - main - INFO - [2025-12-04 17:06:35.465] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-04 17:06:35,465 - main - INFO - [2025-12-04 17:06:35.465] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-04 17:06:35,465 - main - INFO - [2025-12-04 17:06:35.465] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-04 17:06:35,465 - queue_system - INFO - Queue manager stopped | {}
+2025-12-04 17:06:35,465 - main - INFO - [2025-12-04 17:06:35.465] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-04 17:06:35,465 - main - INFO - [2025-12-04 17:06:35.465] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-04 17:06:35,465 - main - INFO - [2025-12-04 17:06:35.465] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-04 17:06:35,465 - main - INFO - [2025-12-04 17:06:35.465] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-04 17:06:41,971 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 17:06:41,972 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 17:06:41,976 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 17:06:41,978 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 17:06:41,980 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 17:06:41,982 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 17:06:41,984 - main - INFO - [2025-12-04 17:06:41.984] [INFO] [main::entry] Bot script started | {}
+2025-12-04 17:06:41,984 - main - INFO - [2025-12-04 17:06:41.984] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 17:06:41,985 - main - WARNING - [2025-12-04 17:06:41.985] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-04 17:06:41,985 - main - INFO - [2025-12-04 17:06:41.985] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-04 17:06:41,985 - main - INFO - [2025-12-04 17:06:41.985] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-04 17:06:41,985 - main - INFO - [2025-12-04 17:06:41.985] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-04 17:06:41,985 - queue_system - INFO - Queue manager stopped | {}
+2025-12-04 17:06:41,985 - main - INFO - [2025-12-04 17:06:41.985] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-04 17:06:41,986 - main - INFO - [2025-12-04 17:06:41.986] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-04 17:06:41,987 - main - INFO - [2025-12-04 17:06:41.987] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-04 17:06:41,987 - main - INFO - [2025-12-04 17:06:41.987] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-04 17:06:48,585 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 17:06:48,586 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 17:06:48,590 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 17:06:48,592 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 17:06:48,594 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 17:06:48,596 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 17:06:48,599 - main - INFO - [2025-12-04 17:06:48.599] [INFO] [main::entry] Bot script started | {}
+2025-12-04 17:06:48,600 - main - INFO - [2025-12-04 17:06:48.600] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 17:06:48,600 - main - WARNING - [2025-12-04 17:06:48.600] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-04 17:06:48,600 - main - INFO - [2025-12-04 17:06:48.600] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-04 17:06:48,600 - main - INFO - [2025-12-04 17:06:48.600] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-04 17:06:48,600 - main - INFO - [2025-12-04 17:06:48.600] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-04 17:06:48,600 - queue_system - INFO - Queue manager stopped | {}
+2025-12-04 17:06:48,600 - main - INFO - [2025-12-04 17:06:48.600] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-04 17:06:48,600 - main - INFO - [2025-12-04 17:06:48.600] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-04 17:06:48,600 - main - INFO - [2025-12-04 17:06:48.600] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-04 17:06:48,601 - main - INFO - [2025-12-04 17:06:48.601] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-04 17:06:55,115 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 17:06:55,116 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 17:06:55,129 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 17:06:55,131 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 17:06:55,134 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 17:06:55,136 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 17:06:55,140 - main - INFO - [2025-12-04 17:06:55.140] [INFO] [main::entry] Bot script started | {}
+2025-12-04 17:06:55,140 - main - INFO - [2025-12-04 17:06:55.140] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 17:06:55,142 - main - WARNING - [2025-12-04 17:06:55.142] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-04 17:06:55,142 - main - INFO - [2025-12-04 17:06:55.142] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-04 17:06:55,143 - main - INFO - [2025-12-04 17:06:55.143] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-04 17:06:55,144 - main - INFO - [2025-12-04 17:06:55.144] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-04 17:06:55,144 - queue_system - INFO - Queue manager stopped | {}
+2025-12-04 17:06:55,145 - main - INFO - [2025-12-04 17:06:55.145] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-04 17:06:55,145 - main - INFO - [2025-12-04 17:06:55.145] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-04 17:06:55,145 - main - INFO - [2025-12-04 17:06:55.145] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-04 17:06:55,146 - main - INFO - [2025-12-04 17:06:55.146] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-04 17:07:01,711 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 17:07:01,712 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 17:07:01,715 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 17:07:01,717 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 17:07:01,718 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 17:07:01,719 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 17:07:01,722 - main - INFO - [2025-12-04 17:07:01.722] [INFO] [main::entry] Bot script started | {}
+2025-12-04 17:07:01,722 - main - INFO - [2025-12-04 17:07:01.722] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 17:07:01,722 - main - WARNING - [2025-12-04 17:07:01.722] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-04 17:07:01,722 - main - INFO - [2025-12-04 17:07:01.722] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-04 17:07:01,722 - main - INFO - [2025-12-04 17:07:01.722] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-04 17:07:01,723 - main - INFO - [2025-12-04 17:07:01.722] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-04 17:07:01,723 - queue_system - INFO - Queue manager stopped | {}
+2025-12-04 17:07:01,723 - main - INFO - [2025-12-04 17:07:01.723] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-04 17:07:01,723 - main - INFO - [2025-12-04 17:07:01.723] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-04 17:07:01,723 - main - INFO - [2025-12-04 17:07:01.723] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-04 17:07:01,723 - main - INFO - [2025-12-04 17:07:01.723] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-04 17:45:35,755 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 17:45:35,759 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 17:45:35,767 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 17:45:35,770 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 17:45:35,773 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 17:45:35,774 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 17:45:35,781 - main - INFO - [2025-12-04 17:45:35.781] [INFO] [main::entry] Bot script started | {}
+2025-12-04 17:45:35,781 - main - INFO - [2025-12-04 17:45:35.781] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 17:45:35,781 - main - WARNING - [2025-12-04 17:45:35.781] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-04 17:45:35,782 - main - INFO - [2025-12-04 17:45:35.781] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-04 17:45:35,782 - main - INFO - [2025-12-04 17:45:35.782] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-04 17:45:35,782 - main - INFO - [2025-12-04 17:45:35.782] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-04 17:45:35,782 - queue_system - INFO - Queue manager stopped | {}
+2025-12-04 17:45:35,782 - main - INFO - [2025-12-04 17:45:35.782] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-04 17:45:35,782 - main - INFO - [2025-12-04 17:45:35.782] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-04 17:45:35,782 - main - INFO - [2025-12-04 17:45:35.782] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-04 17:45:35,782 - main - INFO - [2025-12-04 17:45:35.782] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-04 17:45:42,332 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 17:45:42,333 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 17:45:42,336 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 17:45:42,338 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 17:45:42,340 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 17:45:42,342 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 17:45:42,345 - main - INFO - [2025-12-04 17:45:42.345] [INFO] [main::entry] Bot script started | {}
+2025-12-04 17:45:42,346 - main - INFO - [2025-12-04 17:45:42.346] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 17:45:42,346 - main - WARNING - [2025-12-04 17:45:42.346] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-04 17:45:42,347 - main - INFO - [2025-12-04 17:45:42.346] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-04 17:45:42,347 - main - INFO - [2025-12-04 17:45:42.347] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-04 17:45:42,347 - main - INFO - [2025-12-04 17:45:42.347] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-04 17:45:42,347 - queue_system - INFO - Queue manager stopped | {}
+2025-12-04 17:45:42,347 - main - INFO - [2025-12-04 17:45:42.347] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-04 17:45:42,347 - main - INFO - [2025-12-04 17:45:42.347] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-04 17:45:42,347 - main - INFO - [2025-12-04 17:45:42.347] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-04 17:45:42,347 - main - INFO - [2025-12-04 17:45:42.347] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-04 17:45:49,066 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 17:45:49,068 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 17:45:49,072 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 17:45:49,074 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 17:45:49,076 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 17:45:49,078 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 17:45:49,081 - main - INFO - [2025-12-04 17:45:49.081] [INFO] [main::entry] Bot script started | {}
+2025-12-04 17:45:49,081 - main - INFO - [2025-12-04 17:45:49.081] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 17:45:49,081 - main - WARNING - [2025-12-04 17:45:49.081] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-04 17:45:49,081 - main - INFO - [2025-12-04 17:45:49.081] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-04 17:45:49,081 - main - INFO - [2025-12-04 17:45:49.081] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-04 17:45:49,081 - main - INFO - [2025-12-04 17:45:49.081] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-04 17:45:49,082 - queue_system - INFO - Queue manager stopped | {}
+2025-12-04 17:45:49,082 - main - INFO - [2025-12-04 17:45:49.082] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-04 17:45:49,082 - main - INFO - [2025-12-04 17:45:49.082] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-04 17:45:49,082 - main - INFO - [2025-12-04 17:45:49.082] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-04 17:45:49,082 - main - INFO - [2025-12-04 17:45:49.082] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-04 17:45:55,672 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 17:45:55,673 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 17:45:55,679 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 17:45:55,681 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 17:45:55,683 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 17:45:55,685 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 17:45:55,688 - main - INFO - [2025-12-04 17:45:55.688] [INFO] [main::entry] Bot script started | {}
+2025-12-04 17:45:55,689 - main - INFO - [2025-12-04 17:45:55.689] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 17:45:55,689 - main - WARNING - [2025-12-04 17:45:55.689] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-04 17:45:55,689 - main - INFO - [2025-12-04 17:45:55.689] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-04 17:45:55,689 - main - INFO - [2025-12-04 17:45:55.689] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-04 17:45:55,689 - main - INFO - [2025-12-04 17:45:55.689] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-04 17:45:55,689 - queue_system - INFO - Queue manager stopped | {}
+2025-12-04 17:45:55,689 - main - INFO - [2025-12-04 17:45:55.689] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-04 17:45:55,689 - main - INFO - [2025-12-04 17:45:55.689] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-04 17:45:55,689 - main - INFO - [2025-12-04 17:45:55.689] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-04 17:45:55,690 - main - INFO - [2025-12-04 17:45:55.690] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-04 17:46:02,330 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 17:46:02,331 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 17:46:02,335 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 17:46:02,338 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 17:46:02,339 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 17:46:02,341 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 17:46:02,344 - main - INFO - [2025-12-04 17:46:02.344] [INFO] [main::entry] Bot script started | {}
+2025-12-04 17:46:02,344 - main - INFO - [2025-12-04 17:46:02.344] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 17:46:02,345 - main - WARNING - [2025-12-04 17:46:02.345] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-04 17:46:02,345 - main - INFO - [2025-12-04 17:46:02.345] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-04 17:46:02,345 - main - INFO - [2025-12-04 17:46:02.345] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-04 17:46:02,345 - main - INFO - [2025-12-04 17:46:02.345] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-04 17:46:02,345 - queue_system - INFO - Queue manager stopped | {}
+2025-12-04 17:46:02,345 - main - INFO - [2025-12-04 17:46:02.345] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-04 17:46:02,345 - main - INFO - [2025-12-04 17:46:02.345] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-04 17:46:02,345 - main - INFO - [2025-12-04 17:46:02.345] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-04 17:46:02,345 - main - INFO - [2025-12-04 17:46:02.345] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-04 17:46:08,919 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 17:46:08,921 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 17:46:08,927 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 17:46:08,929 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 17:46:08,931 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 17:46:08,933 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 17:46:08,936 - main - INFO - [2025-12-04 17:46:08.936] [INFO] [main::entry] Bot script started | {}
+2025-12-04 17:46:08,937 - main - INFO - [2025-12-04 17:46:08.937] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 17:46:08,937 - main - WARNING - [2025-12-04 17:46:08.937] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-04 17:46:08,937 - main - INFO - [2025-12-04 17:46:08.937] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-04 17:46:08,937 - main - INFO - [2025-12-04 17:46:08.937] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-04 17:46:08,937 - main - INFO - [2025-12-04 17:46:08.937] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-04 17:46:08,937 - queue_system - INFO - Queue manager stopped | {}
+2025-12-04 17:46:08,937 - main - INFO - [2025-12-04 17:46:08.937] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-04 17:46:08,937 - main - INFO - [2025-12-04 17:46:08.937] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-04 17:46:08,938 - main - INFO - [2025-12-04 17:46:08.938] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-04 17:46:08,938 - main - INFO - [2025-12-04 17:46:08.938] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-04 17:46:52,440 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 17:46:52,444 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 17:46:52,452 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 17:46:52,454 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 17:46:52,456 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 17:46:52,458 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 17:46:52,462 - main - INFO - [2025-12-04 17:46:52.462] [INFO] [main::entry] Bot script started | {}
+2025-12-04 17:46:52,462 - main - INFO - [2025-12-04 17:46:52.462] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 17:46:52,463 - main - INFO - [2025-12-04 17:46:52.463] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-04 17:46:52,463 - main - INFO - [2025-12-04 17:46:52.463] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-04 17:46:54,871 - database - INFO - Database connected successfully | {}
+2025-12-04 17:46:55,308 - main - INFO - [2025-12-04 17:46:55.308] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:46:55,308 - main - INFO - [2025-12-04 17:46:55.308] [WARNING] [session::missing] ⚠️ No active session found! Please login via the web interface. | {}
+2025-12-04 17:46:57,075 - database - INFO - Database connected successfully | {}
+2025-12-04 17:47:08,884 - database - INFO - Database connected successfully | {}
+2025-12-04 17:47:09,296 - main - INFO - [2025-12-04 17:47:09.296] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:47:21,122 - database - INFO - Database connected successfully | {}
+2025-12-04 17:47:21,544 - main - INFO - [2025-12-04 17:47:21.544] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:47:33,415 - database - INFO - Database connected successfully | {}
+2025-12-04 17:47:33,833 - main - INFO - [2025-12-04 17:47:33.833] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:47:45,628 - database - INFO - Database connected successfully | {}
+2025-12-04 17:47:46,040 - main - INFO - [2025-12-04 17:47:46.040] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:47:57,078 - services.userbot_auth - INFO - Starting login for phone: +2015***
+2025-12-04 17:47:57,904 - database - INFO - Database connected successfully | {}
+2025-12-04 17:47:58,334 - main - INFO - [2025-12-04 17:47:58.333] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:47:58,918 - database - INFO - Database connected successfully | {}
+2025-12-04 17:47:59,864 - pyrogram.session.auth - INFO - Start creating a new auth key on DC2
+2025-12-04 17:47:59,864 - pyrogram.connection.connection - INFO - Connecting...
+2025-12-04 17:48:00,051 - pyrogram.connection.connection - INFO - Connected! Production DC2 - IPv4
+2025-12-04 17:48:02,718 - pyrogram.session.auth - INFO - Done auth key exchange: DhGenOk
+2025-12-04 17:48:02,718 - pyrogram.connection.connection - INFO - Disconnected
+2025-12-04 17:48:02,776 - pyrogram.connection.connection - INFO - Connecting...
+2025-12-04 17:48:02,962 - pyrogram.connection.connection - INFO - Connected! Production DC2 - IPv4
+2025-12-04 17:48:02,964 - pyrogram.session.session - INFO - NetworkTask started
+2025-12-04 17:48:03,813 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-12-04 17:48:03,813 - pyrogram.session.session - INFO - Device: CPython 3.11.13 - Pyrogram 2.0.106
+2025-12-04 17:48:03,813 - pyrogram.session.session - INFO - System: Linux 6.14.11 (en)
+2025-12-04 17:48:03,813 - pyrogram.session.session - INFO - Session started
+2025-12-04 17:48:03,830 - pyrogram.session.session - INFO - PingTask started
+2025-12-04 17:48:04,101 - pyrogram.session.session - INFO - PingTask stopped
+2025-12-04 17:48:04,102 - pyrogram.connection.connection - INFO - Disconnected
+2025-12-04 17:48:04,102 - pyrogram.session.session - INFO - NetworkTask stopped
+2025-12-04 17:48:04,102 - pyrogram.session.session - INFO - Session stopped
+2025-12-04 17:48:04,137 - pyrogram.session.auth - INFO - Start creating a new auth key on DC4
+2025-12-04 17:48:04,137 - pyrogram.connection.connection - INFO - Connecting...
+2025-12-04 17:48:04,331 - pyrogram.connection.connection - INFO - Connected! Production DC4 - IPv4
+2025-12-04 17:48:06,414 - pyrogram.session.auth - INFO - Done auth key exchange: DhGenOk
+2025-12-04 17:48:06,415 - pyrogram.connection.connection - INFO - Disconnected
+2025-12-04 17:48:06,480 - pyrogram.connection.connection - INFO - Connecting...
+2025-12-04 17:48:06,668 - pyrogram.connection.connection - INFO - Connected! Production DC4 - IPv4
+2025-12-04 17:48:06,668 - pyrogram.session.session - INFO - NetworkTask started
+2025-12-04 17:48:07,510 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-12-04 17:48:07,510 - pyrogram.session.session - INFO - Device: CPython 3.11.13 - Pyrogram 2.0.106
+2025-12-04 17:48:07,510 - pyrogram.session.session - INFO - System: Linux 6.14.11 (en)
+2025-12-04 17:48:07,510 - pyrogram.session.session - INFO - Session started
+2025-12-04 17:48:07,510 - pyrogram.session.session - INFO - PingTask started
+2025-12-04 17:48:08,711 - services.userbot_auth - INFO - OTP sent successfully to +2015***
+2025-12-04 17:48:10,129 - database - INFO - Database connected successfully | {}
+2025-12-04 17:48:10,544 - main - INFO - [2025-12-04 17:48:10.544] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:48:22,375 - database - INFO - Database connected successfully | {}
+2025-12-04 17:48:22,794 - main - INFO - [2025-12-04 17:48:22.793] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:48:34,629 - database - INFO - Database connected successfully | {}
+2025-12-04 17:48:35,056 - main - INFO - [2025-12-04 17:48:35.056] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:48:46,895 - database - INFO - Database connected successfully | {}
+2025-12-04 17:48:47,329 - main - INFO - [2025-12-04 17:48:47.329] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:48:59,178 - database - INFO - Database connected successfully | {}
+2025-12-04 17:48:59,609 - main - INFO - [2025-12-04 17:48:59.609] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:49:11,426 - database - INFO - Database connected successfully | {}
+2025-12-04 17:49:11,853 - main - INFO - [2025-12-04 17:49:11.853] [INFO] [session::load] No active session found - userbot login required | {}
