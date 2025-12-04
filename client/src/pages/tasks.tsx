@@ -402,9 +402,9 @@ export default function TasksPage() {
               <DialogTitle>{editMode ? "تعديل المهمة" : "إنشاء مهمة توجيه جديدة"}</DialogTitle>
               <DialogDescription>أدخل تفاصيل المهمة واختر القنوات المصدر والهدف</DialogDescription>
             </DialogHeader>
-            <Tabs defaultValue={editMode ? "basic" : selectedTaskId ? "summarization" : "basic"} className="w-full">
+            <Tabs defaultValue="basic" className="w-full">
               <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="basic" disabled={selectedTaskId ? true : false} className="disabled:opacity-50">الأساسيات</TabsTrigger>
+                <TabsTrigger value="basic">الأساسيات</TabsTrigger>
                 <TabsTrigger value="summarization" className="flex items-center gap-2">
                   <FileText className="h-4 w-4" />
                   <span className="hidden sm:inline">التلخيص</span>
