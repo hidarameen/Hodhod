@@ -106,6 +106,10 @@ class ApiClient {
     return this.request<any[]>(`/error-logs?limit=${limit}`);
   }
 
+  async getConsoleLogs() {
+    return this.request<any[]>("/error-logs?limit=1000");
+  }
+
   // Channels
   async getChannels() {
     return this.request<any[]>("/channels");
