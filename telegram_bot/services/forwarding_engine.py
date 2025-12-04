@@ -1058,14 +1058,14 @@ class ForwardingEngine:
                                     "formatted_preview": formatted_value[:100] if len(formatted_value) > 100 else formatted_value
                                 })
                     
-                    # Build the field text
+                    # Build the field text (don't strip - preserves formatting)
                     if show_label and field_label:
                         field_text = f"{field_label}{label_separator}{prefix}{formatted_value}{suffix}"
                     else:
                         field_text = f"{prefix}{formatted_value}{suffix}"
                     
-                    if field_text.strip():
-                        field_parts.append(field_text.strip())
+                    if field_text:
+                        field_parts.append(field_text)
             
             if field_parts:
                 result_parts.append(field_separator.join(field_parts))
