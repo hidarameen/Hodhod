@@ -973,9 +973,20 @@ export class DbStorage implements IStorage {
       for (let i = 0; i < customFields.length; i++) {
         const field = customFields[i];
         await this.createTemplateCustomField({
-          ...field,
           templateId: id,
-          displayOrder: i
+          fieldName: field.fieldName,
+          fieldLabel: field.fieldLabel,
+          extractionInstructions: field.extractionInstructions,
+          defaultValue: field.defaultValue,
+          useDefaultIfEmpty: field.useDefaultIfEmpty,
+          formatting: field.formatting,
+          displayOrder: i,
+          showLabel: field.showLabel,
+          labelSeparator: field.labelSeparator,
+          prefix: field.prefix,
+          suffix: field.suffix,
+          fieldType: field.fieldType,
+          isActive: field.isActive ?? true
         });
       }
     }
