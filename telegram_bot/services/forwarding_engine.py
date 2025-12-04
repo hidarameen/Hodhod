@@ -1306,39 +1306,60 @@ class ForwardingEngine:
             # This ensures template is applied to ALL forwarded messages
             if task_id and final_text:
                 log_detailed("info", "forwarding_engine", "_forward_to_target", 
-                            "Applying publishing template as final step...")
+                            "🔧 [TEMPLATE STAGE 1] Starting publishing template application...", {
+                                "task_id": task_id,
+                                "text_length": len(final_text),
+                                "has_entities": bool(final_entities)
+                            })
                 template_applied_text = await self._apply_publishing_template(final_text, task_id)
+                
+                log_detailed("info", "forwarding_engine", "_forward_to_target",
+                            "🔧 [TEMPLATE STAGE 2] Template function returned", {
+                                "returned_length": len(template_applied_text) if template_applied_text else 0,
+                                "is_empty": not template_applied_text,
+                                "is_same_as_input": template_applied_text == final_text,
+                                "has_html_tags": any(tag in (template_applied_text or "") for tag in ['<b>', '<i>', '<blockquote>', '<u>', '<s>']),
+                                "preview": (template_applied_text or "")[:150]
+                            })
+                
                 if template_applied_text and template_applied_text != final_text:
                     final_text = template_applied_text
                     final_entities = None  # Reset entities since text was modified by template
                     log_detailed("info", "forwarding_engine", "_forward_to_target", 
-                                "Template applied successfully", {
+                                "✅ [TEMPLATE STAGE 3] Template applied successfully", {
                                     "original_length": len(original_text),
-                                    "final_length": len(final_text)
+                                    "template_length": len(final_text),
+                                    "has_html_formatting": any(tag in final_text for tag in ['<b>', '<i>', '<blockquote>', '<u>', '<s>']),
+                                    "entities_reset": True
                                 })
+                elif not template_applied_text:
+                    log_detailed("warning", "forwarding_engine", "_forward_to_target", 
+                                "⚠️ [TEMPLATE STAGE 3] Template returned empty result")
+                else:
+                    log_detailed("debug", "forwarding_engine", "_forward_to_target", 
+                                "ℹ️ [TEMPLATE STAGE 3] Template returned same text (no changes)")
             
             # Create Telegraph page if text was processed
             telegraph_url = None
             if use_processed and original_text:
-                print(f"\n{'='*100}")
-                print(f"[🔗 TELEGRAPH] Starting Telegraph page creation")
-                print(f"{'='*100}")
+                log_detailed("info", "forwarding_engine", "_forward_to_target", 
+                            "🔗 [TELEGRAPH STAGE 1] Starting Telegraph page creation")
                 
                 # Collect media
                 photos_ids = [message.photo.file_id] if message.photo else []
                 videos_info = [{'file_id': message.video.file_id, 'title': 'فيديو'} if message.video else None]
                 videos_info = [v for v in videos_info if v]
                 
-                print(f"[🔗 MEDIA] Photos: {len(photos_ids)}, Videos: {len(videos_info)}")
-                
                 # Create download wrapper
                 async def download_wrapper(fid):
                     try:
                         result = await self.client.download_media(fid)
-                        print(f"  [DOWN] Downloaded to: {result}")
+                        log_detailed("debug", "forwarding_engine", "_forward_to_target",
+                                    "Downloaded media", {"path": result})
                         return result
                     except Exception as e:
-                        print(f"  [DOWN] Error: {str(e)[:60]}")
+                        log_detailed("warning", "forwarding_engine", "_forward_to_target",
+                                    f"Media download failed: {str(e)[:60]}")
                         return None
                 
                 telegraph_url = await telegraph_manager.create_original_content_page(
@@ -1349,12 +1370,20 @@ class ForwardingEngine:
                 )
                 
                 if telegraph_url:
-                    print(f"[🔗 RESULT] ✅ Telegraph page created: {telegraph_url}")
+                    log_detailed("info", "forwarding_engine", "_forward_to_target",
+                                "🔗 [TELEGRAPH STAGE 2] Telegraph page created, adding link")
+                    final_text_before_link = final_text
                     final_text = f'{final_text}\n\n📰 <a href="{telegraph_url}">اقرأ كامل الخبر</a>'
+                    log_detailed("info", "forwarding_engine", "_forward_to_target",
+                                "🔗 [TELEGRAPH STAGE 3] Link added to text", {
+                                    "url": telegraph_url,
+                                    "text_before_link": len(final_text_before_link),
+                                    "text_after_link": len(final_text),
+                                    "new_content": final_text[len(final_text_before_link):] if len(final_text) > len(final_text_before_link) else "N/A"
+                                })
                 else:
-                    print(f"[🔗 RESULT] ⚠️ Telegraph page creation failed")
-                
-                print(f"{'='*100}\n")
+                    log_detailed("warning", "forwarding_engine", "_forward_to_target",
+                                "⚠️ [TELEGRAPH STAGE 2] Telegraph page creation failed")
             
             log_detailed("info", "forwarding_engine", "_forward_to_target", "Text processing", {
                 "original_length": len(original_text),
@@ -1536,12 +1565,20 @@ class ForwardingEngine:
                 )
             elif final_text:
                 # Text message with entities preserved or parse_mode
-                log_detailed("info", "forwarding_engine", "_forward_to_target", "Sending text message...", {
-                    "use_parse_mode": use_parse_mode,
-                    "text_preview": final_text[:300] if len(final_text) > 300 else final_text,
-                    "has_html_tags": any(tag in final_text for tag in ['<b>', '<i>', '<blockquote>', '<u>', '<s>']),
-                })
+                log_detailed("info", "forwarding_engine", "_forward_to_target", 
+                            "📤 [SEND STAGE 1] Preparing text message...", {
+                                "use_parse_mode": use_parse_mode,
+                                "text_length": len(final_text),
+                                "has_html_tags": any(tag in final_text for tag in ['<b>', '<i>', '<blockquote>', '<u>', '<s>']),
+                                "text_preview": final_text[:200] if len(final_text) > 200 else final_text
+                            })
+                
                 if use_parse_mode:
+                    log_detailed("info", "forwarding_engine", "_forward_to_target",
+                                "📤 [SEND STAGE 2] Sending with HTML parse_mode", {
+                                    "chat_id": target_identifier,
+                                    "parse_mode": "HTML"
+                                })
                     await self.client.send_message(
                         chat_id=target_identifier,
                         text=final_text,
@@ -1549,6 +1586,11 @@ class ForwardingEngine:
                         disable_web_page_preview=True
                     )
                 else:
+                    log_detailed("info", "forwarding_engine", "_forward_to_target",
+                                "📤 [SEND STAGE 2] Sending with entities", {
+                                    "chat_id": target_identifier,
+                                    "entities_count": len(final_entities) if final_entities else 0
+                                })
                     await self.client.send_message(
                         chat_id=target_identifier,
                         text=final_text,
