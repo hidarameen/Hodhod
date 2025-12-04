@@ -783,7 +783,7 @@ export default function SettingsPage() {
           <CardContent className="space-y-4">
             <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-center">
               <div className="flex gap-2 flex-wrap flex-1">
-                <Select value={logFilter.level || "all"} onValueChange={(value) => setLogFilter({...logFilter, level: value === "all" ? "" : value})}>
+                <Select value={logFilter.level === "" ? "all" : logFilter.level} onValueChange={(value) => setLogFilter({...logFilter, level: value === "all" ? "" : value})}>
                   <SelectTrigger className="w-full sm:w-36">
                     <SelectValue placeholder="كل المستويات" />
                   </SelectTrigger>
@@ -795,7 +795,7 @@ export default function SettingsPage() {
                   </SelectContent>
                 </Select>
 
-                <Select value={logFilter.source || "all"} onValueChange={(value) => setLogFilter({...logFilter, source: value === "all" ? "" : value})}>
+                <Select value={logFilter.source === "" ? "all" : logFilter.source} onValueChange={(value) => setLogFilter({...logFilter, source: value === "all" ? "" : value})}>
                   <SelectTrigger className="w-full sm:w-36">
                     <SelectValue placeholder="كل المصادر" />
                   </SelectTrigger>
