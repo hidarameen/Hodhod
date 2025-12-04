@@ -780,24 +780,24 @@ export default function SettingsPage() {
         {showConsoleLogs && (
           <CardContent className="space-y-4">
             <div className="flex flex-col sm:flex-row gap-2">
-              <Select value={logFilter.level || "all"} onValueChange={(value) => setLogFilter({...logFilter, level: value === "all" ? "" : value})}>
+              <Select value={logFilter.level} onValueChange={(value) => setLogFilter({...logFilter, level: value})}>
                 <SelectTrigger className="w-full sm:w-40">
                   <SelectValue placeholder="كل المستويات" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">الكل</SelectItem>
+                  <SelectItem value="">الكل</SelectItem>
                   <SelectItem value="info">معلومات</SelectItem>
                   <SelectItem value="warn">تحذيرات</SelectItem>
                   <SelectItem value="error">أخطاء</SelectItem>
                 </SelectContent>
               </Select>
 
-              <Select value={logFilter.source || "all"} onValueChange={(value) => setLogFilter({...logFilter, source: value === "all" ? "" : value})}>
+              <Select value={logFilter.source} onValueChange={(value) => setLogFilter({...logFilter, source: value})}>
                 <SelectTrigger className="w-full sm:w-40">
                   <SelectValue placeholder="كل المصادر" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">الكل</SelectItem>
+                  <SelectItem value="">الكل</SelectItem>
                   <SelectItem value="telegram-bot">البوت</SelectItem>
                   <SelectItem value="express">السيرفر</SelectItem>
                   <SelectItem value="auth-service">المصادقة</SelectItem>
