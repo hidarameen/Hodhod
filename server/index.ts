@@ -4,7 +4,6 @@ import { serveStatic } from "./static";
 import { createServer } from "http";
 import { spawn, ChildProcess } from "child_process";
 import { authServiceManager } from "./auth-service-manager";
-import { consoleLogger } from "./console-logger";
 import path from "path";
 
 const app = express();
@@ -52,7 +51,6 @@ function startTelegramBot() {
     lines.forEach((line: string) => {
       if (line.trim()) {
         console.log(`[telegram-bot] ${line}`);
-        consoleLogger.addLog('info', 'telegram-bot', line);
       }
     });
   });
@@ -62,8 +60,6 @@ function startTelegramBot() {
     lines.forEach((line: string) => {
       if (line.trim()) {
         console.error(`[telegram-bot-err] ${line}`);
-        const level = line.includes('ERROR') ? 'error' : line.includes('WARN') ? 'warn' : 'info';
-        consoleLogger.addLog(level, 'telegram-bot-err', line);
       }
     });
   });
@@ -137,7 +133,6 @@ export function log(message: string, source = "express") {
   });
 
   console.log(`${formattedTime} [${source}] ${message}`);
-  consoleLogger.addLog('info', source, message);
 }
 
 app.use((req, res, next) => {
