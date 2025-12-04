@@ -964,6 +964,21 @@ export class DbStorage implements IStorage {
       .update(schema.aiPublishingTemplates)
       .set({ ...templateData, updatedAt: new Date() })
       .where(eq(schema.aiPublishingTemplates.id, id));
+    
+    if (customFields && Array.isArray(customFields)) {
+      await database
+        .delete(schema.templateCustomFields)
+        .where(eq(schema.templateCustomFields.templateId, id));
+      
+      for (let i = 0; i < customFields.length; i++) {
+        const field = customFields[i];
+        await this.createTemplateCustomField({
+          ...field,
+          templateId: id,
+          displayOrder: i
+        });
+      }
+    }
   }
 
   async deletePublishingTemplate(id: number): Promise<void> {
