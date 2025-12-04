@@ -18068,3 +18068,797 @@ Okay, let's see. The user wants me to extract specific information from the give
 2025-12-04 21:23:50,940 - forwarding_engine - INFO - [2025-12-04 21:23:50.940] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Set date field: التاريخ_ = 2025-12-04 | {}
 2025-12-04 21:23:50,941 - forwarding_engine - INFO - [2025-12-04 21:23:50.940] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Set static field: المختص = حيدر  | {}
 2025-12-04 21:23:50,941 - forwarding_engine - INFO - [2025-12-04 21:23:50.941] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: المصدر_ | {}
+2025-12-04 21:23:51,978 - forwarding_engine - INFO - [2025-12-04 21:23:51.978] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Extracting fields with groq/meta-llama/llama-4-maverick-17b-128e-instruct | Data: {'fields_count': 4, 'prompt_length': 733} | {}
+2025-12-04 21:23:51,979 - ai_providers - INFO - [Groq] Starting request | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Max Tokens: 500 | Temperature: 0.3 | Input length: 795 chars | {}
+2025-12-04 21:23:52,152 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 21:23:52,153 - ai_providers - INFO - [Groq] ✅ Success | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Output length: 84 chars | First 100 chars: {
+  "رقم_القيد": "",
+  "التصنيف_": "سياسي",
+  "المحافظه_": "مأرب",
+  "المصدر_": ""
+} | {}
+2025-12-04 21:23:52,154 - forwarding_engine - INFO - [2025-12-04 21:23:52.154] [DEBUG] [forwarding_engine::_extract_fields_with_ai] AI response received | Data: {'response_length': 84, 'response_preview': '{\n  "رقم_القيد": "",\n  "التصنيف_": "سياسي",\n  "المحافظه_": "مأرب",\n  "المصدر_": ""\n}'} | {}
+2025-12-04 21:23:52,154 - forwarding_engine - INFO - [2025-12-04 21:23:52.154] [INFO] [forwarding_engine::_extract_fields_with_ai] AI extracted fields | Data: {'ai_extracted': {'رقم_القيد': '', 'التصنيف_': 'سياسي', 'المحافظه_': 'مأرب', 'المصدر_': ''}} | {}
+2025-12-04 21:23:52,154 - forwarding_engine - INFO - [2025-12-04 21:23:52.154] [INFO] [forwarding_engine::_extract_fields_with_ai] Final extracted fields | Data: {'extracted': {'التلخيص': 'عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، في ظل تطورات متسارعة بمحافظة حضرموت حيث تمكنت قوات ما يسمى بالمجلس الانتقالي من السيطرة على مناطق حضرموت والمهرة، مما يثير مخاوف لدى حزب الإصلاح.', 'التاريخ_': '2025-12-04', 'المختص': 'حيدر ', 'رقم_القيد': '', 'التصنيف_': 'سياسي', 'المحافظه_': 'مأرب', 'المصدر_': ''}} | {}
+2025-12-04 21:23:52,154 - forwarding_engine - INFO - [2025-12-04 21:23:52.154] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: رقم_القيد | Data: {'has_value': False, 'value_preview': 'empty', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:23:52,154 - forwarding_engine - INFO - [2025-12-04 21:23:52.154] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التصنيف_ | Data: {'has_value': True, 'value_preview': 'سياسي', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:23:52,154 - forwarding_engine - INFO - [2025-12-04 21:23:52.154] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التصنيف_ | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'سياسي'} | {}
+2025-12-04 21:23:52,154 - forwarding_engine - INFO - [2025-12-04 21:23:52.154] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المحافظه_ | Data: {'has_value': True, 'value_preview': 'مأرب', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:23:52,154 - forwarding_engine - INFO - [2025-12-04 21:23:52.154] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المحافظه_ | Data: {'formatting': 'none', 'original_length': 4, 'formatted_length': 4, 'has_html_tags': False, 'formatted_preview': 'مأرب'} | {}
+2025-12-04 21:23:52,155 - forwarding_engine - INFO - [2025-12-04 21:23:52.155] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التلخيص | Data: {'has_value': True, 'value_preview': 'عاد العميد طارق صالح إلى محافظة مأرب بعد عام من ال', 'field_type': 'summary', 'use_default_if_empty': True} | {}
+2025-12-04 21:23:52,155 - forwarding_engine - INFO - [2025-12-04 21:23:52.155] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التلخيص | Data: {'formatting': 'quote', 'original_length': 213, 'formatted_length': 238, 'has_html_tags': True, 'formatted_preview': '<blockquote>عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، في ظل تطورات متسارعة'} | {}
+2025-12-04 21:23:52,155 - forwarding_engine - INFO - [2025-12-04 21:23:52.155] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التاريخ_ | Data: {'has_value': True, 'value_preview': '2025-12-04', 'field_type': 'date_today', 'use_default_if_empty': True} | {}
+2025-12-04 21:23:52,155 - forwarding_engine - INFO - [2025-12-04 21:23:52.155] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التاريخ_ | Data: {'formatting': 'none', 'original_length': 10, 'formatted_length': 10, 'has_html_tags': False, 'formatted_preview': '2025-12-04'} | {}
+2025-12-04 21:23:52,155 - forwarding_engine - INFO - [2025-12-04 21:23:52.155] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المختص | Data: {'has_value': True, 'value_preview': 'حيدر ', 'field_type': 'static', 'use_default_if_empty': True} | {}
+2025-12-04 21:23:52,155 - forwarding_engine - INFO - [2025-12-04 21:23:52.155] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المختص | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'حيدر '} | {}
+2025-12-04 21:23:52,155 - forwarding_engine - INFO - [2025-12-04 21:23:52.155] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المصدر_ | Data: {'has_value': False, 'value_preview': 'empty', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:23:52,155 - forwarding_engine - INFO - [2025-12-04 21:23:52.155] [INFO] [forwarding_engine::_apply_publishing_template] Template applied: تلخيص2 | Data: {'output_length': 305, 'fields_count': 7, 'extracted_count': 7} | {}
+2025-12-04 21:23:52,156 - forwarding_engine - INFO - [2025-12-04 21:23:52.156] [INFO] [forwarding_engine::_forward_to_target] 🔧 [TEMPLATE STAGE 2] Template function returned | Data: {'returned_length': 305, 'is_empty': False, 'is_same_as_input': False, 'has_html_tags': True, 'preview': 'التصنيف : سياسي\nالمحافظه : مأرب\n<blockquote>عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، في ظل تطورات متسارعة بمحافظة حضرموت حي'} | {}
+2025-12-04 21:23:52,156 - forwarding_engine - INFO - [2025-12-04 21:23:52.156] [INFO] [forwarding_engine::_forward_to_target] ✅ [TEMPLATE STAGE 3] Template applied successfully | Data: {'original_length': 1099, 'template_length': 305, 'has_html_formatting': True, 'entities_reset': True} | {}
+2025-12-04 21:23:52,156 - forwarding_engine - INFO - [2025-12-04 21:23:52.156] [INFO] [forwarding_engine::_forward_to_target] 🔗 [TELEGRAPH STAGE 1] Starting Telegraph page creation | {}
+2025-12-04 21:23:52,332 - forwarding_engine - INFO - [2025-12-04 21:23:52.332] [INFO] [forwarding_engine::_forward_to_target] 🔗 [TELEGRAPH STAGE 2] Telegraph page created, adding link | {}
+2025-12-04 21:23:52,332 - forwarding_engine - INFO - [2025-12-04 21:23:52.332] [INFO] [forwarding_engine::_forward_to_target] 🔗 [TELEGRAPH STAGE 3] Link added to text | Data: {'url': 'https://telegra.ph/الخبر-الأصلي-12-04-77', 'text_before_link': 305, 'text_after_link': 379, 'new_content': '\n\n📰 <a href="https://telegra.ph/الخبر-الأصلي-12-04-77">اقرأ كامل الخبر</a>'} | {}
+2025-12-04 21:23:52,333 - forwarding_engine - INFO - [2025-12-04 21:23:52.333] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 1099, 'final_length': 379, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 21:23:52,333 - forwarding_engine - INFO - [2025-12-04 21:23:52.333] [INFO] [forwarding_engine::_forward_to_target] 📤 [SEND STAGE 1] Preparing text message... | Data: {'use_parse_mode': True, 'text_length': 379, 'has_html_tags': True, 'text_preview': 'التصنيف : سياسي\nالمحافظه : مأرب\n<blockquote>عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، في ظل تطورات متسارعة بمحافظة حضرموت حيث تمكنت قوات ما يسمى بالمجلس الانتقالي من السيطرة '} | {}
+2025-12-04 21:23:52,333 - forwarding_engine - INFO - [2025-12-04 21:23:52.333] [INFO] [forwarding_engine::_forward_to_target] 📤 [SEND STAGE 2] Sending with HTML parse_mode | Data: {'chat_id': -1003110660765, 'parse_mode': 'HTML'} | {}
+2025-12-04 21:23:52,562 - forwarding_engine - INFO - [2025-12-04 21:23:52.561] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 21:23:52,562 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 21:23:52,562 - forwarding_engine - INFO - [2025-12-04 21:23:52.562] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 21:23:53,839 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 21:23:53,839 - forwarding_engine - INFO - [2025-12-04 21:23:53.839] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 21:23:53,839 - main - INFO - [2025-12-04 21:23:53.839] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 21:24:12,058 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 21:24:12,059 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 21:24:12,065 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 21:24:12,067 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 21:24:12,069 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 21:24:12,071 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 21:24:12,075 - main - INFO - [2025-12-04 21:24:12.075] [INFO] [main::entry] Bot script started | {}
+2025-12-04 21:24:12,076 - main - INFO - [2025-12-04 21:24:12.076] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 21:24:12,077 - main - INFO - [2025-12-04 21:24:12.076] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-04 21:24:12,077 - main - INFO - [2025-12-04 21:24:12.077] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-04 21:24:13,892 - database - INFO - Database connected successfully | {}
+2025-12-04 21:24:14,318 - main - INFO - [2025-12-04 21:24:14.318] [INFO] [session::load] Found active session in database | {}
+2025-12-04 21:24:14,318 - main - INFO - [2025-12-04 21:24:14.318] [INFO] [main::init] Creating Pyrofork client | Data: {'api_id': 24343527, 'has_session': True, 'api_hash_set': True} | {}
+2025-12-04 21:24:16,077 - main - INFO - [2025-12-04 21:24:16.077] [INFO] [main::initialize_bot] Starting bot initialization... | {}
+2025-12-04 21:24:16,078 - main - INFO - [2025-12-04 21:24:16.078] [INFO] [database::connect] Connecting to database... | {}
+2025-12-04 21:24:17,921 - database - INFO - Database connected successfully | {}
+2025-12-04 21:24:17,921 - main - INFO - [2025-12-04 21:24:17.921] [INFO] [database::connect] Database connected successfully | {}
+2025-12-04 21:24:17,921 - main - INFO - [2025-12-04 21:24:17.921] [INFO] [ai_manager::init] Loading AI providers from database... | {}
+2025-12-04 21:24:18,349 - ai_providers - INFO - Loaded OpenAI provider from database | {}
+2025-12-04 21:24:18,349 - ai_providers - INFO - Loaded Groq provider from database | {}
+2025-12-04 21:24:18,349 - ai_providers - WARNING - No API key found for provider: claude | {}
+2025-12-04 21:24:18,350 - ai_providers - INFO - Loaded HuggingFace provider from database | {}
+2025-12-04 21:24:18,350 - main - INFO - [2025-12-04 21:24:18.350] [INFO] [ai_manager::init] AI providers loaded successfully | {}
+2025-12-04 21:24:18,350 - main - INFO - [2025-12-04 21:24:18.350] [INFO] [admin::check] Checking admin status for ID: 6556918772 | {}
+2025-12-04 21:24:18,781 - main - INFO - [2025-12-04 21:24:18.781] [INFO] [admin::check] Admin already exists: 6556918772 | {}
+2025-12-04 21:24:18,781 - main - INFO - [2025-12-04 21:24:18.781] [INFO] [forwarding_engine::init] Initializing forwarding engine... | {}
+2025-12-04 21:24:18,781 - forwarding_engine - INFO - [2025-12-04 21:24:18.781] [INFO] [forwarding_engine::__init__] Forwarding engine initialized | {}
+2025-12-04 21:24:18,781 - main - INFO - [2025-12-04 21:24:18.781] [INFO] [forwarding_engine::init] Forwarding engine initialized successfully | {}
+2025-12-04 21:24:18,781 - main - INFO - [2025-12-04 21:24:18.781] [INFO] [queue_manager::register] Registering job handlers... | {}
+2025-12-04 21:24:18,781 - queue_system - INFO - Registered handler for job type: forward | {}
+2025-12-04 21:24:18,787 - queue_system - INFO - Registered handler for job type: ai_process | {}
+2025-12-04 21:24:18,788 - queue_system - INFO - Registered handler for job type: video_process | {}
+2025-12-04 21:24:18,789 - main - INFO - [2025-12-04 21:24:18.788] [INFO] [queue_manager::register] All handlers registered: forward, ai_process, video_process | {}
+2025-12-04 21:24:18,789 - main - INFO - [2025-12-04 21:24:18.789] [INFO] [queue_manager::start] Starting queue manager... | {}
+2025-12-04 21:24:18,790 - queue_system - INFO - Queue manager started with 10 max workers | {}
+2025-12-04 21:24:18,792 - main - INFO - [2025-12-04 21:24:18.791] [INFO] [queue_manager::start] Queue manager started with 10 workers | {}
+2025-12-04 21:24:18,793 - main - INFO - [2025-12-04 21:24:18.793] [INFO] [tasks::load] Loading active tasks from database... | {}
+2025-12-04 21:24:19,224 - main - INFO - [2025-12-04 21:24:19.224] [INFO] [tasks::load] Found 1 tasks in database | {}
+2025-12-04 21:24:19,224 - main - INFO - [2025-12-04 21:24:19.224] [INFO] [tasks::check] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'is_active': True, 'source_channels': [4], 'target_channels': [5]} | {}
+2025-12-04 21:24:19,225 - forwarding_engine - INFO - [2025-12-04 21:24:19.224] [INFO] [forwarding_engine::start_task_monitoring] Started monitoring task 4 | {}
+2025-12-04 21:24:19,225 - main - INFO - [2025-12-04 21:24:19.225] [INFO] [tasks::monitor] Started monitoring task: توجيه الأخبار  | Data: {'task_id': 4} | {}
+2025-12-04 21:24:19,225 - main - INFO - [2025-12-04 21:24:19.225] [INFO] [tasks::load] Loaded 1 active tasks for monitoring | {}
+2025-12-04 21:24:19,225 - main - INFO - [2025-12-04 21:24:19.225] [INFO] [main::initialize_bot] ✅ Bot initialization completed successfully | {}
+2025-12-04 21:24:19,225 - main - INFO - [2025-12-04 21:24:19.225] [INFO] [pyrogram::start] Starting Pyrofork userbot client... | {}
+2025-12-04 21:24:19,480 - pyrogram.connection.connection - INFO - Connecting...
+2025-12-04 21:24:19,621 - pyrogram.connection.connection - INFO - Connected! Production DC4 - IPv4
+2025-12-04 21:24:19,622 - pyrogram.session.session - INFO - NetworkTask started
+2025-12-04 21:24:20,268 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-12-04 21:24:20,268 - pyrogram.session.session - INFO - Device: CPython 3.11.13 - Pyrogram 2.0.106
+2025-12-04 21:24:20,268 - pyrogram.session.session - INFO - System: Linux 6.14.11 (en)
+2025-12-04 21:24:20,268 - pyrogram.session.session - INFO - Session started
+2025-12-04 21:24:20,271 - pyrogram.session.session - INFO - PingTask started
+2025-12-04 21:24:20,581 - pyrogram.dispatcher - INFO - Started 12 HandlerTasks
+2025-12-04 21:24:20,742 - main - INFO - [2025-12-04 21:24:20.742] [INFO] [pyrogram::connected] ✅ Userbot connected to Telegram | Data: {'user_id': 6660878563, 'username': 'Sheyyeeuu', 'first_name': 'Amir'} | {}
+2025-12-04 21:24:20,742 - main - INFO - [2025-12-04 21:24:20.742] [INFO] [handlers::register] Registering message handlers... | {}
+2025-12-04 21:24:20,743 - main - INFO - [2025-12-04 21:24:20.742] [INFO] [handlers::register] ✅ All handlers registered successfully | {}
+2025-12-04 21:24:20,743 - main - INFO - [2025-12-04 21:24:20.743] [INFO] [warmup::post_connect] Starting post-connection warmup... | {}
+2025-12-04 21:24:20,743 - main - INFO - [2025-12-04 21:24:20.743] [INFO] [warmup::start] Starting channel peer warmup... | {}
+2025-12-04 21:24:20,743 - main - INFO - [2025-12-04 21:24:20.743] [INFO] [warmup::dialogs] Loading all dialogs to populate peer cache... | {}
+2025-12-04 21:24:21,461 - pyrogram.session.session - WARNING - [userbot_forwarder] Waiting for 13 seconds before continuing (required by "channels.GetMessages")
+2025-12-04 21:24:33,686 - main - INFO - [2025-12-04 21:24:33.686] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2401, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 21:24:33,686 - main - INFO - [2025-12-04 21:24:33.686] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 21:24:33,972 - main - INFO - [2025-12-04 21:24:33.972] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 21:24:33,972 - main - INFO - [2025-12-04 21:24:33.972] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 21:24:34,400 - main - INFO - [2025-12-04 21:24:34.400] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 21:24:34,400 - main - INFO - [2025-12-04 21:24:34.400] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 21:24:34,400 - main - INFO - [2025-12-04 21:24:34.400] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 21:24:34,401 - forwarding_engine - INFO - [2025-12-04 21:24:34.401] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2401, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': True, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 21:24:34,401 - forwarding_engine - INFO - [2025-12-04 21:24:34.401] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 21:24:34,401 - forwarding_engine - INFO - [2025-12-04 21:24:34.401] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': True, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 21:24:34,404 - forwarding_engine - INFO - [2025-12-04 21:24:34.404] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 21:24:34,404 - forwarding_engine - INFO - [2025-12-04 21:24:34.404] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 21:24:34,404 - forwarding_engine - INFO - [2025-12-04 21:24:34.404] [INFO] [forwarding_engine::_process_message] Text length: 1099 chars | {}
+2025-12-04 21:24:34,833 - forwarding_engine - INFO - [2025-12-04 21:24:34.832] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 21:24:35,261 - forwarding_engine - INFO - [2025-12-04 21:24:35.261] [INFO] [forwarding_engine::_process_message] Using model: meta-llama/llama-4-maverick-17b-128e-instruct | {}
+2025-12-04 21:24:35,686 - main - INFO - [2025-12-04 21:24:35.686] [DEBUG] [warmup::dialogs] Loaded 50 dialogs... | {}
+2025-12-04 21:24:35,686 - main - INFO - [2025-12-04 21:24:35.686] [DEBUG] [warmup::dialogs] Loaded 100 dialogs... | {}
+2025-12-04 21:24:35,690 - forwarding_engine - INFO - [2025-12-04 21:24:35.690] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 21:24:36,117 - forwarding_engine - INFO - [2025-12-04 21:24:36.117] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 21:24:36,444 - main - INFO - [2025-12-04 21:24:36.444] [DEBUG] [warmup::dialogs] Loaded 150 dialogs... | {}
+2025-12-04 21:24:36,627 - main - INFO - [2025-12-04 21:24:36.627] [INFO] [warmup::dialogs] ✅ Cached 172 dialogs in peer cache | {}
+2025-12-04 21:24:36,983 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 1099 | {}
+2025-12-04 21:24:36,990 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 4 | Sentiment: neutral | Keywords: 20 | Time: 0.007s | {}
+2025-12-04 21:24:36,990 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 4 | Sentiment: neutral | {}
+2025-12-04 21:24:37,051 - main - INFO - [2025-12-04 21:24:37.051] [INFO] [warmup::channels] Found 2 channels to verify | {}
+2025-12-04 21:24:37,051 - main - INFO - [2025-12-04 21:24:37.051] [INFO] [warmup::cached] ✅ اختبار 1 already in peer cache | {}
+2025-12-04 21:24:37,052 - main - INFO - [2025-12-04 21:24:37.052] [INFO] [warmup::cached] ✅ اختبار 2 already in peer cache | {}
+2025-12-04 21:24:37,052 - main - INFO - [2025-12-04 21:24:37.052] [INFO] [warmup::complete] ✅ Warmup complete: 2 success, 0 failed | {}
+2025-12-04 21:24:37,052 - main - INFO - [2025-12-04 21:24:37.052] [INFO] [main::idle] Userbot is now running and waiting for messages... | {}
+2025-12-04 21:24:37,419 - ai_rule_engine - INFO - [RuleEngine] Loaded 6 entity rules for task 4 from DB | {}
+2025-12-04 21:24:37,419 - ai_rule_engine - INFO - [RuleEngine] Replaced 'المجلس الانتقالي ' with 'ما يسمى بالمجلس الانتقالي ' (1 times) | {}
+2025-12-04 21:24:37,419 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 1 | {}
+2025-12-04 21:24:37,847 - ai_rule_engine - INFO - [RuleEngine] Loaded 0 context rules for task 4 from DB | {}
+2025-12-04 21:24:38,132 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 1 | Replacements: 1 | {}
+2025-12-04 21:24:38,352 - ai_providers - INFO - [Groq] Starting request | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Max Tokens: 554 | Temperature: 0.7 | Input length: 1744 chars | {}
+2025-12-04 21:24:45,594 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 21:24:45,667 - ai_providers - INFO - [Groq] ✅ Success | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Output length: 214 chars | First 100 chars: عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، بالتزامن مع تطورات متسارعة في حض | {}
+2025-12-04 21:24:45,668 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 214 | {}
+2025-12-04 21:24:45,670 - ai_postprocessing - INFO - [Postprocessing] Entity replacement not verified: المجلس الانتقالي  → ما يسمى بالمجلس الانتقالي  | {}
+2025-12-04 21:24:45,672 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 0.70 | {}
+2025-12-04 21:24:45,672 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 9.55s | Quality: 0.70 | Original: 1099 → Final: 214 chars | {}
+2025-12-04 21:24:45,672 - forwarding_engine - INFO - [2025-12-04 21:24:45.672] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 1099, 'final_length': 214, 'stages': 4, 'rules_applied': 1, 'quality_score': 0.7, 'total_time': '9.55s'} | {}
+2025-12-04 21:24:45,672 - forwarding_engine - INFO - [2025-12-04 21:24:45.672] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.01s) | {}
+2025-12-04 21:24:45,673 - forwarding_engine - INFO - [2025-12-04 21:24:45.673] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (1.14s) | {}
+2025-12-04 21:24:45,673 - forwarding_engine - INFO - [2025-12-04 21:24:45.673] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (7.54s) | {}
+2025-12-04 21:24:45,673 - forwarding_engine - INFO - [2025-12-04 21:24:45.673] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 21:24:45,673 - forwarding_engine - INFO - [2025-12-04 21:24:45.673] [INFO] [forwarding_engine::_process_message]   ├─ Entity replacements (organization): 1 | {}
+2025-12-04 21:24:46,101 - task_4 - INFO - AI Pipeline completed | From 1099 → 214 chars
+2025-12-04 21:24:46,956 - forwarding_engine - INFO - [2025-12-04 21:24:46.956] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 1099, 'processed_length': 214, 'total_reduction': 885, 'reduction_percent': 81, 'final_preview': 'عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، بالتزامن مع تطورات متسارعة في حضرموت حيث تمكنت قوات ما يسمى بالمجلس الانتقالي من ا'} | {}
+2025-12-04 21:24:46,956 - forwarding_engine - INFO - [2025-12-04 21:24:46.956] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 21:24:46,961 - forwarding_engine - INFO - [2025-12-04 21:24:46.957] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2401, 'has_processed_text': True, 'task_id': 4} | {}
+2025-12-04 21:24:47,247 - forwarding_engine - INFO - [2025-12-04 21:24:47.247] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 21:24:47,248 - forwarding_engine - INFO - [2025-12-04 21:24:47.248] [INFO] [forwarding_engine::_forward_to_target] 🔧 [TEMPLATE STAGE 1] Starting publishing template application... | Data: {'task_id': 4, 'text_length': 214, 'has_entities': False} | {}
+2025-12-04 21:24:48,135 - forwarding_engine - INFO - [2025-12-04 21:24:48.135] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: رقم_القيد | {}
+2025-12-04 21:24:48,136 - forwarding_engine - INFO - [2025-12-04 21:24:48.136] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: التصنيف_ | {}
+2025-12-04 21:24:48,136 - forwarding_engine - INFO - [2025-12-04 21:24:48.136] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: المحافظه_ | {}
+2025-12-04 21:24:48,136 - forwarding_engine - INFO - [2025-12-04 21:24:48.136] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Auto-populated summary: التلخيص | {}
+2025-12-04 21:24:48,136 - forwarding_engine - INFO - [2025-12-04 21:24:48.136] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Set date field: التاريخ_ = 2025-12-04 | {}
+2025-12-04 21:24:48,136 - forwarding_engine - INFO - [2025-12-04 21:24:48.136] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Set static field: المختص = حيدر  | {}
+2025-12-04 21:24:48,136 - forwarding_engine - INFO - [2025-12-04 21:24:48.136] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: المصدر_ | {}
+2025-12-04 21:24:49,134 - forwarding_engine - INFO - [2025-12-04 21:24:49.134] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Extracting fields with groq/meta-llama/llama-4-maverick-17b-128e-instruct | Data: {'fields_count': 4, 'prompt_length': 734} | {}
+2025-12-04 21:24:49,134 - ai_providers - INFO - [Groq] Starting request | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Max Tokens: 500 | Temperature: 0.3 | Input length: 796 chars | {}
+2025-12-04 21:24:51,565 - main - INFO - [2025-12-04 21:24:51.565] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2402, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 21:24:51,565 - main - INFO - [2025-12-04 21:24:51.565] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 21:24:51,851 - main - INFO - [2025-12-04 21:24:51.851] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 21:24:51,851 - main - INFO - [2025-12-04 21:24:51.851] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 21:24:52,139 - main - INFO - [2025-12-04 21:24:52.139] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 21:24:52,141 - main - INFO - [2025-12-04 21:24:52.140] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 21:24:52,142 - main - INFO - [2025-12-04 21:24:52.142] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 21:24:52,144 - forwarding_engine - INFO - [2025-12-04 21:24:52.143] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2402, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': True, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 21:24:52,145 - forwarding_engine - INFO - [2025-12-04 21:24:52.145] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 21:24:52,146 - forwarding_engine - INFO - [2025-12-04 21:24:52.146] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': True, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 21:24:52,148 - forwarding_engine - INFO - [2025-12-04 21:24:52.148] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 21:24:52,149 - forwarding_engine - INFO - [2025-12-04 21:24:52.149] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 21:24:52,150 - forwarding_engine - INFO - [2025-12-04 21:24:52.150] [INFO] [forwarding_engine::_process_message] Text length: 1099 chars | {}
+2025-12-04 21:24:52,442 - forwarding_engine - INFO - [2025-12-04 21:24:52.440] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 21:24:52,728 - forwarding_engine - INFO - [2025-12-04 21:24:52.728] [INFO] [forwarding_engine::_process_message] Using model: meta-llama/llama-4-maverick-17b-128e-instruct | {}
+2025-12-04 21:24:53,013 - forwarding_engine - INFO - [2025-12-04 21:24:53.013] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 21:24:53,298 - forwarding_engine - INFO - [2025-12-04 21:24:53.298] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 21:24:53,871 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 1099 | {}
+2025-12-04 21:24:53,872 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 4 | Sentiment: neutral | Keywords: 20 | Time: 0.001s | {}
+2025-12-04 21:24:53,873 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 4 | Sentiment: neutral | {}
+2025-12-04 21:24:53,873 - ai_rule_engine - INFO - [RuleEngine] Using cached entity rules for task 4 (6 rules) | {}
+2025-12-04 21:24:53,873 - ai_rule_engine - INFO - [RuleEngine] Replaced 'المجلس الانتقالي ' with 'ما يسمى بالمجلس الانتقالي ' (1 times) | {}
+2025-12-04 21:24:53,873 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 1 | {}
+2025-12-04 21:24:53,873 - ai_rule_engine - INFO - [RuleEngine] Using cached context rules for task 4 (0 rules) | {}
+2025-12-04 21:24:53,876 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 1 | Replacements: 1 | {}
+2025-12-04 21:24:53,877 - ai_providers - INFO - [Groq] Starting request | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Max Tokens: 554 | Temperature: 0.7 | Input length: 1744 chars | {}
+2025-12-04 21:24:55,922 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 21:24:55,934 - ai_providers - INFO - [Groq] ✅ Success | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Output length: 84 chars | First 100 chars: {
+  "رقم_القيد": "",
+  "التصنيف_": "سياسي",
+  "المحافظه_": "مأرب",
+  "المصدر_": ""
+} | {}
+2025-12-04 21:24:55,934 - forwarding_engine - INFO - [2025-12-04 21:24:55.934] [DEBUG] [forwarding_engine::_extract_fields_with_ai] AI response received | Data: {'response_length': 84, 'response_preview': '{\n  "رقم_القيد": "",\n  "التصنيف_": "سياسي",\n  "المحافظه_": "مأرب",\n  "المصدر_": ""\n}'} | {}
+2025-12-04 21:24:55,939 - forwarding_engine - INFO - [2025-12-04 21:24:55.938] [INFO] [forwarding_engine::_extract_fields_with_ai] AI extracted fields | Data: {'ai_extracted': {'رقم_القيد': '', 'التصنيف_': 'سياسي', 'المحافظه_': 'مأرب', 'المصدر_': ''}} | {}
+2025-12-04 21:24:55,940 - forwarding_engine - INFO - [2025-12-04 21:24:55.940] [INFO] [forwarding_engine::_extract_fields_with_ai] Final extracted fields | Data: {'extracted': {'التلخيص': 'عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، بالتزامن مع تطورات متسارعة في حضرموت حيث تمكنت قوات ما يسمى بالمجلس الانتقالي من السيطرة على مناطق حضرموت والمهرة، مما أثار مخاوف لدى حزب الإصلاح.', 'التاريخ_': '2025-12-04', 'المختص': 'حيدر ', 'رقم_القيد': '', 'التصنيف_': 'سياسي', 'المحافظه_': 'مأرب', 'المصدر_': ''}} | {}
+2025-12-04 21:24:55,944 - forwarding_engine - INFO - [2025-12-04 21:24:55.943] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: رقم_القيد | Data: {'has_value': False, 'value_preview': 'empty', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:24:55,944 - forwarding_engine - INFO - [2025-12-04 21:24:55.944] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التصنيف_ | Data: {'has_value': True, 'value_preview': 'سياسي', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:24:55,944 - forwarding_engine - INFO - [2025-12-04 21:24:55.944] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التصنيف_ | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'سياسي'} | {}
+2025-12-04 21:24:55,956 - forwarding_engine - INFO - [2025-12-04 21:24:55.956] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المحافظه_ | Data: {'has_value': True, 'value_preview': 'مأرب', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:24:55,956 - forwarding_engine - INFO - [2025-12-04 21:24:55.956] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المحافظه_ | Data: {'formatting': 'none', 'original_length': 4, 'formatted_length': 4, 'has_html_tags': False, 'formatted_preview': 'مأرب'} | {}
+2025-12-04 21:24:55,956 - forwarding_engine - INFO - [2025-12-04 21:24:55.956] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التلخيص | Data: {'has_value': True, 'value_preview': 'عاد العميد طارق صالح إلى محافظة مأرب بعد عام من ال', 'field_type': 'summary', 'use_default_if_empty': True} | {}
+2025-12-04 21:24:55,956 - forwarding_engine - INFO - [2025-12-04 21:24:55.956] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التلخيص | Data: {'formatting': 'quote', 'original_length': 214, 'formatted_length': 239, 'has_html_tags': True, 'formatted_preview': '<blockquote>عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، بالتزامن مع تطورات م'} | {}
+2025-12-04 21:24:55,957 - forwarding_engine - INFO - [2025-12-04 21:24:55.956] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التاريخ_ | Data: {'has_value': True, 'value_preview': '2025-12-04', 'field_type': 'date_today', 'use_default_if_empty': True} | {}
+2025-12-04 21:24:55,957 - forwarding_engine - INFO - [2025-12-04 21:24:55.957] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التاريخ_ | Data: {'formatting': 'none', 'original_length': 10, 'formatted_length': 10, 'has_html_tags': False, 'formatted_preview': '2025-12-04'} | {}
+2025-12-04 21:24:55,957 - forwarding_engine - INFO - [2025-12-04 21:24:55.957] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المختص | Data: {'has_value': True, 'value_preview': 'حيدر ', 'field_type': 'static', 'use_default_if_empty': True} | {}
+2025-12-04 21:24:55,957 - forwarding_engine - INFO - [2025-12-04 21:24:55.957] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المختص | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'حيدر '} | {}
+2025-12-04 21:24:55,957 - forwarding_engine - INFO - [2025-12-04 21:24:55.957] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المصدر_ | Data: {'has_value': False, 'value_preview': 'empty', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:24:55,957 - forwarding_engine - INFO - [2025-12-04 21:24:55.957] [INFO] [forwarding_engine::_apply_publishing_template] Template applied: تلخيص2 | Data: {'output_length': 306, 'fields_count': 7, 'extracted_count': 7} | {}
+2025-12-04 21:24:55,957 - forwarding_engine - INFO - [2025-12-04 21:24:55.957] [INFO] [forwarding_engine::_forward_to_target] 🔧 [TEMPLATE STAGE 2] Template function returned | Data: {'returned_length': 306, 'is_empty': False, 'is_same_as_input': False, 'has_html_tags': True, 'preview': 'التصنيف : سياسي\nالمحافظه : مأرب\n<blockquote>عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، بالتزامن مع تطورات متسارعة في حضرموت ح'} | {}
+2025-12-04 21:24:55,957 - forwarding_engine - INFO - [2025-12-04 21:24:55.957] [INFO] [forwarding_engine::_forward_to_target] ✅ [TEMPLATE STAGE 3] Template applied successfully | Data: {'original_length': 1099, 'template_length': 306, 'has_html_formatting': True, 'entities_reset': True} | {}
+2025-12-04 21:24:55,957 - forwarding_engine - INFO - [2025-12-04 21:24:55.957] [INFO] [forwarding_engine::_forward_to_target] 🔗 [TELEGRAPH STAGE 1] Starting Telegraph page creation | {}
+2025-12-04 21:24:56,125 - forwarding_engine - INFO - [2025-12-04 21:24:56.124] [INFO] [forwarding_engine::_forward_to_target] 🔗 [TELEGRAPH STAGE 2] Telegraph page created, adding link | {}
+2025-12-04 21:24:56,125 - forwarding_engine - INFO - [2025-12-04 21:24:56.125] [INFO] [forwarding_engine::_forward_to_target] 🔗 [TELEGRAPH STAGE 3] Link added to text | Data: {'url': 'https://telegra.ph/الخبر-الأصلي-12-04-78', 'text_before_link': 306, 'text_after_link': 380, 'new_content': '\n\n📰 <a href="https://telegra.ph/الخبر-الأصلي-12-04-78">اقرأ كامل الخبر</a>'} | {}
+2025-12-04 21:24:56,125 - forwarding_engine - INFO - [2025-12-04 21:24:56.125] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 1099, 'final_length': 380, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 21:24:56,125 - forwarding_engine - INFO - [2025-12-04 21:24:56.125] [INFO] [forwarding_engine::_forward_to_target] 📤 [SEND STAGE 1] Preparing text message... | Data: {'use_parse_mode': True, 'text_length': 380, 'has_html_tags': True, 'text_preview': 'التصنيف : سياسي\nالمحافظه : مأرب\n<blockquote>عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، بالتزامن مع تطورات متسارعة في حضرموت حيث تمكنت قوات ما يسمى بالمجلس الانتقالي من السيطرة'} | {}
+2025-12-04 21:24:56,125 - forwarding_engine - INFO - [2025-12-04 21:24:56.125] [INFO] [forwarding_engine::_forward_to_target] 📤 [SEND STAGE 2] Sending with HTML parse_mode | Data: {'chat_id': -1003110660765, 'parse_mode': 'HTML'} | {}
+2025-12-04 21:24:56,405 - forwarding_engine - INFO - [2025-12-04 21:24:56.405] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 21:24:56,405 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 21:24:56,405 - forwarding_engine - INFO - [2025-12-04 21:24:56.405] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 21:24:57,690 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 21:24:57,690 - forwarding_engine - INFO - [2025-12-04 21:24:57.690] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 21:24:57,690 - main - INFO - [2025-12-04 21:24:57.690] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 21:24:58,945 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 503 Service Unavailable"
+2025-12-04 21:24:58,946 - ai_providers - INFO - [Groq] ⚠️ Model meta-llama/llama-4-maverick-17b-128e-instruct failed | Error: Error code: 503 - {'error': {'message': 'meta-llama/llama-4-maverick-17b-128e-instruct is currently over capacity. Please try again and back off exponentially. Visit https://groqstatus.com to see if there is an active incident.', 'type': 'internal_server_error'}} | {}
+2025-12-04 21:24:59,369 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 21:24:59,370 - ai_providers - INFO - [Groq] ℹ️ Using fallback model llama-3.3-70b-versatile instead of meta-llama/llama-4-maverick-17b-128e-instruct | {}
+2025-12-04 21:24:59,370 - ai_providers - INFO - [Groq] ✅ Success | Model: llama-3.3-70b-versatile | Output length: 184 chars | First 100 chars: عاد عضو مجلس القيادة الرئاسي العميد طارق صالح إلى محافظة مأرب بعد عام، حيث أجرى لقاءات مع القيادات ا | {}
+2025-12-04 21:24:59,370 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 184 | {}
+2025-12-04 21:24:59,371 - ai_postprocessing - INFO - [Postprocessing] Entity replacement not verified: المجلس الانتقالي  → ما يسمى بالمجلس الانتقالي  | {}
+2025-12-04 21:24:59,371 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 0.70 | {}
+2025-12-04 21:24:59,371 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 6.07s | Quality: 0.70 | Original: 1099 → Final: 184 chars | {}
+2025-12-04 21:24:59,372 - forwarding_engine - INFO - [2025-12-04 21:24:59.371] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 1099, 'final_length': 184, 'stages': 4, 'rules_applied': 1, 'quality_score': 0.7, 'total_time': '6.07s'} | {}
+2025-12-04 21:24:59,372 - forwarding_engine - INFO - [2025-12-04 21:24:59.372] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.00s) | {}
+2025-12-04 21:24:59,372 - forwarding_engine - INFO - [2025-12-04 21:24:59.372] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (0.00s) | {}
+2025-12-04 21:24:59,373 - forwarding_engine - INFO - [2025-12-04 21:24:59.372] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (5.49s) | {}
+2025-12-04 21:24:59,373 - forwarding_engine - INFO - [2025-12-04 21:24:59.373] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 21:24:59,373 - forwarding_engine - INFO - [2025-12-04 21:24:59.373] [INFO] [forwarding_engine::_process_message]   ├─ Entity replacements (organization): 1 | {}
+2025-12-04 21:24:59,798 - task_4 - INFO - AI Pipeline completed | From 1099 → 184 chars
+2025-12-04 21:25:00,650 - forwarding_engine - INFO - [2025-12-04 21:25:00.650] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 1099, 'processed_length': 184, 'total_reduction': 915, 'reduction_percent': 84, 'final_preview': 'عاد عضو مجلس القيادة الرئاسي العميد طارق صالح إلى محافظة مأرب بعد عام، حيث أجرى لقاءات مع القيادات العسكرية والأمنية، وسط مخاوف من تطورات في حضرموت وا'} | {}
+2025-12-04 21:25:00,650 - forwarding_engine - INFO - [2025-12-04 21:25:00.650] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 21:25:00,650 - forwarding_engine - INFO - [2025-12-04 21:25:00.650] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2402, 'has_processed_text': True, 'task_id': 4} | {}
+2025-12-04 21:25:01,075 - forwarding_engine - INFO - [2025-12-04 21:25:01.075] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 21:25:01,075 - forwarding_engine - INFO - [2025-12-04 21:25:01.075] [INFO] [forwarding_engine::_forward_to_target] 🔧 [TEMPLATE STAGE 1] Starting publishing template application... | Data: {'task_id': 4, 'text_length': 184, 'has_entities': False} | {}
+2025-12-04 21:25:01,926 - forwarding_engine - INFO - [2025-12-04 21:25:01.926] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: رقم_القيد | {}
+2025-12-04 21:25:01,926 - forwarding_engine - INFO - [2025-12-04 21:25:01.926] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: التصنيف_ | {}
+2025-12-04 21:25:01,926 - forwarding_engine - INFO - [2025-12-04 21:25:01.926] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: المحافظه_ | {}
+2025-12-04 21:25:01,926 - forwarding_engine - INFO - [2025-12-04 21:25:01.926] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Auto-populated summary: التلخيص | {}
+2025-12-04 21:25:01,926 - forwarding_engine - INFO - [2025-12-04 21:25:01.926] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Set date field: التاريخ_ = 2025-12-04 | {}
+2025-12-04 21:25:01,926 - forwarding_engine - INFO - [2025-12-04 21:25:01.926] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Set static field: المختص = حيدر  | {}
+2025-12-04 21:25:01,926 - forwarding_engine - INFO - [2025-12-04 21:25:01.926] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: المصدر_ | {}
+2025-12-04 21:25:03,202 - forwarding_engine - INFO - [2025-12-04 21:25:03.202] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Extracting fields with groq/meta-llama/llama-4-maverick-17b-128e-instruct | Data: {'fields_count': 4, 'prompt_length': 704} | {}
+2025-12-04 21:25:03,203 - ai_providers - INFO - [Groq] Starting request | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Max Tokens: 500 | Temperature: 0.3 | Input length: 766 chars | {}
+2025-12-04 21:25:04,637 - main - INFO - [2025-12-04 21:25:04.637] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2403, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 21:25:04,637 - main - INFO - [2025-12-04 21:25:04.637] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 21:25:05,061 - main - INFO - [2025-12-04 21:25:05.061] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 21:25:05,062 - main - INFO - [2025-12-04 21:25:05.062] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 21:25:05,345 - main - INFO - [2025-12-04 21:25:05.345] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 21:25:05,345 - main - INFO - [2025-12-04 21:25:05.345] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 21:25:05,345 - main - INFO - [2025-12-04 21:25:05.345] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 21:25:05,345 - forwarding_engine - INFO - [2025-12-04 21:25:05.345] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2403, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 21:25:05,345 - forwarding_engine - INFO - [2025-12-04 21:25:05.345] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 21:25:05,345 - forwarding_engine - INFO - [2025-12-04 21:25:05.345] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': True, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 21:25:05,346 - forwarding_engine - INFO - [2025-12-04 21:25:05.346] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 21:25:05,346 - forwarding_engine - INFO - [2025-12-04 21:25:05.346] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 21:25:05,346 - forwarding_engine - INFO - [2025-12-04 21:25:05.346] [INFO] [forwarding_engine::_process_message] Text length: 9 chars | {}
+2025-12-04 21:25:05,630 - forwarding_engine - INFO - [2025-12-04 21:25:05.630] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 21:25:05,914 - forwarding_engine - INFO - [2025-12-04 21:25:05.914] [INFO] [forwarding_engine::_process_message] Using model: meta-llama/llama-4-maverick-17b-128e-instruct | {}
+2025-12-04 21:25:06,340 - forwarding_engine - INFO - [2025-12-04 21:25:06.340] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 21:25:06,765 - forwarding_engine - INFO - [2025-12-04 21:25:06.765] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 21:25:07,035 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 21:25:07,036 - ai_providers - INFO - [Groq] ✅ Success | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Output length: 84 chars | First 100 chars: {
+  "رقم_القيد": "",
+  "التصنيف_": "سياسي",
+  "المحافظه_": "مأرب",
+  "المصدر_": ""
+} | {}
+2025-12-04 21:25:07,036 - forwarding_engine - INFO - [2025-12-04 21:25:07.036] [DEBUG] [forwarding_engine::_extract_fields_with_ai] AI response received | Data: {'response_length': 84, 'response_preview': '{\n  "رقم_القيد": "",\n  "التصنيف_": "سياسي",\n  "المحافظه_": "مأرب",\n  "المصدر_": ""\n}'} | {}
+2025-12-04 21:25:07,036 - forwarding_engine - INFO - [2025-12-04 21:25:07.036] [INFO] [forwarding_engine::_extract_fields_with_ai] AI extracted fields | Data: {'ai_extracted': {'رقم_القيد': '', 'التصنيف_': 'سياسي', 'المحافظه_': 'مأرب', 'المصدر_': ''}} | {}
+2025-12-04 21:25:07,037 - forwarding_engine - INFO - [2025-12-04 21:25:07.037] [INFO] [forwarding_engine::_extract_fields_with_ai] Final extracted fields | Data: {'extracted': {'التلخيص': 'عاد عضو مجلس القيادة الرئاسي العميد طارق صالح إلى محافظة مأرب بعد عام، حيث أجرى لقاءات مع القيادات العسكرية والأمنية، وسط مخاوف من تطورات في حضرموت والمهرة التي قد تؤثر على مدينة مأرب.', 'التاريخ_': '2025-12-04', 'المختص': 'حيدر ', 'رقم_القيد': '', 'التصنيف_': 'سياسي', 'المحافظه_': 'مأرب', 'المصدر_': ''}} | {}
+2025-12-04 21:25:07,037 - forwarding_engine - INFO - [2025-12-04 21:25:07.037] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: رقم_القيد | Data: {'has_value': False, 'value_preview': 'empty', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:07,037 - forwarding_engine - INFO - [2025-12-04 21:25:07.037] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التصنيف_ | Data: {'has_value': True, 'value_preview': 'سياسي', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:07,037 - forwarding_engine - INFO - [2025-12-04 21:25:07.037] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التصنيف_ | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'سياسي'} | {}
+2025-12-04 21:25:07,037 - forwarding_engine - INFO - [2025-12-04 21:25:07.037] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المحافظه_ | Data: {'has_value': True, 'value_preview': 'مأرب', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:07,037 - forwarding_engine - INFO - [2025-12-04 21:25:07.037] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المحافظه_ | Data: {'formatting': 'none', 'original_length': 4, 'formatted_length': 4, 'has_html_tags': False, 'formatted_preview': 'مأرب'} | {}
+2025-12-04 21:25:07,037 - forwarding_engine - INFO - [2025-12-04 21:25:07.037] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التلخيص | Data: {'has_value': True, 'value_preview': 'عاد عضو مجلس القيادة الرئاسي العميد طارق صالح إلى ', 'field_type': 'summary', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:07,037 - forwarding_engine - INFO - [2025-12-04 21:25:07.037] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التلخيص | Data: {'formatting': 'quote', 'original_length': 184, 'formatted_length': 209, 'has_html_tags': True, 'formatted_preview': '<blockquote>عاد عضو مجلس القيادة الرئاسي العميد طارق صالح إلى محافظة مأرب بعد عام، حيث أجرى لقاءات م'} | {}
+2025-12-04 21:25:07,037 - forwarding_engine - INFO - [2025-12-04 21:25:07.037] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التاريخ_ | Data: {'has_value': True, 'value_preview': '2025-12-04', 'field_type': 'date_today', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:07,037 - forwarding_engine - INFO - [2025-12-04 21:25:07.037] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التاريخ_ | Data: {'formatting': 'none', 'original_length': 10, 'formatted_length': 10, 'has_html_tags': False, 'formatted_preview': '2025-12-04'} | {}
+2025-12-04 21:25:07,037 - forwarding_engine - INFO - [2025-12-04 21:25:07.037] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المختص | Data: {'has_value': True, 'value_preview': 'حيدر ', 'field_type': 'static', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:07,038 - forwarding_engine - INFO - [2025-12-04 21:25:07.037] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المختص | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'حيدر '} | {}
+2025-12-04 21:25:07,038 - forwarding_engine - INFO - [2025-12-04 21:25:07.038] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المصدر_ | Data: {'has_value': False, 'value_preview': 'empty', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:07,038 - forwarding_engine - INFO - [2025-12-04 21:25:07.038] [INFO] [forwarding_engine::_apply_publishing_template] Template applied: تلخيص2 | Data: {'output_length': 276, 'fields_count': 7, 'extracted_count': 7} | {}
+2025-12-04 21:25:07,038 - forwarding_engine - INFO - [2025-12-04 21:25:07.038] [INFO] [forwarding_engine::_forward_to_target] 🔧 [TEMPLATE STAGE 2] Template function returned | Data: {'returned_length': 276, 'is_empty': False, 'is_same_as_input': False, 'has_html_tags': True, 'preview': 'التصنيف : سياسي\nالمحافظه : مأرب\n<blockquote>عاد عضو مجلس القيادة الرئاسي العميد طارق صالح إلى محافظة مأرب بعد عام، حيث أجرى لقاءات مع القيادات العسكري'} | {}
+2025-12-04 21:25:07,038 - forwarding_engine - INFO - [2025-12-04 21:25:07.038] [INFO] [forwarding_engine::_forward_to_target] ✅ [TEMPLATE STAGE 3] Template applied successfully | Data: {'original_length': 1099, 'template_length': 276, 'has_html_formatting': True, 'entities_reset': True} | {}
+2025-12-04 21:25:07,038 - forwarding_engine - INFO - [2025-12-04 21:25:07.038] [INFO] [forwarding_engine::_forward_to_target] 🔗 [TELEGRAPH STAGE 1] Starting Telegraph page creation | {}
+2025-12-04 21:25:07,203 - forwarding_engine - INFO - [2025-12-04 21:25:07.203] [INFO] [forwarding_engine::_forward_to_target] 🔗 [TELEGRAPH STAGE 2] Telegraph page created, adding link | {}
+2025-12-04 21:25:07,204 - forwarding_engine - INFO - [2025-12-04 21:25:07.204] [INFO] [forwarding_engine::_forward_to_target] 🔗 [TELEGRAPH STAGE 3] Link added to text | Data: {'url': 'https://telegra.ph/الخبر-الأصلي-12-04-79', 'text_before_link': 276, 'text_after_link': 350, 'new_content': '\n\n📰 <a href="https://telegra.ph/الخبر-الأصلي-12-04-79">اقرأ كامل الخبر</a>'} | {}
+2025-12-04 21:25:07,204 - forwarding_engine - INFO - [2025-12-04 21:25:07.204] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 1099, 'final_length': 350, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 21:25:07,204 - forwarding_engine - INFO - [2025-12-04 21:25:07.204] [INFO] [forwarding_engine::_forward_to_target] 📤 [SEND STAGE 1] Preparing text message... | Data: {'use_parse_mode': True, 'text_length': 350, 'has_html_tags': True, 'text_preview': 'التصنيف : سياسي\nالمحافظه : مأرب\n<blockquote>عاد عضو مجلس القيادة الرئاسي العميد طارق صالح إلى محافظة مأرب بعد عام، حيث أجرى لقاءات مع القيادات العسكرية والأمنية، وسط مخاوف من تطورات في حضرموت والمهرة '} | {}
+2025-12-04 21:25:07,204 - forwarding_engine - INFO - [2025-12-04 21:25:07.204] [INFO] [forwarding_engine::_forward_to_target] 📤 [SEND STAGE 2] Sending with HTML parse_mode | Data: {'chat_id': -1003110660765, 'parse_mode': 'HTML'} | {}
+2025-12-04 21:25:07,421 - forwarding_engine - INFO - [2025-12-04 21:25:07.421] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 21:25:07,421 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 21:25:07,422 - forwarding_engine - INFO - [2025-12-04 21:25:07.422] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 21:25:07,771 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 9 | {}
+2025-12-04 21:25:07,771 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 0 | Sentiment: neutral | Keywords: 2 | Time: 0.000s | {}
+2025-12-04 21:25:07,771 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 0 | Sentiment: neutral | {}
+2025-12-04 21:25:08,197 - ai_rule_engine - INFO - [RuleEngine] Loaded 6 entity rules for task 4 from DB | {}
+2025-12-04 21:25:08,197 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 0 | {}
+2025-12-04 21:25:08,278 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 21:25:08,278 - forwarding_engine - INFO - [2025-12-04 21:25:08.278] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 21:25:08,278 - main - INFO - [2025-12-04 21:25:08.278] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 21:25:08,622 - ai_rule_engine - INFO - [RuleEngine] Loaded 0 context rules for task 4 from DB | {}
+2025-12-04 21:25:08,906 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 0 | Replacements: 0 | {}
+2025-12-04 21:25:08,906 - ai_providers - INFO - [Groq] Starting request | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Max Tokens: 500 | Temperature: 0.7 | Input length: 547 chars | {}
+2025-12-04 21:25:12,467 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 21:25:12,468 - ai_providers - INFO - [Groq] ✅ Success | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Output length: 154 chars | First 100 chars: طارق صالح هو قائد عسكري يمني بارز، شغل منصب قائد الحرس الجمهوري اليمني سابقاً، وله تأثير كبير في الأ | {}
+2025-12-04 21:25:12,468 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 154 | {}
+2025-12-04 21:25:12,468 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 0.90 | {}
+2025-12-04 21:25:12,468 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 5.70s | Quality: 0.90 | Original: 9 → Final: 154 chars | {}
+2025-12-04 21:25:12,468 - forwarding_engine - INFO - [2025-12-04 21:25:12.468] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 9, 'final_length': 154, 'stages': 4, 'rules_applied': 0, 'quality_score': 0.9, 'total_time': '5.70s'} | {}
+2025-12-04 21:25:12,468 - forwarding_engine - INFO - [2025-12-04 21:25:12.468] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.00s) | {}
+2025-12-04 21:25:12,468 - forwarding_engine - INFO - [2025-12-04 21:25:12.468] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (1.13s) | {}
+2025-12-04 21:25:12,469 - forwarding_engine - INFO - [2025-12-04 21:25:12.468] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (3.56s) | {}
+2025-12-04 21:25:12,469 - forwarding_engine - INFO - [2025-12-04 21:25:12.469] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 21:25:12,752 - task_4 - INFO - AI Pipeline completed | From 9 → 154 chars
+2025-12-04 21:25:13,319 - forwarding_engine - INFO - [2025-12-04 21:25:13.319] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 9, 'processed_length': 154, 'total_reduction': -145, 'reduction_percent': -1611, 'final_preview': 'طارق صالح هو قائد عسكري يمني بارز، شغل منصب قائد الحرس الجمهوري اليمني سابقاً، وله تأثير كبير في الأحداث السياسية والعسكرية في اليمن خلال السنوات الأخ'} | {}
+2025-12-04 21:25:13,320 - forwarding_engine - INFO - [2025-12-04 21:25:13.320] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 21:25:13,320 - forwarding_engine - INFO - [2025-12-04 21:25:13.320] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2403, 'has_processed_text': True, 'task_id': 4} | {}
+2025-12-04 21:25:13,604 - forwarding_engine - INFO - [2025-12-04 21:25:13.604] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 21:25:13,604 - forwarding_engine - INFO - [2025-12-04 21:25:13.604] [INFO] [forwarding_engine::_forward_to_target] 🔧 [TEMPLATE STAGE 1] Starting publishing template application... | Data: {'task_id': 4, 'text_length': 154, 'has_entities': False} | {}
+2025-12-04 21:25:14,171 - forwarding_engine - INFO - [2025-12-04 21:25:14.171] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: رقم_القيد | {}
+2025-12-04 21:25:14,171 - forwarding_engine - INFO - [2025-12-04 21:25:14.171] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: التصنيف_ | {}
+2025-12-04 21:25:14,171 - forwarding_engine - INFO - [2025-12-04 21:25:14.171] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: المحافظه_ | {}
+2025-12-04 21:25:14,171 - forwarding_engine - INFO - [2025-12-04 21:25:14.171] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Auto-populated summary: التلخيص | {}
+2025-12-04 21:25:14,171 - forwarding_engine - INFO - [2025-12-04 21:25:14.171] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Set date field: التاريخ_ = 2025-12-04 | {}
+2025-12-04 21:25:14,171 - forwarding_engine - INFO - [2025-12-04 21:25:14.171] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Set static field: المختص = حيدر  | {}
+2025-12-04 21:25:14,171 - forwarding_engine - INFO - [2025-12-04 21:25:14.171] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: المصدر_ | {}
+2025-12-04 21:25:15,021 - forwarding_engine - INFO - [2025-12-04 21:25:15.021] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Extracting fields with groq/meta-llama/llama-4-maverick-17b-128e-instruct | Data: {'fields_count': 4, 'prompt_length': 674} | {}
+2025-12-04 21:25:15,021 - ai_providers - INFO - [Groq] Starting request | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Max Tokens: 500 | Temperature: 0.3 | Input length: 736 chars | {}
+2025-12-04 21:25:15,377 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 21:25:15,378 - ai_providers - INFO - [Groq] ✅ Success | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Output length: 80 chars | First 100 chars: {
+  "رقم_القيد": "",
+  "التصنيف_": "عسكري",
+  "المحافظه_": "",
+  "المصدر_": ""
+} | {}
+2025-12-04 21:25:15,378 - forwarding_engine - INFO - [2025-12-04 21:25:15.378] [DEBUG] [forwarding_engine::_extract_fields_with_ai] AI response received | Data: {'response_length': 80, 'response_preview': '{\n  "رقم_القيد": "",\n  "التصنيف_": "عسكري",\n  "المحافظه_": "",\n  "المصدر_": ""\n}'} | {}
+2025-12-04 21:25:15,378 - forwarding_engine - INFO - [2025-12-04 21:25:15.378] [INFO] [forwarding_engine::_extract_fields_with_ai] AI extracted fields | Data: {'ai_extracted': {'رقم_القيد': '', 'التصنيف_': 'عسكري', 'المحافظه_': '', 'المصدر_': ''}} | {}
+2025-12-04 21:25:15,378 - forwarding_engine - INFO - [2025-12-04 21:25:15.378] [INFO] [forwarding_engine::_extract_fields_with_ai] Final extracted fields | Data: {'extracted': {'التلخيص': 'طارق صالح هو قائد عسكري يمني بارز، شغل منصب قائد الحرس الجمهوري اليمني سابقاً، وله تأثير كبير في الأحداث السياسية والعسكرية في اليمن خلال السنوات الأخيرة.', 'التاريخ_': '2025-12-04', 'المختص': 'حيدر ', 'رقم_القيد': '', 'التصنيف_': 'عسكري', 'المحافظه_': '', 'المصدر_': ''}} | {}
+2025-12-04 21:25:15,378 - forwarding_engine - INFO - [2025-12-04 21:25:15.378] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: رقم_القيد | Data: {'has_value': False, 'value_preview': 'empty', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:15,378 - forwarding_engine - INFO - [2025-12-04 21:25:15.378] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التصنيف_ | Data: {'has_value': True, 'value_preview': 'عسكري', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:15,378 - forwarding_engine - INFO - [2025-12-04 21:25:15.378] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التصنيف_ | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'عسكري'} | {}
+2025-12-04 21:25:15,378 - forwarding_engine - INFO - [2025-12-04 21:25:15.378] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المحافظه_ | Data: {'has_value': False, 'value_preview': 'empty', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:15,379 - forwarding_engine - INFO - [2025-12-04 21:25:15.378] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التلخيص | Data: {'has_value': True, 'value_preview': 'طارق صالح هو قائد عسكري يمني بارز، شغل منصب قائد ا', 'field_type': 'summary', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:15,379 - forwarding_engine - INFO - [2025-12-04 21:25:15.379] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التلخيص | Data: {'formatting': 'quote', 'original_length': 154, 'formatted_length': 179, 'has_html_tags': True, 'formatted_preview': '<blockquote>طارق صالح هو قائد عسكري يمني بارز، شغل منصب قائد الحرس الجمهوري اليمني سابقاً، وله تأثير'} | {}
+2025-12-04 21:25:15,379 - forwarding_engine - INFO - [2025-12-04 21:25:15.379] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التاريخ_ | Data: {'has_value': True, 'value_preview': '2025-12-04', 'field_type': 'date_today', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:15,379 - forwarding_engine - INFO - [2025-12-04 21:25:15.379] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التاريخ_ | Data: {'formatting': 'none', 'original_length': 10, 'formatted_length': 10, 'has_html_tags': False, 'formatted_preview': '2025-12-04'} | {}
+2025-12-04 21:25:15,379 - forwarding_engine - INFO - [2025-12-04 21:25:15.379] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المختص | Data: {'has_value': True, 'value_preview': 'حيدر ', 'field_type': 'static', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:15,379 - forwarding_engine - INFO - [2025-12-04 21:25:15.379] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المختص | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'حيدر '} | {}
+2025-12-04 21:25:15,379 - forwarding_engine - INFO - [2025-12-04 21:25:15.379] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المصدر_ | Data: {'has_value': False, 'value_preview': 'empty', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:15,379 - forwarding_engine - INFO - [2025-12-04 21:25:15.379] [INFO] [forwarding_engine::_apply_publishing_template] Template applied: تلخيص2 | Data: {'output_length': 230, 'fields_count': 7, 'extracted_count': 7} | {}
+2025-12-04 21:25:15,379 - forwarding_engine - INFO - [2025-12-04 21:25:15.379] [INFO] [forwarding_engine::_forward_to_target] 🔧 [TEMPLATE STAGE 2] Template function returned | Data: {'returned_length': 230, 'is_empty': False, 'is_same_as_input': False, 'has_html_tags': True, 'preview': 'التصنيف : عسكري\n<blockquote>طارق صالح هو قائد عسكري يمني بارز، شغل منصب قائد الحرس الجمهوري اليمني سابقاً، وله تأثير كبير في الأحداث السياسية والعسكري'} | {}
+2025-12-04 21:25:15,379 - forwarding_engine - INFO - [2025-12-04 21:25:15.379] [INFO] [forwarding_engine::_forward_to_target] ✅ [TEMPLATE STAGE 3] Template applied successfully | Data: {'original_length': 9, 'template_length': 230, 'has_html_formatting': True, 'entities_reset': True} | {}
+2025-12-04 21:25:15,380 - forwarding_engine - INFO - [2025-12-04 21:25:15.380] [INFO] [forwarding_engine::_forward_to_target] 🔗 [TELEGRAPH STAGE 1] Starting Telegraph page creation | {}
+2025-12-04 21:25:15,380 - forwarding_engine - INFO - [2025-12-04 21:25:15.380] [WARNING] [forwarding_engine::_forward_to_target] ⚠️ [TELEGRAPH STAGE 2] Telegraph page creation failed | {}
+2025-12-04 21:25:15,380 - forwarding_engine - INFO - [2025-12-04 21:25:15.380] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 9, 'final_length': 230, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 21:25:15,380 - forwarding_engine - INFO - [2025-12-04 21:25:15.380] [INFO] [forwarding_engine::_forward_to_target] 📤 [SEND STAGE 1] Preparing text message... | Data: {'use_parse_mode': True, 'text_length': 230, 'has_html_tags': True, 'text_preview': 'التصنيف : عسكري\n<blockquote>طارق صالح هو قائد عسكري يمني بارز، شغل منصب قائد الحرس الجمهوري اليمني سابقاً، وله تأثير كبير في الأحداث السياسية والعسكرية في اليمن خلال السنوات الأخيرة.</blockquote>\nالتا'} | {}
+2025-12-04 21:25:15,380 - forwarding_engine - INFO - [2025-12-04 21:25:15.380] [INFO] [forwarding_engine::_forward_to_target] 📤 [SEND STAGE 2] Sending with HTML parse_mode | Data: {'chat_id': -1003110660765, 'parse_mode': 'HTML'} | {}
+2025-12-04 21:25:15,686 - forwarding_engine - INFO - [2025-12-04 21:25:15.686] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 21:25:15,686 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 21:25:15,686 - forwarding_engine - INFO - [2025-12-04 21:25:15.686] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 21:25:16,963 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 21:25:16,963 - forwarding_engine - INFO - [2025-12-04 21:25:16.963] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 21:25:16,963 - main - INFO - [2025-12-04 21:25:16.963] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 21:25:33,939 - main - INFO - [2025-12-04 21:25:33.939] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2404, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 21:25:33,940 - main - INFO - [2025-12-04 21:25:33.940] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 21:25:34,368 - main - INFO - [2025-12-04 21:25:34.368] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 21:25:34,368 - main - INFO - [2025-12-04 21:25:34.368] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 21:25:34,796 - main - INFO - [2025-12-04 21:25:34.796] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 21:25:34,797 - main - INFO - [2025-12-04 21:25:34.797] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 21:25:34,797 - main - INFO - [2025-12-04 21:25:34.797] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 21:25:34,797 - forwarding_engine - INFO - [2025-12-04 21:25:34.797] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2404, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 21:25:34,797 - forwarding_engine - INFO - [2025-12-04 21:25:34.797] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 21:25:34,797 - forwarding_engine - INFO - [2025-12-04 21:25:34.797] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': True, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 21:25:34,797 - forwarding_engine - INFO - [2025-12-04 21:25:34.797] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 21:25:34,797 - forwarding_engine - INFO - [2025-12-04 21:25:34.797] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 21:25:34,797 - forwarding_engine - INFO - [2025-12-04 21:25:34.797] [INFO] [forwarding_engine::_process_message] Text length: 30 chars | {}
+2025-12-04 21:25:35,226 - forwarding_engine - INFO - [2025-12-04 21:25:35.225] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 21:25:35,654 - forwarding_engine - INFO - [2025-12-04 21:25:35.653] [INFO] [forwarding_engine::_process_message] Using model: meta-llama/llama-4-maverick-17b-128e-instruct | {}
+2025-12-04 21:25:36,081 - forwarding_engine - INFO - [2025-12-04 21:25:36.081] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 21:25:36,509 - forwarding_engine - INFO - [2025-12-04 21:25:36.509] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 21:25:37,373 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 30 | {}
+2025-12-04 21:25:37,374 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 0 | Sentiment: neutral | Keywords: 5 | Time: 0.001s | {}
+2025-12-04 21:25:37,374 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 0 | Sentiment: neutral | {}
+2025-12-04 21:25:37,382 - ai_rule_engine - INFO - [RuleEngine] Using cached entity rules for task 4 (6 rules) | {}
+2025-12-04 21:25:37,382 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 0 | {}
+2025-12-04 21:25:37,385 - ai_rule_engine - INFO - [RuleEngine] Using cached context rules for task 4 (0 rules) | {}
+2025-12-04 21:25:37,385 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 0 | Replacements: 0 | {}
+2025-12-04 21:25:37,385 - ai_providers - INFO - [Groq] Starting request | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Max Tokens: 500 | Temperature: 0.7 | Input length: 568 chars | {}
+2025-12-04 21:25:37,736 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 21:25:37,740 - ai_providers - INFO - [Groq] ✅ Success | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Output length: 100 chars | First 100 chars: طارق صالح قام بعمل ما، حسب ما صرح به محمد تيننينء، و يبدو أن هناك بعض التفاصيل الهامة حول هذا العمل. | {}
+2025-12-04 21:25:37,740 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 100 | {}
+2025-12-04 21:25:37,740 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 0.90 | {}
+2025-12-04 21:25:37,740 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 1.23s | Quality: 0.90 | Original: 30 → Final: 100 chars | {}
+2025-12-04 21:25:37,741 - forwarding_engine - INFO - [2025-12-04 21:25:37.741] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 30, 'final_length': 100, 'stages': 4, 'rules_applied': 0, 'quality_score': 0.9, 'total_time': '1.23s'} | {}
+2025-12-04 21:25:37,741 - forwarding_engine - INFO - [2025-12-04 21:25:37.741] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.00s) | {}
+2025-12-04 21:25:37,741 - forwarding_engine - INFO - [2025-12-04 21:25:37.741] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (0.00s) | {}
+2025-12-04 21:25:37,741 - forwarding_engine - INFO - [2025-12-04 21:25:37.741] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (0.36s) | {}
+2025-12-04 21:25:37,741 - forwarding_engine - INFO - [2025-12-04 21:25:37.741] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 21:25:38,024 - task_4 - INFO - AI Pipeline completed | From 30 → 100 chars
+2025-12-04 21:25:38,596 - forwarding_engine - INFO - [2025-12-04 21:25:38.596] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 30, 'processed_length': 100, 'total_reduction': -70, 'reduction_percent': -233, 'final_preview': 'طارق صالح قام بعمل ما، حسب ما صرح به محمد تيننينء، و يبدو أن هناك بعض التفاصيل الهامة حول هذا العمل.'} | {}
+2025-12-04 21:25:38,597 - forwarding_engine - INFO - [2025-12-04 21:25:38.597] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 21:25:38,598 - forwarding_engine - INFO - [2025-12-04 21:25:38.598] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2404, 'has_processed_text': True, 'task_id': 4} | {}
+2025-12-04 21:25:38,881 - forwarding_engine - INFO - [2025-12-04 21:25:38.881] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 21:25:38,882 - forwarding_engine - INFO - [2025-12-04 21:25:38.882] [INFO] [forwarding_engine::_forward_to_target] 🔧 [TEMPLATE STAGE 1] Starting publishing template application... | Data: {'task_id': 4, 'text_length': 100, 'has_entities': False} | {}
+2025-12-04 21:25:39,449 - forwarding_engine - INFO - [2025-12-04 21:25:39.449] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: رقم_القيد | {}
+2025-12-04 21:25:39,449 - forwarding_engine - INFO - [2025-12-04 21:25:39.449] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: التصنيف_ | {}
+2025-12-04 21:25:39,449 - forwarding_engine - INFO - [2025-12-04 21:25:39.449] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: المحافظه_ | {}
+2025-12-04 21:25:39,449 - forwarding_engine - INFO - [2025-12-04 21:25:39.449] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Auto-populated summary: التلخيص | {}
+2025-12-04 21:25:39,449 - forwarding_engine - INFO - [2025-12-04 21:25:39.449] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Set date field: التاريخ_ = 2025-12-04 | {}
+2025-12-04 21:25:39,449 - forwarding_engine - INFO - [2025-12-04 21:25:39.449] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Set static field: المختص = حيدر  | {}
+2025-12-04 21:25:39,449 - forwarding_engine - INFO - [2025-12-04 21:25:39.449] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: المصدر_ | {}
+2025-12-04 21:25:40,301 - forwarding_engine - INFO - [2025-12-04 21:25:40.301] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Extracting fields with groq/meta-llama/llama-4-maverick-17b-128e-instruct | Data: {'fields_count': 4, 'prompt_length': 620} | {}
+2025-12-04 21:25:40,301 - ai_providers - INFO - [Groq] Starting request | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Max Tokens: 500 | Temperature: 0.3 | Input length: 682 chars | {}
+2025-12-04 21:25:40,498 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 21:25:40,499 - ai_providers - INFO - [Groq] ✅ Success | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Output length: 92 chars | First 100 chars: {
+  "رقم_القيد": "",
+  "التصنيف_": "عسكري",
+  "المحافظه_": "",
+  "المصدر_": "محمد تيننينء"
+} | {}
+2025-12-04 21:25:40,500 - forwarding_engine - INFO - [2025-12-04 21:25:40.500] [DEBUG] [forwarding_engine::_extract_fields_with_ai] AI response received | Data: {'response_length': 92, 'response_preview': '{\n  "رقم_القيد": "",\n  "التصنيف_": "عسكري",\n  "المحافظه_": "",\n  "المصدر_": "محمد تيننينء"\n}'} | {}
+2025-12-04 21:25:40,500 - forwarding_engine - INFO - [2025-12-04 21:25:40.500] [INFO] [forwarding_engine::_extract_fields_with_ai] AI extracted fields | Data: {'ai_extracted': {'رقم_القيد': '', 'التصنيف_': 'عسكري', 'المحافظه_': '', 'المصدر_': 'محمد تيننينء'}} | {}
+2025-12-04 21:25:40,501 - forwarding_engine - INFO - [2025-12-04 21:25:40.501] [INFO] [forwarding_engine::_extract_fields_with_ai] Final extracted fields | Data: {'extracted': {'التلخيص': 'طارق صالح قام بعمل ما، حسب ما صرح به محمد تيننينء، و يبدو أن هناك بعض التفاصيل الهامة حول هذا العمل.', 'التاريخ_': '2025-12-04', 'المختص': 'حيدر ', 'رقم_القيد': '', 'التصنيف_': 'عسكري', 'المحافظه_': '', 'المصدر_': 'محمد تيننينء'}} | {}
+2025-12-04 21:25:40,501 - forwarding_engine - INFO - [2025-12-04 21:25:40.501] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: رقم_القيد | Data: {'has_value': False, 'value_preview': 'empty', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:40,501 - forwarding_engine - INFO - [2025-12-04 21:25:40.501] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التصنيف_ | Data: {'has_value': True, 'value_preview': 'عسكري', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:40,501 - forwarding_engine - INFO - [2025-12-04 21:25:40.501] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التصنيف_ | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'عسكري'} | {}
+2025-12-04 21:25:40,501 - forwarding_engine - INFO - [2025-12-04 21:25:40.501] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المحافظه_ | Data: {'has_value': False, 'value_preview': 'empty', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:40,501 - forwarding_engine - INFO - [2025-12-04 21:25:40.501] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التلخيص | Data: {'has_value': True, 'value_preview': 'طارق صالح قام بعمل ما، حسب ما صرح به محمد تيننينء،', 'field_type': 'summary', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:40,501 - forwarding_engine - INFO - [2025-12-04 21:25:40.501] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التلخيص | Data: {'formatting': 'quote', 'original_length': 100, 'formatted_length': 125, 'has_html_tags': True, 'formatted_preview': '<blockquote>طارق صالح قام بعمل ما، حسب ما صرح به محمد تيننينء، و يبدو أن هناك بعض التفاصيل الهامة حو'} | {}
+2025-12-04 21:25:40,501 - forwarding_engine - INFO - [2025-12-04 21:25:40.501] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التاريخ_ | Data: {'has_value': True, 'value_preview': '2025-12-04', 'field_type': 'date_today', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:40,501 - forwarding_engine - INFO - [2025-12-04 21:25:40.501] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التاريخ_ | Data: {'formatting': 'none', 'original_length': 10, 'formatted_length': 10, 'has_html_tags': False, 'formatted_preview': '2025-12-04'} | {}
+2025-12-04 21:25:40,503 - forwarding_engine - INFO - [2025-12-04 21:25:40.502] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المختص | Data: {'has_value': True, 'value_preview': 'حيدر ', 'field_type': 'static', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:40,503 - forwarding_engine - INFO - [2025-12-04 21:25:40.503] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المختص | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'حيدر '} | {}
+2025-12-04 21:25:40,503 - forwarding_engine - INFO - [2025-12-04 21:25:40.503] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المصدر_ | Data: {'has_value': True, 'value_preview': 'محمد تيننينء', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:25:40,503 - forwarding_engine - INFO - [2025-12-04 21:25:40.503] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المصدر_ | Data: {'formatting': 'none', 'original_length': 12, 'formatted_length': 12, 'has_html_tags': False, 'formatted_preview': 'محمد تيننينء'} | {}
+2025-12-04 21:25:40,503 - forwarding_engine - INFO - [2025-12-04 21:25:40.503] [INFO] [forwarding_engine::_apply_publishing_template] Template applied: تلخيص2 | Data: {'output_length': 198, 'fields_count': 7, 'extracted_count': 7} | {}
+2025-12-04 21:25:40,503 - forwarding_engine - INFO - [2025-12-04 21:25:40.503] [INFO] [forwarding_engine::_forward_to_target] 🔧 [TEMPLATE STAGE 2] Template function returned | Data: {'returned_length': 198, 'is_empty': False, 'is_same_as_input': False, 'has_html_tags': True, 'preview': 'التصنيف : عسكري\n<blockquote>طارق صالح قام بعمل ما، حسب ما صرح به محمد تيننينء، و يبدو أن هناك بعض التفاصيل الهامة حول هذا العمل.</blockquote>\nالتاريخ '} | {}
+2025-12-04 21:25:40,503 - forwarding_engine - INFO - [2025-12-04 21:25:40.503] [INFO] [forwarding_engine::_forward_to_target] ✅ [TEMPLATE STAGE 3] Template applied successfully | Data: {'original_length': 30, 'template_length': 198, 'has_html_formatting': True, 'entities_reset': True} | {}
+2025-12-04 21:25:40,504 - forwarding_engine - INFO - [2025-12-04 21:25:40.503] [INFO] [forwarding_engine::_forward_to_target] 🔗 [TELEGRAPH STAGE 1] Starting Telegraph page creation | {}
+2025-12-04 21:25:40,656 - forwarding_engine - INFO - [2025-12-04 21:25:40.656] [INFO] [forwarding_engine::_forward_to_target] 🔗 [TELEGRAPH STAGE 2] Telegraph page created, adding link | {}
+2025-12-04 21:25:40,656 - forwarding_engine - INFO - [2025-12-04 21:25:40.656] [INFO] [forwarding_engine::_forward_to_target] 🔗 [TELEGRAPH STAGE 3] Link added to text | Data: {'url': 'https://telegra.ph/الخبر-الأصلي-12-04-80', 'text_before_link': 198, 'text_after_link': 272, 'new_content': '\n\n📰 <a href="https://telegra.ph/الخبر-الأصلي-12-04-80">اقرأ كامل الخبر</a>'} | {}
+2025-12-04 21:25:40,656 - forwarding_engine - INFO - [2025-12-04 21:25:40.656] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 30, 'final_length': 272, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 21:25:40,656 - forwarding_engine - INFO - [2025-12-04 21:25:40.656] [INFO] [forwarding_engine::_forward_to_target] 📤 [SEND STAGE 1] Preparing text message... | Data: {'use_parse_mode': True, 'text_length': 272, 'has_html_tags': True, 'text_preview': 'التصنيف : عسكري\n<blockquote>طارق صالح قام بعمل ما، حسب ما صرح به محمد تيننينء، و يبدو أن هناك بعض التفاصيل الهامة حول هذا العمل.</blockquote>\nالتاريخ : 2025-12-04\nالمختص: حيدر \nالمصدر : محمد تيننينء\n\n'} | {}
+2025-12-04 21:25:40,656 - forwarding_engine - INFO - [2025-12-04 21:25:40.656] [INFO] [forwarding_engine::_forward_to_target] 📤 [SEND STAGE 2] Sending with HTML parse_mode | Data: {'chat_id': -1003110660765, 'parse_mode': 'HTML'} | {}
+2025-12-04 21:25:40,949 - forwarding_engine - INFO - [2025-12-04 21:25:40.948] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 21:25:40,949 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 21:25:40,949 - forwarding_engine - INFO - [2025-12-04 21:25:40.949] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 21:25:41,801 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 21:25:41,801 - forwarding_engine - INFO - [2025-12-04 21:25:41.801] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 21:25:41,801 - main - INFO - [2025-12-04 21:25:41.801] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 21:27:46,376 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 21:27:46,378 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 21:27:46,383 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 21:27:46,385 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 21:27:46,387 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 21:27:46,389 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 21:27:46,392 - main - INFO - [2025-12-04 21:27:46.392] [INFO] [main::entry] Bot script started | {}
+2025-12-04 21:27:46,392 - main - INFO - [2025-12-04 21:27:46.392] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 21:27:46,393 - main - INFO - [2025-12-04 21:27:46.393] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-04 21:27:46,393 - main - INFO - [2025-12-04 21:27:46.393] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-04 21:27:48,234 - database - INFO - Database connected successfully | {}
+2025-12-04 21:27:48,663 - main - INFO - [2025-12-04 21:27:48.663] [INFO] [session::load] Found active session in database | {}
+2025-12-04 21:27:48,663 - main - INFO - [2025-12-04 21:27:48.663] [INFO] [main::init] Creating Pyrofork client | Data: {'api_id': 24343527, 'has_session': True, 'api_hash_set': True} | {}
+2025-12-04 21:27:50,547 - main - INFO - [2025-12-04 21:27:50.547] [INFO] [main::initialize_bot] Starting bot initialization... | {}
+2025-12-04 21:27:50,548 - main - INFO - [2025-12-04 21:27:50.548] [INFO] [database::connect] Connecting to database... | {}
+2025-12-04 21:27:52,391 - database - INFO - Database connected successfully | {}
+2025-12-04 21:27:52,391 - main - INFO - [2025-12-04 21:27:52.391] [INFO] [database::connect] Database connected successfully | {}
+2025-12-04 21:27:52,391 - main - INFO - [2025-12-04 21:27:52.391] [INFO] [ai_manager::init] Loading AI providers from database... | {}
+2025-12-04 21:27:52,820 - ai_providers - INFO - Loaded OpenAI provider from database | {}
+2025-12-04 21:27:52,820 - ai_providers - INFO - Loaded Groq provider from database | {}
+2025-12-04 21:27:52,820 - ai_providers - WARNING - No API key found for provider: claude | {}
+2025-12-04 21:27:52,820 - ai_providers - INFO - Loaded HuggingFace provider from database | {}
+2025-12-04 21:27:52,820 - main - INFO - [2025-12-04 21:27:52.820] [INFO] [ai_manager::init] AI providers loaded successfully | {}
+2025-12-04 21:27:52,820 - main - INFO - [2025-12-04 21:27:52.820] [INFO] [admin::check] Checking admin status for ID: 6556918772 | {}
+2025-12-04 21:27:53,250 - main - INFO - [2025-12-04 21:27:53.250] [INFO] [admin::check] Admin already exists: 6556918772 | {}
+2025-12-04 21:27:53,250 - main - INFO - [2025-12-04 21:27:53.250] [INFO] [forwarding_engine::init] Initializing forwarding engine... | {}
+2025-12-04 21:27:53,250 - forwarding_engine - INFO - [2025-12-04 21:27:53.250] [INFO] [forwarding_engine::__init__] Forwarding engine initialized | {}
+2025-12-04 21:27:53,251 - main - INFO - [2025-12-04 21:27:53.250] [INFO] [forwarding_engine::init] Forwarding engine initialized successfully | {}
+2025-12-04 21:27:53,251 - main - INFO - [2025-12-04 21:27:53.251] [INFO] [queue_manager::register] Registering job handlers... | {}
+2025-12-04 21:27:53,251 - queue_system - INFO - Registered handler for job type: forward | {}
+2025-12-04 21:27:53,251 - queue_system - INFO - Registered handler for job type: ai_process | {}
+2025-12-04 21:27:53,251 - queue_system - INFO - Registered handler for job type: video_process | {}
+2025-12-04 21:27:53,251 - main - INFO - [2025-12-04 21:27:53.251] [INFO] [queue_manager::register] All handlers registered: forward, ai_process, video_process | {}
+2025-12-04 21:27:53,251 - main - INFO - [2025-12-04 21:27:53.251] [INFO] [queue_manager::start] Starting queue manager... | {}
+2025-12-04 21:27:53,251 - queue_system - INFO - Queue manager started with 10 max workers | {}
+2025-12-04 21:27:53,251 - main - INFO - [2025-12-04 21:27:53.251] [INFO] [queue_manager::start] Queue manager started with 10 workers | {}
+2025-12-04 21:27:53,251 - main - INFO - [2025-12-04 21:27:53.251] [INFO] [tasks::load] Loading active tasks from database... | {}
+2025-12-04 21:27:53,678 - main - INFO - [2025-12-04 21:27:53.678] [INFO] [tasks::load] Found 1 tasks in database | {}
+2025-12-04 21:27:53,678 - main - INFO - [2025-12-04 21:27:53.678] [INFO] [tasks::check] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'is_active': True, 'source_channels': [4], 'target_channels': [5]} | {}
+2025-12-04 21:27:53,678 - forwarding_engine - INFO - [2025-12-04 21:27:53.678] [INFO] [forwarding_engine::start_task_monitoring] Started monitoring task 4 | {}
+2025-12-04 21:27:53,679 - main - INFO - [2025-12-04 21:27:53.679] [INFO] [tasks::monitor] Started monitoring task: توجيه الأخبار  | Data: {'task_id': 4} | {}
+2025-12-04 21:27:53,680 - main - INFO - [2025-12-04 21:27:53.680] [INFO] [tasks::load] Loaded 1 active tasks for monitoring | {}
+2025-12-04 21:27:53,680 - main - INFO - [2025-12-04 21:27:53.680] [INFO] [main::initialize_bot] ✅ Bot initialization completed successfully | {}
+2025-12-04 21:27:53,680 - main - INFO - [2025-12-04 21:27:53.680] [INFO] [pyrogram::start] Starting Pyrofork userbot client... | {}
+2025-12-04 21:27:53,906 - pyrogram.connection.connection - INFO - Connecting...
+2025-12-04 21:27:54,050 - pyrogram.connection.connection - INFO - Connected! Production DC4 - IPv4
+2025-12-04 21:27:54,051 - pyrogram.session.session - INFO - NetworkTask started
+2025-12-04 21:27:54,681 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-12-04 21:27:54,681 - pyrogram.session.session - INFO - Device: CPython 3.11.13 - Pyrogram 2.0.106
+2025-12-04 21:27:54,682 - pyrogram.session.session - INFO - System: Linux 6.14.11 (en)
+2025-12-04 21:27:54,682 - pyrogram.session.session - INFO - Session started
+2025-12-04 21:27:54,684 - pyrogram.session.session - INFO - PingTask started
+2025-12-04 21:27:55,000 - pyrogram.dispatcher - INFO - Started 12 HandlerTasks
+2025-12-04 21:27:55,169 - main - INFO - [2025-12-04 21:27:55.169] [INFO] [pyrogram::connected] ✅ Userbot connected to Telegram | Data: {'user_id': 6660878563, 'username': 'Sheyyeeuu', 'first_name': 'Amir'} | {}
+2025-12-04 21:27:55,170 - main - INFO - [2025-12-04 21:27:55.170] [INFO] [handlers::register] Registering message handlers... | {}
+2025-12-04 21:27:55,170 - main - INFO - [2025-12-04 21:27:55.170] [INFO] [handlers::register] ✅ All handlers registered successfully | {}
+2025-12-04 21:27:55,171 - main - INFO - [2025-12-04 21:27:55.171] [INFO] [warmup::post_connect] Starting post-connection warmup... | {}
+2025-12-04 21:27:55,171 - main - INFO - [2025-12-04 21:27:55.171] [INFO] [warmup::start] Starting channel peer warmup... | {}
+2025-12-04 21:27:55,171 - main - INFO - [2025-12-04 21:27:55.171] [INFO] [warmup::dialogs] Loading all dialogs to populate peer cache... | {}
+2025-12-04 21:27:55,900 - pyrogram.session.session - WARNING - [userbot_forwarder] Waiting for 11 seconds before continuing (required by "channels.GetMessages")
+2025-12-04 21:28:08,165 - main - INFO - [2025-12-04 21:28:08.165] [DEBUG] [warmup::dialogs] Loaded 50 dialogs... | {}
+2025-12-04 21:28:08,166 - main - INFO - [2025-12-04 21:28:08.166] [DEBUG] [warmup::dialogs] Loaded 100 dialogs... | {}
+2025-12-04 21:28:09,083 - main - INFO - [2025-12-04 21:28:09.083] [DEBUG] [warmup::dialogs] Loaded 150 dialogs... | {}
+2025-12-04 21:28:09,197 - main - INFO - [2025-12-04 21:28:09.197] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2406, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 21:28:09,198 - main - INFO - [2025-12-04 21:28:09.198] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 21:28:09,323 - main - INFO - [2025-12-04 21:28:09.323] [INFO] [warmup::dialogs] ✅ Cached 172 dialogs in peer cache | {}
+2025-12-04 21:28:09,623 - main - INFO - [2025-12-04 21:28:09.623] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 21:28:09,623 - main - INFO - [2025-12-04 21:28:09.623] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 21:28:09,749 - main - INFO - [2025-12-04 21:28:09.749] [INFO] [warmup::channels] Found 2 channels to verify | {}
+2025-12-04 21:28:09,750 - main - INFO - [2025-12-04 21:28:09.749] [INFO] [warmup::cached] ✅ اختبار 1 already in peer cache | {}
+2025-12-04 21:28:09,750 - main - INFO - [2025-12-04 21:28:09.750] [INFO] [warmup::cached] ✅ اختبار 2 already in peer cache | {}
+2025-12-04 21:28:09,750 - main - INFO - [2025-12-04 21:28:09.750] [INFO] [warmup::complete] ✅ Warmup complete: 2 success, 0 failed | {}
+2025-12-04 21:28:09,750 - main - INFO - [2025-12-04 21:28:09.750] [INFO] [main::idle] Userbot is now running and waiting for messages... | {}
+2025-12-04 21:28:10,048 - main - INFO - [2025-12-04 21:28:10.047] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 21:28:10,048 - main - INFO - [2025-12-04 21:28:10.048] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 21:28:10,048 - main - INFO - [2025-12-04 21:28:10.048] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 21:28:10,048 - forwarding_engine - INFO - [2025-12-04 21:28:10.048] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2406, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': True, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 21:28:10,048 - forwarding_engine - INFO - [2025-12-04 21:28:10.048] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 21:28:10,048 - forwarding_engine - INFO - [2025-12-04 21:28:10.048] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': True, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 21:28:10,050 - forwarding_engine - INFO - [2025-12-04 21:28:10.050] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 21:28:10,050 - forwarding_engine - INFO - [2025-12-04 21:28:10.050] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 21:28:10,050 - forwarding_engine - INFO - [2025-12-04 21:28:10.050] [INFO] [forwarding_engine::_process_message] Text length: 1099 chars | {}
+2025-12-04 21:28:10,474 - forwarding_engine - INFO - [2025-12-04 21:28:10.474] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 21:28:10,899 - forwarding_engine - INFO - [2025-12-04 21:28:10.899] [INFO] [forwarding_engine::_process_message] Using model: meta-llama/llama-4-maverick-17b-128e-instruct | {}
+2025-12-04 21:28:11,324 - forwarding_engine - INFO - [2025-12-04 21:28:11.324] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 21:28:11,750 - forwarding_engine - INFO - [2025-12-04 21:28:11.750] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 21:28:12,599 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 1099 | {}
+2025-12-04 21:28:12,606 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 4 | Sentiment: neutral | Keywords: 20 | Time: 0.007s | {}
+2025-12-04 21:28:12,606 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 4 | Sentiment: neutral | {}
+2025-12-04 21:28:13,031 - ai_rule_engine - INFO - [RuleEngine] Loaded 4 entity rules for task 4 from DB | {}
+2025-12-04 21:28:13,032 - ai_rule_engine - INFO - [RuleEngine] Replaced 'المجلس الانتقالي ' with 'ما يسمى بالمجلس الانتقالي ' (1 times) | {}
+2025-12-04 21:28:13,032 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 1 | {}
+2025-12-04 21:28:13,456 - ai_rule_engine - INFO - [RuleEngine] Loaded 0 context rules for task 4 from DB | {}
+2025-12-04 21:28:13,739 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 1 | Replacements: 1 | {}
+2025-12-04 21:28:13,905 - ai_providers - INFO - [Groq] Starting request | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Max Tokens: 554 | Temperature: 0.7 | Input length: 1744 chars | {}
+2025-12-04 21:28:14,369 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 21:28:14,386 - ai_providers - INFO - [Groq] ✅ Success | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Output length: 203 chars | First 100 chars: عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، في ظل تطورات متسارعة في حضرموت و | {}
+2025-12-04 21:28:14,386 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 203 | {}
+2025-12-04 21:28:14,387 - ai_postprocessing - INFO - [Postprocessing] Entity replacement not verified: المجلس الانتقالي  → ما يسمى بالمجلس الانتقالي  | {}
+2025-12-04 21:28:14,388 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 0.70 | {}
+2025-12-04 21:28:14,388 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 2.64s | Quality: 0.70 | Original: 1099 → Final: 203 chars | {}
+2025-12-04 21:28:14,388 - forwarding_engine - INFO - [2025-12-04 21:28:14.388] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 1099, 'final_length': 203, 'stages': 4, 'rules_applied': 1, 'quality_score': 0.7, 'total_time': '2.64s'} | {}
+2025-12-04 21:28:14,389 - forwarding_engine - INFO - [2025-12-04 21:28:14.389] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.01s) | {}
+2025-12-04 21:28:14,389 - forwarding_engine - INFO - [2025-12-04 21:28:14.389] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (1.13s) | {}
+2025-12-04 21:28:14,389 - forwarding_engine - INFO - [2025-12-04 21:28:14.389] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (0.65s) | {}
+2025-12-04 21:28:14,389 - forwarding_engine - INFO - [2025-12-04 21:28:14.389] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 21:28:14,389 - forwarding_engine - INFO - [2025-12-04 21:28:14.389] [INFO] [forwarding_engine::_process_message]   ├─ Entity replacements (organization): 1 | {}
+2025-12-04 21:28:14,814 - task_4 - INFO - AI Pipeline completed | From 1099 → 203 chars
+2025-12-04 21:28:15,668 - forwarding_engine - INFO - [2025-12-04 21:28:15.668] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 1099, 'processed_length': 203, 'total_reduction': 896, 'reduction_percent': 82, 'final_preview': 'عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، في ظل تطورات متسارعة في حضرموت والمهرة حيث تمكنت قوات ما يسمى بالمجلس الانتقالي من'} | {}
+2025-12-04 21:28:15,669 - forwarding_engine - INFO - [2025-12-04 21:28:15.669] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 21:28:15,670 - forwarding_engine - INFO - [2025-12-04 21:28:15.670] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2406, 'has_processed_text': True, 'task_id': 4} | {}
+2025-12-04 21:28:15,953 - forwarding_engine - INFO - [2025-12-04 21:28:15.953] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 21:28:15,953 - forwarding_engine - INFO - [2025-12-04 21:28:15.953] [INFO] [forwarding_engine::_forward_to_target] 🔧 [TEMPLATE STAGE 1] Starting publishing template application... | Data: {'task_id': 4, 'text_length': 203, 'has_entities': False} | {}
+2025-12-04 21:28:16,802 - forwarding_engine - INFO - [2025-12-04 21:28:16.802] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: رقم_القيد | {}
+2025-12-04 21:28:16,802 - forwarding_engine - INFO - [2025-12-04 21:28:16.802] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: التصنيف_ | {}
+2025-12-04 21:28:16,802 - forwarding_engine - INFO - [2025-12-04 21:28:16.802] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: المحافظه_ | {}
+2025-12-04 21:28:16,802 - forwarding_engine - INFO - [2025-12-04 21:28:16.802] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Auto-populated summary: التلخيص | {}
+2025-12-04 21:28:16,802 - forwarding_engine - INFO - [2025-12-04 21:28:16.802] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Set date field: التاريخ_ = 2025-12-04 | {}
+2025-12-04 21:28:16,802 - forwarding_engine - INFO - [2025-12-04 21:28:16.802] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Set static field: المختص = حيدر  | {}
+2025-12-04 21:28:16,802 - forwarding_engine - INFO - [2025-12-04 21:28:16.802] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: المصدر_ | {}
+2025-12-04 21:28:17,793 - forwarding_engine - INFO - [2025-12-04 21:28:17.792] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Extracting fields with groq/meta-llama/llama-4-maverick-17b-128e-instruct | Data: {'fields_count': 4, 'prompt_length': 723} | {}
+2025-12-04 21:28:17,794 - ai_providers - INFO - [Groq] Starting request | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Max Tokens: 500 | Temperature: 0.3 | Input length: 785 chars | {}
+2025-12-04 21:28:18,270 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 21:28:18,272 - ai_providers - INFO - [Groq] ✅ Success | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Output length: 84 chars | First 100 chars: {
+  "رقم_القيد": "",
+  "التصنيف_": "عسكري",
+  "المحافظه_": "مأرب",
+  "المصدر_": ""
+} | {}
+2025-12-04 21:28:18,272 - forwarding_engine - INFO - [2025-12-04 21:28:18.272] [DEBUG] [forwarding_engine::_extract_fields_with_ai] AI response received | Data: {'response_length': 84, 'response_preview': '{\n  "رقم_القيد": "",\n  "التصنيف_": "عسكري",\n  "المحافظه_": "مأرب",\n  "المصدر_": ""\n}'} | {}
+2025-12-04 21:28:18,272 - forwarding_engine - INFO - [2025-12-04 21:28:18.272] [INFO] [forwarding_engine::_extract_fields_with_ai] AI extracted fields | Data: {'ai_extracted': {'رقم_القيد': '', 'التصنيف_': 'عسكري', 'المحافظه_': 'مأرب', 'المصدر_': ''}} | {}
+2025-12-04 21:28:18,272 - forwarding_engine - INFO - [2025-12-04 21:28:18.272] [INFO] [forwarding_engine::_extract_fields_with_ai] Final extracted fields | Data: {'extracted': {'التلخيص': 'عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، في ظل تطورات متسارعة في حضرموت والمهرة حيث تمكنت قوات ما يسمى بالمجلس الانتقالي من السيطرة على مناطقها، مما أثار مخاوف لدى حزب الإصلاح.', 'التاريخ_': '2025-12-04', 'المختص': 'حيدر ', 'رقم_القيد': '', 'التصنيف_': 'عسكري', 'المحافظه_': 'مأرب', 'المصدر_': ''}} | {}
+2025-12-04 21:28:18,272 - forwarding_engine - INFO - [2025-12-04 21:28:18.272] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: رقم_القيد | Data: {'has_value': False, 'value_preview': 'empty', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:28:18,272 - forwarding_engine - INFO - [2025-12-04 21:28:18.272] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التصنيف_ | Data: {'has_value': True, 'value_preview': 'عسكري', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:28:18,273 - forwarding_engine - INFO - [2025-12-04 21:28:18.272] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التصنيف_ | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'عسكري'} | {}
+2025-12-04 21:28:18,273 - forwarding_engine - INFO - [2025-12-04 21:28:18.273] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المحافظه_ | Data: {'has_value': True, 'value_preview': 'مأرب', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:28:18,273 - forwarding_engine - INFO - [2025-12-04 21:28:18.273] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المحافظه_ | Data: {'formatting': 'none', 'original_length': 4, 'formatted_length': 4, 'has_html_tags': False, 'formatted_preview': 'مأرب'} | {}
+2025-12-04 21:28:18,273 - forwarding_engine - INFO - [2025-12-04 21:28:18.273] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التلخيص | Data: {'has_value': True, 'value_preview': 'عاد العميد طارق صالح إلى محافظة مأرب بعد عام من ال', 'field_type': 'summary', 'use_default_if_empty': True} | {}
+2025-12-04 21:28:18,273 - forwarding_engine - INFO - [2025-12-04 21:28:18.273] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التلخيص | Data: {'formatting': 'quote', 'original_length': 203, 'formatted_length': 228, 'has_html_tags': True, 'formatted_preview': '<blockquote>عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، في ظل تطورات متسارعة'} | {}
+2025-12-04 21:28:18,273 - forwarding_engine - INFO - [2025-12-04 21:28:18.273] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التاريخ_ | Data: {'has_value': True, 'value_preview': '2025-12-04', 'field_type': 'date_today', 'use_default_if_empty': True} | {}
+2025-12-04 21:28:18,273 - forwarding_engine - INFO - [2025-12-04 21:28:18.273] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التاريخ_ | Data: {'formatting': 'none', 'original_length': 10, 'formatted_length': 10, 'has_html_tags': False, 'formatted_preview': '2025-12-04'} | {}
+2025-12-04 21:28:18,273 - forwarding_engine - INFO - [2025-12-04 21:28:18.273] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المختص | Data: {'has_value': True, 'value_preview': 'حيدر ', 'field_type': 'static', 'use_default_if_empty': True} | {}
+2025-12-04 21:28:18,274 - forwarding_engine - INFO - [2025-12-04 21:28:18.274] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المختص | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'حيدر '} | {}
+2025-12-04 21:28:18,274 - forwarding_engine - INFO - [2025-12-04 21:28:18.274] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المصدر_ | Data: {'has_value': False, 'value_preview': 'empty', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:28:18,274 - forwarding_engine - INFO - [2025-12-04 21:28:18.274] [INFO] [forwarding_engine::_apply_publishing_template] Template applied: تلخيص2 | Data: {'output_length': 295, 'fields_count': 7, 'extracted_count': 7} | {}
+2025-12-04 21:28:18,274 - forwarding_engine - INFO - [2025-12-04 21:28:18.274] [INFO] [forwarding_engine::_forward_to_target] 🔧 [TEMPLATE STAGE 2] Template function returned | Data: {'returned_length': 295, 'is_empty': False, 'is_same_as_input': False, 'has_html_tags': True, 'preview': 'التصنيف : عسكري\nالمحافظه : مأرب\n<blockquote>عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، في ظل تطورات متسارعة في حضرموت والمهرة'} | {}
+2025-12-04 21:28:18,274 - forwarding_engine - INFO - [2025-12-04 21:28:18.274] [INFO] [forwarding_engine::_forward_to_target] ✅ [TEMPLATE STAGE 3] Template applied successfully | Data: {'original_length': 1099, 'template_length': 295, 'has_html_formatting': True, 'entities_reset': True} | {}
+2025-12-04 21:28:18,274 - forwarding_engine - INFO - [2025-12-04 21:28:18.274] [INFO] [forwarding_engine::_forward_to_target] 🔗 [TELEGRAPH STAGE 1] Starting Telegraph page creation | {}
+2025-12-04 21:28:18,440 - forwarding_engine - INFO - [2025-12-04 21:28:18.440] [INFO] [forwarding_engine::_forward_to_target] 🔗 [TELEGRAPH STAGE 2] Telegraph page created, adding link | {}
+2025-12-04 21:28:18,440 - forwarding_engine - INFO - [2025-12-04 21:28:18.440] [INFO] [forwarding_engine::_forward_to_target] 🔗 [TELEGRAPH STAGE 3] Link added to text | Data: {'url': 'https://telegra.ph/الخبر-الأصلي-12-04-81', 'text_before_link': 295, 'text_after_link': 369, 'new_content': '\n\n📰 <a href="https://telegra.ph/الخبر-الأصلي-12-04-81">اقرأ كامل الخبر</a>'} | {}
+2025-12-04 21:28:18,440 - forwarding_engine - INFO - [2025-12-04 21:28:18.440] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 1099, 'final_length': 369, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 21:28:18,440 - forwarding_engine - INFO - [2025-12-04 21:28:18.440] [INFO] [forwarding_engine::_forward_to_target] 📤 [SEND STAGE 1] Preparing text message... | Data: {'use_parse_mode': True, 'text_length': 369, 'has_html_tags': True, 'text_preview': 'التصنيف : عسكري\nالمحافظه : مأرب\n<blockquote>عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، في ظل تطورات متسارعة في حضرموت والمهرة حيث تمكنت قوات ما يسمى بالمجلس الانتقالي من السيط'} | {}
+2025-12-04 21:28:18,441 - forwarding_engine - INFO - [2025-12-04 21:28:18.441] [INFO] [forwarding_engine::_forward_to_target] 📤 [SEND STAGE 2] Sending with HTML parse_mode | Data: {'chat_id': -1003110660765, 'parse_mode': 'html', 'full_text_for_debug': 'التصنيف : عسكري\nالمحافظه : مأرب\n<blockquote>عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، في ظل تطورات متسارعة في حضرموت والمهرة حيث تمكنت قوات ما يسمى بالمجلس الانتقالي من السيطرة على مناطقها، مما أثار مخاوف لدى حزب الإصلاح.</blockquote>\nالتاريخ : 2025-12-04\nالمختص: حيدر \n\n📰 <a href="https://telegra.ph/الخبر-الأصلي-12-04-81">اقرأ كامل الخبر</a>'} | {}
+2025-12-04 21:28:18,712 - forwarding_engine - INFO - [2025-12-04 21:28:18.711] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 21:28:18,712 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 21:28:18,712 - forwarding_engine - INFO - [2025-12-04 21:28:18.712] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 21:28:19,986 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 21:28:19,987 - forwarding_engine - INFO - [2025-12-04 21:28:19.986] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 21:28:19,987 - main - INFO - [2025-12-04 21:28:19.987] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 21:31:39,291 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 21:31:39,292 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 21:31:39,296 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 21:31:39,298 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 21:31:39,300 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 21:31:39,302 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 21:31:39,304 - main - INFO - [2025-12-04 21:31:39.304] [INFO] [main::entry] Bot script started | {}
+2025-12-04 21:31:39,305 - main - INFO - [2025-12-04 21:31:39.305] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 21:31:39,305 - main - INFO - [2025-12-04 21:31:39.305] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-04 21:31:39,305 - main - INFO - [2025-12-04 21:31:39.305] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-04 21:31:41,149 - database - INFO - Database connected successfully | {}
+2025-12-04 21:31:41,573 - main - INFO - [2025-12-04 21:31:41.573] [INFO] [session::load] Found active session in database | {}
+2025-12-04 21:31:41,573 - main - INFO - [2025-12-04 21:31:41.573] [INFO] [main::init] Creating Pyrofork client | Data: {'api_id': 24343527, 'has_session': True, 'api_hash_set': True} | {}
+2025-12-04 21:31:43,344 - main - INFO - [2025-12-04 21:31:43.344] [INFO] [main::initialize_bot] Starting bot initialization... | {}
+2025-12-04 21:31:43,344 - main - INFO - [2025-12-04 21:31:43.344] [INFO] [database::connect] Connecting to database... | {}
+2025-12-04 21:31:45,157 - database - INFO - Database connected successfully | {}
+2025-12-04 21:31:45,158 - main - INFO - [2025-12-04 21:31:45.157] [INFO] [database::connect] Database connected successfully | {}
+2025-12-04 21:31:45,158 - main - INFO - [2025-12-04 21:31:45.158] [INFO] [ai_manager::init] Loading AI providers from database... | {}
+2025-12-04 21:31:45,583 - ai_providers - INFO - Loaded OpenAI provider from database | {}
+2025-12-04 21:31:45,583 - ai_providers - INFO - Loaded Groq provider from database | {}
+2025-12-04 21:31:45,583 - ai_providers - WARNING - No API key found for provider: claude | {}
+2025-12-04 21:31:45,583 - ai_providers - INFO - Loaded HuggingFace provider from database | {}
+2025-12-04 21:31:45,583 - main - INFO - [2025-12-04 21:31:45.583] [INFO] [ai_manager::init] AI providers loaded successfully | {}
+2025-12-04 21:31:45,584 - main - INFO - [2025-12-04 21:31:45.584] [INFO] [admin::check] Checking admin status for ID: 6556918772 | {}
+2025-12-04 21:31:46,011 - main - INFO - [2025-12-04 21:31:46.011] [INFO] [admin::check] Admin already exists: 6556918772 | {}
+2025-12-04 21:31:46,012 - main - INFO - [2025-12-04 21:31:46.012] [INFO] [forwarding_engine::init] Initializing forwarding engine... | {}
+2025-12-04 21:31:46,012 - forwarding_engine - INFO - [2025-12-04 21:31:46.012] [INFO] [forwarding_engine::__init__] Forwarding engine initialized | {}
+2025-12-04 21:31:46,012 - main - INFO - [2025-12-04 21:31:46.012] [INFO] [forwarding_engine::init] Forwarding engine initialized successfully | {}
+2025-12-04 21:31:46,012 - main - INFO - [2025-12-04 21:31:46.012] [INFO] [queue_manager::register] Registering job handlers... | {}
+2025-12-04 21:31:46,012 - queue_system - INFO - Registered handler for job type: forward | {}
+2025-12-04 21:31:46,012 - queue_system - INFO - Registered handler for job type: ai_process | {}
+2025-12-04 21:31:46,012 - queue_system - INFO - Registered handler for job type: video_process | {}
+2025-12-04 21:31:46,013 - main - INFO - [2025-12-04 21:31:46.013] [INFO] [queue_manager::register] All handlers registered: forward, ai_process, video_process | {}
+2025-12-04 21:31:46,013 - main - INFO - [2025-12-04 21:31:46.013] [INFO] [queue_manager::start] Starting queue manager... | {}
+2025-12-04 21:31:46,013 - queue_system - INFO - Queue manager started with 10 max workers | {}
+2025-12-04 21:31:46,013 - main - INFO - [2025-12-04 21:31:46.013] [INFO] [queue_manager::start] Queue manager started with 10 workers | {}
+2025-12-04 21:31:46,013 - main - INFO - [2025-12-04 21:31:46.013] [INFO] [tasks::load] Loading active tasks from database... | {}
+2025-12-04 21:31:46,451 - main - INFO - [2025-12-04 21:31:46.451] [INFO] [tasks::load] Found 1 tasks in database | {}
+2025-12-04 21:31:46,451 - main - INFO - [2025-12-04 21:31:46.451] [INFO] [tasks::check] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'is_active': True, 'source_channels': [4], 'target_channels': [5]} | {}
+2025-12-04 21:31:46,451 - forwarding_engine - INFO - [2025-12-04 21:31:46.451] [INFO] [forwarding_engine::start_task_monitoring] Started monitoring task 4 | {}
+2025-12-04 21:31:46,451 - main - INFO - [2025-12-04 21:31:46.451] [INFO] [tasks::monitor] Started monitoring task: توجيه الأخبار  | Data: {'task_id': 4} | {}
+2025-12-04 21:31:46,451 - main - INFO - [2025-12-04 21:31:46.451] [INFO] [tasks::load] Loaded 1 active tasks for monitoring | {}
+2025-12-04 21:31:46,452 - main - INFO - [2025-12-04 21:31:46.451] [INFO] [main::initialize_bot] ✅ Bot initialization completed successfully | {}
+2025-12-04 21:31:46,452 - main - INFO - [2025-12-04 21:31:46.452] [INFO] [pyrogram::start] Starting Pyrofork userbot client... | {}
+2025-12-04 21:31:46,699 - pyrogram.connection.connection - INFO - Connecting...
+2025-12-04 21:31:46,842 - pyrogram.connection.connection - INFO - Connected! Production DC4 - IPv4
+2025-12-04 21:31:46,844 - pyrogram.session.session - INFO - NetworkTask started
+2025-12-04 21:31:47,473 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-12-04 21:31:47,473 - pyrogram.session.session - INFO - Device: CPython 3.11.13 - Pyrogram 2.0.106
+2025-12-04 21:31:47,473 - pyrogram.session.session - INFO - System: Linux 6.14.11 (en)
+2025-12-04 21:31:47,473 - pyrogram.session.session - INFO - Session started
+2025-12-04 21:31:47,478 - pyrogram.session.session - INFO - PingTask started
+2025-12-04 21:31:47,808 - pyrogram.dispatcher - INFO - Started 12 HandlerTasks
+2025-12-04 21:31:47,964 - main - INFO - [2025-12-04 21:31:47.964] [INFO] [pyrogram::connected] ✅ Userbot connected to Telegram | Data: {'user_id': 6660878563, 'username': 'Sheyyeeuu', 'first_name': 'Amir'} | {}
+2025-12-04 21:31:47,964 - main - INFO - [2025-12-04 21:31:47.964] [INFO] [handlers::register] Registering message handlers... | {}
+2025-12-04 21:31:47,965 - main - INFO - [2025-12-04 21:31:47.965] [INFO] [handlers::register] ✅ All handlers registered successfully | {}
+2025-12-04 21:31:47,966 - main - INFO - [2025-12-04 21:31:47.966] [INFO] [warmup::post_connect] Starting post-connection warmup... | {}
+2025-12-04 21:31:47,966 - main - INFO - [2025-12-04 21:31:47.966] [INFO] [warmup::start] Starting channel peer warmup... | {}
+2025-12-04 21:31:47,966 - main - INFO - [2025-12-04 21:31:47.966] [INFO] [warmup::dialogs] Loading all dialogs to populate peer cache... | {}
+2025-12-04 21:31:48,641 - pyrogram.session.session - WARNING - [userbot_forwarder] Waiting for 18 seconds before continuing (required by "channels.GetMessages")
+2025-12-04 21:32:08,176 - main - INFO - [2025-12-04 21:32:08.176] [DEBUG] [warmup::dialogs] Loaded 50 dialogs... | {}
+2025-12-04 21:32:08,178 - main - INFO - [2025-12-04 21:32:08.178] [DEBUG] [warmup::dialogs] Loaded 100 dialogs... | {}
+2025-12-04 21:32:08,987 - main - INFO - [2025-12-04 21:32:08.987] [DEBUG] [warmup::dialogs] Loaded 150 dialogs... | {}
+2025-12-04 21:32:09,240 - main - INFO - [2025-12-04 21:32:09.240] [INFO] [warmup::dialogs] ✅ Cached 172 dialogs in peer cache | {}
+2025-12-04 21:32:09,665 - main - INFO - [2025-12-04 21:32:09.665] [INFO] [warmup::channels] Found 2 channels to verify | {}
+2025-12-04 21:32:09,666 - main - INFO - [2025-12-04 21:32:09.665] [INFO] [warmup::cached] ✅ اختبار 1 already in peer cache | {}
+2025-12-04 21:32:09,666 - main - INFO - [2025-12-04 21:32:09.666] [INFO] [warmup::cached] ✅ اختبار 2 already in peer cache | {}
+2025-12-04 21:32:09,666 - main - INFO - [2025-12-04 21:32:09.666] [INFO] [warmup::complete] ✅ Warmup complete: 2 success, 0 failed | {}
+2025-12-04 21:32:09,667 - main - INFO - [2025-12-04 21:32:09.667] [INFO] [main::idle] Userbot is now running and waiting for messages... | {}
+2025-12-04 21:36:41,539 - main - INFO - [2025-12-04 21:36:41.539] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2407, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 21:36:41,539 - main - INFO - [2025-12-04 21:36:41.539] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 21:36:41,680 - pyrogram.session.session - INFO - NetworkTask stopped
+2025-12-04 21:36:41,680 - pyrogram.session.session - INFO - PingTask stopped
+2025-12-04 21:36:41,680 - pyrogram.connection.transport.tcp.tcp - INFO - Close exception: ConnectionResetError [Errno 104] Connection reset by peer
+2025-12-04 21:36:41,680 - pyrogram.connection.connection - INFO - Disconnected
+2025-12-04 21:36:41,680 - pyrogram.session.session - INFO - Session stopped
+2025-12-04 21:36:41,680 - pyrogram.connection.connection - INFO - Connecting...
+2025-12-04 21:36:41,823 - pyrogram.connection.connection - INFO - Connected! Production DC4 - IPv4
+2025-12-04 21:36:41,824 - pyrogram.session.session - INFO - NetworkTask started
+2025-12-04 21:36:41,964 - main - INFO - [2025-12-04 21:36:41.964] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 21:36:41,965 - main - INFO - [2025-12-04 21:36:41.965] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 21:36:42,318 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-12-04 21:36:42,318 - pyrogram.session.session - INFO - Device: CPython 3.11.13 - Pyrogram 2.0.106
+2025-12-04 21:36:42,318 - pyrogram.session.session - INFO - System: Linux 6.14.11 (en)
+2025-12-04 21:36:42,318 - pyrogram.session.session - INFO - Session started
+2025-12-04 21:36:42,318 - pyrogram.session.session - INFO - PingTask started
+2025-12-04 21:36:42,391 - main - INFO - [2025-12-04 21:36:42.390] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 21:36:42,391 - main - INFO - [2025-12-04 21:36:42.391] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 21:36:42,391 - main - INFO - [2025-12-04 21:36:42.391] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 21:36:42,391 - forwarding_engine - INFO - [2025-12-04 21:36:42.391] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2407, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': True, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 21:36:42,391 - forwarding_engine - INFO - [2025-12-04 21:36:42.391] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 21:36:42,391 - forwarding_engine - INFO - [2025-12-04 21:36:42.391] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': True, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 21:36:42,394 - forwarding_engine - INFO - [2025-12-04 21:36:42.394] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 21:36:42,394 - forwarding_engine - INFO - [2025-12-04 21:36:42.394] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 21:36:42,394 - forwarding_engine - INFO - [2025-12-04 21:36:42.394] [INFO] [forwarding_engine::_process_message] Text length: 1099 chars | {}
+2025-12-04 21:36:42,821 - forwarding_engine - INFO - [2025-12-04 21:36:42.820] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 21:36:43,247 - forwarding_engine - INFO - [2025-12-04 21:36:43.246] [INFO] [forwarding_engine::_process_message] Using model: meta-llama/llama-4-maverick-17b-128e-instruct | {}
+2025-12-04 21:36:43,672 - forwarding_engine - INFO - [2025-12-04 21:36:43.672] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 21:36:44,098 - forwarding_engine - INFO - [2025-12-04 21:36:44.098] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 21:36:44,951 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 1099 | {}
+2025-12-04 21:36:44,957 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 4 | Sentiment: neutral | Keywords: 20 | Time: 0.006s | {}
+2025-12-04 21:36:44,957 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 4 | Sentiment: neutral | {}
+2025-12-04 21:36:45,384 - ai_rule_engine - INFO - [RuleEngine] Loaded 4 entity rules for task 4 from DB | {}
+2025-12-04 21:36:45,384 - ai_rule_engine - INFO - [RuleEngine] Replaced 'المجلس الانتقالي ' with 'ما يسمى بالمجلس الانتقالي ' (1 times) | {}
+2025-12-04 21:36:45,384 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 1 | {}
+2025-12-04 21:36:45,810 - ai_rule_engine - INFO - [RuleEngine] Loaded 0 context rules for task 4 from DB | {}
+2025-12-04 21:36:46,094 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 1 | Replacements: 1 | {}
+2025-12-04 21:36:46,297 - ai_providers - INFO - [Groq] Starting request | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Max Tokens: 554 | Temperature: 0.7 | Input length: 1744 chars | {}
+2025-12-04 21:36:47,057 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 21:36:47,074 - ai_providers - INFO - [Groq] ✅ Success | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Output length: 203 chars | First 100 chars: عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، في ظل تطورات متسارعة في حضرموت و | {}
+2025-12-04 21:36:47,075 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 203 | {}
+2025-12-04 21:36:47,076 - ai_postprocessing - INFO - [Postprocessing] Entity replacement not verified: المجلس الانتقالي  → ما يسمى بالمجلس الانتقالي  | {}
+2025-12-04 21:36:47,081 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 0.70 | {}
+2025-12-04 21:36:47,081 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 2.98s | Quality: 0.70 | Original: 1099 → Final: 203 chars | {}
+2025-12-04 21:36:47,081 - forwarding_engine - INFO - [2025-12-04 21:36:47.081] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 1099, 'final_length': 203, 'stages': 4, 'rules_applied': 1, 'quality_score': 0.7, 'total_time': '2.98s'} | {}
+2025-12-04 21:36:47,081 - forwarding_engine - INFO - [2025-12-04 21:36:47.081] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.01s) | {}
+2025-12-04 21:36:47,081 - forwarding_engine - INFO - [2025-12-04 21:36:47.081] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (1.14s) | {}
+2025-12-04 21:36:47,081 - forwarding_engine - INFO - [2025-12-04 21:36:47.081] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (0.98s) | {}
+2025-12-04 21:36:47,081 - forwarding_engine - INFO - [2025-12-04 21:36:47.081] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.01s) | {}
+2025-12-04 21:36:47,081 - forwarding_engine - INFO - [2025-12-04 21:36:47.081] [INFO] [forwarding_engine::_process_message]   ├─ Entity replacements (organization): 1 | {}
+2025-12-04 21:36:47,937 - task_4 - INFO - AI Pipeline completed | From 1099 → 203 chars
+2025-12-04 21:36:49,080 - forwarding_engine - INFO - [2025-12-04 21:36:49.080] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 1099, 'processed_length': 203, 'total_reduction': 896, 'reduction_percent': 82, 'final_preview': 'عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، في ظل تطورات متسارعة في حضرموت والمهرة حيث تمكنت قوات ما يسمى بالمجلس الانتقالي من'} | {}
+2025-12-04 21:36:49,081 - forwarding_engine - INFO - [2025-12-04 21:36:49.080] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 21:36:49,081 - forwarding_engine - INFO - [2025-12-04 21:36:49.081] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2407, 'has_processed_text': True, 'task_id': 4} | {}
+2025-12-04 21:36:49,536 - forwarding_engine - INFO - [2025-12-04 21:36:49.536] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 21:36:49,536 - forwarding_engine - INFO - [2025-12-04 21:36:49.536] [INFO] [forwarding_engine::_forward_to_target] 🔧 [TEMPLATE STAGE 1] Starting publishing template application... | Data: {'task_id': 4, 'text_length': 203, 'has_entities': False} | {}
+2025-12-04 21:36:50,480 - forwarding_engine - INFO - [2025-12-04 21:36:50.480] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: رقم_القيد | {}
+2025-12-04 21:36:50,480 - forwarding_engine - INFO - [2025-12-04 21:36:50.480] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: التصنيف_ | {}
+2025-12-04 21:36:50,481 - forwarding_engine - INFO - [2025-12-04 21:36:50.481] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: المحافظه_ | {}
+2025-12-04 21:36:50,481 - forwarding_engine - INFO - [2025-12-04 21:36:50.481] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Auto-populated summary: التلخيص | {}
+2025-12-04 21:36:50,481 - forwarding_engine - INFO - [2025-12-04 21:36:50.481] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Set date field: التاريخ_ = 2025-12-04 | {}
+2025-12-04 21:36:50,481 - forwarding_engine - INFO - [2025-12-04 21:36:50.481] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Set static field: المختص = حيدر  | {}
+2025-12-04 21:36:50,481 - forwarding_engine - INFO - [2025-12-04 21:36:50.481] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Will extract: المصدر_ | {}
+2025-12-04 21:36:51,864 - forwarding_engine - INFO - [2025-12-04 21:36:51.863] [DEBUG] [forwarding_engine::_extract_fields_with_ai] Extracting fields with groq/meta-llama/llama-4-maverick-17b-128e-instruct | Data: {'fields_count': 4, 'prompt_length': 723} | {}
+2025-12-04 21:36:51,864 - ai_providers - INFO - [Groq] Starting request | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Max Tokens: 500 | Temperature: 0.3 | Input length: 785 chars | {}
+2025-12-04 21:36:52,037 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 21:36:52,039 - ai_providers - INFO - [Groq] ✅ Success | Model: meta-llama/llama-4-maverick-17b-128e-instruct | Output length: 84 chars | First 100 chars: {
+  "رقم_القيد": "",
+  "التصنيف_": "سياسي",
+  "المحافظه_": "مأرب",
+  "المصدر_": ""
+} | {}
+2025-12-04 21:36:52,040 - forwarding_engine - INFO - [2025-12-04 21:36:52.040] [DEBUG] [forwarding_engine::_extract_fields_with_ai] AI response received | Data: {'response_length': 84, 'response_preview': '{\n  "رقم_القيد": "",\n  "التصنيف_": "سياسي",\n  "المحافظه_": "مأرب",\n  "المصدر_": ""\n}'} | {}
+2025-12-04 21:36:52,041 - forwarding_engine - INFO - [2025-12-04 21:36:52.041] [INFO] [forwarding_engine::_extract_fields_with_ai] AI extracted fields | Data: {'ai_extracted': {'رقم_القيد': '', 'التصنيف_': 'سياسي', 'المحافظه_': 'مأرب', 'المصدر_': ''}} | {}
+2025-12-04 21:36:52,042 - forwarding_engine - INFO - [2025-12-04 21:36:52.042] [INFO] [forwarding_engine::_extract_fields_with_ai] Final extracted fields | Data: {'extracted': {'التلخيص': 'عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، في ظل تطورات متسارعة في حضرموت والمهرة حيث تمكنت قوات ما يسمى بالمجلس الانتقالي من السيطرة على مناطقها، مما أثار مخاوف لدى حزب الإصلاح.', 'التاريخ_': '2025-12-04', 'المختص': 'حيدر ', 'رقم_القيد': '', 'التصنيف_': 'سياسي', 'المحافظه_': 'مأرب', 'المصدر_': ''}} | {}
+2025-12-04 21:36:52,042 - forwarding_engine - INFO - [2025-12-04 21:36:52.042] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: رقم_القيد | Data: {'has_value': False, 'value_preview': 'empty', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:36:52,043 - forwarding_engine - INFO - [2025-12-04 21:36:52.043] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التصنيف_ | Data: {'has_value': True, 'value_preview': 'سياسي', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:36:52,043 - forwarding_engine - INFO - [2025-12-04 21:36:52.043] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التصنيف_ | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'سياسي'} | {}
+2025-12-04 21:36:52,043 - forwarding_engine - INFO - [2025-12-04 21:36:52.043] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المحافظه_ | Data: {'has_value': True, 'value_preview': 'مأرب', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:36:52,044 - forwarding_engine - INFO - [2025-12-04 21:36:52.044] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المحافظه_ | Data: {'formatting': 'none', 'original_length': 4, 'formatted_length': 4, 'has_html_tags': False, 'formatted_preview': 'مأرب'} | {}
+2025-12-04 21:36:52,044 - forwarding_engine - INFO - [2025-12-04 21:36:52.044] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التلخيص | Data: {'has_value': True, 'value_preview': 'عاد العميد طارق صالح إلى محافظة مأرب بعد عام من ال', 'field_type': 'summary', 'use_default_if_empty': True} | {}
+2025-12-04 21:36:52,044 - forwarding_engine - INFO - [2025-12-04 21:36:52.044] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التلخيص | Data: {'formatting': 'quote', 'original_length': 203, 'formatted_length': 228, 'has_html_tags': True, 'formatted_preview': '<blockquote>عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، في ظل تطورات متسارعة'} | {}
+2025-12-04 21:36:52,045 - forwarding_engine - INFO - [2025-12-04 21:36:52.045] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: التاريخ_ | Data: {'has_value': True, 'value_preview': '2025-12-04', 'field_type': 'date_today', 'use_default_if_empty': True} | {}
+2025-12-04 21:36:52,045 - forwarding_engine - INFO - [2025-12-04 21:36:52.045] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التاريخ_ | Data: {'formatting': 'none', 'original_length': 10, 'formatted_length': 10, 'has_html_tags': False, 'formatted_preview': '2025-12-04'} | {}
+2025-12-04 21:36:52,045 - forwarding_engine - INFO - [2025-12-04 21:36:52.045] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المختص | Data: {'has_value': True, 'value_preview': 'حيدر ', 'field_type': 'static', 'use_default_if_empty': True} | {}
+2025-12-04 21:36:52,046 - forwarding_engine - INFO - [2025-12-04 21:36:52.046] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المختص | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'حيدر '} | {}
+2025-12-04 21:36:52,046 - forwarding_engine - INFO - [2025-12-04 21:36:52.046] [DEBUG] [forwarding_engine::_apply_publishing_template] Processing field: المصدر_ | Data: {'has_value': False, 'value_preview': 'empty', 'field_type': 'extracted', 'use_default_if_empty': True} | {}
+2025-12-04 21:36:52,046 - forwarding_engine - INFO - [2025-12-04 21:36:52.046] [INFO] [forwarding_engine::_apply_publishing_template] Template applied: تلخيص2 | Data: {'output_length': 295, 'fields_count': 7, 'extracted_count': 7} | {}
+2025-12-04 21:36:52,047 - forwarding_engine - INFO - [2025-12-04 21:36:52.047] [INFO] [forwarding_engine::_forward_to_target] 🔧 [TEMPLATE STAGE 2] Template function returned | Data: {'returned_length': 295, 'is_empty': False, 'is_same_as_input': False, 'has_html_tags': True, 'preview': 'التصنيف : سياسي\nالمحافظه : مأرب\n<blockquote>عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، في ظل تطورات متسارعة في حضرموت والمهرة'} | {}
+2025-12-04 21:36:52,047 - forwarding_engine - INFO - [2025-12-04 21:36:52.047] [INFO] [forwarding_engine::_forward_to_target] ✅ [TEMPLATE STAGE 3] Template applied successfully | Data: {'original_length': 1099, 'template_length': 295, 'has_html_formatting': True, 'entities_reset': True} | {}
+2025-12-04 21:36:52,047 - forwarding_engine - INFO - [2025-12-04 21:36:52.047] [INFO] [forwarding_engine::_forward_to_target] 🔗 [TELEGRAPH STAGE 1] Starting Telegraph page creation | {}
+2025-12-04 21:36:52,260 - forwarding_engine - INFO - [2025-12-04 21:36:52.259] [INFO] [forwarding_engine::_forward_to_target] 🔗 [TELEGRAPH STAGE 2] Telegraph page created, adding link | {}
+2025-12-04 21:36:52,260 - forwarding_engine - INFO - [2025-12-04 21:36:52.260] [INFO] [forwarding_engine::_forward_to_target] 🔗 [TELEGRAPH STAGE 3] Link added to text | Data: {'url': 'https://telegra.ph/الخبر-الأصلي-12-04-82', 'text_before_link': 295, 'text_after_link': 369, 'new_content': '\n\n📰 <a href="https://telegra.ph/الخبر-الأصلي-12-04-82">اقرأ كامل الخبر</a>'} | {}
+2025-12-04 21:36:52,261 - forwarding_engine - INFO - [2025-12-04 21:36:52.261] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 1099, 'final_length': 369, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 21:36:52,261 - forwarding_engine - INFO - [2025-12-04 21:36:52.261] [INFO] [forwarding_engine::_forward_to_target] 📤 [SEND STAGE 1] Preparing text message... | Data: {'use_parse_mode': True, 'text_length': 369, 'has_html_tags': True, 'text_preview': 'التصنيف : سياسي\nالمحافظه : مأرب\n<blockquote>عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، في ظل تطورات متسارعة في حضرموت والمهرة حيث تمكنت قوات ما يسمى بالمجلس الانتقالي من السيط'} | {}
+2025-12-04 21:36:52,261 - forwarding_engine - INFO - [2025-12-04 21:36:52.261] [INFO] [forwarding_engine::_forward_to_target] 📤 [SEND STAGE 2] Sending with HTML parse_mode | Data: {'chat_id': -1003110660765, 'parse_mode': 'html', 'full_text_for_debug': 'التصنيف : سياسي\nالمحافظه : مأرب\n<blockquote>عاد العميد طارق صالح إلى محافظة مأرب بعد عام من الغياب في السعودية، في ظل تطورات متسارعة في حضرموت والمهرة حيث تمكنت قوات ما يسمى بالمجلس الانتقالي من السيطرة على مناطقها، مما أثار مخاوف لدى حزب الإصلاح.</blockquote>\nالتاريخ : 2025-12-04\nالمختص: حيدر \n\n📰 <a href="https://telegra.ph/الخبر-الأصلي-12-04-82">اقرأ كامل الخبر</a>'} | {}
+2025-12-04 21:36:52,520 - forwarding_engine - INFO - [2025-12-04 21:36:52.520] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 21:36:52,520 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 21:36:52,520 - forwarding_engine - INFO - [2025-12-04 21:36:52.520] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 21:36:53,803 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 21:36:53,803 - forwarding_engine - INFO - [2025-12-04 21:36:53.803] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 21:36:53,803 - main - INFO - [2025-12-04 21:36:53.803] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}

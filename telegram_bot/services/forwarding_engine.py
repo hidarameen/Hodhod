@@ -790,20 +790,161 @@ class ForwardingEngine:
         if not text or formatting == "none":
             return text
         
-        # Escape HTML special characters in the text first
-        escaped_text = self._escape_html(text)
-        
         formatting_map = {
-            "bold": f"<b>{escaped_text}</b>",
-            "italic": f"<i>{escaped_text}</i>",
-            "code": f"<code>{escaped_text}</code>",
-            "spoiler": f"<tg-spoiler>{escaped_text}</tg-spoiler>",
-            "strikethrough": f"<s>{escaped_text}</s>",
-            "underline": f"<u>{escaped_text}</u>",
-            "quote": f"<blockquote>{escaped_text}</blockquote>",
+            "bold": f"<b>{text}</b>",
+            "italic": f"<i>{text}</i>",
+            "code": f"<code>{text}</code>",
+            "spoiler": f"<tg-spoiler>{text}</tg-spoiler>",
+            "strikethrough": f"<s>{text}</s>",
+            "underline": f"<u>{text}</u>",
+            "quote": f"<blockquote>{text}</blockquote>",
         }
         
-        return formatting_map.get(formatting, escaped_text)
+        return formatting_map.get(formatting, text)
+    
+    def _parse_html_to_entities(self, html_text: str) -> tuple:
+        """
+        Parse HTML text and create MessageEntity objects for formatting.
+        Pyrogram's HTML parser doesn't fully support all tags (especially blockquote),
+        so we manually parse and create entities.
+        
+        Returns: (plain_text, list of MessageEntity)
+        """
+        import re
+        from pyrogram.types import MessageEntity
+        
+        # Tag patterns with their entity types
+        tag_patterns = [
+            (r'<blockquote>(.*?)</blockquote>', MessageEntityType.BLOCKQUOTE),
+            (r'<b>(.*?)</b>', MessageEntityType.BOLD),
+            (r'<strong>(.*?)</strong>', MessageEntityType.BOLD),
+            (r'<i>(.*?)</i>', MessageEntityType.ITALIC),
+            (r'<em>(.*?)</em>', MessageEntityType.ITALIC),
+            (r'<u>(.*?)</u>', MessageEntityType.UNDERLINE),
+            (r'<s>(.*?)</s>', MessageEntityType.STRIKETHROUGH),
+            (r'<code>(.*?)</code>', MessageEntityType.CODE),
+            (r'<tg-spoiler>(.*?)</tg-spoiler>', MessageEntityType.SPOILER),
+        ]
+        
+        # Link pattern is special - needs to extract href
+        link_pattern = r'<a href="([^"]+)">([^<]+)</a>'
+        
+        entities = []
+        plain_text = html_text
+        
+        # First pass: collect all tags with their positions in original text
+        tag_info = []
+        
+        # Process regular tags
+        for pattern, entity_type in tag_patterns:
+            for match in re.finditer(pattern, html_text, re.DOTALL):
+                tag_info.append({
+                    'full_match': match.group(0),
+                    'content': match.group(1),
+                    'entity_type': entity_type,
+                    'start': match.start(),
+                    'url': None
+                })
+        
+        # Process links
+        for match in re.finditer(link_pattern, html_text, re.DOTALL):
+            tag_info.append({
+                'full_match': match.group(0),
+                'content': match.group(2),  # Link text
+                'entity_type': MessageEntityType.TEXT_LINK,
+                'start': match.start(),
+                'url': match.group(1)  # URL
+            })
+        
+        # Sort by position in original text
+        tag_info.sort(key=lambda x: x['start'])
+        
+        # Second pass: build plain text and calculate entity offsets
+        current_offset = 0
+        offset_adjustment = 0
+        
+        for tag in tag_info:
+            original_start = tag['start']
+            tag_full = tag['full_match']
+            content = tag['content']
+            
+            # Calculate the adjusted offset in plain text
+            adjusted_start = original_start - offset_adjustment
+            
+            # Create entity
+            if tag['entity_type'] == MessageEntityType.TEXT_LINK:
+                entity = MessageEntity(
+                    type=tag['entity_type'],
+                    offset=adjusted_start,
+                    length=len(content),
+                    url=tag['url']
+                )
+            else:
+                entity = MessageEntity(
+                    type=tag['entity_type'],
+                    offset=adjusted_start,
+                    length=len(content)
+                )
+            entities.append(entity)
+            
+            # Update offset adjustment (difference between full tag and content)
+            offset_adjustment += len(tag_full) - len(content)
+        
+        # Remove all HTML tags from text
+        plain_text = html_text
+        for pattern, _ in tag_patterns:
+            plain_text = re.sub(pattern, r'\1', plain_text, flags=re.DOTALL)
+        plain_text = re.sub(link_pattern, r'\2', plain_text, flags=re.DOTALL)
+        
+        # Recalculate entity offsets after all substitutions
+        entities_final = []
+        for tag in tag_info:
+            # Find the content position in the final plain text
+            content = tag['content']
+            
+            # Search for content, considering it might appear multiple times
+            # Use approximate position based on original position ratio
+            approx_pos = int(tag['start'] * len(plain_text) / len(html_text)) if len(html_text) > 0 else 0
+            
+            # Search nearby the approximate position
+            search_start = max(0, approx_pos - len(content) - 50)
+            search_end = min(len(plain_text), approx_pos + len(content) + 50)
+            
+            search_region = plain_text[search_start:search_end]
+            pos_in_region = search_region.find(content)
+            
+            if pos_in_region >= 0:
+                actual_offset = search_start + pos_in_region
+            else:
+                # Fallback: search in entire text
+                actual_offset = plain_text.find(content)
+                if actual_offset < 0:
+                    continue  # Skip if content not found
+            
+            if tag['entity_type'] == MessageEntityType.TEXT_LINK:
+                entity = MessageEntity(
+                    type=tag['entity_type'],
+                    offset=actual_offset,
+                    length=len(content),
+                    url=tag['url']
+                )
+            else:
+                entity = MessageEntity(
+                    type=tag['entity_type'],
+                    offset=actual_offset,
+                    length=len(content)
+                )
+            entities_final.append(entity)
+        
+        log_detailed("debug", "forwarding_engine", "_parse_html_to_entities", 
+                    f"Parsed HTML to entities", {
+                        "html_length": len(html_text),
+                        "plain_length": len(plain_text),
+                        "entities_count": len(entities_final),
+                        "entity_types": [str(e.type) for e in entities_final]
+                    })
+        
+        return plain_text, entities_final
     
     def _escape_html(self, text: str) -> str:
         """Escape HTML special characters"""
@@ -1395,31 +1536,56 @@ class ForwardingEngine:
             # Determine if we should use parse_mode (when template applied) or entities
             use_parse_mode = not final_entities
             
-            # Handle different message types with entity preservation or parse_mode
+            # Check if caption has HTML tags for entity parsing
+            caption_has_html = any(tag in (final_text or "") for tag in ['<b>', '<i>', '<blockquote>', '<u>', '<s>', '<a href='])
+            
+            # Prepare caption entities if HTML present
+            caption_plain = final_text
+            caption_entities_parsed = None
+            if use_parse_mode and caption_has_html and final_text:
+                caption_plain, caption_entities_parsed = self._parse_html_to_entities(final_text)
+            
+            # Handle different message types with entity preservation
             if message.photo:
                 log_detailed("info", "forwarding_engine", "_forward_to_target", "Sending photo...")
-                if use_parse_mode:
+                if caption_entities_parsed:
                     await self.client.send_photo(
                         chat_id=target_identifier,
                         photo=message.photo.file_id,
-                        caption=final_text or "",
-                        parse_mode=ParseMode.HTML
+                        caption=caption_plain or "",
+                        caption_entities=caption_entities_parsed
                     )
-                else:
+                elif final_entities:
                     await self.client.send_photo(
                         chat_id=target_identifier,
                         photo=message.photo.file_id,
                         caption=final_text or "",
                         caption_entities=final_entities
                     )
+                else:
+                    await self.client.send_photo(
+                        chat_id=target_identifier,
+                        photo=message.photo.file_id,
+                        caption=final_text or ""
+                    )
             elif message.video:
                 log_detailed("info", "forwarding_engine", "_forward_to_target", "Sending video...")
-                if use_parse_mode:
+                if caption_entities_parsed:
+                    await self.client.send_video(
+                        chat_id=target_identifier,
+                        video=message.video.file_id,
+                        caption=caption_plain or "",
+                        caption_entities=caption_entities_parsed,
+                        duration=message.video.duration,
+                        width=message.video.width,
+                        height=message.video.height
+                    )
+                elif final_entities:
                     await self.client.send_video(
                         chat_id=target_identifier,
                         video=message.video.file_id,
                         caption=final_text or "",
-                        parse_mode=ParseMode.HTML,
+                        caption_entities=final_entities,
                         duration=message.video.duration,
                         width=message.video.width,
                         height=message.video.height
@@ -1429,40 +1595,45 @@ class ForwardingEngine:
                         chat_id=target_identifier,
                         video=message.video.file_id,
                         caption=final_text or "",
-                        caption_entities=final_entities,
                         duration=message.video.duration,
                         width=message.video.width,
                         height=message.video.height
                     )
             elif message.animation:
                 log_detailed("info", "forwarding_engine", "_forward_to_target", "Sending animation...")
-                if use_parse_mode:
+                if caption_entities_parsed:
                     await self.client.send_animation(
                         chat_id=target_identifier,
                         animation=message.animation.file_id,
-                        caption=final_text or "",
-                        parse_mode=ParseMode.HTML
+                        caption=caption_plain or "",
+                        caption_entities=caption_entities_parsed
                     )
-                else:
+                elif final_entities:
                     await self.client.send_animation(
                         chat_id=target_identifier,
                         animation=message.animation.file_id,
                         caption=final_text or "",
                         caption_entities=final_entities
                     )
+                else:
+                    await self.client.send_animation(
+                        chat_id=target_identifier,
+                        animation=message.animation.file_id,
+                        caption=final_text or ""
+                    )
             elif message.audio:
                 log_detailed("info", "forwarding_engine", "_forward_to_target", "Sending audio...")
-                if use_parse_mode:
+                if caption_entities_parsed:
                     await self.client.send_audio(
                         chat_id=target_identifier,
                         audio=message.audio.file_id,
-                        caption=final_text or "",
-                        parse_mode=ParseMode.HTML,
+                        caption=caption_plain or "",
+                        caption_entities=caption_entities_parsed,
                         duration=message.audio.duration,
                         performer=message.audio.performer,
                         title=message.audio.title
                     )
-                else:
+                elif final_entities:
                     await self.client.send_audio(
                         chat_id=target_identifier,
                         audio=message.audio.file_id,
@@ -1472,14 +1643,31 @@ class ForwardingEngine:
                         performer=message.audio.performer,
                         title=message.audio.title
                     )
+                else:
+                    await self.client.send_audio(
+                        chat_id=target_identifier,
+                        audio=message.audio.file_id,
+                        caption=final_text or "",
+                        duration=message.audio.duration,
+                        performer=message.audio.performer,
+                        title=message.audio.title
+                    )
             elif message.voice:
                 log_detailed("info", "forwarding_engine", "_forward_to_target", "Sending voice...")
-                if use_parse_mode:
+                if caption_entities_parsed:
+                    await self.client.send_voice(
+                        chat_id=target_identifier,
+                        voice=message.voice.file_id,
+                        caption=caption_plain or "",
+                        caption_entities=caption_entities_parsed,
+                        duration=message.voice.duration
+                    )
+                elif final_entities:
                     await self.client.send_voice(
                         chat_id=target_identifier,
                         voice=message.voice.file_id,
                         caption=final_text or "",
-                        parse_mode=ParseMode.HTML,
+                        caption_entities=final_entities,
                         duration=message.voice.duration
                     )
                 else:
@@ -1487,7 +1675,6 @@ class ForwardingEngine:
                         chat_id=target_identifier,
                         voice=message.voice.file_id,
                         caption=final_text or "",
-                        caption_entities=final_entities,
                         duration=message.voice.duration
                     )
             elif message.video_note:
@@ -1500,12 +1687,20 @@ class ForwardingEngine:
                 )
             elif message.document:
                 log_detailed("info", "forwarding_engine", "_forward_to_target", "Sending document...")
-                if use_parse_mode:
+                if caption_entities_parsed:
+                    await self.client.send_document(
+                        chat_id=target_identifier,
+                        document=message.document.file_id,
+                        caption=caption_plain or "",
+                        caption_entities=caption_entities_parsed,
+                        file_name=message.document.file_name
+                    )
+                elif final_entities:
                     await self.client.send_document(
                         chat_id=target_identifier,
                         document=message.document.file_id,
                         caption=final_text or "",
-                        parse_mode=ParseMode.HTML,
+                        caption_entities=final_entities,
                         file_name=message.document.file_name
                     )
                 else:
@@ -1513,7 +1708,6 @@ class ForwardingEngine:
                         chat_id=target_identifier,
                         document=message.document.file_id,
                         caption=final_text or "",
-                        caption_entities=final_entities,
                         file_name=message.document.file_name
                     )
             elif message.sticker:
@@ -1564,30 +1758,51 @@ class ForwardingEngine:
                     emoji=message.dice.emoji
                 )
             elif final_text:
-                # Text message with entities preserved or parse_mode
+                # Text message with entities preserved or manually parsed
+                has_html = any(tag in final_text for tag in ['<b>', '<i>', '<blockquote>', '<u>', '<s>', '<a href='])
+                
                 log_detailed("info", "forwarding_engine", "_forward_to_target", 
                             "📤 [SEND STAGE 1] Preparing text message...", {
                                 "use_parse_mode": use_parse_mode,
+                                "has_html_tags": has_html,
                                 "text_length": len(final_text),
-                                "has_html_tags": any(tag in final_text for tag in ['<b>', '<i>', '<blockquote>', '<u>', '<s>']),
                                 "text_preview": final_text[:200] if len(final_text) > 200 else final_text
                             })
                 
-                if use_parse_mode:
+                if use_parse_mode and has_html:
+                    # Use manual entity parsing since Pyrogram doesn't support blockquote in parse_mode
+                    plain_text, parsed_entities = self._parse_html_to_entities(final_text)
+                    
                     log_detailed("info", "forwarding_engine", "_forward_to_target",
-                                "📤 [SEND STAGE 2] Sending with HTML parse_mode", {
+                                "📤 [SEND STAGE 2] Sending with manually parsed entities", {
                                     "chat_id": target_identifier,
-                                    "parse_mode": "HTML"
+                                    "plain_text_length": len(plain_text),
+                                    "entities_count": len(parsed_entities),
+                                    "entity_types": [str(e.type) for e in parsed_entities],
+                                    "plain_text_preview": plain_text[:150]
+                                })
+                    
+                    await self.client.send_message(
+                        chat_id=target_identifier,
+                        text=plain_text,
+                        entities=parsed_entities,
+                        disable_web_page_preview=True
+                    )
+                elif use_parse_mode:
+                    # No HTML tags - send plain text
+                    log_detailed("info", "forwarding_engine", "_forward_to_target",
+                                "📤 [SEND STAGE 2] Sending plain text (no HTML)", {
+                                    "chat_id": target_identifier,
+                                    "text_length": len(final_text)
                                 })
                     await self.client.send_message(
                         chat_id=target_identifier,
                         text=final_text,
-                        parse_mode=ParseMode.HTML,
                         disable_web_page_preview=True
                     )
                 else:
                     log_detailed("info", "forwarding_engine", "_forward_to_target",
-                                "📤 [SEND STAGE 2] Sending with entities", {
+                                "📤 [SEND STAGE 2] Sending with original entities", {
                                     "chat_id": target_identifier,
                                     "entities_count": len(final_entities) if final_entities else 0
                                 })
