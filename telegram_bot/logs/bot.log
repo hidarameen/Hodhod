@@ -9641,3 +9641,82 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-04 00:37:29,183 - main - INFO - [2025-12-04 00:37:29.183] [INFO] [main::startup] Validating settings... | {}
 2025-12-04 00:37:29,183 - main - INFO - [2025-12-04 00:37:29.183] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
 2025-12-04 00:37:29,183 - main - INFO - [2025-12-04 00:37:29.183] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-04 00:38:38,108 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 00:38:38,109 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 00:38:38,113 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 00:38:38,115 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 00:38:38,117 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 00:38:38,175 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 00:38:38,178 - main - INFO - [2025-12-04 00:38:38.178] [INFO] [main::entry] Bot script started | {}
+2025-12-04 00:38:38,178 - main - INFO - [2025-12-04 00:38:38.178] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 00:38:38,179 - main - INFO - [2025-12-04 00:38:38.179] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-04 00:38:38,179 - main - INFO - [2025-12-04 00:38:38.179] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-04 00:38:40,375 - database - INFO - Database connected successfully | {}
+2025-12-04 00:38:40,814 - main - INFO - [2025-12-04 00:38:40.814] [INFO] [session::load] Found active session in database | {}
+2025-12-04 00:38:40,814 - main - INFO - [2025-12-04 00:38:40.814] [INFO] [main::init] Creating Pyrofork client | Data: {'api_id': 24343527, 'has_session': True, 'api_hash_set': True} | {}
+2025-12-04 00:38:42,581 - main - INFO - [2025-12-04 00:38:42.581] [INFO] [main::initialize_bot] Starting bot initialization... | {}
+2025-12-04 00:38:42,581 - main - INFO - [2025-12-04 00:38:42.581] [INFO] [database::connect] Connecting to database... | {}
+2025-12-04 00:38:44,423 - database - INFO - Database connected successfully | {}
+2025-12-04 00:38:44,423 - main - INFO - [2025-12-04 00:38:44.423] [INFO] [database::connect] Database connected successfully | {}
+2025-12-04 00:38:44,423 - main - INFO - [2025-12-04 00:38:44.423] [INFO] [ai_manager::init] Loading AI providers from database... | {}
+2025-12-04 00:38:44,848 - ai_providers - WARNING - No API key found for provider: claude | {}
+2025-12-04 00:38:44,849 - ai_providers - INFO - Loaded Groq provider from database | {}
+2025-12-04 00:38:44,849 - ai_providers - INFO - Loaded HuggingFace provider from database | {}
+2025-12-04 00:38:44,849 - main - INFO - [2025-12-04 00:38:44.849] [INFO] [ai_manager::init] AI providers loaded successfully | {}
+2025-12-04 00:38:44,849 - main - INFO - [2025-12-04 00:38:44.849] [INFO] [admin::check] Checking admin status for ID: 6556918772 | {}
+2025-12-04 00:38:45,276 - main - INFO - [2025-12-04 00:38:45.275] [INFO] [admin::check] Admin already exists: 6556918772 | {}
+2025-12-04 00:38:45,276 - main - INFO - [2025-12-04 00:38:45.276] [INFO] [forwarding_engine::init] Initializing forwarding engine... | {}
+2025-12-04 00:38:45,276 - forwarding_engine - INFO - [2025-12-04 00:38:45.276] [INFO] [forwarding_engine::__init__] Forwarding engine initialized | {}
+2025-12-04 00:38:45,276 - main - INFO - [2025-12-04 00:38:45.276] [INFO] [forwarding_engine::init] Forwarding engine initialized successfully | {}
+2025-12-04 00:38:45,276 - main - INFO - [2025-12-04 00:38:45.276] [INFO] [queue_manager::register] Registering job handlers... | {}
+2025-12-04 00:38:45,276 - queue_system - INFO - Registered handler for job type: forward | {}
+2025-12-04 00:38:45,277 - queue_system - INFO - Registered handler for job type: ai_process | {}
+2025-12-04 00:38:45,277 - queue_system - INFO - Registered handler for job type: video_process | {}
+2025-12-04 00:38:45,277 - main - INFO - [2025-12-04 00:38:45.277] [INFO] [queue_manager::register] All handlers registered: forward, ai_process, video_process | {}
+2025-12-04 00:38:45,278 - main - INFO - [2025-12-04 00:38:45.278] [INFO] [queue_manager::start] Starting queue manager... | {}
+2025-12-04 00:38:45,278 - queue_system - INFO - Queue manager started with 10 max workers | {}
+2025-12-04 00:38:45,278 - main - INFO - [2025-12-04 00:38:45.278] [INFO] [queue_manager::start] Queue manager started with 10 workers | {}
+2025-12-04 00:38:45,278 - main - INFO - [2025-12-04 00:38:45.278] [INFO] [tasks::load] Loading active tasks from database... | {}
+2025-12-04 00:38:45,697 - main - INFO - [2025-12-04 00:38:45.697] [INFO] [tasks::load] Found 1 tasks in database | {}
+2025-12-04 00:38:45,697 - main - INFO - [2025-12-04 00:38:45.697] [INFO] [tasks::check] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'is_active': True, 'source_channels': [4], 'target_channels': [5]} | {}
+2025-12-04 00:38:45,697 - forwarding_engine - INFO - [2025-12-04 00:38:45.697] [INFO] [forwarding_engine::start_task_monitoring] Started monitoring task 4 | {}
+2025-12-04 00:38:45,698 - main - INFO - [2025-12-04 00:38:45.697] [INFO] [tasks::monitor] Started monitoring task: توجيه الأخبار  | Data: {'task_id': 4} | {}
+2025-12-04 00:38:45,698 - main - INFO - [2025-12-04 00:38:45.698] [INFO] [tasks::load] Loaded 1 active tasks for monitoring | {}
+2025-12-04 00:38:45,698 - main - INFO - [2025-12-04 00:38:45.698] [INFO] [main::initialize_bot] ✅ Bot initialization completed successfully | {}
+2025-12-04 00:38:45,698 - main - INFO - [2025-12-04 00:38:45.698] [INFO] [pyrogram::start] Starting Pyrofork userbot client... | {}
+2025-12-04 00:38:45,894 - pyrogram.connection.connection - INFO - Connecting...
+2025-12-04 00:38:46,080 - pyrogram.connection.connection - INFO - Connected! Production DC4 - IPv4
+2025-12-04 00:38:46,081 - pyrogram.session.session - INFO - NetworkTask started
+2025-12-04 00:38:46,879 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-12-04 00:38:46,879 - pyrogram.session.session - INFO - Device: CPython 3.11.13 - Pyrogram 2.0.106
+2025-12-04 00:38:46,879 - pyrogram.session.session - INFO - System: Linux 6.14.11 (en)
+2025-12-04 00:38:46,879 - pyrogram.session.session - INFO - Session started
+2025-12-04 00:38:46,882 - pyrogram.session.session - INFO - PingTask started
+2025-12-04 00:38:47,276 - pyrogram.dispatcher - INFO - Started 12 HandlerTasks
+2025-12-04 00:38:47,475 - main - INFO - [2025-12-04 00:38:47.474] [INFO] [pyrogram::connected] ✅ Userbot connected to Telegram | Data: {'user_id': 7831798910, 'username': 'TTT1234TTTT', 'first_name': 'V'} | {}
+2025-12-04 00:38:47,475 - main - INFO - [2025-12-04 00:38:47.475] [INFO] [handlers::register] Registering message handlers... | {}
+2025-12-04 00:38:47,475 - main - INFO - [2025-12-04 00:38:47.475] [INFO] [handlers::register] ✅ All handlers registered successfully | {}
+2025-12-04 00:38:47,475 - main - INFO - [2025-12-04 00:38:47.475] [INFO] [warmup::post_connect] Starting post-connection warmup... | {}
+2025-12-04 00:38:47,475 - main - INFO - [2025-12-04 00:38:47.475] [INFO] [warmup::start] Starting channel peer warmup... | {}
+2025-12-04 00:38:47,475 - main - INFO - [2025-12-04 00:38:47.475] [INFO] [warmup::dialogs] Loading all dialogs to populate peer cache... | {}
+2025-12-04 00:38:49,539 - main - INFO - [2025-12-04 00:38:49.539] [DEBUG] [warmup::dialogs] Loaded 50 dialogs... | {}
+2025-12-04 00:38:49,540 - main - INFO - [2025-12-04 00:38:49.539] [DEBUG] [warmup::dialogs] Loaded 100 dialogs... | {}
+2025-12-04 00:38:49,858 - main - INFO - [2025-12-04 00:38:49.858] [DEBUG] [warmup::dialogs] Loaded 150 dialogs... | {}
+2025-12-04 00:38:50,085 - main - INFO - [2025-12-04 00:38:50.085] [INFO] [warmup::dialogs] ✅ Cached 164 dialogs in peer cache | {}
+2025-12-04 00:38:50,518 - main - INFO - [2025-12-04 00:38:50.518] [INFO] [warmup::channels] Found 2 channels to verify | {}
+2025-12-04 00:38:50,518 - main - INFO - [2025-12-04 00:38:50.518] [INFO] [warmup::cached] ✅ اختبار 1 already in peer cache | {}
+2025-12-04 00:38:50,518 - main - INFO - [2025-12-04 00:38:50.518] [INFO] [warmup::cached] ✅ اختبار 2 already in peer cache | {}
+2025-12-04 00:38:50,518 - main - INFO - [2025-12-04 00:38:50.518] [INFO] [warmup::complete] ✅ Warmup complete: 2 success, 0 failed | {}
+2025-12-04 00:38:50,519 - main - INFO - [2025-12-04 00:38:50.519] [INFO] [main::idle] Userbot is now running and waiting for messages... | {}
+2025-12-04 00:39:35,732 - main - INFO - [2025-12-04 00:39:35.732] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003119954858', 'chat_title': 'شبكة الفرقان copy', 'message_id': 2053, 'message_type': 'media', 'has_text': False, 'has_caption': True, 'media_type': 'MessageMediaType.VIDEO', 'media_group_id': None} | {}
+2025-12-04 00:39:35,733 - main - INFO - [2025-12-04 00:39:35.733] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 00:39:36,164 - main - INFO - [2025-12-04 00:39:36.164] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 00:39:36,165 - main - INFO - [2025-12-04 00:39:36.165] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 00:39:36,430 - main - INFO - [2025-12-04 00:39:36.429] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 17879, 'message_type': 'media', 'has_text': False, 'has_caption': True, 'media_type': 'MessageMediaType.VIDEO', 'media_group_id': None} | {}
+2025-12-04 00:39:36,430 - main - INFO - [2025-12-04 00:39:36.430] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 00:39:36,597 - main - INFO - [2025-12-04 00:39:36.597] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003119954858', 'match': False} | {}
+2025-12-04 00:39:36,597 - main - INFO - [2025-12-04 00:39:36.597] [INFO] [message_handler::skip] No matching task for chat: شبكة الفرقان copy | Data: {'chat_id': '-1003119954858'} | {}
+2025-12-04 00:39:36,711 - main - INFO - [2025-12-04 00:39:36.710] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 00:39:36,711 - main - INFO - [2025-12-04 00:39:36.711] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 00:39:37,172 - main - INFO - [2025-12-04 00:39:37.172] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 00:39:37,172 - main - INFO - [2025-12-04 00:39:37.172] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
