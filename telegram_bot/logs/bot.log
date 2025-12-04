@@ -9510,3 +9510,57 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-04 00:27:33,435 - task_4 - INFO - Message forwarded to 1/1 targets
 2025-12-04 00:27:33,435 - forwarding_engine - INFO - [2025-12-04 00:27:33.435] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
 2025-12-04 00:27:33,436 - main - INFO - [2025-12-04 00:27:33.435] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 00:28:53,915 - main - INFO - [2025-12-04 00:28:53.915] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2287, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 00:28:53,915 - main - INFO - [2025-12-04 00:28:53.915] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 00:28:54,487 - main - INFO - [2025-12-04 00:28:54.487] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 00:28:54,487 - main - INFO - [2025-12-04 00:28:54.487] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 00:28:54,917 - main - INFO - [2025-12-04 00:28:54.917] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 00:28:54,917 - main - INFO - [2025-12-04 00:28:54.917] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 00:28:54,917 - main - INFO - [2025-12-04 00:28:54.917] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 00:28:54,917 - forwarding_engine - INFO - [2025-12-04 00:28:54.917] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2287, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 00:28:54,917 - forwarding_engine - INFO - [2025-12-04 00:28:54.917] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 00:28:54,917 - forwarding_engine - INFO - [2025-12-04 00:28:54.917] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': False, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 00:28:54,917 - forwarding_engine - INFO - [2025-12-04 00:28:54.917] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 00:28:54,918 - forwarding_engine - INFO - [2025-12-04 00:28:54.918] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 00:28:54,918 - forwarding_engine - INFO - [2025-12-04 00:28:54.918] [INFO] [forwarding_engine::_process_message] Text length: 16 chars | {}
+2025-12-04 00:28:55,351 - forwarding_engine - INFO - [2025-12-04 00:28:55.351] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 00:28:55,780 - forwarding_engine - INFO - [2025-12-04 00:28:55.780] [INFO] [forwarding_engine::_process_message] Using model: moonshotai/kimi-k2-instruct | {}
+2025-12-04 00:28:56,210 - forwarding_engine - INFO - [2025-12-04 00:28:56.209] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 00:28:56,639 - forwarding_engine - INFO - [2025-12-04 00:28:56.639] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 2 rules | {}
+2025-12-04 00:28:57,498 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 16 | {}
+2025-12-04 00:28:57,498 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 0 | Sentiment: neutral | Keywords: 2 | Time: 0.000s | {}
+2025-12-04 00:28:57,498 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 0 | Sentiment: neutral | {}
+2025-12-04 00:28:57,929 - ai_rule_engine - INFO - [RuleEngine] Loaded 4 entity rules for task 4 from DB | {}
+2025-12-04 00:28:57,929 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 0 | {}
+2025-12-04 00:28:58,358 - ai_rule_engine - INFO - [RuleEngine] Loaded 1 context rules for task 4 from DB | {}
+2025-12-04 00:28:58,358 - ai_rule_engine - INFO - [RuleEngine] Applying 1 context rules | {}
+2025-12-04 00:28:58,358 - ai_rule_engine - INFO - [RuleEngine] Processing rule 1: type=enhance_positive, instructions=اذا مثلا نبره النص هجوم  لجماعة الحوثي  رجعها حياد... | {}
+2025-12-04 00:28:58,358 - ai_rule_engine - INFO - [RuleEngine] Context rules result: 1 applied, 1 AI instructions | {}
+2025-12-04 00:28:58,358 - ai_rule_engine - INFO - [RuleEngine] Context modifications: 1, AI instructions: 1 | {}
+2025-12-04 00:28:58,645 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 1 | Replacements: 0 | {}
+2025-12-04 00:28:58,646 - ai_pipeline - INFO - [Pipeline] Added 1 context instructions to prompt | {}
+2025-12-04 00:28:58,646 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 500 | Temperature: 0.7 | Input length: 600 chars | {}
+2025-12-04 00:29:00,026 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 00:29:00,027 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 410 chars | First 100 chars: - المجلس الانتقالي الجنوبي يعلن إعادة ترتيب صفوفه استعداداً لإدارة المحافظات الجنوبية  
+- القرار يأت | {}
+2025-12-04 00:29:00,028 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 410 | {}
+2025-12-04 00:29:00,029 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 0.93 | {}
+2025-12-04 00:29:00,030 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 3.39s | Quality: 0.93 | Original: 16 → Final: 410 chars | {}
+2025-12-04 00:29:00,031 - forwarding_engine - INFO - [2025-12-04 00:29:00.031] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 16, 'final_length': 410, 'stages': 4, 'rules_applied': 1, 'quality_score': 0.9299999999999999, 'total_time': '3.39s'} | {}
+2025-12-04 00:29:00,031 - forwarding_engine - INFO - [2025-12-04 00:29:00.031] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.00s) | {}
+2025-12-04 00:29:00,031 - forwarding_engine - INFO - [2025-12-04 00:29:00.031] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (1.15s) | {}
+2025-12-04 00:29:00,031 - forwarding_engine - INFO - [2025-12-04 00:29:00.031] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (1.38s) | {}
+2025-12-04 00:29:00,031 - forwarding_engine - INFO - [2025-12-04 00:29:00.031] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 00:29:00,890 - task_4 - INFO - AI Pipeline completed | From 16 → 410 chars
+2025-12-04 00:29:01,749 - forwarding_engine - INFO - [2025-12-04 00:29:01.749] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 16, 'processed_length': 410, 'total_reduction': -394, 'reduction_percent': -2462, 'final_preview': '- المجلس الانتقالي الجنوبي يعلن إعادة ترتيب صفوفه استعداداً لإدارة المحافظات الجنوبية  \n- القرار يأتي ضمن خطة لتوحيد الجهود الإدارية والأمنية وتعزيز ا'} | {}
+2025-12-04 00:29:01,749 - forwarding_engine - INFO - [2025-12-04 00:29:01.749] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 00:29:01,749 - forwarding_engine - INFO - [2025-12-04 00:29:01.749] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2287, 'has_processed_text': True} | {}
+2025-12-04 00:29:02,036 - forwarding_engine - INFO - [2025-12-04 00:29:02.036] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 00:29:02,240 - forwarding_engine - INFO - [2025-12-04 00:29:02.239] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 16, 'final_length': 484, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 00:29:02,241 - forwarding_engine - INFO - [2025-12-04 00:29:02.241] [INFO] [forwarding_engine::_forward_to_target] Sending text message... | {}
+2025-12-04 00:29:02,492 - forwarding_engine - INFO - [2025-12-04 00:29:02.492] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 00:29:02,492 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 00:29:02,492 - forwarding_engine - INFO - [2025-12-04 00:29:02.492] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 00:29:04,164 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 00:29:04,165 - forwarding_engine - INFO - [2025-12-04 00:29:04.165] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 00:29:04,165 - main - INFO - [2025-12-04 00:29:04.165] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
