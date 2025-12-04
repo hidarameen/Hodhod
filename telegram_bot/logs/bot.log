@@ -16456,3 +16456,21 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-04 17:48:59,609 - main - INFO - [2025-12-04 17:48:59.609] [INFO] [session::load] No active session found - userbot login required | {}
 2025-12-04 17:49:11,426 - database - INFO - Database connected successfully | {}
 2025-12-04 17:49:11,853 - main - INFO - [2025-12-04 17:49:11.853] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:55:30,633 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 17:55:30,635 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 17:55:30,642 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 17:55:30,645 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 17:55:30,727 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 17:55:30,730 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 17:55:30,734 - main - INFO - [2025-12-04 17:55:30.734] [INFO] [main::entry] Bot script started | {}
+2025-12-04 17:55:30,735 - main - INFO - [2025-12-04 17:55:30.734] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 17:55:30,735 - main - INFO - [2025-12-04 17:55:30.735] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-04 17:55:30,735 - main - INFO - [2025-12-04 17:55:30.735] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-04 17:55:32,802 - database - INFO - Database connected successfully | {}
+2025-12-04 17:55:33,227 - main - INFO - [2025-12-04 17:55:33.215] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:55:33,227 - main - INFO - [2025-12-04 17:55:33.227] [WARNING] [session::missing] ⚠️ No active session found! Please login via the web interface. | {}
+2025-12-04 17:55:35,298 - database - INFO - Database connected successfully | {}
+2025-12-04 17:55:47,107 - database - INFO - Database connected successfully | {}
+2025-12-04 17:55:47,523 - main - INFO - [2025-12-04 17:55:47.523] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 17:55:59,498 - database - INFO - Database connected successfully | {}
+2025-12-04 17:55:59,914 - main - INFO - [2025-12-04 17:55:59.914] [INFO] [session::load] No active session found - userbot login required | {}
