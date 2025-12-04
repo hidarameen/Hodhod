@@ -749,6 +749,151 @@ class ForwardingEngine:
             log_detailed("error", "forwarding_engine", "_check_content_filters", f"Filter check error: {str(e)}")
             return (True, "forward", None, text)
     
+    def _apply_formatting(self, text: str, formatting: str) -> str:
+        """
+        Apply Telegram entity formatting to text
+        Supported: bold, italic, code, quote, spoiler, strikethrough, underline, none
+        """
+        if not text or formatting == "none":
+            return text
+        
+        formatting_map = {
+            "bold": f"**{text}**",
+            "italic": f"__{text}__",
+            "code": f"`{text}`",
+            "quote": f"> {text}",
+            "spoiler": f"||{text}||",
+            "strikethrough": f"~~{text}~~",
+            "underline": f"<u>{text}</u>",
+        }
+        
+        return formatting_map.get(formatting, text)
+    
+    async def _extract_fields_with_ai(
+        self, 
+        text: str, 
+        custom_fields: List[Dict[str, Any]], 
+        task_id: int
+    ) -> Dict[str, str]:
+        """
+        Use AI to extract custom fields from the text based on their instructions
+        """
+        from datetime import datetime
+        
+        extracted = {}
+        fields_to_extract = []
+        
+        for field in custom_fields:
+            field_type = field.get("field_type", "extracted")
+            field_name = field.get("field_name", "")
+            
+            if field_type == "summary":
+                # Summary is the processed text itself
+                extracted[field_name] = text
+            elif field_type == "date_today":
+                # Use today's date
+                extracted[field_name] = datetime.now().strftime("%Y-%m-%d")
+            elif field_type == "static":
+                # Use default value as static
+                extracted[field_name] = field.get("default_value", "")
+            elif field_type == "extracted":
+                # Need AI extraction
+                fields_to_extract.append(field)
+        
+        # Extract fields using AI if needed
+        if fields_to_extract and ai_manager:
+            try:
+                # Build extraction prompt
+                fields_prompt = "\n".join([
+                    f"- {f['field_name']}: {f['extraction_instructions']}"
+                    for f in fields_to_extract
+                ])
+                
+                extraction_prompt = f"""قم باستخراج المعلومات التالية من النص المعطى.
+أجب بتنسيق JSON فقط بدون أي نص إضافي.
+
+الحقول المطلوب استخراجها:
+{fields_prompt}
+
+النص:
+{text}
+
+أجب بتنسيق JSON التالي فقط:
+{{
+  "field_name1": "القيمة المستخرجة",
+  "field_name2": "القيمة المستخرجة"
+}}
+
+إذا لم تجد قيمة لحقل معين، اترك القيمة فارغة ""."""
+
+                # Get AI provider and model for the task
+                task_config = await db.get_task(task_id)
+                provider_id = task_config.get("summarization_provider_id") if task_config else None
+                model_id = task_config.get("summarization_model_id") if task_config else None
+                
+                provider_name = "groq"
+                model_name = "mixtral-8x7b-32768"
+                
+                if provider_id:
+                    provider_info = await db.get_ai_provider(provider_id)
+                    if provider_info:
+                        provider_name = provider_info["name"]
+                
+                if model_id:
+                    model_info = await db.get_ai_model(model_id)
+                    if model_info:
+                        model_name = model_info["model_name"]
+                
+                # Call AI to extract fields
+                ai_response = await ai_manager.generate_text(
+                    provider=provider_name,
+                    model=model_name,
+                    prompt=extraction_prompt,
+                    system_prompt="أنت مساعد لاستخراج المعلومات من النصوص. أجب بتنسيق JSON فقط."
+                )
+                
+                if ai_response:
+                    # Parse JSON response
+                    import json
+                    import re
+                    
+                    # Try to extract JSON from response
+                    json_match = re.search(r'\{[^{}]*\}', ai_response, re.DOTALL)
+                    if json_match:
+                        try:
+                            ai_extracted = json.loads(json_match.group())
+                            for field in fields_to_extract:
+                                field_name = field.get("field_name", "")
+                                if field_name in ai_extracted:
+                                    extracted[field_name] = ai_extracted[field_name]
+                                elif field.get("use_default_if_empty") and field.get("default_value"):
+                                    extracted[field_name] = field.get("default_value")
+                                else:
+                                    extracted[field_name] = ""
+                        except json.JSONDecodeError:
+                            log_detailed("warning", "forwarding_engine", "_extract_fields_with_ai", 
+                                        "Failed to parse AI JSON response")
+                            # Use defaults for all fields
+                            for field in fields_to_extract:
+                                field_name = field.get("field_name", "")
+                                if field.get("use_default_if_empty") and field.get("default_value"):
+                                    extracted[field_name] = field.get("default_value")
+                                else:
+                                    extracted[field_name] = ""
+                
+            except Exception as e:
+                log_detailed("error", "forwarding_engine", "_extract_fields_with_ai", 
+                            f"AI extraction error: {str(e)}")
+                # Use defaults for all fields on error
+                for field in fields_to_extract:
+                    field_name = field.get("field_name", "")
+                    if field.get("use_default_if_empty") and field.get("default_value"):
+                        extracted[field_name] = field.get("default_value")
+                    else:
+                        extracted[field_name] = ""
+        
+        return extracted
+    
     async def _apply_publishing_template(
         self,
         text: str,
@@ -756,60 +901,98 @@ class ForwardingEngine:
         extracted_data: Dict[str, Any] = None
     ) -> str:
         """
-        Apply publishing template to format the output
+        Apply publishing template to format the output with custom fields and formatting
         """
         try:
-            template = await db.get_default_template(task_id)
+            template = await db.get_default_template_with_fields(task_id)
             
             if not template:
                 return text
             
-            header = template.get("header_template", "")
-            body = template.get("body_template", "{summary}")
-            footer = template.get("footer_template", "")
-            use_markdown = template.get("use_markdown", True)
-            use_bold = template.get("use_bold", True)
+            custom_fields = template.get("custom_fields", [])
+            header_text = template.get("header_text", "")
+            header_formatting = template.get("header_formatting", "none")
+            footer_text = template.get("footer_text", "")
+            footer_formatting = template.get("footer_formatting", "none")
+            field_separator = template.get("field_separator", "\n")
+            use_newline_after_header = template.get("use_newline_after_header", True)
+            use_newline_before_footer = template.get("use_newline_before_footer", True)
             max_length = template.get("max_length")
             
-            extracted_data = extracted_data or {}
-            extracted_data["summary"] = text
-            
-            for key, value in extracted_data.items():
-                placeholder = "{" + key + "}"
-                header = header.replace(placeholder, str(value) if value else "")
-                body = body.replace(placeholder, str(value) if value else "")
-                footer = footer.replace(placeholder, str(value) if value else "")
+            # Extract custom fields using AI
+            if custom_fields:
+                extracted_data = await self._extract_fields_with_ai(text, custom_fields, task_id)
+            else:
+                extracted_data = extracted_data or {}
+                extracted_data["summary"] = text
             
             result_parts = []
-            if header:
-                if use_markdown and use_bold:
-                    result_parts.append(f"**{header}**")
-                else:
-                    result_parts.append(header)
             
-            if body:
-                result_parts.append(body)
+            # Add header if exists
+            if header_text:
+                formatted_header = self._apply_formatting(header_text.strip(), header_formatting)
+                result_parts.append(formatted_header)
+                if use_newline_after_header:
+                    result_parts.append("")
             
-            if footer:
-                if use_markdown:
-                    result_parts.append(f"_{footer}_")
-                else:
-                    result_parts.append(footer)
+            # Add custom fields in order
+            field_parts = []
+            for field in custom_fields:
+                field_name = field.get("field_name", "")
+                field_label = field.get("field_label", "")
+                formatting = field.get("formatting", "none")
+                show_label = field.get("show_label", False)
+                label_separator = field.get("label_separator", ": ")
+                prefix = field.get("prefix", "") or ""
+                suffix = field.get("suffix", "") or ""
+                
+                # Get the extracted value
+                value = extracted_data.get(field_name, "")
+                
+                if not value and field.get("use_default_if_empty"):
+                    value = field.get("default_value", "")
+                
+                if value:
+                    # Apply formatting to the value
+                    formatted_value = self._apply_formatting(str(value), formatting)
+                    
+                    # Build the field text
+                    if show_label and field_label:
+                        field_text = f"{field_label}{label_separator}{prefix}{formatted_value}{suffix}"
+                    else:
+                        field_text = f"{prefix}{formatted_value}{suffix}"
+                    
+                    field_parts.append(field_text.strip())
             
-            result = "\n\n".join(result_parts)
+            if field_parts:
+                result_parts.append(field_separator.join(field_parts))
             
+            # Add footer if exists
+            if footer_text:
+                if use_newline_before_footer:
+                    result_parts.append("")
+                formatted_footer = self._apply_formatting(footer_text.strip(), footer_formatting)
+                result_parts.append(formatted_footer)
+            
+            # Join all parts
+            result = "\n".join(filter(None, result_parts))
+            
+            # Apply max length
             if max_length and len(result) > max_length:
                 result = result[:max_length - 3] + "..."
             
             log_detailed("info", "forwarding_engine", "_apply_publishing_template",
                         f"Template applied: {template['name']}", {
-                            "output_length": len(result)
+                            "output_length": len(result),
+                            "fields_count": len(custom_fields),
+                            "extracted_count": len(extracted_data)
                         })
             
             return result
             
         except Exception as e:
-            log_detailed("error", "forwarding_engine", "_apply_publishing_template", f"Template error: {str(e)}")
+            log_detailed("error", "forwarding_engine", "_apply_publishing_template", 
+                        f"Template error: {str(e)}", {"traceback": traceback.format_exc()})
             return text
     
     async def _process_message(

@@ -797,5 +797,58 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
+  // ============ Template Custom Fields ============
+  app.get("/api/publishing-templates/:templateId/custom-fields", async (req: Request, res: Response) => {
+    try {
+      const templateId = parseInt(req.params.templateId);
+      const fields = await storage.getTemplateCustomFields(templateId);
+      res.json(fields);
+    } catch (error) {
+      handleError(res, error, "Failed to get custom fields");
+    }
+  });
+
+  app.post("/api/publishing-templates/:templateId/custom-fields", async (req: Request, res: Response) => {
+    try {
+      const templateId = parseInt(req.params.templateId);
+      const data = { ...req.body, templateId };
+      const field = await storage.createTemplateCustomField(data);
+      res.json(field);
+    } catch (error) {
+      handleError(res, error, "Failed to create custom field");
+    }
+  });
+
+  app.patch("/api/custom-fields/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.updateTemplateCustomField(id, req.body);
+      res.json({ message: "Custom field updated" });
+    } catch (error) {
+      handleError(res, error, "Failed to update custom field");
+    }
+  });
+
+  app.delete("/api/custom-fields/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteTemplateCustomField(id);
+      res.json({ message: "Custom field deleted" });
+    } catch (error) {
+      handleError(res, error, "Failed to delete custom field");
+    }
+  });
+
+  app.post("/api/publishing-templates/:templateId/custom-fields/reorder", async (req: Request, res: Response) => {
+    try {
+      const templateId = parseInt(req.params.templateId);
+      const { fieldOrders } = req.body;
+      await storage.reorderTemplateCustomFields(templateId, fieldOrders);
+      res.json({ message: "Custom fields reordered" });
+    } catch (error) {
+      handleError(res, error, "Failed to reorder custom fields");
+    }
+  });
+
   return httpServer;
 }

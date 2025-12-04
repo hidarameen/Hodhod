@@ -867,7 +867,7 @@ export class DbStorage implements IStorage {
 
   // ============ AI Publishing Templates ============
   async getPublishingTemplates(taskId: number): Promise<any[]> {
-    return await database
+    const templates = await database
       .select()
       .from(schema.aiPublishingTemplates)
       .where(
@@ -877,6 +877,16 @@ export class DbStorage implements IStorage {
         )
       )
       .orderBy(desc(schema.aiPublishingTemplates.isDefault));
+    
+    // Load custom fields for each template
+    const templatesWithFields = await Promise.all(
+      templates.map(async (template) => {
+        const customFields = await this.getTemplateCustomFields(template.id);
+        return { ...template, customFields };
+      })
+    );
+    
+    return templatesWithFields;
   }
 
   async getDefaultTemplate(taskId: number): Promise<any> {
@@ -891,7 +901,12 @@ export class DbStorage implements IStorage {
         )
       )
       .limit(1);
-    return result[0] || null;
+    
+    if (!result[0]) return null;
+    
+    // Load custom fields for the template
+    const customFields = await this.getTemplateCustomFields(result[0].id);
+    return { ...result[0], customFields };
   }
 
   async createPublishingTemplate(data: any): Promise<any> {
@@ -908,19 +923,30 @@ export class DbStorage implements IStorage {
         taskId: data.taskId,
         name: data.name,
         isDefault: data.isDefault ?? false,
-        templateType: data.templateType,
-        headerTemplate: data.headerTemplate || null,
-        bodyTemplate: data.bodyTemplate || null,
-        footerTemplate: data.footerTemplate || null,
-        extractFields: data.extractFields || null,
-        useMarkdown: data.useMarkdown ?? true,
-        useBold: data.useBold ?? true,
-        useItalic: data.useItalic ?? false,
+        templateType: data.templateType || 'custom',
+        headerText: data.headerText || null,
+        headerFormatting: data.headerFormatting || 'none',
+        footerText: data.footerText || null,
+        footerFormatting: data.footerFormatting || 'none',
+        fieldSeparator: data.fieldSeparator || '\n',
+        useNewlineAfterHeader: data.useNewlineAfterHeader ?? true,
+        useNewlineBeforeFooter: data.useNewlineBeforeFooter ?? true,
         maxLength: data.maxLength || null,
         extractionPrompt: data.extractionPrompt || null,
         isActive: data.isActive ?? true,
       })
       .returning();
+    
+    // Create custom fields if provided
+    if (data.customFields && Array.isArray(data.customFields)) {
+      for (const field of data.customFields) {
+        await this.createTemplateCustomField({
+          ...field,
+          templateId: result[0].id
+        });
+      }
+    }
+    
     return result[0];
   }
 
@@ -932,16 +958,92 @@ export class DbStorage implements IStorage {
         .where(eq(schema.aiPublishingTemplates.taskId, data.taskId));
     }
     
+    const { customFields, ...templateData } = data;
+    
     await database
       .update(schema.aiPublishingTemplates)
-      .set({ ...data, updatedAt: new Date() })
+      .set({ ...templateData, updatedAt: new Date() })
       .where(eq(schema.aiPublishingTemplates.id, id));
   }
 
   async deletePublishingTemplate(id: number): Promise<void> {
+    // Custom fields are deleted automatically via cascade
     await database
       .delete(schema.aiPublishingTemplates)
       .where(eq(schema.aiPublishingTemplates.id, id));
+  }
+
+  // ============ Template Custom Fields ============
+  async getTemplateCustomFields(templateId: number): Promise<any[]> {
+    return await database
+      .select()
+      .from(schema.templateCustomFields)
+      .where(
+        and(
+          eq(schema.templateCustomFields.templateId, templateId),
+          eq(schema.templateCustomFields.isActive, true)
+        )
+      )
+      .orderBy(schema.templateCustomFields.displayOrder);
+  }
+
+  async getTemplateCustomField(id: number): Promise<any> {
+    const result = await database
+      .select()
+      .from(schema.templateCustomFields)
+      .where(eq(schema.templateCustomFields.id, id))
+      .limit(1);
+    return result[0] || null;
+  }
+
+  async createTemplateCustomField(data: any): Promise<any> {
+    const result = await database
+      .insert(schema.templateCustomFields)
+      .values({
+        templateId: data.templateId,
+        fieldName: data.fieldName,
+        fieldLabel: data.fieldLabel,
+        extractionInstructions: data.extractionInstructions,
+        defaultValue: data.defaultValue || null,
+        useDefaultIfEmpty: data.useDefaultIfEmpty ?? true,
+        formatting: data.formatting || 'none',
+        displayOrder: data.displayOrder || 0,
+        showLabel: data.showLabel ?? false,
+        labelSeparator: data.labelSeparator || ': ',
+        prefix: data.prefix || null,
+        suffix: data.suffix || null,
+        fieldType: data.fieldType || 'extracted',
+        isActive: data.isActive ?? true,
+      })
+      .returning();
+    return result[0];
+  }
+
+  async updateTemplateCustomField(id: number, data: any): Promise<void> {
+    await database
+      .update(schema.templateCustomFields)
+      .set(data)
+      .where(eq(schema.templateCustomFields.id, id));
+  }
+
+  async deleteTemplateCustomField(id: number): Promise<void> {
+    await database
+      .delete(schema.templateCustomFields)
+      .where(eq(schema.templateCustomFields.id, id));
+  }
+
+  async reorderTemplateCustomFields(templateId: number, fieldOrders: { id: number; order: number }[]): Promise<void> {
+    for (const { id, order } of fieldOrders) {
+      await database
+        .update(schema.templateCustomFields)
+        .set({ displayOrder: order })
+        .where(
+          and(
+            eq(schema.templateCustomFields.id, id),
+            eq(schema.templateCustomFields.templateId, templateId)
+          )
+        );
+    }
   }
 }
 

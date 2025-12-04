@@ -844,6 +844,90 @@ class Database:
             "DELETE FROM ai_publishing_templates WHERE id = $1",
             template_id
         )
+    
+    # ============================================
+    # Template Custom Fields
+    # ============================================
+    
+    async def get_template_custom_fields(self, template_id: int) -> List[Dict[str, Any]]:
+        """Get custom fields for a publishing template"""
+        rows = await self.fetch(
+            """SELECT * FROM template_custom_fields 
+               WHERE template_id = $1 AND is_active = true
+               ORDER BY display_order ASC""",
+            template_id
+        )
+        return [dict(row) for row in rows]
+    
+    async def get_default_template_with_fields(self, task_id: int) -> Optional[Dict[str, Any]]:
+        """Get default publishing template for a task with its custom fields"""
+        template = await self.fetchrow(
+            """SELECT * FROM ai_publishing_templates 
+               WHERE task_id = $1 AND is_default = true AND is_active = true
+               LIMIT 1""",
+            task_id
+        )
+        if not template:
+            return None
+        
+        template_dict = dict(template)
+        template_dict['custom_fields'] = await self.get_template_custom_fields(template_dict['id'])
+        return template_dict
+    
+    async def add_template_custom_field(self, data: Dict[str, Any]) -> int:
+        """Add new custom field to a template"""
+        return await self.fetchval(
+            """INSERT INTO template_custom_fields 
+               (template_id, field_name, field_label, extraction_instructions,
+                default_value, use_default_if_empty, formatting, display_order,
+                show_label, label_separator, prefix, suffix, field_type, is_active)
+               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING id""",
+            data["template_id"],
+            data["field_name"],
+            data["field_label"],
+            data["extraction_instructions"],
+            data.get("default_value"),
+            data.get("use_default_if_empty", True),
+            data.get("formatting", "none"),
+            data.get("display_order", 0),
+            data.get("show_label", False),
+            data.get("label_separator", ": "),
+            data.get("prefix"),
+            data.get("suffix"),
+            data.get("field_type", "extracted"),
+            data.get("is_active", True)
+        )
+    
+    async def update_template_custom_field(self, field_id: int, data: Dict[str, Any]):
+        """Update custom field"""
+        fields = []
+        values = []
+        param_count = 1
+        
+        allowed_fields = ['field_name', 'field_label', 'extraction_instructions',
+                          'default_value', 'use_default_if_empty', 'formatting',
+                          'display_order', 'show_label', 'label_separator',
+                          'prefix', 'suffix', 'field_type', 'is_active']
+        
+        for field in allowed_fields:
+            if field in data:
+                fields.append(f"{field} = ${param_count}")
+                values.append(data[field])
+                param_count += 1
+        
+        if not values:
+            return
+        
+        values.append(field_id)
+        query = f"UPDATE template_custom_fields SET {', '.join(fields)} WHERE id = ${param_count}"
+        return await self.execute(query, *values)
+    
+    async def delete_template_custom_field(self, field_id: int):
+        """Delete custom field"""
+        return await self.execute(
+            "DELETE FROM template_custom_fields WHERE id = $1",
+            field_id
+        )
 
 # Global database instance
 db = Database()

@@ -366,6 +366,10 @@ class ApiClient {
     return this.request<any[]>(`/tasks/${taskId}/publishing-templates`);
   }
 
+  async getPublishingTemplate(templateId: number) {
+    return this.request<any>(`/publishing-templates/${templateId}`);
+  }
+
   async createPublishingTemplate(data: any) {
     return this.request<any>(`/tasks/${data.taskId}/publishing-templates`, {
       method: "POST",
@@ -373,9 +377,51 @@ class ApiClient {
     });
   }
 
+  async updatePublishingTemplate(id: number, data: any) {
+    return this.request<any>(`/publishing-templates/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  }
+
   async deletePublishingTemplate(id: number) {
     return this.request<{ message: string }>(`/publishing-templates/${id}`, {
       method: "DELETE",
+    });
+  }
+
+  // ============================================
+  // Template Custom Fields
+  // ============================================
+  
+  async getTemplateCustomFields(templateId: number) {
+    return this.request<any[]>(`/publishing-templates/${templateId}/custom-fields`);
+  }
+
+  async createTemplateCustomField(templateId: number, data: any) {
+    return this.request<any>(`/publishing-templates/${templateId}/custom-fields`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateTemplateCustomField(id: number, data: any) {
+    return this.request<any>(`/custom-fields/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteTemplateCustomField(id: number) {
+    return this.request<{ message: string }>(`/custom-fields/${id}`, {
+      method: "DELETE",
+    });
+  }
+
+  async reorderTemplateCustomFields(templateId: number, fieldOrders: { id: number; order: number }[]) {
+    return this.request<{ message: string }>(`/publishing-templates/${templateId}/custom-fields/reorder`, {
+      method: "POST",
+      body: JSON.stringify({ fieldOrders }),
     });
   }
 }

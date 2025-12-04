@@ -285,26 +285,56 @@ export const aiPublishingTemplates = pgTable("ai_publishing_templates", {
   isDefault: boolean("is_default").notNull().default(false),
   templateType: text("template_type").notNull(), // 'news' | 'report' | 'interview' | 'summary' | 'custom'
   
-  // Template structure
-  headerTemplate: text("header_template"), // e.g., "📰 {news_type} | {date}"
-  bodyTemplate: text("body_template"), // e.g., "{summary}"
-  footerTemplate: text("footer_template"), // e.g., "📍 {location} | 🏷 {source}"
+  // Template structure with formatting
+  headerText: text("header_text"), // Static header text
+  headerFormatting: text("header_formatting"), // 'bold' | 'italic' | 'code' | 'quote' | 'spoiler' | 'strikethrough' | 'underline' | 'none'
+  footerText: text("footer_text"), // Static footer text
+  footerFormatting: text("footer_formatting"), // 'bold' | 'italic' | 'code' | 'quote' | 'spoiler' | 'strikethrough' | 'underline' | 'none'
   
-  // Fields to extract via AI
-  extractFields: jsonb("extract_fields"), // ['title', 'date', 'location', 'news_type', 'source', 'summary']
+  // Global settings
+  fieldSeparator: text("field_separator").default("\n"), // Separator between fields
+  useNewlineAfterHeader: boolean("use_newline_after_header").notNull().default(true),
+  useNewlineBeforeFooter: boolean("use_newline_before_footer").notNull().default(true),
   
-  // Formatting options
-  useMarkdown: boolean("use_markdown").notNull().default(true),
-  useBold: boolean("use_bold").notNull().default(true),
-  useItalic: boolean("use_italic").notNull().default(false),
   maxLength: integer("max_length"), // Maximum output length
   
-  // AI instructions for extraction
-  extractionPrompt: text("extraction_prompt"), // Custom AI prompt for extracting fields
+  // General AI extraction prompt (optional override)
+  extractionPrompt: text("extraction_prompt"), // Custom AI prompt for extracting all fields
   
   isActive: boolean("is_active").notNull().default(true),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// Template Custom Fields (dynamic fields with individual formatting and AI instructions)
+export const templateCustomFields = pgTable("template_custom_fields", {
+  id: serial("id").primaryKey(),
+  templateId: integer("template_id").notNull().references(() => aiPublishingTemplates.id, { onDelete: 'cascade' }),
+  
+  // Field identification
+  fieldName: text("field_name").notNull(), // Internal name like 'news_type', 'province', 'source'
+  fieldLabel: text("field_label").notNull(), // Display label like 'نوع الخبر', 'المحافظة', 'المصدر'
+  
+  // AI extraction instructions
+  extractionInstructions: text("extraction_instructions").notNull(), // AI instructions for extracting this field
+  defaultValue: text("default_value"), // Default if extraction fails (e.g., today's date)
+  useDefaultIfEmpty: boolean("use_default_if_empty").notNull().default(true),
+  
+  // Formatting options (Telegram entities)
+  formatting: text("formatting").notNull().default("none"), // 'bold' | 'italic' | 'code' | 'quote' | 'spoiler' | 'strikethrough' | 'underline' | 'none'
+  
+  // Field position and display
+  displayOrder: integer("display_order").notNull().default(0),
+  showLabel: boolean("show_label").notNull().default(false), // Whether to show "نوع الخبر: " prefix
+  labelSeparator: text("label_separator").default(": "), // Separator after label
+  prefix: text("prefix"), // Text before the value (e.g., emoji)
+  suffix: text("suffix"), // Text after the value
+  
+  // Special field types
+  fieldType: text("field_type").notNull().default("extracted"), // 'extracted' | 'summary' | 'static' | 'date_today'
+  
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 // Insert Schemas
@@ -352,6 +382,7 @@ export const insertUserbotSessionSchema = createInsertSchema(userbotSessions).om
 export const insertGithubSettingsSchema = createInsertSchema(githubSettings).omit({ id: true, linkedAt: true, updatedAt: true });
 export const insertAiContentFilterSchema = createInsertSchema(aiContentFilters).omit({ id: true, createdAt: true, matchCount: true });
 export const insertAiPublishingTemplateSchema = createInsertSchema(aiPublishingTemplates).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertTemplateCustomFieldSchema = createInsertSchema(templateCustomFields).omit({ id: true, createdAt: true });
 
 // Types
 export type User = typeof users.$inferSelect;

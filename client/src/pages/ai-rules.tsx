@@ -85,21 +85,40 @@ interface ContentFilter {
   isActive: boolean;
 }
 
+interface TemplateCustomField {
+  id?: number;
+  templateId?: number;
+  fieldName: string;
+  fieldLabel: string;
+  extractionInstructions: string;
+  defaultValue?: string;
+  useDefaultIfEmpty: boolean;
+  formatting: string;
+  displayOrder: number;
+  showLabel: boolean;
+  labelSeparator: string;
+  prefix?: string;
+  suffix?: string;
+  fieldType: string;
+  isActive: boolean;
+}
+
 interface PublishingTemplate {
   id?: number;
   taskId: number;
   name: string;
   templateType: string;
   isDefault: boolean;
-  headerTemplate: string;
-  bodyTemplate: string;
-  footerTemplate: string;
-  extractFields: string[];
-  useMarkdown: boolean;
-  useBold: boolean;
-  useItalic: boolean;
+  headerText?: string;
+  headerFormatting?: string;
+  footerText?: string;
+  footerFormatting?: string;
+  fieldSeparator?: string;
+  useNewlineAfterHeader?: boolean;
+  useNewlineBeforeFooter?: boolean;
   maxLength?: number;
   extractionPrompt?: string;
+  customFields?: TemplateCustomField[];
 }
 
 const entityTypes = [
@@ -161,6 +180,24 @@ const templateTypes = [
   { value: 'custom', label: 'مخصص', description: 'قالب مخصص' },
 ];
 
+const formattingOptions = [
+  { value: 'none', label: 'بدون تنسيق', example: 'نص عادي' },
+  { value: 'bold', label: 'عريض', example: '**نص عريض**' },
+  { value: 'italic', label: 'مائل', example: '__نص مائل__' },
+  { value: 'code', label: 'كود', example: '`نص كود`' },
+  { value: 'quote', label: 'اقتباس', example: '> اقتباس' },
+  { value: 'spoiler', label: 'مخفي', example: '||نص مخفي||' },
+  { value: 'strikethrough', label: 'مشطوب', example: '~~نص مشطوب~~' },
+  { value: 'underline', label: 'تحته خط', example: '<u>نص</u>' },
+];
+
+const fieldTypes = [
+  { value: 'extracted', label: 'مستخرج بالذكاء الاصطناعي', description: 'يتم استخراجه من النص' },
+  { value: 'summary', label: 'الملخص', description: 'نتيجة التلخيص من المعالجة السابقة' },
+  { value: 'date_today', label: 'تاريخ اليوم', description: 'تاريخ اليوم الحالي تلقائياً' },
+  { value: 'static', label: 'نص ثابت', description: 'قيمة ثابتة تحددها أنت' },
+];
+
 export default function AIRulesPage() {
   const queryClient = useQueryClient();
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
@@ -210,20 +247,37 @@ export default function AIRulesPage() {
 
   const [templateForm, setTemplateForm] = useState<Partial<PublishingTemplate>>({
     name: '',
-    templateType: 'news',
+    templateType: 'custom',
     isDefault: false,
-    headerTemplate: '',
-    bodyTemplate: '{summary}',
-    footerTemplate: '',
-    extractFields: [],
-    useMarkdown: true,
-    useBold: true,
-    useItalic: false,
+    headerText: '',
+    headerFormatting: 'none',
+    footerText: '',
+    footerFormatting: 'none',
+    fieldSeparator: '\n',
+    useNewlineAfterHeader: true,
+    useNewlineBeforeFooter: true,
     maxLength: undefined,
-    extractionPrompt: ''
+    extractionPrompt: '',
+    customFields: []
   });
 
-  const [extractFieldInput, setExtractFieldInput] = useState('');
+  const [currentField, setCurrentField] = useState<Partial<TemplateCustomField>>({
+    fieldName: '',
+    fieldLabel: '',
+    extractionInstructions: '',
+    defaultValue: '',
+    useDefaultIfEmpty: true,
+    formatting: 'none',
+    displayOrder: 0,
+    showLabel: false,
+    labelSeparator: ': ',
+    prefix: '',
+    suffix: '',
+    fieldType: 'extracted',
+    isActive: true
+  });
+
+  const [editingFieldIndex, setEditingFieldIndex] = useState<number | null>(null);
   
   const [editingEntity, setEditingEntity] = useState<number | null>(null);
   const [editingContext, setEditingContext] = useState<number | null>(null);
@@ -422,19 +476,39 @@ export default function AIRulesPage() {
   const resetTemplateForm = () => {
     setTemplateForm({
       name: '',
-      templateType: 'news',
+      templateType: 'custom',
       isDefault: false,
-      headerTemplate: '',
-      bodyTemplate: '{summary}',
-      footerTemplate: '',
-      extractFields: [],
-      useMarkdown: true,
-      useBold: true,
-      useItalic: false,
+      headerText: '',
+      headerFormatting: 'none',
+      footerText: '',
+      footerFormatting: 'none',
+      fieldSeparator: '\n',
+      useNewlineAfterHeader: true,
+      useNewlineBeforeFooter: true,
       maxLength: undefined,
-      extractionPrompt: ''
+      extractionPrompt: '',
+      customFields: []
     });
-    setExtractFieldInput('');
+    resetCurrentField();
+  };
+
+  const resetCurrentField = () => {
+    setCurrentField({
+      fieldName: '',
+      fieldLabel: '',
+      extractionInstructions: '',
+      defaultValue: '',
+      useDefaultIfEmpty: true,
+      formatting: 'none',
+      displayOrder: 0,
+      showLabel: false,
+      labelSeparator: ': ',
+      prefix: '',
+      suffix: '',
+      fieldType: 'extracted',
+      isActive: true
+    });
+    setEditingFieldIndex(null);
   };
 
   const handleSubmitEntity = () => {
@@ -493,24 +567,84 @@ export default function AIRulesPage() {
       return;
     }
 
+    if (!templateForm.customFields || templateForm.customFields.length === 0) {
+      toast.error("يرجى إضافة حقل واحد على الأقل");
+      return;
+    }
+
     const data = { ...templateForm, taskId: selectedTaskId };
     createTemplateMutation.mutate(data);
   };
 
-  const handleAddExtractField = () => {
-    if (extractFieldInput.trim()) {
+  const handleAddCustomField = () => {
+    if (!currentField.fieldName || !currentField.fieldLabel) {
+      toast.error("يرجى ملء اسم الحقل والعنوان");
+      return;
+    }
+
+    if (currentField.fieldType === 'extracted' && !currentField.extractionInstructions) {
+      toast.error("يرجى إضافة تعليمات الاستخراج للحقل المستخرج بالذكاء الاصطناعي");
+      return;
+    }
+
+    const newField: TemplateCustomField = {
+      fieldName: currentField.fieldName || '',
+      fieldLabel: currentField.fieldLabel || '',
+      extractionInstructions: currentField.extractionInstructions || '',
+      defaultValue: currentField.defaultValue || '',
+      useDefaultIfEmpty: currentField.useDefaultIfEmpty ?? true,
+      formatting: currentField.formatting || 'none',
+      displayOrder: (templateForm.customFields?.length || 0),
+      showLabel: currentField.showLabel ?? false,
+      labelSeparator: currentField.labelSeparator || ': ',
+      prefix: currentField.prefix || '',
+      suffix: currentField.suffix || '',
+      fieldType: currentField.fieldType || 'extracted',
+      isActive: true
+    };
+
+    if (editingFieldIndex !== null) {
+      const updatedFields = [...(templateForm.customFields || [])];
+      updatedFields[editingFieldIndex] = newField;
+      setTemplateForm({ ...templateForm, customFields: updatedFields });
+      toast.success("تم تحديث الحقل");
+    } else {
       setTemplateForm({
         ...templateForm,
-        extractFields: [...(templateForm.extractFields || []), extractFieldInput.trim()]
+        customFields: [...(templateForm.customFields || []), newField]
       });
-      setExtractFieldInput('');
+      toast.success("تم إضافة الحقل");
+    }
+    
+    resetCurrentField();
+  };
+
+  const handleEditCustomField = (index: number) => {
+    const field = templateForm.customFields?.[index];
+    if (field) {
+      setCurrentField(field);
+      setEditingFieldIndex(index);
     }
   };
 
-  const handleRemoveExtractField = (index: number) => {
-    const newFields = [...(templateForm.extractFields || [])];
+  const handleRemoveCustomField = (index: number) => {
+    const newFields = [...(templateForm.customFields || [])];
     newFields.splice(index, 1);
-    setTemplateForm({ ...templateForm, extractFields: newFields });
+    // Reorder
+    newFields.forEach((f, i) => f.displayOrder = i);
+    setTemplateForm({ ...templateForm, customFields: newFields });
+    toast.success("تم حذف الحقل");
+  };
+
+  const handleMoveField = (index: number, direction: 'up' | 'down') => {
+    const fields = [...(templateForm.customFields || [])];
+    const newIndex = direction === 'up' ? index - 1 : index + 1;
+    
+    if (newIndex < 0 || newIndex >= fields.length) return;
+    
+    [fields[index], fields[newIndex]] = [fields[newIndex], fields[index]];
+    fields.forEach((f, i) => f.displayOrder = i);
+    setTemplateForm({ ...templateForm, customFields: fields });
   };
 
   return (
@@ -1342,16 +1476,17 @@ export default function AIRulesPage() {
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center gap-2">
                     <Plus className="h-5 w-5" />
-                    إضافة قالب نشر جديد
+                    إنشاء قالب نشر مخصص
                   </CardTitle>
                   <CardDescription>
-                    إنشاء قوالب لتنسيق المحتوى المنشور تلقائياً
+                    أنشئ قالب نشر مع حقول مخصصة يتم استخراجها بالذكاء الاصطناعي وتنسيقات متعددة
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-6">
+                  {/* Basic Template Info */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label>اسم القالب</Label>
+                      <Label>اسم القالب *</Label>
                       <Input
                         value={templateForm.name}
                         onChange={(e) => setTemplateForm({ ...templateForm, name: e.target.value })}
@@ -1371,10 +1506,7 @@ export default function AIRulesPage() {
                         <SelectContent>
                           {templateTypes.map((type) => (
                             <SelectItem key={type.value} value={type.value}>
-                              <div>
-                                <div className="font-medium">{type.label}</div>
-                                <div className="text-xs text-muted-foreground">{type.description}</div>
-                              </div>
+                              {type.label}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -1382,88 +1514,300 @@ export default function AIRulesPage() {
                     </div>
                   </div>
 
-                  <div>
-                    <Label>رأس القالب</Label>
-                    <Input
-                      value={templateForm.headerTemplate}
-                      onChange={(e) => setTemplateForm({ ...templateForm, headerTemplate: e.target.value })}
-                      placeholder="مثال: 🔴 {news_type} | {date}"
-                      className="mt-1"
-                      dir="ltr"
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      المتغيرات المتاحة: {'{news_type}'}, {'{date}'}, {'{time}'}
-                    </p>
-                  </div>
-
-                  <div>
-                    <Label>جسم القالب</Label>
-                    <Textarea
-                      value={templateForm.bodyTemplate}
-                      onChange={(e) => setTemplateForm({ ...templateForm, bodyTemplate: e.target.value })}
-                      placeholder="{summary}"
-                      className="mt-1 min-h-[100px]"
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      المتغير الرئيسي: {'{summary}'}
-                    </p>
-                  </div>
-
-                  <div>
-                    <Label>تذييل القالب</Label>
-                    <Input
-                      value={templateForm.footerTemplate}
-                      onChange={(e) => setTemplateForm({ ...templateForm, footerTemplate: e.target.value })}
-                      placeholder="مثال: 📍 {location} | المصدر: {source}"
-                      className="mt-1"
-                      dir="ltr"
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      المتغيرات المتاحة: {'{location}'}, {'{source}'}, {'{author}'}
-                    </p>
-                  </div>
-
-                  <div>
-                    <Label>حقول الاستخراج</Label>
-                    <div className="flex gap-2 mt-1">
-                      <Input
-                        value={extractFieldInput}
-                        onChange={(e) => setExtractFieldInput(e.target.value)}
-                        placeholder="اسم الحقل"
-                        onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddExtractField())}
-                      />
-                      <Button type="button" onClick={handleAddExtractField} variant="outline">
-                        <Plus className="h-4 w-4" />
-                      </Button>
+                  {/* Header Section */}
+                  <div className="p-4 border rounded-lg bg-muted/30">
+                    <h4 className="font-medium mb-3">رأس القالب (اختياري)</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="md:col-span-2">
+                        <Label>نص الرأس</Label>
+                        <Input
+                          value={templateForm.headerText || ''}
+                          onChange={(e) => setTemplateForm({ ...templateForm, headerText: e.target.value })}
+                          placeholder="مثال: عاجل | أخبار اليوم"
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label>تنسيق الرأس</Label>
+                        <Select
+                          value={templateForm.headerFormatting || 'none'}
+                          onValueChange={(value) => setTemplateForm({ ...templateForm, headerFormatting: value })}
+                        >
+                          <SelectTrigger className="mt-1">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {formattingOptions.map((fmt) => (
+                              <SelectItem key={fmt.value} value={fmt.value}>
+                                {fmt.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
-                    {templateForm.extractFields && templateForm.extractFields.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {templateForm.extractFields.map((field, index) => (
-                          <Badge key={index} variant="secondary" className="flex items-center gap-1">
-                            {field}
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveExtractField(index)}
-                              className="ml-1 hover:text-red-600"
-                            >
-                              ×
-                            </button>
-                          </Badge>
+                  </div>
+
+                  {/* Custom Fields Section */}
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-medium mb-3 flex items-center gap-2">
+                      <Zap className="h-4 w-4 text-yellow-500" />
+                      الحقول المخصصة
+                    </h4>
+                    
+                    {/* Field Editor */}
+                    <div className="space-y-4 p-4 bg-muted/30 rounded-lg mb-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label>اسم الحقل (للنظام) *</Label>
+                          <Input
+                            value={currentField.fieldName || ''}
+                            onChange={(e) => setCurrentField({ ...currentField, fieldName: e.target.value.replace(/\s/g, '_') })}
+                            placeholder="مثال: news_type"
+                            className="mt-1 font-mono"
+                            dir="ltr"
+                          />
+                        </div>
+                        <div>
+                          <Label>عنوان الحقل (للعرض) *</Label>
+                          <Input
+                            value={currentField.fieldLabel || ''}
+                            onChange={(e) => setCurrentField({ ...currentField, fieldLabel: e.target.value })}
+                            placeholder="مثال: نوع الخبر"
+                            className="mt-1"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label>نوع الحقل</Label>
+                          <Select
+                            value={currentField.fieldType || 'extracted'}
+                            onValueChange={(value) => setCurrentField({ ...currentField, fieldType: value })}
+                          >
+                            <SelectTrigger className="mt-1">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {fieldTypes.map((ft) => (
+                                <SelectItem key={ft.value} value={ft.value}>
+                                  <div>
+                                    <div className="font-medium">{ft.label}</div>
+                                    <div className="text-xs text-muted-foreground">{ft.description}</div>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label>التنسيق</Label>
+                          <Select
+                            value={currentField.formatting || 'none'}
+                            onValueChange={(value) => setCurrentField({ ...currentField, formatting: value })}
+                          >
+                            <SelectTrigger className="mt-1">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {formattingOptions.map((fmt) => (
+                                <SelectItem key={fmt.value} value={fmt.value}>
+                                  <div className="flex items-center gap-2">
+                                    <span>{fmt.label}</span>
+                                    <code className="text-xs bg-muted px-1 rounded">{fmt.example}</code>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      {currentField.fieldType === 'extracted' && (
+                        <div>
+                          <Label>تعليمات الاستخراج بالذكاء الاصطناعي *</Label>
+                          <Textarea
+                            value={currentField.extractionInstructions || ''}
+                            onChange={(e) => setCurrentField({ ...currentField, extractionInstructions: e.target.value })}
+                            placeholder="مثال: استخرج نوع الخبر من النص (سياسي، اقتصادي، رياضي، الخ)"
+                            className="mt-1 min-h-[80px]"
+                          />
+                        </div>
+                      )}
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <Label>القيمة الافتراضية</Label>
+                          <Input
+                            value={currentField.defaultValue || ''}
+                            onChange={(e) => setCurrentField({ ...currentField, defaultValue: e.target.value })}
+                            placeholder="قيمة إذا فشل الاستخراج"
+                            className="mt-1"
+                          />
+                        </div>
+                        <div>
+                          <Label>بادئة (قبل القيمة)</Label>
+                          <Input
+                            value={currentField.prefix || ''}
+                            onChange={(e) => setCurrentField({ ...currentField, prefix: e.target.value })}
+                            placeholder="مثال: emoji"
+                            className="mt-1"
+                          />
+                        </div>
+                        <div>
+                          <Label>لاحقة (بعد القيمة)</Label>
+                          <Input
+                            value={currentField.suffix || ''}
+                            onChange={(e) => setCurrentField({ ...currentField, suffix: e.target.value })}
+                            placeholder="مثال: نص إضافي"
+                            className="mt-1"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-4">
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            checked={currentField.showLabel ?? false}
+                            onCheckedChange={(checked) => setCurrentField({ ...currentField, showLabel: checked })}
+                          />
+                          <Label className="text-sm">إظهار العنوان</Label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            checked={currentField.useDefaultIfEmpty ?? true}
+                            onCheckedChange={(checked) => setCurrentField({ ...currentField, useDefaultIfEmpty: checked })}
+                          />
+                          <Label className="text-sm">استخدام الافتراضي إذا فارغ</Label>
+                        </div>
+                      </div>
+
+                      <Button 
+                        type="button" 
+                        onClick={handleAddCustomField}
+                        className="w-full"
+                        variant={editingFieldIndex !== null ? "default" : "outline"}
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        {editingFieldIndex !== null ? 'تحديث الحقل' : 'إضافة الحقل'}
+                      </Button>
+                      
+                      {editingFieldIndex !== null && (
+                        <Button 
+                          type="button" 
+                          onClick={resetCurrentField}
+                          variant="ghost"
+                          className="w-full"
+                        >
+                          إلغاء التعديل
+                        </Button>
+                      )}
+                    </div>
+
+                    {/* Added Fields List */}
+                    {templateForm.customFields && templateForm.customFields.length > 0 && (
+                      <div className="space-y-2">
+                        <Label className="text-sm text-muted-foreground">الحقول المضافة ({templateForm.customFields.length})</Label>
+                        {templateForm.customFields.map((field, index) => (
+                          <div key={index} className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
+                            <div className="flex flex-col gap-1">
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-5 w-5"
+                                onClick={() => handleMoveField(index, 'up')}
+                                disabled={index === 0}
+                              >
+                                <ChevronDown className="h-3 w-3 rotate-180" />
+                              </Button>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-5 w-5"
+                                onClick={() => handleMoveField(index, 'down')}
+                                disabled={index === templateForm.customFields!.length - 1}
+                              >
+                                <ChevronDown className="h-3 w-3" />
+                              </Button>
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <span className="font-medium">{field.fieldLabel}</span>
+                                <Badge variant="outline" className="text-xs">{field.fieldName}</Badge>
+                                <Badge variant="secondary" className="text-xs">
+                                  {fieldTypes.find(ft => ft.value === field.fieldType)?.label}
+                                </Badge>
+                                {field.formatting !== 'none' && (
+                                  <Badge className="text-xs">
+                                    {formattingOptions.find(f => f.value === field.formatting)?.label}
+                                  </Badge>
+                                )}
+                              </div>
+                              {field.extractionInstructions && (
+                                <p className="text-xs text-muted-foreground mt-1 truncate max-w-md">
+                                  {field.extractionInstructions}
+                                </p>
+                              )}
+                            </div>
+                            <div className="flex gap-1">
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() => handleEditCustomField(index)}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="text-red-600"
+                                onClick={() => handleRemoveCustomField(index)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
                         ))}
                       </div>
                     )}
                   </div>
 
-                  <div>
-                    <Label>تعليمات الاستخراج (اختياري)</Label>
-                    <Textarea
-                      value={templateForm.extractionPrompt}
-                      onChange={(e) => setTemplateForm({ ...templateForm, extractionPrompt: e.target.value })}
-                      placeholder="تعليمات للذكاء الاصطناعي لاستخراج البيانات..."
-                      className="mt-1 min-h-[80px]"
-                    />
+                  {/* Footer Section */}
+                  <div className="p-4 border rounded-lg bg-muted/30">
+                    <h4 className="font-medium mb-3">تذييل القالب (اختياري)</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="md:col-span-2">
+                        <Label>نص التذييل</Label>
+                        <Input
+                          value={templateForm.footerText || ''}
+                          onChange={(e) => setTemplateForm({ ...templateForm, footerText: e.target.value })}
+                          placeholder="مثال: المصدر: قناتنا الإخبارية"
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label>تنسيق التذييل</Label>
+                        <Select
+                          value={templateForm.footerFormatting || 'none'}
+                          onValueChange={(value) => setTemplateForm({ ...templateForm, footerFormatting: value })}
+                        >
+                          <SelectTrigger className="mt-1">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {formattingOptions.map((fmt) => (
+                              <SelectItem key={fmt.value} value={fmt.value}>
+                                {fmt.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
                   </div>
 
+                  {/* Settings */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label>الحد الأقصى للطول (اختياري)</Label>
@@ -1476,54 +1820,51 @@ export default function AIRulesPage() {
                         min={0}
                       />
                     </div>
+                    <div>
+                      <Label>الفاصل بين الحقول</Label>
+                      <Select
+                        value={templateForm.fieldSeparator || '\n'}
+                        onValueChange={(value) => setTemplateForm({ ...templateForm, fieldSeparator: value })}
+                      >
+                        <SelectTrigger className="mt-1">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value={'\n'}>سطر جديد</SelectItem>
+                          <SelectItem value={'\n\n'}>سطرين</SelectItem>
+                          <SelectItem value={' | '}>شريط |</SelectItem>
+                          <SelectItem value={' - '}>شرطة -</SelectItem>
+                          <SelectItem value={' '}>مسافة</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-6">
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={templateForm.isDefault}
-                        onCheckedChange={(checked) => setTemplateForm({ ...templateForm, isDefault: checked })}
-                      />
-                      <Label>قالب افتراضي</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={templateForm.useMarkdown}
-                        onCheckedChange={(checked) => setTemplateForm({ ...templateForm, useMarkdown: checked })}
-                      />
-                      <Label>استخدام Markdown</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={templateForm.useBold}
-                        onCheckedChange={(checked) => setTemplateForm({ ...templateForm, useBold: checked })}
-                      />
-                      <Label>نص عريض</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={templateForm.useItalic}
-                        onCheckedChange={(checked) => setTemplateForm({ ...templateForm, useItalic: checked })}
-                      />
-                      <Label>نص مائل</Label>
-                    </div>
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      checked={templateForm.isDefault ?? false}
+                      onCheckedChange={(checked) => setTemplateForm({ ...templateForm, isDefault: checked })}
+                    />
+                    <Label>تعيين كقالب افتراضي</Label>
                   </div>
 
                   <Button
                     onClick={handleSubmitTemplate}
                     disabled={createTemplateMutation.isPending}
                     className="w-full"
+                    size="lg"
                   >
                     {createTemplateMutation.isPending && <Loader className="h-4 w-4 mr-2 animate-spin" />}
-                    إضافة القالب
+                    إنشاء القالب
                   </Button>
                 </CardContent>
               </Card>
 
+              {/* Existing Templates List */}
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
                   <FileText className="h-5 w-5 text-primary" />
-                  القوالب المضافة ({publishingTemplates.length})
+                  القوالب المحفوظة ({publishingTemplates.length})
                 </h3>
                 
                 {loadingTemplates ? (
@@ -1533,7 +1874,7 @@ export default function AIRulesPage() {
                 ) : publishingTemplates.length === 0 ? (
                   <Card className="p-8 text-center text-muted-foreground">
                     <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>لا توجد قوالب نشر. أضف قالب جديد للبدء.</p>
+                    <p>لا توجد قوالب نشر. أنشئ قالب جديد للبدء.</p>
                   </Card>
                 ) : (
                   <div className="grid gap-3">
@@ -1550,23 +1891,48 @@ export default function AIRulesPage() {
                                 <Badge>افتراضي</Badge>
                               )}
                             </div>
-                            <div className="flex flex-wrap items-center gap-2 mb-2">
-                              {template.useMarkdown && <Badge variant="secondary">Markdown</Badge>}
-                              {template.useBold && <Badge variant="secondary">عريض</Badge>}
-                              {template.useItalic && <Badge variant="secondary">مائل</Badge>}
-                              {template.maxLength && <Badge variant="outline">الحد: {template.maxLength}</Badge>}
-                            </div>
-                            {template.headerTemplate && (
+                            
+                            {template.headerText && (
                               <div className="text-sm mb-1">
                                 <span className="text-muted-foreground">الرأس: </span>
-                                <code className="bg-muted px-1 rounded">{template.headerTemplate}</code>
+                                <code className="bg-muted px-1 rounded">{template.headerText}</code>
+                                {template.headerFormatting !== 'none' && (
+                                  <Badge variant="secondary" className="ml-2 text-xs">
+                                    {formattingOptions.find(f => f.value === template.headerFormatting)?.label}
+                                  </Badge>
+                                )}
                               </div>
                             )}
-                            {template.footerTemplate && (
+                            
+                            {template.customFields && template.customFields.length > 0 && (
+                              <div className="text-sm mb-1">
+                                <span className="text-muted-foreground">الحقول: </span>
+                                <div className="flex flex-wrap gap-1 mt-1">
+                                  {template.customFields.map((field: any, idx: number) => (
+                                    <Badge key={idx} variant="outline" className="text-xs">
+                                      {field.fieldLabel}
+                                      {field.formatting !== 'none' && (
+                                        <span className="ml-1 text-primary">
+                                          ({formattingOptions.find(f => f.value === field.formatting)?.label})
+                                        </span>
+                                      )}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                            
+                            {template.footerText && (
                               <div className="text-sm">
                                 <span className="text-muted-foreground">التذييل: </span>
-                                <code className="bg-muted px-1 rounded">{template.footerTemplate}</code>
+                                <code className="bg-muted px-1 rounded">{template.footerText}</code>
                               </div>
+                            )}
+                            
+                            {template.maxLength && (
+                              <Badge variant="outline" className="mt-2 text-xs">
+                                الحد الأقصى: {template.maxLength} حرف
+                              </Badge>
                             )}
                           </div>
                           <Button
