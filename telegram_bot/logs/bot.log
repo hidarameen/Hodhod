@@ -11297,3 +11297,105 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-04 02:27:16,184 - task_4 - INFO - Message forwarded to 1/1 targets
 2025-12-04 02:27:16,186 - forwarding_engine - INFO - [2025-12-04 02:27:16.186] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
 2025-12-04 02:27:16,188 - main - INFO - [2025-12-04 02:27:16.187] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 02:29:48,121 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 02:29:48,124 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 02:29:48,130 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 02:29:48,133 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 02:29:48,135 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 02:29:48,136 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 02:29:48,141 - main - INFO - [2025-12-04 02:29:48.141] [INFO] [main::entry] Bot script started | {}
+2025-12-04 02:29:48,141 - main - INFO - [2025-12-04 02:29:48.141] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 02:29:48,141 - main - WARNING - [2025-12-04 02:29:48.141] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-04 02:29:48,141 - main - INFO - [2025-12-04 02:29:48.141] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-04 02:29:48,142 - main - INFO - [2025-12-04 02:29:48.141] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-04 02:29:48,142 - main - INFO - [2025-12-04 02:29:48.142] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-04 02:29:48,142 - queue_system - INFO - Queue manager stopped | {}
+2025-12-04 02:29:48,142 - main - INFO - [2025-12-04 02:29:48.142] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-04 02:29:48,142 - main - INFO - [2025-12-04 02:29:48.142] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-04 02:29:48,142 - main - INFO - [2025-12-04 02:29:48.142] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-04 02:29:48,142 - main - INFO - [2025-12-04 02:29:48.142] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-04 02:29:54,395 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 02:29:54,395 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 02:29:54,398 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 02:29:54,400 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 02:29:54,401 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 02:29:54,402 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 02:29:54,404 - main - INFO - [2025-12-04 02:29:54.404] [INFO] [main::entry] Bot script started | {}
+2025-12-04 02:29:54,404 - main - INFO - [2025-12-04 02:29:54.404] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 02:29:54,404 - main - WARNING - [2025-12-04 02:29:54.404] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-04 02:29:54,404 - main - INFO - [2025-12-04 02:29:54.404] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-04 02:29:54,404 - main - INFO - [2025-12-04 02:29:54.404] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-04 02:29:54,404 - main - INFO - [2025-12-04 02:29:54.404] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-04 02:29:54,404 - queue_system - INFO - Queue manager stopped | {}
+2025-12-04 02:29:54,404 - main - INFO - [2025-12-04 02:29:54.404] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-04 02:29:54,405 - main - INFO - [2025-12-04 02:29:54.405] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-04 02:29:54,405 - main - INFO - [2025-12-04 02:29:54.405] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-04 02:29:54,405 - main - INFO - [2025-12-04 02:29:54.405] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-04 02:30:00,685 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 02:30:00,685 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 02:30:00,688 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 02:30:00,690 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 02:30:00,691 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 02:30:00,693 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 02:30:00,695 - main - INFO - [2025-12-04 02:30:00.695] [INFO] [main::entry] Bot script started | {}
+2025-12-04 02:30:00,696 - main - INFO - [2025-12-04 02:30:00.696] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 02:30:00,696 - main - WARNING - [2025-12-04 02:30:00.696] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-04 02:30:00,696 - main - INFO - [2025-12-04 02:30:00.696] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-04 02:30:00,696 - main - INFO - [2025-12-04 02:30:00.696] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-04 02:30:00,696 - main - INFO - [2025-12-04 02:30:00.696] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-04 02:30:00,696 - queue_system - INFO - Queue manager stopped | {}
+2025-12-04 02:30:00,696 - main - INFO - [2025-12-04 02:30:00.696] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-04 02:30:00,696 - main - INFO - [2025-12-04 02:30:00.696] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-04 02:30:00,696 - main - INFO - [2025-12-04 02:30:00.696] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-04 02:30:00,696 - main - INFO - [2025-12-04 02:30:00.696] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-04 02:30:07,128 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 02:30:07,129 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 02:30:07,133 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 02:30:07,135 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 02:30:07,136 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 02:30:07,138 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 02:30:07,142 - main - INFO - [2025-12-04 02:30:07.142] [INFO] [main::entry] Bot script started | {}
+2025-12-04 02:30:07,142 - main - INFO - [2025-12-04 02:30:07.142] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 02:30:07,143 - main - WARNING - [2025-12-04 02:30:07.143] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-04 02:30:07,143 - main - INFO - [2025-12-04 02:30:07.143] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-04 02:30:07,143 - main - INFO - [2025-12-04 02:30:07.143] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-04 02:30:07,143 - main - INFO - [2025-12-04 02:30:07.143] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-04 02:30:07,143 - queue_system - INFO - Queue manager stopped | {}
+2025-12-04 02:30:07,143 - main - INFO - [2025-12-04 02:30:07.143] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-04 02:30:07,143 - main - INFO - [2025-12-04 02:30:07.143] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-04 02:30:07,143 - main - INFO - [2025-12-04 02:30:07.143] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-04 02:30:07,143 - main - INFO - [2025-12-04 02:30:07.143] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-04 02:30:13,399 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 02:30:13,399 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 02:30:13,402 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 02:30:13,404 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 02:30:13,405 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 02:30:13,406 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 02:30:13,408 - main - INFO - [2025-12-04 02:30:13.408] [INFO] [main::entry] Bot script started | {}
+2025-12-04 02:30:13,408 - main - INFO - [2025-12-04 02:30:13.408] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 02:30:13,408 - main - WARNING - [2025-12-04 02:30:13.408] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-04 02:30:13,408 - main - INFO - [2025-12-04 02:30:13.408] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-04 02:30:13,408 - main - INFO - [2025-12-04 02:30:13.408] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-04 02:30:13,408 - main - INFO - [2025-12-04 02:30:13.408] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-04 02:30:13,409 - queue_system - INFO - Queue manager stopped | {}
+2025-12-04 02:30:13,409 - main - INFO - [2025-12-04 02:30:13.409] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-04 02:30:13,409 - main - INFO - [2025-12-04 02:30:13.409] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-04 02:30:13,409 - main - INFO - [2025-12-04 02:30:13.409] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-04 02:30:13,409 - main - INFO - [2025-12-04 02:30:13.409] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
+2025-12-04 02:30:19,676 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 02:30:19,676 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 02:30:19,680 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 02:30:19,682 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 02:30:19,683 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 02:30:19,684 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 02:30:19,686 - main - INFO - [2025-12-04 02:30:19.686] [INFO] [main::entry] Bot script started | {}
+2025-12-04 02:30:19,686 - main - INFO - [2025-12-04 02:30:19.686] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 02:30:19,687 - main - WARNING - [2025-12-04 02:30:19.687] [ERROR] [main::startup] ❌ Invalid configuration. Check your environment variables | {}
+2025-12-04 02:30:19,687 - main - INFO - [2025-12-04 02:30:19.687] [INFO] [main::cleanup] Cleaning up... | {}
+2025-12-04 02:30:19,687 - main - INFO - [2025-12-04 02:30:19.687] [INFO] [main::shutdown] Starting graceful shutdown... | {}
+2025-12-04 02:30:19,687 - main - INFO - [2025-12-04 02:30:19.687] [INFO] [queue_manager::stop] Stopping queue manager... | {}
+2025-12-04 02:30:19,687 - queue_system - INFO - Queue manager stopped | {}
+2025-12-04 02:30:19,687 - main - INFO - [2025-12-04 02:30:19.687] [INFO] [queue_manager::stop] Queue manager stopped | {}
+2025-12-04 02:30:19,687 - main - INFO - [2025-12-04 02:30:19.687] [INFO] [database::disconnect] Disconnecting database... | {}
+2025-12-04 02:30:19,687 - main - INFO - [2025-12-04 02:30:19.687] [INFO] [database::disconnect] Database disconnected | {}
+2025-12-04 02:30:19,687 - main - INFO - [2025-12-04 02:30:19.687] [INFO] [main::shutdown] ✅ Bot shutdown completed | {}
