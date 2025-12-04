@@ -20,6 +20,8 @@ import type {
   InsertAiProvider,
   AiModel,
   InsertAiModel,
+  AiUsageStats,
+  InsertAiUsageStats,
   UserbotSession,
   InsertUserbotSession,
   GitHubSettings,
@@ -319,6 +321,153 @@ export class DbStorage implements IStorage {
 
   async createAiModel(model: InsertAiModel): Promise<AiModel> {
     const result = await database.insert(schema.aiModels).values(model).returning();
+    return result[0];
+  }
+
+  async getAiModel(id: number): Promise<AiModel | undefined> {
+    const result = await database.select().from(schema.aiModels).where(eq(schema.aiModels.id, id)).limit(1);
+    return result[0];
+  }
+
+  async updateModel(id: number, data: Partial<InsertAiModel>): Promise<AiModel | undefined> {
+    const result = await database
+      .update(schema.aiModels)
+      .set(data)
+      .where(eq(schema.aiModels.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async getModelsByProvider(providerId: number): Promise<AiModel[]> {
+    return await database
+      .select()
+      .from(schema.aiModels)
+      .where(eq(schema.aiModels.providerId, providerId));
+  }
+
+  // AI Usage Statistics
+  async getUsageStats(filters: {
+    providerId?: number;
+    modelId?: number;
+    taskId?: number;
+    dateFrom?: Date;
+    dateTo?: Date;
+  }): Promise<AiUsageStats[]> {
+    const conditions = [];
+    
+    if (filters.providerId) {
+      conditions.push(eq(schema.aiUsageStats.providerId, filters.providerId));
+    }
+    if (filters.modelId) {
+      conditions.push(eq(schema.aiUsageStats.modelId, filters.modelId));
+    }
+    if (filters.taskId) {
+      conditions.push(eq(schema.aiUsageStats.taskId, filters.taskId));
+    }
+    if (filters.dateFrom) {
+      conditions.push(sql`${schema.aiUsageStats.usageDate} >= ${filters.dateFrom}`);
+    }
+    if (filters.dateTo) {
+      conditions.push(sql`${schema.aiUsageStats.usageDate} <= ${filters.dateTo}`);
+    }
+    
+    if (conditions.length === 0) {
+      return await database
+        .select()
+        .from(schema.aiUsageStats)
+        .orderBy(desc(schema.aiUsageStats.usageDate))
+        .limit(100);
+    }
+    
+    return await database
+      .select()
+      .from(schema.aiUsageStats)
+      .where(and(...conditions))
+      .orderBy(desc(schema.aiUsageStats.usageDate))
+      .limit(100);
+  }
+
+  async getUsageStatsSummary(filters: {
+    providerId?: number;
+    dateFrom?: Date;
+    dateTo?: Date;
+  }): Promise<{
+    totalRequests: number;
+    totalTokensInput: number;
+    totalTokensOutput: number;
+    totalCost: string;
+    byModel: Array<{ modelName: string; requests: number; tokens: number }>;
+  }> {
+    const conditions = [];
+    
+    if (filters.providerId) {
+      conditions.push(eq(schema.aiUsageStats.providerId, filters.providerId));
+    }
+    if (filters.dateFrom) {
+      conditions.push(sql`${schema.aiUsageStats.usageDate} >= ${filters.dateFrom}`);
+    }
+    if (filters.dateTo) {
+      conditions.push(sql`${schema.aiUsageStats.usageDate} <= ${filters.dateTo}`);
+    }
+    
+    let stats: AiUsageStats[];
+    if (conditions.length === 0) {
+      stats = await database.select().from(schema.aiUsageStats);
+    } else {
+      stats = await database
+        .select()
+        .from(schema.aiUsageStats)
+        .where(and(...conditions));
+    }
+    
+    let totalRequests = 0;
+    let totalTokensInput = 0;
+    let totalTokensOutput = 0;
+    let totalCost = 0;
+    const modelStats: Record<string, { requests: number; tokens: number }> = {};
+    
+    for (const stat of stats) {
+      totalRequests += stat.requestCount;
+      totalTokensInput += stat.totalTokensInput;
+      totalTokensOutput += stat.totalTokensOutput;
+      totalCost += parseFloat(stat.totalCost || '0');
+      
+      if (!modelStats[stat.modelName]) {
+        modelStats[stat.modelName] = { requests: 0, tokens: 0 };
+      }
+      modelStats[stat.modelName].requests += stat.requestCount;
+      modelStats[stat.modelName].tokens += stat.totalTokensInput + stat.totalTokensOutput;
+    }
+    
+    const byModel = Object.entries(modelStats).map(([modelName, data]) => ({
+      modelName,
+      requests: data.requests,
+      tokens: data.tokens,
+    }));
+    
+    return {
+      totalRequests,
+      totalTokensInput,
+      totalTokensOutput,
+      totalCost: totalCost.toFixed(6),
+      byModel,
+    };
+  }
+
+  async getModelUsageStats(modelId: number): Promise<AiUsageStats[]> {
+    return await database
+      .select()
+      .from(schema.aiUsageStats)
+      .where(eq(schema.aiUsageStats.modelId, modelId))
+      .orderBy(desc(schema.aiUsageStats.usageDate))
+      .limit(30);
+  }
+
+  async recordUsage(data: InsertAiUsageStats): Promise<AiUsageStats> {
+    const result = await database
+      .insert(schema.aiUsageStats)
+      .values(data)
+      .returning();
     return result[0];
   }
 

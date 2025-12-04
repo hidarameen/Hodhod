@@ -288,6 +288,137 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
+  // ============ AI Model Management ============
+  app.get("/api/ai-providers/:providerId/models", async (req: Request, res: Response) => {
+    try {
+      const providerId = parseInt(req.params.providerId);
+      if (isNaN(providerId)) {
+        return res.status(400).json({ error: "Invalid provider ID" });
+      }
+      const models = await storage.getModelsByProvider(providerId);
+      res.json(models);
+    } catch (error) {
+      handleError(res, error, "Failed to get models for provider");
+    }
+  });
+
+  app.put("/api/ai-models/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ error: "Invalid model ID" });
+      }
+      const model = await storage.updateModel(id, req.body);
+      if (!model) {
+        return res.status(404).json({ error: "Model not found" });
+      }
+      res.json(model);
+    } catch (error) {
+      handleError(res, error, "Failed to update AI model");
+    }
+  });
+
+  app.get("/api/ai-models/:id/stats", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ error: "Invalid model ID" });
+      }
+      const stats = await storage.getModelUsageStats(id);
+      res.json(stats);
+    } catch (error) {
+      handleError(res, error, "Failed to get model usage stats");
+    }
+  });
+
+  // ============ AI Usage Statistics ============
+  app.get("/api/ai-usage-stats", async (req: Request, res: Response) => {
+    try {
+      const filters: {
+        providerId?: number;
+        modelId?: number;
+        taskId?: number;
+        dateFrom?: Date;
+        dateTo?: Date;
+      } = {};
+      
+      if (req.query.providerId) {
+        filters.providerId = parseInt(req.query.providerId as string);
+      }
+      if (req.query.modelId) {
+        filters.modelId = parseInt(req.query.modelId as string);
+      }
+      if (req.query.taskId) {
+        filters.taskId = parseInt(req.query.taskId as string);
+      }
+      if (req.query.dateFrom) {
+        filters.dateFrom = new Date(req.query.dateFrom as string);
+      }
+      if (req.query.dateTo) {
+        filters.dateTo = new Date(req.query.dateTo as string);
+      }
+      
+      const stats = await storage.getUsageStats(filters);
+      res.json(stats);
+    } catch (error) {
+      handleError(res, error, "Failed to get usage statistics");
+    }
+  });
+
+  app.get("/api/ai-usage-stats/summary", async (req: Request, res: Response) => {
+    try {
+      const filters: {
+        providerId?: number;
+        dateFrom?: Date;
+        dateTo?: Date;
+      } = {};
+      
+      if (req.query.providerId) {
+        filters.providerId = parseInt(req.query.providerId as string);
+      }
+      if (req.query.dateFrom) {
+        filters.dateFrom = new Date(req.query.dateFrom as string);
+      }
+      if (req.query.dateTo) {
+        filters.dateTo = new Date(req.query.dateTo as string);
+      }
+      
+      const summary = await storage.getUsageStatsSummary(filters);
+      res.json(summary);
+    } catch (error) {
+      handleError(res, error, "Failed to get usage statistics summary");
+    }
+  });
+
+  app.post("/api/ai-usage-stats", async (req: Request, res: Response) => {
+    try {
+      const { providerId, modelId, modelName, taskId, requestCount, totalTokensInput, totalTokensOutput, totalCost, usageDate, avgLatency, errorCount, successCount } = req.body;
+      
+      if (!providerId || !modelName || !usageDate) {
+        return res.status(400).json({ error: "providerId, modelName, and usageDate are required" });
+      }
+      
+      const usage = await storage.recordUsage({
+        providerId,
+        modelId: modelId || null,
+        modelName,
+        taskId: taskId || null,
+        requestCount: requestCount || 1,
+        totalTokensInput: totalTokensInput || 0,
+        totalTokensOutput: totalTokensOutput || 0,
+        totalCost: totalCost || null,
+        usageDate: new Date(usageDate),
+        avgLatency: avgLatency || null,
+        errorCount: errorCount || 0,
+        successCount: successCount || 1,
+      });
+      
+      res.status(201).json(usage);
+    } catch (error) {
+      handleError(res, error, "Failed to record usage statistics");
+    }
+  });
+
   // Settings
   app.get("/api/settings", async (req: Request, res: Response) => {
     try {
