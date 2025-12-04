@@ -13084,3 +13084,356 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-04 16:02:09,400 - main - INFO - [2025-12-04 16:02:09.400] [INFO] [warmup::cached] ✅ اختبار 2 already in peer cache | {}
 2025-12-04 16:02:09,400 - main - INFO - [2025-12-04 16:02:09.400] [INFO] [warmup::complete] ✅ Warmup complete: 2 success, 0 failed | {}
 2025-12-04 16:02:09,400 - main - INFO - [2025-12-04 16:02:09.400] [INFO] [main::idle] Userbot is now running and waiting for messages... | {}
+2025-12-04 16:07:10,402 - main - INFO - [2025-12-04 16:07:10.402] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003226229537', 'chat_title': 'قناة المسيرة الفضائية copy', 'message_id': 3162, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:07:10,402 - main - INFO - [2025-12-04 16:07:10.402] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:07:10,980 - main - INFO - [2025-12-04 16:07:10.980] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:07:10,981 - main - INFO - [2025-12-04 16:07:10.981] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:07:11,145 - main - INFO - [2025-12-04 16:07:11.144] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18145, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:07:11,145 - main - INFO - [2025-12-04 16:07:11.145] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:07:11,415 - main - INFO - [2025-12-04 16:07:11.414] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003226229537', 'match': False} | {}
+2025-12-04 16:07:11,415 - main - INFO - [2025-12-04 16:07:11.415] [INFO] [message_handler::skip] No matching task for chat: قناة المسيرة الفضائية copy | Data: {'chat_id': '-1003226229537'} | {}
+2025-12-04 16:07:12,482 - main - INFO - [2025-12-04 16:07:12.482] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:07:12,483 - main - INFO - [2025-12-04 16:07:12.483] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:07:12,910 - main - INFO - [2025-12-04 16:07:12.910] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:07:12,910 - main - INFO - [2025-12-04 16:07:12.910] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:07:19,242 - main - INFO - [2025-12-04 16:07:19.242] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003136318550', 'chat_title': 'صدى المسيرة copy', 'message_id': 3194, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:07:19,242 - main - INFO - [2025-12-04 16:07:19.242] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:07:19,517 - main - INFO - [2025-12-04 16:07:19.516] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:07:19,518 - main - INFO - [2025-12-04 16:07:19.517] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:07:19,524 - main - INFO - [2025-12-04 16:07:19.524] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003110660765', 'chat_title': 'Test2', 'message_id': 5574, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:07:19,524 - main - INFO - [2025-12-04 16:07:19.524] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:07:19,798 - main - INFO - [2025-12-04 16:07:19.798] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003136318550', 'match': False} | {}
+2025-12-04 16:07:19,798 - main - INFO - [2025-12-04 16:07:19.798] [INFO] [message_handler::skip] No matching task for chat: صدى المسيرة copy | Data: {'chat_id': '-1003136318550'} | {}
+2025-12-04 16:07:19,934 - main - INFO - [2025-12-04 16:07:19.934] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:07:19,935 - main - INFO - [2025-12-04 16:07:19.935] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:07:20,343 - main - INFO - [2025-12-04 16:07:20.343] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003110660765', 'match': False} | {}
+2025-12-04 16:07:20,343 - main - INFO - [2025-12-04 16:07:20.343] [INFO] [message_handler::skip] No matching task for chat: Test2 | Data: {'chat_id': '-1003110660765'} | {}
+2025-12-04 16:07:22,564 - main - INFO - [2025-12-04 16:07:22.563] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003226229537', 'chat_title': 'قناة المسيرة الفضائية copy', 'message_id': 3163, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:07:22,564 - main - INFO - [2025-12-04 16:07:22.564] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:07:22,838 - main - INFO - [2025-12-04 16:07:22.838] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:07:22,839 - main - INFO - [2025-12-04 16:07:22.839] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:07:22,856 - main - INFO - [2025-12-04 16:07:22.856] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18146, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:07:22,856 - main - INFO - [2025-12-04 16:07:22.856] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:07:22,883 - main - INFO - [2025-12-04 16:07:22.883] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2319, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:07:22,883 - main - INFO - [2025-12-04 16:07:22.883] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:07:23,113 - main - INFO - [2025-12-04 16:07:23.113] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003226229537', 'match': False} | {}
+2025-12-04 16:07:23,115 - main - INFO - [2025-12-04 16:07:23.115] [INFO] [message_handler::skip] No matching task for chat: قناة المسيرة الفضائية copy | Data: {'chat_id': '-1003226229537'} | {}
+2025-12-04 16:07:23,128 - main - INFO - [2025-12-04 16:07:23.128] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:07:23,129 - main - INFO - [2025-12-04 16:07:23.128] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:07:23,172 - main - INFO - [2025-12-04 16:07:23.172] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:07:23,172 - main - INFO - [2025-12-04 16:07:23.172] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:07:23,402 - main - INFO - [2025-12-04 16:07:23.402] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:07:23,403 - main - INFO - [2025-12-04 16:07:23.403] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:07:23,462 - main - INFO - [2025-12-04 16:07:23.462] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 16:07:23,463 - main - INFO - [2025-12-04 16:07:23.463] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 16:07:23,464 - main - INFO - [2025-12-04 16:07:23.464] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 16:07:23,466 - forwarding_engine - INFO - [2025-12-04 16:07:23.466] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2319, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:07:23,467 - forwarding_engine - INFO - [2025-12-04 16:07:23.466] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 16:07:23,467 - forwarding_engine - INFO - [2025-12-04 16:07:23.467] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': False, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 16:07:23,471 - forwarding_engine - INFO - [2025-12-04 16:07:23.471] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 16:07:23,471 - forwarding_engine - INFO - [2025-12-04 16:07:23.471] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 16:07:23,472 - forwarding_engine - INFO - [2025-12-04 16:07:23.472] [INFO] [forwarding_engine::_process_message] Text length: 150 chars | {}
+2025-12-04 16:07:23,920 - forwarding_engine - INFO - [2025-12-04 16:07:23.920] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 16:07:24,353 - forwarding_engine - INFO - [2025-12-04 16:07:24.353] [INFO] [forwarding_engine::_process_message] Using model: moonshotai/kimi-k2-instruct | {}
+2025-12-04 16:07:24,790 - forwarding_engine - INFO - [2025-12-04 16:07:24.789] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 16:07:25,222 - forwarding_engine - INFO - [2025-12-04 16:07:25.222] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 16:07:26,089 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 150 | {}
+2025-12-04 16:07:26,094 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 0 | Sentiment: neutral | Keywords: 20 | Time: 0.005s | {}
+2025-12-04 16:07:26,094 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 0 | Sentiment: neutral | {}
+2025-12-04 16:07:26,527 - ai_rule_engine - INFO - [RuleEngine] Loaded 4 entity rules for task 4 from DB | {}
+2025-12-04 16:07:26,527 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 0 | {}
+2025-12-04 16:07:26,961 - ai_rule_engine - INFO - [RuleEngine] Loaded 1 context rules for task 4 from DB | {}
+2025-12-04 16:07:26,962 - ai_rule_engine - INFO - [RuleEngine] Applying 1 context rules | {}
+2025-12-04 16:07:26,962 - ai_rule_engine - INFO - [RuleEngine] Processing rule 2: type=neutralize_negative, instructions=اجعل النص محايد ... | {}
+2025-12-04 16:07:26,962 - ai_rule_engine - INFO - [RuleEngine] Neutralized 0 terms | {}
+2025-12-04 16:07:26,962 - ai_rule_engine - INFO - [RuleEngine] Context rules result: 1 applied, 1 AI instructions | {}
+2025-12-04 16:07:26,962 - ai_rule_engine - INFO - [RuleEngine] Context modifications: 1, AI instructions: 1 | {}
+2025-12-04 16:07:27,250 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 1 | Replacements: 0 | {}
+2025-12-04 16:07:27,251 - ai_pipeline - INFO - [Pipeline] Added 1 context instructions to prompt | {}
+2025-12-04 16:07:27,567 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 500 | Temperature: 0.7 | Input length: 692 chars | {}
+2025-12-04 16:07:27,716 - main - INFO - [2025-12-04 16:07:27.716] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003136318550', 'chat_title': 'صدى المسيرة copy', 'message_id': 3195, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:07:27,716 - main - INFO - [2025-12-04 16:07:27.716] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:07:27,940 - main - INFO - [2025-12-04 16:07:27.940] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003110660765', 'chat_title': 'Test2', 'message_id': 5575, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:07:27,941 - main - INFO - [2025-12-04 16:07:27.941] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:07:27,989 - main - INFO - [2025-12-04 16:07:27.988] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:07:27,990 - main - INFO - [2025-12-04 16:07:27.989] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:07:28,230 - main - INFO - [2025-12-04 16:07:28.230] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:07:28,230 - main - INFO - [2025-12-04 16:07:28.230] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:07:28,262 - main - INFO - [2025-12-04 16:07:28.262] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003136318550', 'match': False} | {}
+2025-12-04 16:07:28,262 - main - INFO - [2025-12-04 16:07:28.262] [INFO] [message_handler::skip] No matching task for chat: صدى المسيرة copy | Data: {'chat_id': '-1003136318550'} | {}
+2025-12-04 16:07:28,519 - main - INFO - [2025-12-04 16:07:28.519] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003110660765', 'match': False} | {}
+2025-12-04 16:07:28,519 - main - INFO - [2025-12-04 16:07:28.519] [INFO] [message_handler::skip] No matching task for chat: Test2 | Data: {'chat_id': '-1003110660765'} | {}
+2025-12-04 16:07:29,124 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 16:07:29,199 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 487 chars | First 100 chars: - حماس تحذّر من أن استمرار التزامن العالمي الصمت تجاه ممارسات التعذيب داخل السجون الإسرائيلية يُعدّ  | {}
+2025-12-04 16:07:29,200 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 487 | {}
+2025-12-04 16:07:29,202 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 0.93 | {}
+2025-12-04 16:07:29,202 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 3.98s | Quality: 0.93 | Original: 150 → Final: 487 chars | {}
+2025-12-04 16:07:29,202 - forwarding_engine - INFO - [2025-12-04 16:07:29.202] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 150, 'final_length': 487, 'stages': 4, 'rules_applied': 1, 'quality_score': 0.9299999999999999, 'total_time': '3.98s'} | {}
+2025-12-04 16:07:29,202 - forwarding_engine - INFO - [2025-12-04 16:07:29.202] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.01s) | {}
+2025-12-04 16:07:29,203 - forwarding_engine - INFO - [2025-12-04 16:07:29.202] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (1.16s) | {}
+2025-12-04 16:07:29,203 - forwarding_engine - INFO - [2025-12-04 16:07:29.203] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (1.95s) | {}
+2025-12-04 16:07:29,203 - forwarding_engine - INFO - [2025-12-04 16:07:29.203] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 16:07:29,611 - task_4 - INFO - AI Pipeline completed | From 150 → 487 chars
+2025-12-04 16:07:30,433 - forwarding_engine - INFO - [2025-12-04 16:07:30.432] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 150, 'processed_length': 487, 'total_reduction': -337, 'reduction_percent': -224, 'final_preview': '- حماس تحذّر من أن استمرار التزامن العالمي الصمت تجاه ممارسات التعذيب داخل السجون الإسرائيلية يُعدّ تفويضاً ضمنياً لاستمرار الانتهاكات.  \n- الحركة ترى'} | {}
+2025-12-04 16:07:30,433 - forwarding_engine - INFO - [2025-12-04 16:07:30.433] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 16:07:30,433 - forwarding_engine - INFO - [2025-12-04 16:07:30.433] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2319, 'has_processed_text': True, 'task_id': 4} | {}
+2025-12-04 16:07:30,704 - forwarding_engine - INFO - [2025-12-04 16:07:30.704] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 16:07:30,705 - forwarding_engine - INFO - [2025-12-04 16:07:30.705] [INFO] [forwarding_engine::_forward_to_target] Applying publishing template as final step... | {}
+2025-12-04 16:07:31,112 - main - INFO - [2025-12-04 16:07:31.112] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003226229537', 'chat_title': 'قناة المسيرة الفضائية copy', 'message_id': 3164, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:07:31,112 - main - INFO - [2025-12-04 16:07:31.112] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:07:31,329 - main - INFO - [2025-12-04 16:07:31.329] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18147, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:07:31,329 - main - INFO - [2025-12-04 16:07:31.329] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:07:31,401 - main - INFO - [2025-12-04 16:07:31.400] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:07:31,401 - main - INFO - [2025-12-04 16:07:31.401] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:07:31,614 - main - INFO - [2025-12-04 16:07:31.614] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:07:31,614 - main - INFO - [2025-12-04 16:07:31.614] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:07:31,690 - main - INFO - [2025-12-04 16:07:31.690] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003226229537', 'match': False} | {}
+2025-12-04 16:07:31,690 - main - INFO - [2025-12-04 16:07:31.690] [INFO] [message_handler::skip] No matching task for chat: قناة المسيرة الفضائية copy | Data: {'chat_id': '-1003226229537'} | {}
+2025-12-04 16:07:31,899 - main - INFO - [2025-12-04 16:07:31.899] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:07:31,899 - main - INFO - [2025-12-04 16:07:31.899] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:07:32,742 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 500 | Temperature: 0.3 | Input length: 1013 chars | {}
+2025-12-04 16:07:33,155 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 16:07:33,156 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 62 chars | First 100 chars: {
+  "رقم_القيد": "",
+  "التصنيف_": "أمني",
+  "المحافظه_": ""
+} | {}
+2025-12-04 16:07:33,157 - forwarding_engine - INFO - [2025-12-04 16:07:33.157] [INFO] [forwarding_engine::_apply_publishing_template] Template applied: تلخيص2 | Data: {'output_length': 519, 'fields_count': 4, 'extracted_count': 4} | {}
+2025-12-04 16:07:33,157 - forwarding_engine - INFO - [2025-12-04 16:07:33.157] [INFO] [forwarding_engine::_forward_to_target] Template applied successfully | Data: {'original_length': 150, 'final_length': 519} | {}
+2025-12-04 16:07:33,363 - forwarding_engine - INFO - [2025-12-04 16:07:33.363] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 150, 'final_length': 593, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 16:07:33,363 - forwarding_engine - INFO - [2025-12-04 16:07:33.363] [INFO] [forwarding_engine::_forward_to_target] Sending text message... | {}
+2025-12-04 16:07:33,736 - forwarding_engine - INFO - [2025-12-04 16:07:33.736] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 16:07:33,736 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 16:07:33,736 - forwarding_engine - INFO - [2025-12-04 16:07:33.736] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 16:07:35,020 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 16:07:35,020 - forwarding_engine - INFO - [2025-12-04 16:07:35.020] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 16:07:35,020 - main - INFO - [2025-12-04 16:07:35.020] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 16:07:36,422 - main - INFO - [2025-12-04 16:07:36.422] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003136318550', 'chat_title': 'صدى المسيرة copy', 'message_id': 3196, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:07:36,422 - main - INFO - [2025-12-04 16:07:36.422] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:07:36,694 - main - INFO - [2025-12-04 16:07:36.694] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:07:36,694 - main - INFO - [2025-12-04 16:07:36.694] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:07:36,695 - main - INFO - [2025-12-04 16:07:36.695] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003110660765', 'chat_title': 'Test2', 'message_id': 5577, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:07:36,695 - main - INFO - [2025-12-04 16:07:36.695] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:07:36,966 - main - INFO - [2025-12-04 16:07:36.966] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003136318550', 'match': False} | {}
+2025-12-04 16:07:36,967 - main - INFO - [2025-12-04 16:07:36.967] [INFO] [message_handler::skip] No matching task for chat: صدى المسيرة copy | Data: {'chat_id': '-1003136318550'} | {}
+2025-12-04 16:07:37,123 - main - INFO - [2025-12-04 16:07:37.123] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:07:37,123 - main - INFO - [2025-12-04 16:07:37.123] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:07:37,550 - main - INFO - [2025-12-04 16:07:37.550] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003110660765', 'match': False} | {}
+2025-12-04 16:07:37,550 - main - INFO - [2025-12-04 16:07:37.550] [INFO] [message_handler::skip] No matching task for chat: Test2 | Data: {'chat_id': '-1003110660765'} | {}
+2025-12-04 16:07:39,721 - main - INFO - [2025-12-04 16:07:39.721] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003226229537', 'chat_title': 'قناة المسيرة الفضائية copy', 'message_id': 3165, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:07:39,721 - main - INFO - [2025-12-04 16:07:39.721] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:07:39,935 - main - INFO - [2025-12-04 16:07:39.935] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18148, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:07:39,935 - main - INFO - [2025-12-04 16:07:39.935] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:07:40,006 - main - INFO - [2025-12-04 16:07:40.005] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:07:40,006 - main - INFO - [2025-12-04 16:07:40.006] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:07:40,207 - main - INFO - [2025-12-04 16:07:40.207] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:07:40,207 - main - INFO - [2025-12-04 16:07:40.207] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:07:40,290 - main - INFO - [2025-12-04 16:07:40.290] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003226229537', 'match': False} | {}
+2025-12-04 16:07:40,291 - main - INFO - [2025-12-04 16:07:40.291] [INFO] [message_handler::skip] No matching task for chat: قناة المسيرة الفضائية copy | Data: {'chat_id': '-1003226229537'} | {}
+2025-12-04 16:07:40,482 - main - INFO - [2025-12-04 16:07:40.482] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:07:40,482 - main - INFO - [2025-12-04 16:07:40.482] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:07:49,444 - main - INFO - [2025-12-04 16:07:49.444] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003136318550', 'chat_title': 'صدى المسيرة copy', 'message_id': 3197, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:07:49,446 - main - INFO - [2025-12-04 16:07:49.445] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:07:49,680 - main - INFO - [2025-12-04 16:07:49.680] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003110660765', 'chat_title': 'Test2', 'message_id': 5578, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:07:49,680 - main - INFO - [2025-12-04 16:07:49.680] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:07:49,720 - main - INFO - [2025-12-04 16:07:49.720] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:07:49,721 - main - INFO - [2025-12-04 16:07:49.721] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:07:49,954 - main - INFO - [2025-12-04 16:07:49.954] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:07:49,954 - main - INFO - [2025-12-04 16:07:49.954] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:07:49,993 - main - INFO - [2025-12-04 16:07:49.993] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003136318550', 'match': False} | {}
+2025-12-04 16:07:49,993 - main - INFO - [2025-12-04 16:07:49.993] [INFO] [message_handler::skip] No matching task for chat: صدى المسيرة copy | Data: {'chat_id': '-1003136318550'} | {}
+2025-12-04 16:07:50,229 - main - INFO - [2025-12-04 16:07:50.229] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003110660765', 'match': False} | {}
+2025-12-04 16:07:50,229 - main - INFO - [2025-12-04 16:07:50.229] [INFO] [message_handler::skip] No matching task for chat: Test2 | Data: {'chat_id': '-1003110660765'} | {}
+2025-12-04 16:09:02,326 - main - INFO - [2025-12-04 16:09:02.326] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003233977303', 'chat_title': 'عاجل | شبكة الفرقان copy', 'message_id': 2877, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:09:02,326 - main - INFO - [2025-12-04 16:09:02.326] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:09:02,601 - main - INFO - [2025-12-04 16:09:02.601] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:09:02,602 - main - INFO - [2025-12-04 16:09:02.602] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:09:02,878 - main - INFO - [2025-12-04 16:09:02.878] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003233977303', 'match': False} | {}
+2025-12-04 16:09:02,878 - main - INFO - [2025-12-04 16:09:02.878] [INFO] [message_handler::skip] No matching task for chat: عاجل | شبكة الفرقان copy | Data: {'chat_id': '-1003233977303'} | {}
+2025-12-04 16:09:03,168 - main - INFO - [2025-12-04 16:09:03.168] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1002542749883', 'chat_title': 'تجريبي 2', 'message_id': 5173, 'message_type': 'other', 'has_text': False, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:09:03,168 - main - INFO - [2025-12-04 16:09:03.168] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:09:03,188 - main - INFO - [2025-12-04 16:09:03.188] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18149, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:09:03,190 - main - INFO - [2025-12-04 16:09:03.190] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:09:03,442 - main - INFO - [2025-12-04 16:09:03.442] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:09:03,443 - main - INFO - [2025-12-04 16:09:03.443] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:09:03,462 - main - INFO - [2025-12-04 16:09:03.462] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:09:03,462 - main - INFO - [2025-12-04 16:09:03.462] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:09:03,717 - main - INFO - [2025-12-04 16:09:03.717] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1002542749883', 'match': False} | {}
+2025-12-04 16:09:03,717 - main - INFO - [2025-12-04 16:09:03.717] [INFO] [message_handler::skip] No matching task for chat: تجريبي 2 | Data: {'chat_id': '-1002542749883'} | {}
+2025-12-04 16:09:03,734 - main - INFO - [2025-12-04 16:09:03.734] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:09:03,734 - main - INFO - [2025-12-04 16:09:03.734] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:09:10,901 - main - INFO - [2025-12-04 16:09:10.901] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003233977303', 'chat_title': 'عاجل | شبكة الفرقان copy', 'message_id': 2878, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:09:10,901 - main - INFO - [2025-12-04 16:09:10.901] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:09:11,141 - main - INFO - [2025-12-04 16:09:11.141] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1002542749883', 'chat_title': 'تجريبي 2', 'message_id': 5174, 'message_type': 'other', 'has_text': False, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:09:11,141 - main - INFO - [2025-12-04 16:09:11.141] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:09:11,148 - main - INFO - [2025-12-04 16:09:11.148] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18150, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:09:11,148 - main - INFO - [2025-12-04 16:09:11.148] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:09:11,186 - main - INFO - [2025-12-04 16:09:11.185] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:09:11,187 - main - INFO - [2025-12-04 16:09:11.186] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:09:11,413 - main - INFO - [2025-12-04 16:09:11.413] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:09:11,414 - main - INFO - [2025-12-04 16:09:11.414] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:09:11,433 - main - INFO - [2025-12-04 16:09:11.433] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:09:11,434 - main - INFO - [2025-12-04 16:09:11.434] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:09:11,472 - main - INFO - [2025-12-04 16:09:11.472] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003233977303', 'match': False} | {}
+2025-12-04 16:09:11,472 - main - INFO - [2025-12-04 16:09:11.472] [INFO] [message_handler::skip] No matching task for chat: عاجل | شبكة الفرقان copy | Data: {'chat_id': '-1003233977303'} | {}
+2025-12-04 16:09:11,686 - main - INFO - [2025-12-04 16:09:11.685] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1002542749883', 'match': False} | {}
+2025-12-04 16:09:11,686 - main - INFO - [2025-12-04 16:09:11.686] [INFO] [message_handler::skip] No matching task for chat: تجريبي 2 | Data: {'chat_id': '-1002542749883'} | {}
+2025-12-04 16:09:11,718 - main - INFO - [2025-12-04 16:09:11.718] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:09:11,718 - main - INFO - [2025-12-04 16:09:11.718] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:09:22,921 - main - INFO - [2025-12-04 16:09:22.920] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003233977303', 'chat_title': 'عاجل | شبكة الفرقان copy', 'message_id': 2879, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:09:22,921 - main - INFO - [2025-12-04 16:09:22.921] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:09:23,151 - main - INFO - [2025-12-04 16:09:23.151] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18151, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:09:23,151 - main - INFO - [2025-12-04 16:09:23.151] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:09:23,173 - main - INFO - [2025-12-04 16:09:23.173] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1002542749883', 'chat_title': 'تجريبي 2', 'message_id': 5175, 'message_type': 'other', 'has_text': False, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:09:23,174 - main - INFO - [2025-12-04 16:09:23.174] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:09:23,205 - main - INFO - [2025-12-04 16:09:23.205] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:09:23,205 - main - INFO - [2025-12-04 16:09:23.205] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:09:23,436 - main - INFO - [2025-12-04 16:09:23.436] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:09:23,437 - main - INFO - [2025-12-04 16:09:23.437] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:09:23,458 - main - INFO - [2025-12-04 16:09:23.458] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:09:23,459 - main - INFO - [2025-12-04 16:09:23.459] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:09:23,490 - main - INFO - [2025-12-04 16:09:23.489] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003233977303', 'match': False} | {}
+2025-12-04 16:09:23,490 - main - INFO - [2025-12-04 16:09:23.490] [INFO] [message_handler::skip] No matching task for chat: عاجل | شبكة الفرقان copy | Data: {'chat_id': '-1003233977303'} | {}
+2025-12-04 16:09:23,709 - main - INFO - [2025-12-04 16:09:23.709] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:09:23,709 - main - INFO - [2025-12-04 16:09:23.709] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:09:23,743 - main - INFO - [2025-12-04 16:09:23.743] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1002542749883', 'match': False} | {}
+2025-12-04 16:09:23,743 - main - INFO - [2025-12-04 16:09:23.743] [INFO] [message_handler::skip] No matching task for chat: تجريبي 2 | Data: {'chat_id': '-1002542749883'} | {}
+2025-12-04 16:09:25,029 - main - INFO - [2025-12-04 16:09:25.029] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003233977303', 'chat_title': 'عاجل | شبكة الفرقان copy', 'message_id': 2880, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:09:25,029 - main - INFO - [2025-12-04 16:09:25.029] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:09:25,314 - main - INFO - [2025-12-04 16:09:25.314] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:09:25,315 - main - INFO - [2025-12-04 16:09:25.315] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:09:25,486 - main - INFO - [2025-12-04 16:09:25.486] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1002542749883', 'chat_title': 'تجريبي 2', 'message_id': 5176, 'message_type': 'other', 'has_text': False, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:09:25,487 - main - INFO - [2025-12-04 16:09:25.487] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:09:25,491 - main - INFO - [2025-12-04 16:09:25.491] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18152, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:09:25,491 - main - INFO - [2025-12-04 16:09:25.491] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:09:25,605 - main - INFO - [2025-12-04 16:09:25.605] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003233977303', 'match': False} | {}
+2025-12-04 16:09:25,606 - main - INFO - [2025-12-04 16:09:25.606] [INFO] [message_handler::skip] No matching task for chat: عاجل | شبكة الفرقان copy | Data: {'chat_id': '-1003233977303'} | {}
+2025-12-04 16:09:25,763 - main - INFO - [2025-12-04 16:09:25.763] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:09:25,763 - main - INFO - [2025-12-04 16:09:25.763] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:09:25,770 - main - INFO - [2025-12-04 16:09:25.770] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:09:25,771 - main - INFO - [2025-12-04 16:09:25.771] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:09:26,036 - main - INFO - [2025-12-04 16:09:26.036] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:09:26,037 - main - INFO - [2025-12-04 16:09:26.037] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:09:26,055 - main - INFO - [2025-12-04 16:09:26.055] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1002542749883', 'match': False} | {}
+2025-12-04 16:09:26,055 - main - INFO - [2025-12-04 16:09:26.055] [INFO] [message_handler::skip] No matching task for chat: تجريبي 2 | Data: {'chat_id': '-1002542749883'} | {}
+2025-12-04 16:09:39,123 - main - INFO - [2025-12-04 16:09:39.123] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003285265410', 'chat_title': 'الإعلام الشعبي اليمني copy', 'message_id': 2247, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:09:39,123 - main - INFO - [2025-12-04 16:09:39.123] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:09:39,365 - main - INFO - [2025-12-04 16:09:39.365] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18153, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:09:39,366 - main - INFO - [2025-12-04 16:09:39.366] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:09:39,396 - main - INFO - [2025-12-04 16:09:39.396] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:09:39,398 - main - INFO - [2025-12-04 16:09:39.397] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:09:39,652 - main - INFO - [2025-12-04 16:09:39.652] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:09:39,653 - main - INFO - [2025-12-04 16:09:39.653] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:09:39,671 - main - INFO - [2025-12-04 16:09:39.671] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003285265410', 'match': False} | {}
+2025-12-04 16:09:39,671 - main - INFO - [2025-12-04 16:09:39.671] [INFO] [message_handler::skip] No matching task for chat: الإعلام الشعبي اليمني copy | Data: {'chat_id': '-1003285265410'} | {}
+2025-12-04 16:09:39,940 - main - INFO - [2025-12-04 16:09:39.940] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:09:39,940 - main - INFO - [2025-12-04 16:09:39.940] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:10:34,748 - main - INFO - [2025-12-04 16:10:34.748] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003214846700', 'chat_title': 'المركز الإعلامي لأنصار الله copy', 'message_id': 2137, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:10:34,749 - main - INFO - [2025-12-04 16:10:34.748] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:10:35,024 - main - INFO - [2025-12-04 16:10:35.024] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:10:35,024 - main - INFO - [2025-12-04 16:10:35.024] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:10:35,262 - main - INFO - [2025-12-04 16:10:35.262] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18154, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:10:35,262 - main - INFO - [2025-12-04 16:10:35.262] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:10:35,299 - main - INFO - [2025-12-04 16:10:35.298] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003214846700', 'match': False} | {}
+2025-12-04 16:10:35,300 - main - INFO - [2025-12-04 16:10:35.300] [INFO] [message_handler::skip] No matching task for chat: المركز الإعلامي لأنصار الله copy | Data: {'chat_id': '-1003214846700'} | {}
+2025-12-04 16:10:35,535 - main - INFO - [2025-12-04 16:10:35.535] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:10:35,535 - main - INFO - [2025-12-04 16:10:35.535] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:10:35,807 - main - INFO - [2025-12-04 16:10:35.807] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:10:35,809 - main - INFO - [2025-12-04 16:10:35.809] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:10:54,164 - main - INFO - [2025-12-04 16:10:54.164] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003285265410', 'chat_title': 'الإعلام الشعبي اليمني copy', 'message_id': 2248, 'message_type': 'media', 'has_text': False, 'has_caption': True, 'media_type': 'MessageMediaType.PHOTO', 'media_group_id': None} | {}
+2025-12-04 16:10:54,178 - main - INFO - [2025-12-04 16:10:54.178] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:10:54,451 - main - INFO - [2025-12-04 16:10:54.451] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:10:54,451 - main - INFO - [2025-12-04 16:10:54.451] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:10:54,627 - main - INFO - [2025-12-04 16:10:54.627] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18155, 'message_type': 'media', 'has_text': False, 'has_caption': True, 'media_type': 'MessageMediaType.PHOTO', 'media_group_id': None} | {}
+2025-12-04 16:10:54,628 - main - INFO - [2025-12-04 16:10:54.628] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:10:54,723 - main - INFO - [2025-12-04 16:10:54.723] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003285265410', 'match': False} | {}
+2025-12-04 16:10:54,724 - main - INFO - [2025-12-04 16:10:54.724] [INFO] [message_handler::skip] No matching task for chat: الإعلام الشعبي اليمني copy | Data: {'chat_id': '-1003285265410'} | {}
+2025-12-04 16:10:54,915 - main - INFO - [2025-12-04 16:10:54.912] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:10:54,915 - main - INFO - [2025-12-04 16:10:54.915] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:10:55,199 - main - INFO - [2025-12-04 16:10:55.199] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:10:55,200 - main - INFO - [2025-12-04 16:10:55.200] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:11:44,365 - main - INFO - [2025-12-04 16:11:44.365] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003119954858', 'chat_title': 'شبكة الفرقان copy', 'message_id': 2091, 'message_type': 'media', 'has_text': False, 'has_caption': True, 'media_type': 'MessageMediaType.VIDEO', 'media_group_id': None} | {}
+2025-12-04 16:11:44,365 - main - INFO - [2025-12-04 16:11:44.365] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:11:44,638 - main - INFO - [2025-12-04 16:11:44.638] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:11:44,638 - main - INFO - [2025-12-04 16:11:44.638] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:11:44,896 - main - INFO - [2025-12-04 16:11:44.896] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18156, 'message_type': 'media', 'has_text': False, 'has_caption': True, 'media_type': 'MessageMediaType.VIDEO', 'media_group_id': None} | {}
+2025-12-04 16:11:44,896 - main - INFO - [2025-12-04 16:11:44.896] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:11:44,910 - main - INFO - [2025-12-04 16:11:44.910] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003119954858', 'match': False} | {}
+2025-12-04 16:11:44,910 - main - INFO - [2025-12-04 16:11:44.910] [INFO] [message_handler::skip] No matching task for chat: شبكة الفرقان copy | Data: {'chat_id': '-1003119954858'} | {}
+2025-12-04 16:11:45,170 - main - INFO - [2025-12-04 16:11:45.170] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:11:45,171 - main - INFO - [2025-12-04 16:11:45.171] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:11:45,446 - main - INFO - [2025-12-04 16:11:45.446] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:11:45,446 - main - INFO - [2025-12-04 16:11:45.446] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:11:57,474 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 16:11:57,474 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 16:11:57,479 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 16:11:57,482 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 16:11:57,484 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 16:11:57,486 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 16:11:57,491 - main - INFO - [2025-12-04 16:11:57.491] [INFO] [main::entry] Bot script started | {}
+2025-12-04 16:11:57,492 - main - INFO - [2025-12-04 16:11:57.492] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 16:11:57,493 - main - INFO - [2025-12-04 16:11:57.493] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-04 16:11:57,493 - main - INFO - [2025-12-04 16:11:57.493] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-04 16:11:59,376 - database - INFO - Database connected successfully | {}
+2025-12-04 16:11:59,805 - main - INFO - [2025-12-04 16:11:59.805] [INFO] [session::load] Found active session in database | {}
+2025-12-04 16:11:59,805 - main - INFO - [2025-12-04 16:11:59.805] [INFO] [main::init] Creating Pyrofork client | Data: {'api_id': 24343527, 'has_session': True, 'api_hash_set': True} | {}
+2025-12-04 16:12:01,587 - main - INFO - [2025-12-04 16:12:01.587] [INFO] [main::initialize_bot] Starting bot initialization... | {}
+2025-12-04 16:12:01,587 - main - INFO - [2025-12-04 16:12:01.587] [INFO] [database::connect] Connecting to database... | {}
+2025-12-04 16:12:03,378 - database - INFO - Database connected successfully | {}
+2025-12-04 16:12:03,378 - main - INFO - [2025-12-04 16:12:03.378] [INFO] [database::connect] Database connected successfully | {}
+2025-12-04 16:12:03,378 - main - INFO - [2025-12-04 16:12:03.378] [INFO] [ai_manager::init] Loading AI providers from database... | {}
+2025-12-04 16:12:03,791 - ai_providers - WARNING - No API key found for provider: claude | {}
+2025-12-04 16:12:03,791 - ai_providers - INFO - Loaded Groq provider from database | {}
+2025-12-04 16:12:03,791 - ai_providers - INFO - Loaded HuggingFace provider from database | {}
+2025-12-04 16:12:03,791 - main - INFO - [2025-12-04 16:12:03.791] [INFO] [ai_manager::init] AI providers loaded successfully | {}
+2025-12-04 16:12:03,792 - main - INFO - [2025-12-04 16:12:03.792] [INFO] [admin::check] Checking admin status for ID: 6556918772 | {}
+2025-12-04 16:12:04,206 - main - INFO - [2025-12-04 16:12:04.206] [INFO] [admin::check] Admin already exists: 6556918772 | {}
+2025-12-04 16:12:04,206 - main - INFO - [2025-12-04 16:12:04.206] [INFO] [forwarding_engine::init] Initializing forwarding engine... | {}
+2025-12-04 16:12:04,206 - forwarding_engine - INFO - [2025-12-04 16:12:04.206] [INFO] [forwarding_engine::__init__] Forwarding engine initialized | {}
+2025-12-04 16:12:04,207 - main - INFO - [2025-12-04 16:12:04.207] [INFO] [forwarding_engine::init] Forwarding engine initialized successfully | {}
+2025-12-04 16:12:04,208 - main - INFO - [2025-12-04 16:12:04.208] [INFO] [queue_manager::register] Registering job handlers... | {}
+2025-12-04 16:12:04,208 - queue_system - INFO - Registered handler for job type: forward | {}
+2025-12-04 16:12:04,208 - queue_system - INFO - Registered handler for job type: ai_process | {}
+2025-12-04 16:12:04,209 - queue_system - INFO - Registered handler for job type: video_process | {}
+2025-12-04 16:12:04,209 - main - INFO - [2025-12-04 16:12:04.209] [INFO] [queue_manager::register] All handlers registered: forward, ai_process, video_process | {}
+2025-12-04 16:12:04,210 - main - INFO - [2025-12-04 16:12:04.210] [INFO] [queue_manager::start] Starting queue manager... | {}
+2025-12-04 16:12:04,210 - queue_system - INFO - Queue manager started with 10 max workers | {}
+2025-12-04 16:12:04,210 - main - INFO - [2025-12-04 16:12:04.210] [INFO] [queue_manager::start] Queue manager started with 10 workers | {}
+2025-12-04 16:12:04,211 - main - INFO - [2025-12-04 16:12:04.211] [INFO] [tasks::load] Loading active tasks from database... | {}
+2025-12-04 16:12:04,624 - main - INFO - [2025-12-04 16:12:04.624] [INFO] [tasks::load] Found 1 tasks in database | {}
+2025-12-04 16:12:04,624 - main - INFO - [2025-12-04 16:12:04.624] [INFO] [tasks::check] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'is_active': True, 'source_channels': [4], 'target_channels': [5]} | {}
+2025-12-04 16:12:04,624 - forwarding_engine - INFO - [2025-12-04 16:12:04.624] [INFO] [forwarding_engine::start_task_monitoring] Started monitoring task 4 | {}
+2025-12-04 16:12:04,624 - main - INFO - [2025-12-04 16:12:04.624] [INFO] [tasks::monitor] Started monitoring task: توجيه الأخبار  | Data: {'task_id': 4} | {}
+2025-12-04 16:12:04,624 - main - INFO - [2025-12-04 16:12:04.624] [INFO] [tasks::load] Loaded 1 active tasks for monitoring | {}
+2025-12-04 16:12:04,624 - main - INFO - [2025-12-04 16:12:04.624] [INFO] [main::initialize_bot] ✅ Bot initialization completed successfully | {}
+2025-12-04 16:12:04,624 - main - INFO - [2025-12-04 16:12:04.624] [INFO] [pyrogram::start] Starting Pyrofork userbot client... | {}
+2025-12-04 16:12:04,839 - pyrogram.connection.connection - INFO - Connecting...
+2025-12-04 16:12:05,029 - pyrogram.connection.connection - INFO - Connected! Production DC4 - IPv4
+2025-12-04 16:12:05,030 - pyrogram.session.session - INFO - NetworkTask started
+2025-12-04 16:12:05,842 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-12-04 16:12:05,842 - pyrogram.session.session - INFO - Device: CPython 3.11.13 - Pyrogram 2.0.106
+2025-12-04 16:12:05,843 - pyrogram.session.session - INFO - System: Linux 6.14.11 (en)
+2025-12-04 16:12:05,843 - pyrogram.session.session - INFO - Session started
+2025-12-04 16:12:05,849 - pyrogram.session.session - INFO - PingTask started
+2025-12-04 16:12:06,274 - pyrogram.dispatcher - INFO - Started 12 HandlerTasks
+2025-12-04 16:12:06,493 - main - INFO - [2025-12-04 16:12:06.493] [INFO] [pyrogram::connected] ✅ Userbot connected to Telegram | Data: {'user_id': 7831798910, 'username': 'TTT1234TTTT', 'first_name': 'V'} | {}
+2025-12-04 16:12:06,493 - main - INFO - [2025-12-04 16:12:06.493] [INFO] [handlers::register] Registering message handlers... | {}
+2025-12-04 16:12:06,493 - main - INFO - [2025-12-04 16:12:06.493] [INFO] [handlers::register] ✅ All handlers registered successfully | {}
+2025-12-04 16:12:06,493 - main - INFO - [2025-12-04 16:12:06.493] [INFO] [warmup::post_connect] Starting post-connection warmup... | {}
+2025-12-04 16:12:06,493 - main - INFO - [2025-12-04 16:12:06.493] [INFO] [warmup::start] Starting channel peer warmup... | {}
+2025-12-04 16:12:06,494 - main - INFO - [2025-12-04 16:12:06.494] [INFO] [warmup::dialogs] Loading all dialogs to populate peer cache... | {}
+2025-12-04 16:12:09,087 - main - INFO - [2025-12-04 16:12:09.087] [DEBUG] [warmup::dialogs] Loaded 50 dialogs... | {}
+2025-12-04 16:12:09,087 - main - INFO - [2025-12-04 16:12:09.087] [DEBUG] [warmup::dialogs] Loaded 100 dialogs... | {}
+2025-12-04 16:12:09,628 - main - INFO - [2025-12-04 16:12:09.628] [DEBUG] [warmup::dialogs] Loaded 150 dialogs... | {}
+2025-12-04 16:12:09,882 - main - INFO - [2025-12-04 16:12:09.882] [INFO] [warmup::dialogs] ✅ Cached 164 dialogs in peer cache | {}
+2025-12-04 16:12:10,294 - main - INFO - [2025-12-04 16:12:10.294] [INFO] [warmup::channels] Found 2 channels to verify | {}
+2025-12-04 16:12:10,294 - main - INFO - [2025-12-04 16:12:10.294] [INFO] [warmup::cached] ✅ اختبار 1 already in peer cache | {}
+2025-12-04 16:12:10,294 - main - INFO - [2025-12-04 16:12:10.294] [INFO] [warmup::cached] ✅ اختبار 2 already in peer cache | {}
+2025-12-04 16:12:10,294 - main - INFO - [2025-12-04 16:12:10.294] [INFO] [warmup::complete] ✅ Warmup complete: 2 success, 0 failed | {}
+2025-12-04 16:12:10,294 - main - INFO - [2025-12-04 16:12:10.294] [INFO] [main::idle] Userbot is now running and waiting for messages... | {}
+2025-12-04 16:12:48,898 - main - INFO - [2025-12-04 16:12:48.898] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003237222019', 'chat_title': 'زوامل أنصار الله الرسمية copy', 'message_id': 115, 'message_type': 'media', 'has_text': False, 'has_caption': True, 'media_type': 'MessageMediaType.VIDEO', 'media_group_id': None} | {}
+2025-12-04 16:12:48,899 - main - INFO - [2025-12-04 16:12:48.899] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:12:49,200 - main - INFO - [2025-12-04 16:12:49.199] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:12:49,200 - main - INFO - [2025-12-04 16:12:49.200] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:12:49,379 - main - INFO - [2025-12-04 16:12:49.379] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18158, 'message_type': 'media', 'has_text': False, 'has_caption': True, 'media_type': 'MessageMediaType.VIDEO', 'media_group_id': None} | {}
+2025-12-04 16:12:49,384 - main - INFO - [2025-12-04 16:12:49.383] [INFO] [message_handler::process] Fetching active tasks... | {}

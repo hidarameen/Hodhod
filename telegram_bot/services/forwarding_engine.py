@@ -878,11 +878,16 @@ class ForwardingEngine:
                     import json
                     import re
                     
-                    # Try to extract JSON from response
-                    json_match = re.search(r'\{[^{}]*\}', ai_response, re.DOTALL)
+                    log_detailed("debug", "forwarding_engine", "_extract_fields_with_ai",
+                                f"AI response received", {"response_length": len(ai_response), "response_preview": ai_response[:500]})
+                    
+                    # Try to extract JSON from response - use greedy match for nested objects
+                    json_match = re.search(r'\{[\s\S]*\}', ai_response, re.DOTALL)
                     if json_match:
                         try:
                             ai_extracted = json.loads(json_match.group())
+                            log_detailed("info", "forwarding_engine", "_extract_fields_with_ai",
+                                        f"AI extracted fields", {"ai_extracted": ai_extracted})
                             for field in fields_to_extract:
                                 field_name = field.get("field_name", "")
                                 if field_name in ai_extracted:
@@ -891,7 +896,9 @@ class ForwardingEngine:
                                     extracted[field_name] = field.get("default_value")
                                 else:
                                     extracted[field_name] = ""
-                        except json.JSONDecodeError:
+                            log_detailed("info", "forwarding_engine", "_extract_fields_with_ai",
+                                        f"Final extracted fields", {"extracted": extracted})
+                        except json.JSONDecodeError as je:
                             log_detailed("warning", "forwarding_engine", "_extract_fields_with_ai", 
                                         "Failed to parse AI JSON response")
                             # Use defaults for all fields
