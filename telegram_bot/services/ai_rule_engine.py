@@ -5,6 +5,7 @@ Handles entity replacement, context neutralization, sentiment adjustment
 """
 import re
 import asyncio
+import time
 from typing import Dict, Any, List, Optional, Tuple
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -12,6 +13,9 @@ from utils.error_handler import ErrorLogger
 from utils.database import db
 
 error_logger = ErrorLogger("ai_rule_engine")
+
+# Cache TTL in seconds
+CACHE_TTL = 30
 
 @dataclass
 class RuleApplication:
@@ -21,7 +25,7 @@ class RuleApplication:
     rule_type: str
     original_text: str
     modified_text: str
-    changes_made: List[Dict[str, str]]
+    changes_made: List[Dict[str, Any]]  # Can contain nested structures
     success: bool
     error: Optional[str] = None
 
@@ -37,6 +41,7 @@ class RuleEngineResult:
     processing_time: float
     success: bool
     errors: List[str] = field(default_factory=list)
+    ai_instructions: List[Dict[str, Any]] = field(default_factory=list)  # Instructions for AI processing
 
 class AIRuleEngine:
     """
@@ -45,10 +50,33 @@ class AIRuleEngine:
     """
     
     def __init__(self):
-        self.rule_cache: Dict[int, List[Dict]] = {}
-        self.entity_cache: Dict[int, List[Dict]] = {}
-        self.context_cache: Dict[int, List[Dict]] = {}
-        error_logger.log_info("[RuleEngine] Engine initialized")
+        # Cache structure: {task_id: {'data': [...], 'timestamp': float}}
+        self.rule_cache: Dict[int, Dict[str, Any]] = {}
+        self.entity_cache: Dict[int, Dict[str, Any]] = {}
+        self.context_cache: Dict[int, Dict[str, Any]] = {}
+        error_logger.log_info("[RuleEngine] Engine initialized with TTL-based caching")
+    
+    def _is_cache_valid(self, cache: Dict[int, Dict[str, Any]], task_id: int) -> bool:
+        """Check if cached data is still valid (not expired)"""
+        if task_id not in cache:
+            return False
+        entry = cache[task_id]
+        if 'timestamp' not in entry:
+            return False
+        return (time.time() - entry['timestamp']) < CACHE_TTL
+    
+    def _get_cached_data(self, cache: Dict[int, Dict[str, Any]], task_id: int) -> Optional[List[Dict]]:
+        """Get cached data if valid, otherwise return None"""
+        if self._is_cache_valid(cache, task_id):
+            return cache[task_id].get('data', [])
+        return None
+    
+    def _set_cache(self, cache: Dict[int, Dict[str, Any]], task_id: int, data: List[Dict]):
+        """Set cache with timestamp"""
+        cache[task_id] = {
+            'data': data,
+            'timestamp': time.time()
+        }
     
     async def process(
         self, 
@@ -71,6 +99,7 @@ class AIRuleEngine:
         total_replacements = 0
         entities_replaced = {}
         context_modifications = []
+        ai_instructions = []
         errors = []
         
         try:
@@ -97,7 +126,8 @@ class AIRuleEngine:
                 processed_text = result['text']
                 rules_applied.extend(result['applications'])
                 context_modifications = result['modifications']
-                error_logger.log_info(f"[RuleEngine] Context modifications: {len(result['modifications'])}")
+                ai_instructions = result.get('ai_instructions', [])
+                error_logger.log_info(f"[RuleEngine] Context modifications: {len(result['modifications'])}, AI instructions: {len(ai_instructions)}")
             
             ai_rules = await self._get_ai_rules(task_id)
             preprocessing_rules = [r for r in ai_rules if r.get('category') == 'preprocessing']
@@ -125,52 +155,69 @@ class AIRuleEngine:
             context_modifications=context_modifications,
             processing_time=processing_time,
             success=len(errors) == 0,
-            errors=errors
+            errors=errors,
+            ai_instructions=ai_instructions
         )
     
     async def _get_entity_rules(self, task_id: int) -> List[Dict]:
-        """Get entity replacement rules for task"""
+        """Get entity replacement rules for task with TTL-based caching"""
         try:
-            if task_id in self.entity_cache:
-                return self.entity_cache[task_id]
+            # Check cache with TTL
+            cached = self._get_cached_data(self.entity_cache, task_id)
+            if cached is not None:
+                error_logger.log_info(f"[RuleEngine] Using cached entity rules for task {task_id} ({len(cached)} rules)")
+                return cached
             
+            # Fetch from database
             rules = await db.get_entity_replacements(task_id)
             active_rules = [r for r in rules if r.get('is_active', True)]
             active_rules.sort(key=lambda x: x.get('priority', 0), reverse=True)
             
-            self.entity_cache[task_id] = active_rules
+            # Store in cache with timestamp
+            self._set_cache(self.entity_cache, task_id, active_rules)
+            error_logger.log_info(f"[RuleEngine] Loaded {len(active_rules)} entity rules for task {task_id} from DB")
             return active_rules
         except Exception as e:
             error_logger.log_warning(f"[RuleEngine] Failed to get entity rules: {str(e)}")
             return []
     
     async def _get_context_rules(self, task_id: int) -> List[Dict]:
-        """Get context modification rules for task"""
+        """Get context modification rules for task with TTL-based caching"""
         try:
-            if task_id in self.context_cache:
-                return self.context_cache[task_id]
+            # Check cache with TTL
+            cached = self._get_cached_data(self.context_cache, task_id)
+            if cached is not None:
+                error_logger.log_info(f"[RuleEngine] Using cached context rules for task {task_id} ({len(cached)} rules)")
+                return cached
             
+            # Fetch from database
             rules = await db.get_context_rules(task_id)
             active_rules = [r for r in rules if r.get('is_active', True)]
             active_rules.sort(key=lambda x: x.get('priority', 0), reverse=True)
             
-            self.context_cache[task_id] = active_rules
+            # Store in cache with timestamp
+            self._set_cache(self.context_cache, task_id, active_rules)
+            error_logger.log_info(f"[RuleEngine] Loaded {len(active_rules)} context rules for task {task_id} from DB")
             return active_rules
         except Exception as e:
             error_logger.log_warning(f"[RuleEngine] Failed to get context rules: {str(e)}")
             return []
     
     async def _get_ai_rules(self, task_id: int) -> List[Dict]:
-        """Get AI rules for task"""
+        """Get AI rules for task with TTL-based caching"""
         try:
-            if task_id in self.rule_cache:
-                return self.rule_cache[task_id]
+            # Check cache with TTL
+            cached = self._get_cached_data(self.rule_cache, task_id)
+            if cached is not None:
+                return cached
             
+            # Fetch from database
             rules = await db.get_task_rules(task_id)
             active_rules = [r for r in rules if r.get('is_active', True)]
             active_rules.sort(key=lambda x: x.get('priority', 0), reverse=True)
             
-            self.rule_cache[task_id] = active_rules
+            # Store in cache with timestamp
+            self._set_cache(self.rule_cache, task_id, active_rules)
             return active_rules
         except Exception as e:
             error_logger.log_warning(f"[RuleEngine] Failed to get AI rules: {str(e)}")
@@ -266,12 +313,15 @@ class AIRuleEngine:
     ) -> Dict[str, Any]:
         """
         Apply context modification rules
-        Example: Neutralize offensive language, adjust tone
+        Applies pattern-based rules and stores instructions for AI processing
+        All context rules with instructions will be passed to AI for processing
         """
         processed_text = text
         applications = []
         modifications = []
+        ai_instructions = []  # Instructions to be passed to AI
         
+        # Standard neutralization map for common offensive terms
         neutralization_map = {
             'إرهابي': 'مسلح',
             'إرهابيين': 'مسلحين',
@@ -285,28 +335,46 @@ class AIRuleEngine:
             'أحمق': 'شخص'
         }
         
+        error_logger.log_info(f"[RuleEngine] Applying {len(rules)} context rules")
+        
         for rule in rules:
             try:
                 rule_type = rule.get('rule_type', '')
                 trigger_pattern = rule.get('trigger_pattern', '')
                 target_sentiment = rule.get('target_sentiment', 'neutral')
                 instructions = rule.get('instructions', '')
+                rule_id = rule.get('id', 0)
+                
+                error_logger.log_info(f"[RuleEngine] Processing rule {rule_id}: type={rule_type}, instructions={instructions[:50] if instructions else 'none'}...")
+                
+                # Always record instructions for AI processing
+                if instructions:
+                    ai_instructions.append({
+                        'rule_id': rule_id,
+                        'rule_type': rule_type,
+                        'instructions': instructions,
+                        'target_sentiment': target_sentiment
+                    })
+                    modifications.append(f"AI_INSTRUCTION: {instructions}")
                 
                 if rule_type == 'neutralize_negative':
+                    changes_made = []
                     for offensive, neutral in neutralization_map.items():
                         if offensive in processed_text:
                             processed_text = processed_text.replace(offensive, neutral)
+                            changes_made.append(f"{offensive} → {neutral}")
                             modifications.append(f"Neutralized: {offensive} → {neutral}")
                     
                     applications.append(RuleApplication(
-                        rule_id=rule.get('id', 0),
-                        rule_name=rule.get('instructions', 'Neutralize')[:50],
+                        rule_id=rule_id,
+                        rule_name=instructions[:50] if instructions else 'Neutralize Negative',
                         rule_type='context_neutralize',
                         original_text=text[:100],
                         modified_text=processed_text[:100],
-                        changes_made=[{'type': 'neutralization', 'count': len(modifications)}],
+                        changes_made=[{'type': 'neutralization', 'changes': changes_made}],
                         success=True
                     ))
+                    error_logger.log_info(f"[RuleEngine] Neutralized {len(changes_made)} terms")
                 
                 elif rule_type == 'remove_bias':
                     bias_patterns = [
@@ -315,18 +383,20 @@ class AIRuleEngine:
                         (r'الإرهابي[ة]?\s+', ''),
                     ]
                     
+                    changes_made = []
                     for pattern, replacement in bias_patterns:
                         if re.search(pattern, processed_text):
                             processed_text = re.sub(pattern, replacement, processed_text)
+                            changes_made.append(pattern)
                             modifications.append(f"Removed bias pattern: {pattern}")
                     
                     applications.append(RuleApplication(
-                        rule_id=rule.get('id', 0),
-                        rule_name='Remove Bias',
+                        rule_id=rule_id,
+                        rule_name=instructions[:50] if instructions else 'Remove Bias',
                         rule_type='remove_bias',
                         original_text=text[:100],
                         modified_text=processed_text[:100],
-                        changes_made=[{'type': 'bias_removal'}],
+                        changes_made=[{'type': 'bias_removal', 'patterns': changes_made}],
                         success=True
                     ))
                 
@@ -337,18 +407,20 @@ class AIRuleEngine:
                         ('تقدم', 'تقدم ملموس'),
                     ]
                     
+                    changes_made = []
                     for original, enhanced in positive_enhancements:
                         if original in processed_text and enhanced not in processed_text:
                             processed_text = processed_text.replace(original, enhanced, 1)
+                            changes_made.append(f"{original} → {enhanced}")
                             modifications.append(f"Enhanced: {original} → {enhanced}")
                     
                     applications.append(RuleApplication(
-                        rule_id=rule.get('id', 0),
-                        rule_name='Enhance Positive',
+                        rule_id=rule_id,
+                        rule_name=instructions[:50] if instructions else 'Enhance Positive',
                         rule_type='enhance_positive',
                         original_text=text[:100],
                         modified_text=processed_text[:100],
-                        changes_made=[{'type': 'positive_enhancement'}],
+                        changes_made=[{'type': 'positive_enhancement', 'changes': changes_made}],
                         success=True
                     ))
                 
@@ -360,36 +432,59 @@ class AIRuleEngine:
                         'شاف': 'رأى',
                     }
                     
+                    changes_made = []
                     for informal, formal in informal_formal.items():
                         if informal in processed_text:
                             processed_text = processed_text.replace(informal, formal)
+                            changes_made.append(f"{informal} → {formal}")
                             modifications.append(f"Formalized: {informal} → {formal}")
                     
                     applications.append(RuleApplication(
-                        rule_id=rule.get('id', 0),
-                        rule_name='Formal Tone',
+                        rule_id=rule_id,
+                        rule_name=instructions[:50] if instructions else 'Formal Tone',
                         rule_type='formal_tone',
                         original_text=text[:100],
                         modified_text=processed_text[:100],
-                        changes_made=[{'type': 'formalization'}],
+                        changes_made=[{'type': 'formalization', 'changes': changes_made}],
                         success=True
                     ))
                 
-                elif rule_type == 'custom' and trigger_pattern:
-                    try:
-                        if re.search(trigger_pattern, processed_text):
-                            modifications.append(f"Custom rule triggered: {trigger_pattern[:30]}")
-                            applications.append(RuleApplication(
-                                rule_id=rule.get('id', 0),
-                                rule_name=f'Custom: {instructions[:30]}',
-                                rule_type='custom',
-                                original_text=text[:100],
-                                modified_text=processed_text[:100],
-                                changes_made=[{'type': 'custom_trigger'}],
-                                success=True
-                            ))
-                    except re.error:
-                        pass
+                elif rule_type == 'custom':
+                    # Custom rules - check trigger if present, always apply instructions
+                    triggered = True
+                    if trigger_pattern:
+                        try:
+                            triggered = bool(re.search(trigger_pattern, processed_text))
+                        except re.error as e:
+                            error_logger.log_warning(f"[RuleEngine] Invalid regex pattern: {trigger_pattern}, error: {e}")
+                            triggered = False
+                    
+                    if triggered:
+                        modifications.append(f"Custom rule applied: {instructions[:50] if instructions else trigger_pattern[:30]}")
+                        applications.append(RuleApplication(
+                            rule_id=rule_id,
+                            rule_name=f'Custom: {instructions[:30] if instructions else "trigger"}',
+                            rule_type='custom',
+                            original_text=text[:100],
+                            modified_text=processed_text[:100],
+                            changes_made=[{'type': 'custom_trigger', 'instructions': instructions}],
+                            success=True
+                        ))
+                        error_logger.log_info(f"[RuleEngine] Custom rule {rule_id} triggered")
+                
+                else:
+                    # Unknown rule type - still record it if it has instructions
+                    if instructions:
+                        applications.append(RuleApplication(
+                            rule_id=rule_id,
+                            rule_name=f'{rule_type}: {instructions[:30]}',
+                            rule_type=rule_type or 'unknown',
+                            original_text=text[:100],
+                            modified_text=processed_text[:100],
+                            changes_made=[{'type': 'instruction', 'instructions': instructions}],
+                            success=True
+                        ))
+                        error_logger.log_info(f"[RuleEngine] Rule {rule_id} ({rule_type}) recorded with instructions")
                         
             except Exception as e:
                 applications.append(RuleApplication(
@@ -403,10 +498,13 @@ class AIRuleEngine:
                     error=str(e)
                 ))
         
+        error_logger.log_info(f"[RuleEngine] Context rules result: {len(applications)} applied, {len(ai_instructions)} AI instructions")
+        
         return {
             'text': processed_text,
             'applications': applications,
-            'modifications': modifications
+            'modifications': modifications,
+            'ai_instructions': ai_instructions  # Pass to AI for processing
         }
     
     async def _apply_preprocessing_rules(
@@ -485,7 +583,9 @@ class AIRuleEngine:
             entities_replaced={},
             context_modifications=[],
             processing_time=0.0,
-            success=True
+            success=True,
+            errors=[],
+            ai_instructions=[]
         )
 
 rule_engine = AIRuleEngine()

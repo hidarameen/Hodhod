@@ -324,6 +324,20 @@ class AIPipeline:
                     entity_instructions += f"\n- استخدم '{replacement}' وليس '{original}'"
             prompt_parts.append(entity_instructions)
         
+        # Add context rules instructions for AI processing
+        if hasattr(rule_result, 'ai_instructions') and rule_result.ai_instructions:
+            context_instructions = "\n\nتعليمات السياق والتحرير (يجب اتباعها):"
+            for i, inst in enumerate(rule_result.ai_instructions, 1):
+                instructions_text = inst.get('instructions', '')
+                rule_type = inst.get('rule_type', '')
+                target_sentiment = inst.get('target_sentiment', 'neutral')
+                if instructions_text:
+                    context_instructions += f"\n{i}. {instructions_text}"
+                    if target_sentiment != 'neutral':
+                        context_instructions += f" (الهدف: {target_sentiment})"
+            prompt_parts.append(context_instructions)
+            error_logger.log_info(f"[Pipeline] Added {len(rule_result.ai_instructions)} context instructions to prompt")
+        
         if preprocessing_result.sentiment.has_offensive:
             prompt_parts.append("\n\nملاحظة: النص يحتوي على لغة قد تكون غير مناسبة. يرجى تحييدها وجعل الصياغة محايدة.")
         
