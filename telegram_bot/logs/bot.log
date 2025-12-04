@@ -9644,3 +9644,16 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-04 01:04:13,451 - main - INFO - [2025-12-04 01:04:13.451] [INFO] [warmup::cached] ✅ اختبار 2 already in peer cache | {}
 2025-12-04 01:04:13,451 - main - INFO - [2025-12-04 01:04:13.451] [INFO] [warmup::complete] ✅ Warmup complete: 2 success, 0 failed | {}
 2025-12-04 01:04:13,452 - main - INFO - [2025-12-04 01:04:13.451] [INFO] [main::idle] Userbot is now running and waiting for messages... | {}
+2025-12-04 01:14:02,585 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 01:14:02,588 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 01:14:02,595 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 01:14:02,688 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 01:14:02,694 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 01:14:02,697 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 01:14:02,781 - main - INFO - [2025-12-04 01:14:02.781] [INFO] [main::entry] Bot script started | {}
+2025-12-04 01:14:02,782 - main - INFO - [2025-12-04 01:14:02.782] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 01:14:02,782 - main - INFO - [2025-12-04 01:14:02.782] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-04 01:14:02,782 - main - INFO - [2025-12-04 01:14:02.782] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-04 01:14:05,196 - database - INFO - Database connected successfully | {}
+2025-12-04 01:14:05,683 - main - INFO - [2025-12-04 01:14:05.683] [INFO] [session::load] Found active session in database | {}
+2025-12-04 01:14:05,683 - main - INFO - [2025-12-04 01:14:05.683] [INFO] [main::init] Creating Pyrofork client | Data: {'api_id': 24343527, 'has_session': True, 'api_hash_set': True} | {}
