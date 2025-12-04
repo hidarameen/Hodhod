@@ -49,12 +49,20 @@ class OpenAIProvider(AIProvider):
             if not self.client:
                 self.client = AsyncOpenAI(api_key=self.api_key)
             
-            response = await self.client.chat.completions.create(
-                model=model,
-                messages=[{"role": "user", "content": prompt}],
-                max_tokens=max_tokens,
-                temperature=temperature
-            )
+            # GPT-5 and newer models use 'max_completion_tokens' instead of 'max_tokens'
+            request_params = {
+                "model": model,
+                "messages": [{"role": "user", "content": prompt}],
+                "temperature": temperature
+            }
+            
+            # Check if this is a GPT-5+ model that requires max_completion_tokens
+            if "gpt-5" in model.lower() or "o3" in model.lower() or "o4" in model.lower():
+                request_params["max_completion_tokens"] = max_tokens
+            else:
+                request_params["max_tokens"] = max_tokens
+            
+            response = await self.client.chat.completions.create(**request_params)
             
             return response.choices[0].message.content or ""
         except Exception as e:

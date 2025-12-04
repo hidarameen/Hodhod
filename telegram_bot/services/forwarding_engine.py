@@ -491,21 +491,30 @@ class ForwardingEngine:
                             provider_info = await db.get_ai_provider(provider_id)
                             if provider_info:
                                 provider_name = provider_info["name"]
+                                # Check if provider has API key, if not fall back to Groq
+                                if not provider_info.get("api_key"):
+                                    log_detailed("warning", "forwarding_engine", "_process_media_group_after_delay", f"Provider {provider_name} has no API key configured, falling back to Groq")
+                                    provider_name = "groq"
+                                    model_name = "mixtral-8x7b-32768"
                         
-                        if model_id:
+                        if model_id and provider_name != "groq":  # Only apply custom model if provider is available
                             model_info = await db.get_ai_model(model_id)
                             if model_info:
                                 model_name = model_info["model_name"]
                         
                         processed_caption = combined_caption
                         for rule in rules:
-                            log_detailed("info", "forwarding_engine", "_process_media_group_after_delay", f"Applying AI rule to media group: {rule['name']}")
-                            processed_caption = await ai_manager.summarize_text(
+                            log_detailed("info", "forwarding_engine", "_process_media_group_after_delay", f"Applying AI rule to media group: {rule['name']} | Provider: {provider_name} | Model: {model_name}")
+                            result = await ai_manager.summarize_text(
                                 processed_caption,
                                 provider=provider_name,
                                 model=model_name,
                                 custom_rule=rule["prompt"]
                             )
+                            if result:
+                                processed_caption = result
+                            else:
+                                log_detailed("warning", "forwarding_engine", "_process_media_group_after_delay", f"AI summarization returned empty result, skipping")
                             await db.update_task_stats(task_id, "ai")
                         
                         log_detailed("info", "forwarding_engine", "_process_media_group_after_delay", "✅ Media group captions processed with AI")
