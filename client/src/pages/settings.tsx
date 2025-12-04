@@ -336,13 +336,13 @@ export default function SettingsPage() {
   const getLogLevelBadge = (level: string) => {
     switch (level) {
       case 'error':
-        return 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20';
+        return 'bg-red-600 text-white border-red-500';
       case 'warn':
-        return 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20';
+        return 'bg-yellow-600 text-white border-yellow-500';
       case 'info':
-        return 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20';
+        return 'bg-blue-600 text-white border-blue-500';
       default:
-        return 'bg-gray-500/10 text-gray-600 dark:text-gray-400 border-gray-500/20';
+        return 'bg-gray-600 text-white border-gray-500';
     }
   };
 
@@ -869,14 +869,14 @@ export default function SettingsPage() {
               </div>
             )}
 
-            <div className="bg-slate-950 dark:bg-black rounded-lg p-3 max-h-[28rem] overflow-y-auto font-mono text-xs shadow-inner border border-slate-800">
+            <div className="bg-slate-950 dark:bg-slate-900 rounded-lg p-4 max-h-[32rem] overflow-y-auto overflow-x-auto font-mono text-sm shadow-inner border border-slate-700 dark:border-slate-600">
               {loadingLogs && consoleLogs.length === 0 ? (
                 <div className="flex flex-col items-center justify-center p-8 gap-2">
                   <Loader className="h-6 w-6 animate-spin text-green-500" />
-                  <span className="text-gray-400 text-sm">جاري تحميل السجلات...</span>
+                  <span className="text-gray-300 text-sm">جاري تحميل السجلات...</span>
                 </div>
               ) : consoleLogs.length === 0 ? (
-                <div className="flex flex-col items-center justify-center p-8 gap-2 text-gray-500">
+                <div className="flex flex-col items-center justify-center p-8 gap-2 text-gray-400">
                   <Terminal className="h-8 w-8 opacity-50" />
                   <span className="text-sm">لا توجد سجلات متاحة</span>
                   {(logFilter.level || logFilter.source) && (
@@ -884,14 +884,15 @@ export default function SettingsPage() {
                   )}
                 </div>
               ) : (
-                <div className="space-y-0.5">
+                <div className="space-y-1">
                   {consoleLogs.map((log: any) => (
                     <div 
                       key={log.id}
-                      className="flex gap-2 hover:bg-white/5 px-2 py-1.5 rounded transition-colors group"
+                      className="flex flex-wrap items-start gap-2 hover:bg-slate-800/50 dark:hover:bg-slate-700/50 px-3 py-2 rounded transition-colors group"
+                      dir="ltr"
                     >
-                      <span className="text-gray-500 dark:text-gray-400 shrink-0 font-normal min-w-[70px]">
-                        {new Date(log.timestamp).toLocaleTimeString('ar-SA', {
+                      <span className="text-gray-400 shrink-0 font-normal tabular-nums" style={{ minWidth: '85px' }}>
+                        {new Date(log.timestamp).toLocaleTimeString('en-US', {
                           hour: '2-digit',
                           minute: '2-digit',
                           second: '2-digit',
@@ -900,21 +901,21 @@ export default function SettingsPage() {
                       </span>
                       <Badge 
                         variant="outline" 
-                        className={`shrink-0 text-[10px] h-5 px-1.5 font-medium ${getLogLevelBadge(log.level)}`}
+                        className={`shrink-0 text-[10px] h-5 px-2 font-semibold ${getLogLevelBadge(log.level)}`}
                       >
                         {log.level.toUpperCase()}
                       </Badge>
-                      <span className="text-cyan-400 dark:text-cyan-300 shrink-0 text-[11px] font-medium min-w-[100px] truncate" title={log.source}>
+                      <span className="text-cyan-400 dark:text-cyan-300 shrink-0 text-xs font-semibold" style={{ minWidth: '120px', maxWidth: '200px' }} title={log.source}>
                         [{log.source}]
                       </span>
                       <span 
                         className={`
-                          break-words leading-relaxed
-                          ${log.level === 'error' ? 'text-red-400 dark:text-red-300 font-medium' : 
-                            log.level === 'warn' ? 'text-yellow-400 dark:text-yellow-300' : 
-                            'text-green-400 dark:text-green-300'}
+                          flex-1 min-w-0 break-words leading-relaxed
+                          ${log.level === 'error' ? 'text-red-300 font-medium' : 
+                            log.level === 'warn' ? 'text-yellow-300' : 
+                            'text-green-300'}
                         `}
-                        style={{ wordBreak: 'break-word' }}
+                        style={{ wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}
                       >
                         {log.message}
                       </span>
