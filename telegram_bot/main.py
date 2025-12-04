@@ -660,6 +660,10 @@ async def main():
                 """)
         except:
             pass
+    except FloodWait as e:
+        log_detailed("error", "main", "flood", f"Flood wait: {e.value} seconds")
+        wait_time = int(e.value) if isinstance(e.value, (int, float)) else 5
+        await asyncio.sleep(wait_time)
     except RPCError as e:
         error_code = e.CODE if hasattr(e, 'CODE') else None
         error_msg = str(e)
@@ -680,10 +684,6 @@ async def main():
             log_detailed("error", "main", "rpc_error", f"RPC Error: {error_msg}", {
                 "error_code": error_code
             })
-    except FloodWait as e:
-        log_detailed("error", "main", "flood", f"Flood wait: {e.value} seconds")
-        wait_time = int(e.value) if isinstance(e.value, (int, float)) else 5
-        await asyncio.sleep(wait_time)
     except KeyboardInterrupt:
         log_detailed("info", "main", "interrupt", "Userbot stopped by user (Ctrl+C)")
     except Exception as e:

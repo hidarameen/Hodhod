@@ -15480,3 +15480,151 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-04 18:15:43,973 - main - INFO - [2025-12-04 18:15:43.973] [INFO] [session::load] No active session found - userbot login required | {}
 2025-12-04 18:15:55,809 - database - INFO - Database connected successfully | {}
 2025-12-04 18:15:56,244 - main - INFO - [2025-12-04 18:15:56.244] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:16:08,099 - database - INFO - Database connected successfully | {}
+2025-12-04 18:16:08,528 - main - INFO - [2025-12-04 18:16:08.528] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:16:20,424 - database - INFO - Database connected successfully | {}
+2025-12-04 18:16:20,853 - main - INFO - [2025-12-04 18:16:20.853] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:16:32,704 - database - INFO - Database connected successfully | {}
+2025-12-04 18:16:33,132 - main - INFO - [2025-12-04 18:16:33.132] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:16:44,976 - database - INFO - Database connected successfully | {}
+2025-12-04 18:16:45,406 - main - INFO - [2025-12-04 18:16:45.406] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:16:57,527 - database - INFO - Database connected successfully | {}
+2025-12-04 18:16:57,941 - main - INFO - [2025-12-04 18:16:57.941] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:17:10,195 - database - INFO - Database connected successfully | {}
+2025-12-04 18:17:10,623 - main - INFO - [2025-12-04 18:17:10.623] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:17:22,452 - database - INFO - Database connected successfully | {}
+2025-12-04 18:17:22,883 - main - INFO - [2025-12-04 18:17:22.883] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:17:34,804 - database - INFO - Database connected successfully | {}
+2025-12-04 18:17:35,220 - main - INFO - [2025-12-04 18:17:35.220] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:17:47,039 - database - INFO - Database connected successfully | {}
+2025-12-04 18:17:47,464 - main - INFO - [2025-12-04 18:17:47.464] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:17:59,295 - database - INFO - Database connected successfully | {}
+2025-12-04 18:17:59,719 - main - INFO - [2025-12-04 18:17:59.719] [INFO] [session::load] No active session found - userbot login required | {}
+2025-12-04 18:18:11,529 - database - INFO - Database connected successfully | {}
+2025-12-04 18:18:11,948 - main - INFO - [2025-12-04 18:18:11.948] [INFO] [session::load] Found active session in database | {}
+2025-12-04 18:18:11,948 - main - INFO - [2025-12-04 18:18:11.948] [INFO] [session::detected] Session detected! Starting userbot... | {}
+2025-12-04 18:18:11,948 - main - INFO - [2025-12-04 18:18:11.948] [INFO] [main::init] Creating Pyrofork client | Data: {'api_id': 24343527, 'has_session': True, 'api_hash_set': True} | {}
+2025-12-04 18:18:13,678 - main - INFO - [2025-12-04 18:18:13.678] [INFO] [main::initialize_bot] Starting bot initialization... | {}
+2025-12-04 18:18:13,678 - main - INFO - [2025-12-04 18:18:13.678] [INFO] [database::connect] Connecting to database... | {}
+2025-12-04 18:18:15,443 - database - INFO - Database connected successfully | {}
+2025-12-04 18:18:15,444 - main - INFO - [2025-12-04 18:18:15.444] [INFO] [database::connect] Database connected successfully | {}
+2025-12-04 18:18:15,444 - main - INFO - [2025-12-04 18:18:15.444] [INFO] [ai_manager::init] Loading AI providers from database... | {}
+2025-12-04 18:18:15,856 - ai_providers - WARNING - No API key found for provider: claude | {}
+2025-12-04 18:18:15,856 - ai_providers - INFO - Loaded Groq provider from database | {}
+2025-12-04 18:18:15,856 - ai_providers - INFO - Loaded HuggingFace provider from database | {}
+2025-12-04 18:18:15,856 - ai_providers - WARNING - No API key found for provider: openai | {}
+2025-12-04 18:18:15,856 - main - INFO - [2025-12-04 18:18:15.856] [INFO] [ai_manager::init] AI providers loaded successfully | {}
+2025-12-04 18:18:15,856 - main - INFO - [2025-12-04 18:18:15.856] [INFO] [admin::check] Checking admin status for ID: 6556918772 | {}
+2025-12-04 18:18:16,298 - main - INFO - [2025-12-04 18:18:16.298] [INFO] [admin::check] Admin already exists: 6556918772 | {}
+2025-12-04 18:18:16,298 - main - INFO - [2025-12-04 18:18:16.298] [INFO] [forwarding_engine::init] Initializing forwarding engine... | {}
+2025-12-04 18:18:16,298 - forwarding_engine - INFO - [2025-12-04 18:18:16.298] [INFO] [forwarding_engine::__init__] Forwarding engine initialized | {}
+2025-12-04 18:18:16,299 - main - INFO - [2025-12-04 18:18:16.299] [INFO] [forwarding_engine::init] Forwarding engine initialized successfully | {}
+2025-12-04 18:18:16,299 - main - INFO - [2025-12-04 18:18:16.299] [INFO] [queue_manager::register] Registering job handlers... | {}
+2025-12-04 18:18:16,299 - queue_system - INFO - Registered handler for job type: forward | {}
+2025-12-04 18:18:16,299 - queue_system - INFO - Registered handler for job type: ai_process | {}
+2025-12-04 18:18:16,299 - queue_system - INFO - Registered handler for job type: video_process | {}
+2025-12-04 18:18:16,299 - main - INFO - [2025-12-04 18:18:16.299] [INFO] [queue_manager::register] All handlers registered: forward, ai_process, video_process | {}
+2025-12-04 18:18:16,299 - main - INFO - [2025-12-04 18:18:16.299] [INFO] [queue_manager::start] Starting queue manager... | {}
+2025-12-04 18:18:16,299 - queue_system - INFO - Queue manager started with 10 max workers | {}
+2025-12-04 18:18:16,299 - main - INFO - [2025-12-04 18:18:16.299] [INFO] [queue_manager::start] Queue manager started with 10 workers | {}
+2025-12-04 18:18:16,299 - main - INFO - [2025-12-04 18:18:16.299] [INFO] [tasks::load] Loading active tasks from database... | {}
+2025-12-04 18:18:16,723 - main - INFO - [2025-12-04 18:18:16.723] [INFO] [tasks::load] Found 1 tasks in database | {}
+2025-12-04 18:18:16,723 - main - INFO - [2025-12-04 18:18:16.723] [INFO] [tasks::check] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'is_active': True, 'source_channels': [4], 'target_channels': [5]} | {}
+2025-12-04 18:18:16,723 - forwarding_engine - INFO - [2025-12-04 18:18:16.723] [INFO] [forwarding_engine::start_task_monitoring] Started monitoring task 4 | {}
+2025-12-04 18:18:16,723 - main - INFO - [2025-12-04 18:18:16.723] [INFO] [tasks::monitor] Started monitoring task: توجيه الأخبار  | Data: {'task_id': 4} | {}
+2025-12-04 18:18:16,723 - main - INFO - [2025-12-04 18:18:16.723] [INFO] [tasks::load] Loaded 1 active tasks for monitoring | {}
+2025-12-04 18:18:16,723 - main - INFO - [2025-12-04 18:18:16.723] [INFO] [main::initialize_bot] ✅ Bot initialization completed successfully | {}
+2025-12-04 18:18:16,724 - main - INFO - [2025-12-04 18:18:16.724] [INFO] [pyrogram::start] Starting Pyrofork userbot client... | {}
+2025-12-04 18:18:16,924 - pyrogram.connection.connection - INFO - Connecting...
+2025-12-04 18:18:17,111 - pyrogram.connection.connection - INFO - Connected! Production DC4 - IPv4
+2025-12-04 18:18:17,113 - pyrogram.session.session - INFO - NetworkTask started
+2025-12-04 18:18:17,921 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-12-04 18:18:17,921 - pyrogram.session.session - INFO - Device: CPython 3.11.13 - Pyrogram 2.0.106
+2025-12-04 18:18:17,921 - pyrogram.session.session - INFO - System: Linux 6.14.11 (en)
+2025-12-04 18:18:17,921 - pyrogram.session.session - INFO - Session started
+2025-12-04 18:18:17,923 - pyrogram.session.session - INFO - PingTask started
+2025-12-04 18:18:18,336 - pyrogram.dispatcher - INFO - Started 12 HandlerTasks
+2025-12-04 18:18:18,543 - main - INFO - [2025-12-04 18:18:18.543] [INFO] [pyrogram::connected] ✅ Userbot connected to Telegram | Data: {'user_id': 6660878563, 'username': 'Sheyyeeuu', 'first_name': 'Amir'} | {}
+2025-12-04 18:18:18,544 - main - INFO - [2025-12-04 18:18:18.544] [INFO] [handlers::register] Registering message handlers... | {}
+2025-12-04 18:18:18,547 - main - INFO - [2025-12-04 18:18:18.547] [INFO] [handlers::register] ✅ All handlers registered successfully | {}
+2025-12-04 18:18:18,547 - main - INFO - [2025-12-04 18:18:18.547] [INFO] [warmup::post_connect] Starting post-connection warmup... | {}
+2025-12-04 18:18:18,547 - main - INFO - [2025-12-04 18:18:18.547] [INFO] [warmup::start] Starting channel peer warmup... | {}
+2025-12-04 18:18:18,547 - main - INFO - [2025-12-04 18:18:18.547] [INFO] [warmup::dialogs] Loading all dialogs to populate peer cache... | {}
+2025-12-04 18:18:20,307 - main - INFO - [2025-12-04 18:18:20.306] [DEBUG] [warmup::dialogs] Loaded 50 dialogs... | {}
+2025-12-04 18:18:20,307 - main - INFO - [2025-12-04 18:18:20.307] [DEBUG] [warmup::dialogs] Loaded 100 dialogs... | {}
+2025-12-04 18:18:21,093 - main - INFO - [2025-12-04 18:18:21.093] [DEBUG] [warmup::dialogs] Loaded 150 dialogs... | {}
+2025-12-04 18:18:21,294 - main - INFO - [2025-12-04 18:18:21.294] [INFO] [warmup::dialogs] ✅ Cached 170 dialogs in peer cache | {}
+2025-12-04 18:18:21,718 - main - INFO - [2025-12-04 18:18:21.718] [INFO] [warmup::channels] Found 2 channels to verify | {}
+2025-12-04 18:18:21,719 - main - INFO - [2025-12-04 18:18:21.719] [WARNING] [warmup::failed] ❌ Failed to warm up اختبار 1: Peer id invalid: -1003190233554 | {}
+2025-12-04 18:18:21,719 - main - INFO - [2025-12-04 18:18:21.719] [WARNING] [warmup::failed] ❌ Failed to warm up اختبار 2: Peer id invalid: -1003110660765 | {}
+2025-12-04 18:18:21,719 - main - INFO - [2025-12-04 18:18:21.719] [INFO] [warmup::complete] ✅ Warmup complete: 0 success, 2 failed | {}
+2025-12-04 18:18:21,719 - main - INFO - [2025-12-04 18:18:21.719] [INFO] [main::idle] Userbot is now running and waiting for messages... | {}
+2025-12-04 18:18:35,329 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 18:18:35,331 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 18:18:35,336 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 18:18:35,339 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 18:18:35,341 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 18:18:35,343 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 18:18:35,347 - main - INFO - [2025-12-04 18:18:35.347] [INFO] [main::entry] Bot script started | {}
+2025-12-04 18:18:35,349 - main - INFO - [2025-12-04 18:18:35.349] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 18:18:35,349 - main - INFO - [2025-12-04 18:18:35.349] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-04 18:18:35,349 - main - INFO - [2025-12-04 18:18:35.349] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-04 18:18:37,304 - database - INFO - Database connected successfully | {}
+2025-12-04 18:18:37,736 - main - INFO - [2025-12-04 18:18:37.735] [INFO] [session::load] Found active session in database | {}
+2025-12-04 18:18:37,736 - main - INFO - [2025-12-04 18:18:37.736] [INFO] [main::init] Creating Pyrofork client | Data: {'api_id': 24343527, 'has_session': True, 'api_hash_set': True} | {}
+2025-12-04 18:18:39,495 - main - INFO - [2025-12-04 18:18:39.494] [INFO] [main::initialize_bot] Starting bot initialization... | {}
+2025-12-04 18:18:39,495 - main - INFO - [2025-12-04 18:18:39.495] [INFO] [database::connect] Connecting to database... | {}
+2025-12-04 18:18:41,570 - database - INFO - Database connected successfully | {}
+2025-12-04 18:18:41,570 - main - INFO - [2025-12-04 18:18:41.570] [INFO] [database::connect] Database connected successfully | {}
+2025-12-04 18:18:41,570 - main - INFO - [2025-12-04 18:18:41.570] [INFO] [ai_manager::init] Loading AI providers from database... | {}
+2025-12-04 18:18:41,998 - ai_providers - WARNING - No API key found for provider: claude | {}
+2025-12-04 18:18:41,998 - ai_providers - INFO - Loaded Groq provider from database | {}
+2025-12-04 18:18:41,998 - ai_providers - INFO - Loaded HuggingFace provider from database | {}
+2025-12-04 18:18:41,998 - ai_providers - WARNING - No API key found for provider: openai | {}
+2025-12-04 18:18:41,998 - main - INFO - [2025-12-04 18:18:41.998] [INFO] [ai_manager::init] AI providers loaded successfully | {}
+2025-12-04 18:18:41,998 - main - INFO - [2025-12-04 18:18:41.998] [INFO] [admin::check] Checking admin status for ID: 6556918772 | {}
+2025-12-04 18:18:42,429 - main - INFO - [2025-12-04 18:18:42.429] [INFO] [admin::check] Admin already exists: 6556918772 | {}
+2025-12-04 18:18:42,430 - main - INFO - [2025-12-04 18:18:42.430] [INFO] [forwarding_engine::init] Initializing forwarding engine... | {}
+2025-12-04 18:18:42,430 - forwarding_engine - INFO - [2025-12-04 18:18:42.430] [INFO] [forwarding_engine::__init__] Forwarding engine initialized | {}
+2025-12-04 18:18:42,430 - main - INFO - [2025-12-04 18:18:42.430] [INFO] [forwarding_engine::init] Forwarding engine initialized successfully | {}
+2025-12-04 18:18:42,430 - main - INFO - [2025-12-04 18:18:42.430] [INFO] [queue_manager::register] Registering job handlers... | {}
+2025-12-04 18:18:42,430 - queue_system - INFO - Registered handler for job type: forward | {}
+2025-12-04 18:18:42,430 - queue_system - INFO - Registered handler for job type: ai_process | {}
+2025-12-04 18:18:42,430 - queue_system - INFO - Registered handler for job type: video_process | {}
+2025-12-04 18:18:42,430 - main - INFO - [2025-12-04 18:18:42.430] [INFO] [queue_manager::register] All handlers registered: forward, ai_process, video_process | {}
+2025-12-04 18:18:42,430 - main - INFO - [2025-12-04 18:18:42.430] [INFO] [queue_manager::start] Starting queue manager... | {}
+2025-12-04 18:18:42,431 - queue_system - INFO - Queue manager started with 10 max workers | {}
+2025-12-04 18:18:42,431 - main - INFO - [2025-12-04 18:18:42.431] [INFO] [queue_manager::start] Queue manager started with 10 workers | {}
+2025-12-04 18:18:42,431 - main - INFO - [2025-12-04 18:18:42.431] [INFO] [tasks::load] Loading active tasks from database... | {}
+2025-12-04 18:18:42,858 - main - INFO - [2025-12-04 18:18:42.858] [INFO] [tasks::load] Found 1 tasks in database | {}
+2025-12-04 18:18:42,858 - main - INFO - [2025-12-04 18:18:42.858] [INFO] [tasks::check] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'is_active': True, 'source_channels': [4], 'target_channels': [5]} | {}
+2025-12-04 18:18:42,858 - forwarding_engine - INFO - [2025-12-04 18:18:42.858] [INFO] [forwarding_engine::start_task_monitoring] Started monitoring task 4 | {}
+2025-12-04 18:18:42,858 - main - INFO - [2025-12-04 18:18:42.858] [INFO] [tasks::monitor] Started monitoring task: توجيه الأخبار  | Data: {'task_id': 4} | {}
+2025-12-04 18:18:42,858 - main - INFO - [2025-12-04 18:18:42.858] [INFO] [tasks::load] Loaded 1 active tasks for monitoring | {}
+2025-12-04 18:18:42,858 - main - INFO - [2025-12-04 18:18:42.858] [INFO] [main::initialize_bot] ✅ Bot initialization completed successfully | {}
+2025-12-04 18:18:42,858 - main - INFO - [2025-12-04 18:18:42.858] [INFO] [pyrogram::start] Starting Pyrofork userbot client... | {}
+2025-12-04 18:18:43,055 - pyrogram.connection.connection - INFO - Connecting...
+2025-12-04 18:18:43,243 - pyrogram.connection.connection - INFO - Connected! Production DC4 - IPv4
+2025-12-04 18:18:43,245 - pyrogram.session.session - INFO - NetworkTask started
+2025-12-04 18:18:44,061 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-12-04 18:18:44,061 - pyrogram.session.session - INFO - Device: CPython 3.11.13 - Pyrogram 2.0.106
+2025-12-04 18:18:44,061 - pyrogram.session.session - INFO - System: Linux 6.14.11 (en)
+2025-12-04 18:18:44,061 - pyrogram.session.session - INFO - Session started
+2025-12-04 18:18:44,063 - pyrogram.session.session - INFO - PingTask started
+2025-12-04 18:18:44,477 - pyrogram.dispatcher - INFO - Started 12 HandlerTasks
+2025-12-04 18:18:44,679 - main - INFO - [2025-12-04 18:18:44.679] [INFO] [pyrogram::connected] ✅ Userbot connected to Telegram | Data: {'user_id': 6660878563, 'username': 'Sheyyeeuu', 'first_name': 'Amir'} | {}
+2025-12-04 18:18:44,680 - main - INFO - [2025-12-04 18:18:44.680] [INFO] [handlers::register] Registering message handlers... | {}
+2025-12-04 18:18:44,682 - main - INFO - [2025-12-04 18:18:44.682] [INFO] [handlers::register] ✅ All handlers registered successfully | {}
+2025-12-04 18:18:44,683 - main - INFO - [2025-12-04 18:18:44.683] [INFO] [warmup::post_connect] Starting post-connection warmup... | {}
+2025-12-04 18:18:44,684 - main - INFO - [2025-12-04 18:18:44.684] [INFO] [warmup::start] Starting channel peer warmup... | {}
+2025-12-04 18:18:44,685 - main - INFO - [2025-12-04 18:18:44.685] [INFO] [warmup::dialogs] Loading all dialogs to populate peer cache... | {}
+2025-12-04 18:18:45,589 - pyrogram.session.session - WARNING - [userbot_forwarder] Waiting for 3 seconds before continuing (required by "channels.GetMessages")
+2025-12-04 18:18:50,156 - main - INFO - [2025-12-04 18:18:50.156] [DEBUG] [warmup::dialogs] Loaded 50 dialogs... | {}
+2025-12-04 18:18:50,156 - main - INFO - [2025-12-04 18:18:50.156] [DEBUG] [warmup::dialogs] Loaded 100 dialogs... | {}
+2025-12-04 18:18:51,134 - main - INFO - [2025-12-04 18:18:51.134] [DEBUG] [warmup::dialogs] Loaded 150 dialogs... | {}
+2025-12-04 18:18:51,435 - main - INFO - [2025-12-04 18:18:51.435] [INFO] [warmup::dialogs] ✅ Cached 170 dialogs in peer cache | {}
+2025-12-04 18:18:51,862 - main - INFO - [2025-12-04 18:18:51.862] [INFO] [warmup::channels] Found 2 channels to verify | {}
+2025-12-04 18:18:51,862 - main - INFO - [2025-12-04 18:18:51.862] [WARNING] [warmup::failed] ❌ Failed to warm up اختبار 1: Peer id invalid: -1003190233554 | {}
+2025-12-04 18:18:51,862 - main - INFO - [2025-12-04 18:18:51.862] [WARNING] [warmup::failed] ❌ Failed to warm up اختبار 2: Peer id invalid: -1003110660765 | {}
+2025-12-04 18:18:51,862 - main - INFO - [2025-12-04 18:18:51.862] [INFO] [warmup::complete] ✅ Warmup complete: 0 success, 2 failed | {}
+2025-12-04 18:18:51,862 - main - INFO - [2025-12-04 18:18:51.862] [INFO] [main::idle] Userbot is now running and waiting for messages... | {}
