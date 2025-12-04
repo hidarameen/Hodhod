@@ -327,7 +327,8 @@ class ForwardingEngine:
                         message,
                         target_id,
                         processed_text,
-                        task_logger
+                        task_logger,
+                        task_id=task_id
                     )
                 )
                 forward_tasks.append(task)
@@ -514,7 +515,8 @@ class ForwardingEngine:
                         target_id,
                         task_logger or TaskLogger(task_id),
                         processed_caption=processed_caption,
-                        download_func=download_wrapper
+                        download_func=download_wrapper,
+                        task_id=task_id
                     )
                 except Exception as e:
                     log_detailed("error", "forwarding_engine", "_process_media_group_after_delay", f"Media group forward error: {str(e)}", {
@@ -541,7 +543,8 @@ class ForwardingEngine:
         target_id: int,
         task_logger: TaskLogger,
         processed_caption: Optional[str] = None,
-        download_func: Optional[Any] = None
+        download_func: Optional[Any] = None,
+        task_id: int = None
     ):
         """Forward a media group to target"""
         log_detailed("info", "forwarding_engine", "_forward_media_group", f"Building media group for target {target_id}", {
@@ -590,6 +593,20 @@ class ForwardingEngine:
             "caption_preview": combined_caption[:100] if combined_caption else "No caption",
             "is_processed": processed_caption is not None
         })
+        
+        # ALWAYS apply publishing template as the LAST step (even without AI)
+        if task_id and combined_caption:
+            log_detailed("info", "forwarding_engine", "_forward_media_group", 
+                        "Applying publishing template to media group caption...")
+            template_applied_caption = await self._apply_publishing_template(combined_caption, task_id)
+            if template_applied_caption and template_applied_caption != combined_caption:
+                combined_caption = template_applied_caption
+                first_caption_entities = None  # Reset entities since text was modified
+                log_detailed("info", "forwarding_engine", "_forward_media_group", 
+                            "Template applied to media group caption", {
+                                "original_length": len(combined_caption),
+                                "final_length": len(template_applied_caption)
+                            })
         
         # Create Telegraph page if caption was processed (shortened)
         final_caption = combined_caption
@@ -787,12 +804,15 @@ class ForwardingEngine:
             field_type = field.get("field_type", "extracted")
             field_name = field.get("field_name", "")
             
-            if field_type == "summary":
-                # Summary is the processed text itself
+            if field_type == "summary" or field_type == "content":
+                # Summary/Content is the processed text itself (original or summarized message)
                 extracted[field_name] = text
             elif field_type == "date_today":
                 # Use today's date
                 extracted[field_name] = datetime.now().strftime("%Y-%m-%d")
+            elif field_type == "date_time":
+                # Use current date and time
+                extracted[field_name] = datetime.now().strftime("%Y-%m-%d %H:%M")
             elif field_type == "static":
                 # Use default value as static
                 extracted[field_name] = field.get("default_value", "")
@@ -844,12 +864,13 @@ class ForwardingEngine:
                     if model_info:
                         model_name = model_info["model_name"]
                 
-                # Call AI to extract fields
-                ai_response = await ai_manager.generate_text(
+                # Call AI to extract fields - use generate method (not generate_text)
+                ai_response = await ai_manager.generate(
                     provider=provider_name,
                     model=model_name,
-                    prompt=extraction_prompt,
-                    system_prompt="أنت مساعد لاستخراج المعلومات من النصوص. أجب بتنسيق JSON فقط."
+                    prompt=f"أنت مساعد لاستخراج المعلومات من النصوص. أجب بتنسيق JSON فقط.\n\n{extraction_prompt}",
+                    max_tokens=500,
+                    temperature=0.3
                 )
                 
                 if ai_response:
@@ -1117,7 +1138,8 @@ class ForwardingEngine:
                 log_detailed("info", "forwarding_engine", "_process_message", 
                             f"🔄 Applying filter modification: {filter_matched['name']}")
             
-            processed_text = await self._apply_publishing_template(processed_text, task_id)
+            # NOTE: Publishing template is now applied in _forward_to_target as the LAST step
+            # This ensures it works for both AI and non-AI forwarding
             
             await task_logger.log_info(
                 f"AI Pipeline completed | From {len(text)} → {len(processed_text)} chars",
@@ -1154,13 +1176,15 @@ class ForwardingEngine:
         message: Message,
         target_id: int,
         processed_text: Optional[str],
-        task_logger: TaskLogger
+        task_logger: TaskLogger,
+        task_id: int = None
     ):
         """Forward message to a single target with full support for all media types and entities"""
         
         log_detailed("info", "forwarding_engine", "_forward_to_target", f"Forwarding to target {target_id}", {
             "message_id": message.id,
-            "has_processed_text": bool(processed_text)
+            "has_processed_text": bool(processed_text),
+            "task_id": task_id
         })
         
         try:
@@ -1195,6 +1219,21 @@ class ForwardingEngine:
             
             final_text = processed_text if use_processed else original_text
             final_entities = None if use_processed else original_entities
+            
+            # ALWAYS apply publishing template as the LAST step (even without AI)
+            # This ensures template is applied to ALL forwarded messages
+            if task_id and final_text:
+                log_detailed("info", "forwarding_engine", "_forward_to_target", 
+                            "Applying publishing template as final step...")
+                template_applied_text = await self._apply_publishing_template(final_text, task_id)
+                if template_applied_text and template_applied_text != final_text:
+                    final_text = template_applied_text
+                    final_entities = None  # Reset entities since text was modified by template
+                    log_detailed("info", "forwarding_engine", "_forward_to_target", 
+                                "Template applied successfully", {
+                                    "original_length": len(original_text),
+                                    "final_length": len(final_text)
+                                })
             
             # Create Telegraph page if text was processed
             telegraph_url = None

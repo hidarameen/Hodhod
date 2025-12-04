@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { 
   Sparkles, 
   Plus, 
@@ -27,6 +28,7 @@ import {
   FileText,
   Loader,
   ChevronDown,
+  ChevronUp,
   Copy,
   Check,
   AlertCircle,
@@ -202,6 +204,12 @@ export default function AIRulesPage() {
   const queryClient = useQueryClient();
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState("entities");
+  
+  const [isEntityFormOpen, setIsEntityFormOpen] = useState(false);
+  const [isContextFormOpen, setIsContextFormOpen] = useState(false);
+  const [isTrainingFormOpen, setIsTrainingFormOpen] = useState(false);
+  const [isFilterFormOpen, setIsFilterFormOpen] = useState(false);
+  const [isTemplateFormOpen, setIsTemplateFormOpen] = useState(false);
   
   const [entityForm, setEntityForm] = useState<Partial<EntityReplacement>>({
     entityType: 'person',
@@ -742,123 +750,144 @@ export default function AIRulesPage() {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="entities" className="space-y-6">
-              <Card className="border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/5 to-transparent">
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Plus className="h-5 w-5" />
-                    {editingEntity ? "تعديل قاعدة الاستبدال" : "إضافة قاعدة استبدال جديدة"}
-                  </CardTitle>
-                  <CardDescription>
-                    استبدل أسماء أو كلمات بأخرى تلقائياً. مثال: "محمد مصطفى" ← "البطل محمد مصطفى"
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label>نوع الكيان</Label>
-                      <Select
-                        value={entityForm.entityType}
-                        onValueChange={(value) => setEntityForm({ ...entityForm, entityType: value })}
-                      >
-                        <SelectTrigger className="mt-1">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {entityTypes.map((type) => (
-                            <SelectItem key={type.value} value={type.value}>
-                              <span className="flex items-center gap-2">
-                                <span>{type.icon}</span>
-                                {type.label}
-                              </span>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label>الأولوية</Label>
-                      <Input
-                        type="number"
-                        value={entityForm.priority}
-                        onChange={(e) => setEntityForm({ ...entityForm, priority: parseInt(e.target.value) || 0 })}
-                        className="mt-1"
-                        min={0}
-                        max={100}
-                      />
-                    </div>
-                  </div>
+            <TabsContent value="entities" className="space-y-4">
+              <Collapsible open={isEntityFormOpen} onOpenChange={setIsEntityFormOpen}>
+                <Card className="border border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+                  <CollapsibleTrigger asChild>
+                    <CardHeader className="py-3 px-4 cursor-pointer hover:bg-muted/50 transition-colors">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Plus className="h-4 w-4 text-primary" />
+                          <CardTitle className="text-sm font-medium">
+                            {editingEntity ? "تعديل قاعدة الاستبدال" : "إضافة قاعدة استبدال جديدة"}
+                          </CardTitle>
+                        </div>
+                        {isEntityFormOpen ? (
+                          <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                        )}
+                      </div>
+                      <CardDescription className="text-xs mt-1">
+                        استبدل أسماء أو كلمات بأخرى تلقائياً
+                      </CardDescription>
+                    </CardHeader>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <CardContent className="space-y-3 pt-0 px-4 pb-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                          <Label className="text-xs">نوع الكيان</Label>
+                          <Select
+                            value={entityForm.entityType}
+                            onValueChange={(value) => setEntityForm({ ...entityForm, entityType: value })}
+                          >
+                            <SelectTrigger className="mt-1 h-8 text-sm">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {entityTypes.map((type) => (
+                                <SelectItem key={type.value} value={type.value}>
+                                  <span className="flex items-center gap-2">
+                                    <span>{type.icon}</span>
+                                    {type.label}
+                                  </span>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label className="text-xs">الأولوية</Label>
+                          <Input
+                            type="number"
+                            value={entityForm.priority}
+                            onChange={(e) => setEntityForm({ ...entityForm, priority: parseInt(e.target.value) || 0 })}
+                            className="mt-1 h-8 text-sm"
+                            min={0}
+                            max={100}
+                          />
+                        </div>
+                      </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label>النص الأصلي</Label>
-                      <Input
-                        value={entityForm.originalText}
-                        onChange={(e) => setEntityForm({ ...entityForm, originalText: e.target.value })}
-                        placeholder="مثال: محمد مصطفى"
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label>النص البديل</Label>
-                      <Input
-                        value={entityForm.replacementText}
-                        onChange={(e) => setEntityForm({ ...entityForm, replacementText: e.target.value })}
-                        placeholder="مثال: البطل محمد مصطفى"
-                        className="mt-1"
-                      />
-                    </div>
-                  </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                          <Label className="text-xs">النص الأصلي</Label>
+                          <Input
+                            value={entityForm.originalText}
+                            onChange={(e) => setEntityForm({ ...entityForm, originalText: e.target.value })}
+                            placeholder="مثال: محمد مصطفى"
+                            className="mt-1 h-8 text-sm"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-xs">النص البديل</Label>
+                          <Input
+                            value={entityForm.replacementText}
+                            onChange={(e) => setEntityForm({ ...entityForm, replacementText: e.target.value })}
+                            placeholder="مثال: البطل محمد مصطفى"
+                            className="mt-1 h-8 text-sm"
+                          />
+                        </div>
+                      </div>
 
-                  <div className="flex flex-wrap items-center gap-6">
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={entityForm.useContext}
-                        onCheckedChange={(checked) => setEntityForm({ ...entityForm, useContext: checked })}
-                      />
-                      <Label>استخدام السياق</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={entityForm.caseSensitive}
-                        onCheckedChange={(checked) => setEntityForm({ ...entityForm, caseSensitive: checked })}
-                      />
-                      <Label>حساس لحالة الأحرف</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={entityForm.isActive}
-                        onCheckedChange={(checked) => setEntityForm({ ...entityForm, isActive: checked })}
-                      />
-                      <Label>مفعّل</Label>
-                    </div>
-                  </div>
+                      <div className="flex flex-wrap items-center gap-4">
+                        <div className="flex items-center gap-1.5">
+                          <Switch
+                            checked={entityForm.useContext}
+                            onCheckedChange={(checked) => setEntityForm({ ...entityForm, useContext: checked })}
+                            className="scale-90"
+                          />
+                          <Label className="text-xs">استخدام السياق</Label>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Switch
+                            checked={entityForm.caseSensitive}
+                            onCheckedChange={(checked) => setEntityForm({ ...entityForm, caseSensitive: checked })}
+                            className="scale-90"
+                          />
+                          <Label className="text-xs">حساس لحالة الأحرف</Label>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Switch
+                            checked={entityForm.isActive}
+                            onCheckedChange={(checked) => setEntityForm({ ...entityForm, isActive: checked })}
+                            className="scale-90"
+                          />
+                          <Label className="text-xs">مفعّل</Label>
+                        </div>
+                      </div>
 
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={handleSubmitEntity}
-                      disabled={createEntityMutation.isPending || updateEntityMutation.isPending}
-                      className="flex-1"
-                    >
-                      {(createEntityMutation.isPending || updateEntityMutation.isPending) && (
-                        <Loader className="h-4 w-4 mr-2 animate-spin" />
-                      )}
-                      {editingEntity ? "حفظ التعديلات" : "إضافة القاعدة"}
-                    </Button>
-                    {editingEntity && (
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          resetEntityForm();
-                          setEditingEntity(null);
-                        }}
-                      >
-                        إلغاء
-                      </Button>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={handleSubmitEntity}
+                          disabled={createEntityMutation.isPending || updateEntityMutation.isPending}
+                          className="flex-1 h-8 text-sm"
+                          size="sm"
+                        >
+                          {(createEntityMutation.isPending || updateEntityMutation.isPending) && (
+                            <Loader className="h-3 w-3 mr-2 animate-spin" />
+                          )}
+                          {editingEntity ? "حفظ التعديلات" : "إضافة القاعدة"}
+                        </Button>
+                        {editingEntity && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-8 text-sm"
+                            onClick={() => {
+                              resetEntityForm();
+                              setEditingEntity(null);
+                            }}
+                          >
+                            إلغاء
+                          </Button>
+                        )}
+                      </div>
+                    </CardContent>
+                  </CollapsibleContent>
+                </Card>
+              </Collapsible>
 
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
@@ -937,112 +966,129 @@ export default function AIRulesPage() {
               </div>
             </TabsContent>
 
-            <TabsContent value="context" className="space-y-6">
-              <Card className="border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/5 to-transparent">
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Plus className="h-5 w-5" />
-                    إضافة قاعدة سياق جديدة
-                  </CardTitle>
-                  <CardDescription>
-                    تحييد اللغة السلبية، تعزيز الإيجابية، أو تعديل أسلوب النص
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label>نوع القاعدة</Label>
-                      <Select
-                        value={contextForm.ruleType}
-                        onValueChange={(value) => setContextForm({ ...contextForm, ruleType: value })}
+            <TabsContent value="context" className="space-y-4">
+              <Collapsible open={isContextFormOpen} onOpenChange={setIsContextFormOpen}>
+                <Card className="border border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+                  <CollapsibleTrigger asChild>
+                    <CardHeader className="py-3 px-4 cursor-pointer hover:bg-muted/50 transition-colors">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Plus className="h-4 w-4 text-primary" />
+                          <CardTitle className="text-sm font-medium">
+                            إضافة قاعدة سياق جديدة
+                          </CardTitle>
+                        </div>
+                        {isContextFormOpen ? (
+                          <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                        )}
+                      </div>
+                      <CardDescription className="text-xs mt-1">
+                        تحييد اللغة السلبية، تعزيز الإيجابية، أو تعديل أسلوب النص
+                      </CardDescription>
+                    </CardHeader>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <CardContent className="space-y-3 pt-0 px-4 pb-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                          <Label className="text-xs">نوع القاعدة</Label>
+                          <Select
+                            value={contextForm.ruleType}
+                            onValueChange={(value) => setContextForm({ ...contextForm, ruleType: value })}
+                          >
+                            <SelectTrigger className="mt-1 h-8 text-sm">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {contextRuleTypes.map((type) => (
+                                <SelectItem key={type.value} value={type.value}>
+                                  <div>
+                                    <div className="font-medium text-sm">{type.label}</div>
+                                    <div className="text-xs text-muted-foreground">{type.description}</div>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label className="text-xs">النبرة المستهدفة</Label>
+                          <Select
+                            value={contextForm.targetSentiment}
+                            onValueChange={(value) => setContextForm({ ...contextForm, targetSentiment: value })}
+                          >
+                            <SelectTrigger className="mt-1 h-8 text-sm">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="neutral">حيادي</SelectItem>
+                              <SelectItem value="positive">إيجابي</SelectItem>
+                              <SelectItem value="formal">رسمي</SelectItem>
+                              <SelectItem value="professional">مهني</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      {contextForm.ruleType === 'custom' && (
+                        <div>
+                          <Label className="text-xs">نمط التفعيل (Regex)</Label>
+                          <Input
+                            value={contextForm.triggerPattern}
+                            onChange={(e) => setContextForm({ ...contextForm, triggerPattern: e.target.value })}
+                            placeholder="مثال: إرهابي|عميل|خائن"
+                            className="mt-1 h-8 text-sm font-mono"
+                            dir="ltr"
+                          />
+                        </div>
+                      )}
+
+                      <div>
+                        <Label className="text-xs">التعليمات</Label>
+                        <Textarea
+                          value={contextForm.instructions}
+                          onChange={(e) => setContextForm({ ...contextForm, instructions: e.target.value })}
+                          placeholder="اكتب تعليمات واضحة للذكاء الاصطناعي..."
+                          className="mt-1 min-h-[70px] text-sm"
+                        />
+                      </div>
+
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-1.5">
+                          <Switch
+                            checked={contextForm.isActive}
+                            onCheckedChange={(checked) => setContextForm({ ...contextForm, isActive: checked })}
+                            className="scale-90"
+                          />
+                          <Label className="text-xs">مفعّل</Label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Label className="text-xs text-muted-foreground">الأولوية</Label>
+                          <Input
+                            type="number"
+                            value={contextForm.priority}
+                            onChange={(e) => setContextForm({ ...contextForm, priority: parseInt(e.target.value) || 0 })}
+                            className="w-16 h-7 text-sm"
+                            min={0}
+                          />
+                        </div>
+                      </div>
+
+                      <Button
+                        onClick={handleSubmitContext}
+                        disabled={createContextMutation.isPending}
+                        className="w-full h-8 text-sm"
+                        size="sm"
                       >
-                        <SelectTrigger className="mt-1">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {contextRuleTypes.map((type) => (
-                            <SelectItem key={type.value} value={type.value}>
-                              <div>
-                                <div className="font-medium">{type.label}</div>
-                                <div className="text-xs text-muted-foreground">{type.description}</div>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label>النبرة المستهدفة</Label>
-                      <Select
-                        value={contextForm.targetSentiment}
-                        onValueChange={(value) => setContextForm({ ...contextForm, targetSentiment: value })}
-                      >
-                        <SelectTrigger className="mt-1">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="neutral">حيادي</SelectItem>
-                          <SelectItem value="positive">إيجابي</SelectItem>
-                          <SelectItem value="formal">رسمي</SelectItem>
-                          <SelectItem value="professional">مهني</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  {contextForm.ruleType === 'custom' && (
-                    <div>
-                      <Label>نمط التفعيل (Regex)</Label>
-                      <Input
-                        value={contextForm.triggerPattern}
-                        onChange={(e) => setContextForm({ ...contextForm, triggerPattern: e.target.value })}
-                        placeholder="مثال: إرهابي|عميل|خائن"
-                        className="mt-1 font-mono"
-                        dir="ltr"
-                      />
-                    </div>
-                  )}
-
-                  <div>
-                    <Label>التعليمات</Label>
-                    <Textarea
-                      value={contextForm.instructions}
-                      onChange={(e) => setContextForm({ ...contextForm, instructions: e.target.value })}
-                      placeholder="اكتب تعليمات واضحة للذكاء الاصطناعي..."
-                      className="mt-1 min-h-[100px]"
-                    />
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={contextForm.isActive}
-                        onCheckedChange={(checked) => setContextForm({ ...contextForm, isActive: checked })}
-                      />
-                      <Label>مفعّل</Label>
-                    </div>
-                    <div>
-                      <Label className="text-sm text-muted-foreground">الأولوية</Label>
-                      <Input
-                        type="number"
-                        value={contextForm.priority}
-                        onChange={(e) => setContextForm({ ...contextForm, priority: parseInt(e.target.value) || 0 })}
-                        className="w-20 h-8"
-                        min={0}
-                      />
-                    </div>
-                  </div>
-
-                  <Button
-                    onClick={handleSubmitContext}
-                    disabled={createContextMutation.isPending}
-                    className="w-full"
-                  >
-                    {createContextMutation.isPending && <Loader className="h-4 w-4 mr-2 animate-spin" />}
-                    إضافة القاعدة
-                  </Button>
-                </CardContent>
-              </Card>
+                        {createContextMutation.isPending && <Loader className="h-3 w-3 mr-2 animate-spin" />}
+                        إضافة القاعدة
+                      </Button>
+                    </CardContent>
+                  </CollapsibleContent>
+                </Card>
+              </Collapsible>
 
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
@@ -1094,80 +1140,96 @@ export default function AIRulesPage() {
               </div>
             </TabsContent>
 
-            <TabsContent value="training" className="space-y-6">
-              <Card className="border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/5 to-transparent">
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Plus className="h-5 w-5" />
-                    إضافة مثال تدريب جديد
-                  </CardTitle>
-                  <CardDescription>
-                    علّم الذكاء الاصطناعي أسلوبك المفضل بأمثلة عملية
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label>نوع المثال</Label>
-                    <Select
-                      value={trainingForm.exampleType}
-                      onValueChange={(value) => setTrainingForm({ ...trainingForm, exampleType: value })}
-                    >
-                      <SelectTrigger className="mt-1">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {exampleTypes.map((type) => (
-                          <SelectItem key={type.value} value={type.value}>
-                            <div>
-                              <div className="font-medium">{type.label}</div>
-                              <div className="text-xs text-muted-foreground">{type.description}</div>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+            <TabsContent value="training" className="space-y-4">
+              <Collapsible open={isTrainingFormOpen} onOpenChange={setIsTrainingFormOpen}>
+                <Card className="border border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+                  <CollapsibleTrigger asChild>
+                    <CardHeader className="py-3 px-4 cursor-pointer hover:bg-muted/50 transition-colors">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Plus className="h-4 w-4 text-primary" />
+                          <CardTitle className="text-sm font-medium">
+                            إضافة مثال تدريب جديد
+                          </CardTitle>
+                        </div>
+                        {isTrainingFormOpen ? (
+                          <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                        )}
+                      </div>
+                      <CardDescription className="text-xs mt-1">
+                        علّم الذكاء الاصطناعي أسلوبك المفضل بأمثلة عملية
+                      </CardDescription>
+                    </CardHeader>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <CardContent className="space-y-3 pt-0 px-4 pb-4">
+                      <div>
+                        <Label className="text-xs">نوع المثال</Label>
+                        <Select
+                          value={trainingForm.exampleType}
+                          onValueChange={(value) => setTrainingForm({ ...trainingForm, exampleType: value })}
+                        >
+                          <SelectTrigger className="mt-1 h-8 text-sm">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {exampleTypes.map((type) => (
+                              <SelectItem key={type.value} value={type.value}>
+                                <div>
+                                  <div className="font-medium text-sm">{type.label}</div>
+                                  <div className="text-xs text-muted-foreground">{type.description}</div>
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-                  <div>
-                    <Label>النص المُدخل</Label>
-                    <Textarea
-                      value={trainingForm.inputText}
-                      onChange={(e) => setTrainingForm({ ...trainingForm, inputText: e.target.value })}
-                      placeholder="النص الأصلي أو مخرج الذكاء الاصطناعي الخاطئ..."
-                      className="mt-1 min-h-[80px]"
-                    />
-                  </div>
+                      <div>
+                        <Label className="text-xs">النص المُدخل</Label>
+                        <Textarea
+                          value={trainingForm.inputText}
+                          onChange={(e) => setTrainingForm({ ...trainingForm, inputText: e.target.value })}
+                          placeholder="النص الأصلي أو مخرج الذكاء الاصطناعي الخاطئ..."
+                          className="mt-1 min-h-[60px] text-sm"
+                        />
+                      </div>
 
-                  <div>
-                    <Label>المخرج المتوقع</Label>
-                    <Textarea
-                      value={trainingForm.expectedOutput}
-                      onChange={(e) => setTrainingForm({ ...trainingForm, expectedOutput: e.target.value })}
-                      placeholder="الصياغة الصحيحة التي تفضلها..."
-                      className="mt-1 min-h-[80px]"
-                    />
-                  </div>
+                      <div>
+                        <Label className="text-xs">المخرج المتوقع</Label>
+                        <Textarea
+                          value={trainingForm.expectedOutput}
+                          onChange={(e) => setTrainingForm({ ...trainingForm, expectedOutput: e.target.value })}
+                          placeholder="الصياغة الصحيحة التي تفضلها..."
+                          className="mt-1 min-h-[60px] text-sm"
+                        />
+                      </div>
 
-                  <div>
-                    <Label>شرح (اختياري)</Label>
-                    <Input
-                      value={trainingForm.explanation}
-                      onChange={(e) => setTrainingForm({ ...trainingForm, explanation: e.target.value })}
-                      placeholder="لماذا هذه الصياغة أفضل؟"
-                      className="mt-1"
-                    />
-                  </div>
+                      <div>
+                        <Label className="text-xs">شرح (اختياري)</Label>
+                        <Input
+                          value={trainingForm.explanation}
+                          onChange={(e) => setTrainingForm({ ...trainingForm, explanation: e.target.value })}
+                          placeholder="لماذا هذه الصياغة أفضل؟"
+                          className="mt-1 h-8 text-sm"
+                        />
+                      </div>
 
-                  <Button
-                    onClick={handleSubmitTraining}
-                    disabled={createTrainingMutation.isPending}
-                    className="w-full"
-                  >
-                    {createTrainingMutation.isPending && <Loader className="h-4 w-4 mr-2 animate-spin" />}
-                    إضافة المثال
-                  </Button>
-                </CardContent>
-              </Card>
+                      <Button
+                        onClick={handleSubmitTraining}
+                        disabled={createTrainingMutation.isPending}
+                        className="w-full h-8 text-sm"
+                        size="sm"
+                      >
+                        {createTrainingMutation.isPending && <Loader className="h-3 w-3 mr-2 animate-spin" />}
+                        إضافة المثال
+                      </Button>
+                    </CardContent>
+                  </CollapsibleContent>
+                </Card>
+              </Collapsible>
 
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
@@ -1235,182 +1297,199 @@ export default function AIRulesPage() {
               </div>
             </TabsContent>
 
-            <TabsContent value="filters" className="space-y-6">
-              <Card className="border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/5 to-transparent">
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Plus className="h-5 w-5" />
-                    إضافة فلتر محتوى جديد
-                  </CardTitle>
-                  <CardDescription>
-                    تصفية المحتوى تلقائياً بناءً على أنماط محددة
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label>اسم الفلتر</Label>
-                      <Input
-                        value={filterForm.name}
-                        onChange={(e) => setFilterForm({ ...filterForm, name: e.target.value })}
-                        placeholder="مثال: فلتر المحتوى السلبي"
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label>نوع الفلتر</Label>
-                      <Select
-                        value={filterForm.filterType}
-                        onValueChange={(value) => setFilterForm({ ...filterForm, filterType: value })}
+            <TabsContent value="filters" className="space-y-4">
+              <Collapsible open={isFilterFormOpen} onOpenChange={setIsFilterFormOpen}>
+                <Card className="border border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+                  <CollapsibleTrigger asChild>
+                    <CardHeader className="py-3 px-4 cursor-pointer hover:bg-muted/50 transition-colors">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Plus className="h-4 w-4 text-primary" />
+                          <CardTitle className="text-sm font-medium">
+                            إضافة فلتر محتوى جديد
+                          </CardTitle>
+                        </div>
+                        {isFilterFormOpen ? (
+                          <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                        )}
+                      </div>
+                      <CardDescription className="text-xs mt-1">
+                        تصفية المحتوى تلقائياً بناءً على أنماط محددة
+                      </CardDescription>
+                    </CardHeader>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <CardContent className="space-y-3 pt-0 px-4 pb-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                          <Label className="text-xs">اسم الفلتر</Label>
+                          <Input
+                            value={filterForm.name}
+                            onChange={(e) => setFilterForm({ ...filterForm, name: e.target.value })}
+                            placeholder="مثال: فلتر المحتوى السلبي"
+                            className="mt-1 h-8 text-sm"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-xs">نوع الفلتر</Label>
+                          <Select
+                            value={filterForm.filterType}
+                            onValueChange={(value) => setFilterForm({ ...filterForm, filterType: value })}
+                          >
+                            <SelectTrigger className="mt-1 h-8 text-sm">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {filterTypes.map((type) => (
+                                <SelectItem key={type.value} value={type.value}>
+                                  <div>
+                                    <div className="font-medium text-sm">{type.label}</div>
+                                    <div className="text-xs text-muted-foreground">{type.description}</div>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                          <Label className="text-xs">نوع المطابقة</Label>
+                          <Select
+                            value={filterForm.matchType}
+                            onValueChange={(value) => setFilterForm({ ...filterForm, matchType: value })}
+                          >
+                            <SelectTrigger className="mt-1 h-8 text-sm">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {matchTypes.map((type) => (
+                                <SelectItem key={type.value} value={type.value}>
+                                  <div>
+                                    <div className="font-medium text-sm">{type.label}</div>
+                                    <div className="text-xs text-muted-foreground">{type.description}</div>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label className="text-xs">الإجراء</Label>
+                          <Select
+                            value={filterForm.action}
+                            onValueChange={(value) => setFilterForm({ ...filterForm, action: value })}
+                          >
+                            <SelectTrigger className="mt-1 h-8 text-sm">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {filterActions.map((action) => (
+                                <SelectItem key={action.value} value={action.value}>
+                                  <div>
+                                    <div className="font-medium text-sm">{action.label}</div>
+                                    <div className="text-xs text-muted-foreground">{action.description}</div>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label className="text-xs">النمط / الكلمات المفتاحية</Label>
+                        <Input
+                          value={filterForm.pattern}
+                          onChange={(e) => setFilterForm({ ...filterForm, pattern: e.target.value })}
+                          placeholder="مثال: كلمة1|كلمة2|كلمة3"
+                          className="mt-1 h-8 text-sm font-mono"
+                          dir="ltr"
+                        />
+                      </div>
+
+                      {filterForm.matchType === 'context' && (
+                        <div>
+                          <Label className="text-xs">وصف السياق</Label>
+                          <Textarea
+                            value={filterForm.contextDescription}
+                            onChange={(e) => setFilterForm({ ...filterForm, contextDescription: e.target.value })}
+                            placeholder="اكتب وصفاً للسياق المطلوب تحليله..."
+                            className="mt-1 min-h-[60px] text-sm"
+                          />
+                        </div>
+                      )}
+
+                      {filterForm.matchType === 'sentiment' && (
+                        <div>
+                          <Label className="text-xs">المشاعر المستهدفة</Label>
+                          <Select
+                            value={filterForm.sentimentTarget}
+                            onValueChange={(value) => setFilterForm({ ...filterForm, sentimentTarget: value })}
+                          >
+                            <SelectTrigger className="mt-1 h-8 text-sm">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {sentimentTargets.map((target) => (
+                                <SelectItem key={target.value} value={target.value}>
+                                  {target.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
+
+                      {filterForm.action === 'modify' && (
+                        <div>
+                          <Label className="text-xs">تعليمات التعديل</Label>
+                          <Textarea
+                            value={filterForm.modifyInstructions}
+                            onChange={(e) => setFilterForm({ ...filterForm, modifyInstructions: e.target.value })}
+                            placeholder="اكتب تعليمات التعديل للذكاء الاصطناعي..."
+                            className="mt-1 min-h-[60px] text-sm"
+                          />
+                        </div>
+                      )}
+
+                      <div className="flex flex-wrap items-center gap-4">
+                        <div className="flex items-center gap-1.5">
+                          <Switch
+                            checked={filterForm.isActive}
+                            onCheckedChange={(checked) => setFilterForm({ ...filterForm, isActive: checked })}
+                            className="scale-90"
+                          />
+                          <Label className="text-xs">مفعّل</Label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Label className="text-xs text-muted-foreground">الأولوية</Label>
+                          <Input
+                            type="number"
+                            value={filterForm.priority}
+                            onChange={(e) => setFilterForm({ ...filterForm, priority: parseInt(e.target.value) || 0 })}
+                            className="w-16 h-7 text-sm"
+                            min={0}
+                          />
+                        </div>
+                      </div>
+
+                      <Button
+                        onClick={handleSubmitFilter}
+                        disabled={createFilterMutation.isPending}
+                        className="w-full h-8 text-sm"
+                        size="sm"
                       >
-                        <SelectTrigger className="mt-1">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {filterTypes.map((type) => (
-                            <SelectItem key={type.value} value={type.value}>
-                              <div>
-                                <div className="font-medium">{type.label}</div>
-                                <div className="text-xs text-muted-foreground">{type.description}</div>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label>نوع المطابقة</Label>
-                      <Select
-                        value={filterForm.matchType}
-                        onValueChange={(value) => setFilterForm({ ...filterForm, matchType: value })}
-                      >
-                        <SelectTrigger className="mt-1">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {matchTypes.map((type) => (
-                            <SelectItem key={type.value} value={type.value}>
-                              <div>
-                                <div className="font-medium">{type.label}</div>
-                                <div className="text-xs text-muted-foreground">{type.description}</div>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label>الإجراء</Label>
-                      <Select
-                        value={filterForm.action}
-                        onValueChange={(value) => setFilterForm({ ...filterForm, action: value })}
-                      >
-                        <SelectTrigger className="mt-1">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {filterActions.map((action) => (
-                            <SelectItem key={action.value} value={action.value}>
-                              <div>
-                                <div className="font-medium">{action.label}</div>
-                                <div className="text-xs text-muted-foreground">{action.description}</div>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label>النمط / الكلمات المفتاحية</Label>
-                    <Input
-                      value={filterForm.pattern}
-                      onChange={(e) => setFilterForm({ ...filterForm, pattern: e.target.value })}
-                      placeholder="مثال: كلمة1|كلمة2|كلمة3"
-                      className="mt-1 font-mono"
-                      dir="ltr"
-                    />
-                  </div>
-
-                  {filterForm.matchType === 'context' && (
-                    <div>
-                      <Label>وصف السياق</Label>
-                      <Textarea
-                        value={filterForm.contextDescription}
-                        onChange={(e) => setFilterForm({ ...filterForm, contextDescription: e.target.value })}
-                        placeholder="اكتب وصفاً للسياق المطلوب تحليله..."
-                        className="mt-1 min-h-[80px]"
-                      />
-                    </div>
-                  )}
-
-                  {filterForm.matchType === 'sentiment' && (
-                    <div>
-                      <Label>المشاعر المستهدفة</Label>
-                      <Select
-                        value={filterForm.sentimentTarget}
-                        onValueChange={(value) => setFilterForm({ ...filterForm, sentimentTarget: value })}
-                      >
-                        <SelectTrigger className="mt-1">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {sentimentTargets.map((target) => (
-                            <SelectItem key={target.value} value={target.value}>
-                              {target.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  )}
-
-                  {filterForm.action === 'modify' && (
-                    <div>
-                      <Label>تعليمات التعديل</Label>
-                      <Textarea
-                        value={filterForm.modifyInstructions}
-                        onChange={(e) => setFilterForm({ ...filterForm, modifyInstructions: e.target.value })}
-                        placeholder="اكتب تعليمات التعديل للذكاء الاصطناعي..."
-                        className="mt-1 min-h-[80px]"
-                      />
-                    </div>
-                  )}
-
-                  <div className="flex flex-wrap items-center gap-6">
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={filterForm.isActive}
-                        onCheckedChange={(checked) => setFilterForm({ ...filterForm, isActive: checked })}
-                      />
-                      <Label>مفعّل</Label>
-                    </div>
-                    <div>
-                      <Label className="text-sm text-muted-foreground">الأولوية</Label>
-                      <Input
-                        type="number"
-                        value={filterForm.priority}
-                        onChange={(e) => setFilterForm({ ...filterForm, priority: parseInt(e.target.value) || 0 })}
-                        className="w-20 h-8"
-                        min={0}
-                      />
-                    </div>
-                  </div>
-
-                  <Button
-                    onClick={handleSubmitFilter}
-                    disabled={createFilterMutation.isPending}
-                    className="w-full"
-                  >
-                    {createFilterMutation.isPending && <Loader className="h-4 w-4 mr-2 animate-spin" />}
-                    إضافة الفلتر
-                  </Button>
-                </CardContent>
-              </Card>
+                        {createFilterMutation.isPending && <Loader className="h-3 w-3 mr-2 animate-spin" />}
+                        إضافة الفلتر
+                      </Button>
+                    </CardContent>
+                  </CollapsibleContent>
+                </Card>
+              </Collapsible>
 
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
@@ -1471,152 +1550,54 @@ export default function AIRulesPage() {
               </div>
             </TabsContent>
 
-            <TabsContent value="templates" className="space-y-6">
-              <Card className="border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/5 to-transparent">
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Plus className="h-5 w-5" />
-                    إنشاء قالب نشر مخصص
-                  </CardTitle>
-                  <CardDescription>
-                    أنشئ قالب نشر مع حقول مخصصة يتم استخراجها بالذكاء الاصطناعي وتنسيقات متعددة
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  {/* Basic Template Info */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label>اسم القالب *</Label>
-                      <Input
-                        value={templateForm.name}
-                        onChange={(e) => setTemplateForm({ ...templateForm, name: e.target.value })}
-                        placeholder="مثال: قالب الأخبار العاجلة"
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label>نوع القالب</Label>
-                      <Select
-                        value={templateForm.templateType}
-                        onValueChange={(value) => setTemplateForm({ ...templateForm, templateType: value })}
-                      >
-                        <SelectTrigger className="mt-1">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {templateTypes.map((type) => (
-                            <SelectItem key={type.value} value={type.value}>
-                              {type.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  {/* Header Section */}
-                  <div className="p-4 border rounded-lg bg-muted/30">
-                    <h4 className="font-medium mb-3">رأس القالب (اختياري)</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="md:col-span-2">
-                        <Label>نص الرأس</Label>
-                        <Input
-                          value={templateForm.headerText || ''}
-                          onChange={(e) => setTemplateForm({ ...templateForm, headerText: e.target.value })}
-                          placeholder="مثال: عاجل | أخبار اليوم"
-                          className="mt-1"
-                        />
+            <TabsContent value="templates" className="space-y-4">
+              <Collapsible open={isTemplateFormOpen} onOpenChange={setIsTemplateFormOpen}>
+                <Card className="border border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+                  <CollapsibleTrigger asChild>
+                    <CardHeader className="py-3 px-4 cursor-pointer hover:bg-muted/50 transition-colors">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Plus className="h-4 w-4 text-primary" />
+                          <CardTitle className="text-sm font-medium">
+                            إنشاء قالب نشر مخصص
+                          </CardTitle>
+                        </div>
+                        {isTemplateFormOpen ? (
+                          <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                        )}
                       </div>
-                      <div>
-                        <Label>تنسيق الرأس</Label>
-                        <Select
-                          value={templateForm.headerFormatting || 'none'}
-                          onValueChange={(value) => setTemplateForm({ ...templateForm, headerFormatting: value })}
-                        >
-                          <SelectTrigger className="mt-1">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {formattingOptions.map((fmt) => (
-                              <SelectItem key={fmt.value} value={fmt.value}>
-                                {fmt.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Custom Fields Section */}
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-3 flex items-center gap-2">
-                      <Zap className="h-4 w-4 text-yellow-500" />
-                      الحقول المخصصة
-                    </h4>
-                    
-                    {/* Field Editor */}
-                    <div className="space-y-4 p-4 bg-muted/30 rounded-lg mb-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <CardDescription className="text-xs mt-1">
+                        أنشئ قالب نشر مع حقول مخصصة يتم استخراجها بالذكاء الاصطناعي
+                      </CardDescription>
+                    </CardHeader>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <CardContent className="space-y-4 pt-0 px-4 pb-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
-                          <Label>اسم الحقل (للنظام) *</Label>
+                          <Label className="text-xs">اسم القالب *</Label>
                           <Input
-                            value={currentField.fieldName || ''}
-                            onChange={(e) => setCurrentField({ ...currentField, fieldName: e.target.value.replace(/\s/g, '_') })}
-                            placeholder="مثال: news_type"
-                            className="mt-1 font-mono"
-                            dir="ltr"
+                            value={templateForm.name}
+                            onChange={(e) => setTemplateForm({ ...templateForm, name: e.target.value })}
+                            placeholder="مثال: قالب الأخبار العاجلة"
+                            className="mt-1 h-8 text-sm"
                           />
                         </div>
                         <div>
-                          <Label>عنوان الحقل (للعرض) *</Label>
-                          <Input
-                            value={currentField.fieldLabel || ''}
-                            onChange={(e) => setCurrentField({ ...currentField, fieldLabel: e.target.value })}
-                            placeholder="مثال: نوع الخبر"
-                            className="mt-1"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <Label>نوع الحقل</Label>
+                          <Label className="text-xs">نوع القالب</Label>
                           <Select
-                            value={currentField.fieldType || 'extracted'}
-                            onValueChange={(value) => setCurrentField({ ...currentField, fieldType: value })}
+                            value={templateForm.templateType}
+                            onValueChange={(value) => setTemplateForm({ ...templateForm, templateType: value })}
                           >
-                            <SelectTrigger className="mt-1">
+                            <SelectTrigger className="mt-1 h-8 text-sm">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              {fieldTypes.map((ft) => (
-                                <SelectItem key={ft.value} value={ft.value}>
-                                  <div>
-                                    <div className="font-medium">{ft.label}</div>
-                                    <div className="text-xs text-muted-foreground">{ft.description}</div>
-                                  </div>
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div>
-                          <Label>التنسيق</Label>
-                          <Select
-                            value={currentField.formatting || 'none'}
-                            onValueChange={(value) => setCurrentField({ ...currentField, formatting: value })}
-                          >
-                            <SelectTrigger className="mt-1">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {formattingOptions.map((fmt) => (
-                                <SelectItem key={fmt.value} value={fmt.value}>
-                                  <div className="flex items-center gap-2">
-                                    <span>{fmt.label}</span>
-                                    <code className="text-xs bg-muted px-1 rounded">{fmt.example}</code>
-                                  </div>
+                              {templateTypes.map((type) => (
+                                <SelectItem key={type.value} value={type.value}>
+                                  {type.label}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -1624,241 +1605,343 @@ export default function AIRulesPage() {
                         </div>
                       </div>
 
-                      {currentField.fieldType === 'extracted' && (
-                        <div>
-                          <Label>تعليمات الاستخراج بالذكاء الاصطناعي *</Label>
-                          <Textarea
-                            value={currentField.extractionInstructions || ''}
-                            onChange={(e) => setCurrentField({ ...currentField, extractionInstructions: e.target.value })}
-                            placeholder="مثال: استخرج نوع الخبر من النص (سياسي، اقتصادي، رياضي، الخ)"
-                            className="mt-1 min-h-[80px]"
-                          />
-                        </div>
-                      )}
-
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                          <Label>القيمة الافتراضية</Label>
-                          <Input
-                            value={currentField.defaultValue || ''}
-                            onChange={(e) => setCurrentField({ ...currentField, defaultValue: e.target.value })}
-                            placeholder="قيمة إذا فشل الاستخراج"
-                            className="mt-1"
-                          />
-                        </div>
-                        <div>
-                          <Label>بادئة (قبل القيمة)</Label>
-                          <Input
-                            value={currentField.prefix || ''}
-                            onChange={(e) => setCurrentField({ ...currentField, prefix: e.target.value })}
-                            placeholder="مثال: emoji"
-                            className="mt-1"
-                          />
-                        </div>
-                        <div>
-                          <Label>لاحقة (بعد القيمة)</Label>
-                          <Input
-                            value={currentField.suffix || ''}
-                            onChange={(e) => setCurrentField({ ...currentField, suffix: e.target.value })}
-                            placeholder="مثال: نص إضافي"
-                            className="mt-1"
-                          />
+                      <div className="p-3 border rounded-lg bg-muted/30">
+                        <h4 className="text-xs font-medium mb-2">رأس القالب (اختياري)</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <div className="md:col-span-2">
+                            <Label className="text-xs">نص الرأس</Label>
+                            <Input
+                              value={templateForm.headerText || ''}
+                              onChange={(e) => setTemplateForm({ ...templateForm, headerText: e.target.value })}
+                              placeholder="مثال: عاجل | أخبار اليوم"
+                              className="mt-1 h-8 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs">تنسيق الرأس</Label>
+                            <Select
+                              value={templateForm.headerFormatting || 'none'}
+                              onValueChange={(value) => setTemplateForm({ ...templateForm, headerFormatting: value })}
+                            >
+                              <SelectTrigger className="mt-1 h-8 text-sm">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {formattingOptions.map((fmt) => (
+                                  <SelectItem key={fmt.value} value={fmt.value}>
+                                    {fmt.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
                         </div>
                       </div>
 
-                      <div className="flex flex-wrap items-center gap-4">
-                        <div className="flex items-center gap-2">
-                          <Switch
-                            checked={currentField.showLabel ?? false}
-                            onCheckedChange={(checked) => setCurrentField({ ...currentField, showLabel: checked })}
-                          />
-                          <Label className="text-sm">إظهار العنوان</Label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Switch
-                            checked={currentField.useDefaultIfEmpty ?? true}
-                            onCheckedChange={(checked) => setCurrentField({ ...currentField, useDefaultIfEmpty: checked })}
-                          />
-                          <Label className="text-sm">استخدام الافتراضي إذا فارغ</Label>
-                        </div>
-                      </div>
-
-                      <Button 
-                        type="button" 
-                        onClick={handleAddCustomField}
-                        className="w-full"
-                        variant={editingFieldIndex !== null ? "default" : "outline"}
-                      >
-                        <Plus className="h-4 w-4 mr-2" />
-                        {editingFieldIndex !== null ? 'تحديث الحقل' : 'إضافة الحقل'}
-                      </Button>
-                      
-                      {editingFieldIndex !== null && (
-                        <Button 
-                          type="button" 
-                          onClick={resetCurrentField}
-                          variant="ghost"
-                          className="w-full"
-                        >
-                          إلغاء التعديل
-                        </Button>
-                      )}
-                    </div>
-
-                    {/* Added Fields List */}
-                    {templateForm.customFields && templateForm.customFields.length > 0 && (
-                      <div className="space-y-2">
-                        <Label className="text-sm text-muted-foreground">الحقول المضافة ({templateForm.customFields.length})</Label>
-                        {templateForm.customFields.map((field, index) => (
-                          <div key={index} className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
-                            <div className="flex flex-col gap-1">
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-5 w-5"
-                                onClick={() => handleMoveField(index, 'up')}
-                                disabled={index === 0}
-                              >
-                                <ChevronDown className="h-3 w-3 rotate-180" />
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-5 w-5"
-                                onClick={() => handleMoveField(index, 'down')}
-                                disabled={index === templateForm.customFields!.length - 1}
-                              >
-                                <ChevronDown className="h-3 w-3" />
-                              </Button>
+                      <div className="p-3 border rounded-lg">
+                        <h4 className="text-xs font-medium mb-2 flex items-center gap-2">
+                          <Zap className="h-3 w-3 text-yellow-500" />
+                          الحقول المخصصة
+                        </h4>
+                        
+                        <div className="space-y-3 p-3 bg-muted/30 rounded-lg mb-3">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                              <Label className="text-xs">اسم الحقل (للنظام) *</Label>
+                              <Input
+                                value={currentField.fieldName || ''}
+                                onChange={(e) => setCurrentField({ ...currentField, fieldName: e.target.value.replace(/\s/g, '_') })}
+                                placeholder="مثال: news_type"
+                                className="mt-1 h-8 text-sm font-mono"
+                                dir="ltr"
+                              />
                             </div>
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2">
-                                <span className="font-medium">{field.fieldLabel}</span>
-                                <Badge variant="outline" className="text-xs">{field.fieldName}</Badge>
-                                <Badge variant="secondary" className="text-xs">
-                                  {fieldTypes.find(ft => ft.value === field.fieldType)?.label}
-                                </Badge>
-                                {field.formatting !== 'none' && (
-                                  <Badge className="text-xs">
-                                    {formattingOptions.find(f => f.value === field.formatting)?.label}
-                                  </Badge>
-                                )}
-                              </div>
-                              {field.extractionInstructions && (
-                                <p className="text-xs text-muted-foreground mt-1 truncate max-w-md">
-                                  {field.extractionInstructions}
-                                </p>
-                              )}
-                            </div>
-                            <div className="flex gap-1">
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                onClick={() => handleEditCustomField(index)}
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="text-red-600"
-                                onClick={() => handleRemoveCustomField(index)}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
+                            <div>
+                              <Label className="text-xs">عنوان الحقل (للعرض) *</Label>
+                              <Input
+                                value={currentField.fieldLabel || ''}
+                                onChange={(e) => setCurrentField({ ...currentField, fieldLabel: e.target.value })}
+                                placeholder="مثال: نوع الخبر"
+                                className="mt-1 h-8 text-sm"
+                              />
                             </div>
                           </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
 
-                  {/* Footer Section */}
-                  <div className="p-4 border rounded-lg bg-muted/30">
-                    <h4 className="font-medium mb-3">تذييل القالب (اختياري)</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="md:col-span-2">
-                        <Label>نص التذييل</Label>
-                        <Input
-                          value={templateForm.footerText || ''}
-                          onChange={(e) => setTemplateForm({ ...templateForm, footerText: e.target.value })}
-                          placeholder="مثال: المصدر: قناتنا الإخبارية"
-                          className="mt-1"
-                        />
-                      </div>
-                      <div>
-                        <Label>تنسيق التذييل</Label>
-                        <Select
-                          value={templateForm.footerFormatting || 'none'}
-                          onValueChange={(value) => setTemplateForm({ ...templateForm, footerFormatting: value })}
-                        >
-                          <SelectTrigger className="mt-1">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {formattingOptions.map((fmt) => (
-                              <SelectItem key={fmt.value} value={fmt.value}>
-                                {fmt.label}
-                              </SelectItem>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                              <Label className="text-xs">نوع الحقل</Label>
+                              <Select
+                                value={currentField.fieldType || 'extracted'}
+                                onValueChange={(value) => setCurrentField({ ...currentField, fieldType: value })}
+                              >
+                                <SelectTrigger className="mt-1 h-8 text-sm">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {fieldTypes.map((ft) => (
+                                    <SelectItem key={ft.value} value={ft.value}>
+                                      <div>
+                                        <div className="font-medium text-sm">{ft.label}</div>
+                                        <div className="text-xs text-muted-foreground">{ft.description}</div>
+                                      </div>
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div>
+                              <Label className="text-xs">التنسيق</Label>
+                              <Select
+                                value={currentField.formatting || 'none'}
+                                onValueChange={(value) => setCurrentField({ ...currentField, formatting: value })}
+                              >
+                                <SelectTrigger className="mt-1 h-8 text-sm">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {formattingOptions.map((fmt) => (
+                                    <SelectItem key={fmt.value} value={fmt.value}>
+                                      <div className="flex items-center gap-2">
+                                        <span>{fmt.label}</span>
+                                        <code className="text-xs bg-muted px-1 rounded">{fmt.example}</code>
+                                      </div>
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+
+                          {currentField.fieldType === 'extracted' && (
+                            <div>
+                              <Label className="text-xs">تعليمات الاستخراج بالذكاء الاصطناعي *</Label>
+                              <Textarea
+                                value={currentField.extractionInstructions || ''}
+                                onChange={(e) => setCurrentField({ ...currentField, extractionInstructions: e.target.value })}
+                                placeholder="مثال: استخرج نوع الخبر من النص (سياسي، اقتصادي، رياضي، الخ)"
+                                className="mt-1 min-h-[60px] text-sm"
+                              />
+                            </div>
+                          )}
+
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div>
+                              <Label className="text-xs">القيمة الافتراضية</Label>
+                              <Input
+                                value={currentField.defaultValue || ''}
+                                onChange={(e) => setCurrentField({ ...currentField, defaultValue: e.target.value })}
+                                placeholder="قيمة إذا فشل الاستخراج"
+                                className="mt-1 h-8 text-sm"
+                              />
+                            </div>
+                            <div>
+                              <Label className="text-xs">بادئة (قبل القيمة)</Label>
+                              <Input
+                                value={currentField.prefix || ''}
+                                onChange={(e) => setCurrentField({ ...currentField, prefix: e.target.value })}
+                                placeholder="مثال: emoji"
+                                className="mt-1 h-8 text-sm"
+                              />
+                            </div>
+                            <div>
+                              <Label className="text-xs">لاحقة (بعد القيمة)</Label>
+                              <Input
+                                value={currentField.suffix || ''}
+                                onChange={(e) => setCurrentField({ ...currentField, suffix: e.target.value })}
+                                placeholder="مثال: نص إضافي"
+                                className="mt-1 h-8 text-sm"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-3">
+                            <div className="flex items-center gap-1.5">
+                              <Switch
+                                checked={currentField.showLabel ?? false}
+                                onCheckedChange={(checked) => setCurrentField({ ...currentField, showLabel: checked })}
+                                className="scale-90"
+                              />
+                              <Label className="text-xs">إظهار العنوان</Label>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              <Switch
+                                checked={currentField.useDefaultIfEmpty ?? true}
+                                onCheckedChange={(checked) => setCurrentField({ ...currentField, useDefaultIfEmpty: checked })}
+                                className="scale-90"
+                              />
+                              <Label className="text-xs">استخدام الافتراضي إذا فارغ</Label>
+                            </div>
+                          </div>
+
+                          <Button 
+                            type="button" 
+                            onClick={handleAddCustomField}
+                            className="w-full h-8 text-sm"
+                            size="sm"
+                            variant={editingFieldIndex !== null ? "default" : "outline"}
+                          >
+                            <Plus className="h-3 w-3 mr-2" />
+                            {editingFieldIndex !== null ? 'تحديث الحقل' : 'إضافة الحقل'}
+                          </Button>
+                          
+                          {editingFieldIndex !== null && (
+                            <Button 
+                              type="button" 
+                              onClick={resetCurrentField}
+                              variant="ghost"
+                              size="sm"
+                              className="w-full h-8 text-sm"
+                            >
+                              إلغاء التعديل
+                            </Button>
+                          )}
+                        </div>
+
+                        {templateForm.customFields && templateForm.customFields.length > 0 && (
+                          <div className="space-y-1.5">
+                            <Label className="text-xs text-muted-foreground">الحقول المضافة ({templateForm.customFields.length})</Label>
+                            {templateForm.customFields.map((field, index) => (
+                              <div key={index} className="flex items-center gap-2 p-2 bg-muted/50 rounded-lg">
+                                <div className="flex flex-col gap-0.5">
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-4 w-4"
+                                    onClick={() => handleMoveField(index, 'up')}
+                                    disabled={index === 0}
+                                  >
+                                    <ChevronDown className="h-2 w-2 rotate-180" />
+                                  </Button>
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-4 w-4"
+                                    onClick={() => handleMoveField(index, 'down')}
+                                    disabled={index === templateForm.customFields!.length - 1}
+                                  >
+                                    <ChevronDown className="h-2 w-2" />
+                                  </Button>
+                                </div>
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-1.5 flex-wrap">
+                                    <span className="text-sm font-medium">{field.fieldLabel}</span>
+                                    <Badge variant="outline" className="text-[10px]">{field.fieldName}</Badge>
+                                    <Badge variant="secondary" className="text-[10px]">
+                                      {fieldTypes.find(ft => ft.value === field.fieldType)?.label}
+                                    </Badge>
+                                  </div>
+                                </div>
+                                <div className="flex gap-0.5">
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-6 w-6"
+                                    onClick={() => handleEditCustomField(index)}
+                                  >
+                                    <Edit className="h-3 w-3" />
+                                  </Button>
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-6 w-6 text-red-600"
+                                    onClick={() => handleRemoveCustomField(index)}
+                                  >
+                                    <Trash2 className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              </div>
                             ))}
-                          </SelectContent>
-                        </Select>
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  </div>
 
-                  {/* Settings */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label>الحد الأقصى للطول (اختياري)</Label>
-                      <Input
-                        type="number"
-                        value={templateForm.maxLength || ''}
-                        onChange={(e) => setTemplateForm({ ...templateForm, maxLength: e.target.value ? parseInt(e.target.value) : undefined })}
-                        placeholder="بدون حد"
-                        className="mt-1"
-                        min={0}
-                      />
-                    </div>
-                    <div>
-                      <Label>الفاصل بين الحقول</Label>
-                      <Select
-                        value={templateForm.fieldSeparator || '\n'}
-                        onValueChange={(value) => setTemplateForm({ ...templateForm, fieldSeparator: value })}
+                      <div className="p-3 border rounded-lg bg-muted/30">
+                        <h4 className="text-xs font-medium mb-2">تذييل القالب (اختياري)</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <div className="md:col-span-2">
+                            <Label className="text-xs">نص التذييل</Label>
+                            <Input
+                              value={templateForm.footerText || ''}
+                              onChange={(e) => setTemplateForm({ ...templateForm, footerText: e.target.value })}
+                              placeholder="مثال: المصدر: قناتنا الإخبارية"
+                              className="mt-1 h-8 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs">تنسيق التذييل</Label>
+                            <Select
+                              value={templateForm.footerFormatting || 'none'}
+                              onValueChange={(value) => setTemplateForm({ ...templateForm, footerFormatting: value })}
+                            >
+                              <SelectTrigger className="mt-1 h-8 text-sm">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {formattingOptions.map((fmt) => (
+                                  <SelectItem key={fmt.value} value={fmt.value}>
+                                    {fmt.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                          <Label className="text-xs">الحد الأقصى للطول (اختياري)</Label>
+                          <Input
+                            type="number"
+                            value={templateForm.maxLength || ''}
+                            onChange={(e) => setTemplateForm({ ...templateForm, maxLength: e.target.value ? parseInt(e.target.value) : undefined })}
+                            placeholder="بدون حد"
+                            className="mt-1 h-8 text-sm"
+                            min={0}
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-xs">الفاصل بين الحقول</Label>
+                          <Select
+                            value={templateForm.fieldSeparator || '\n'}
+                            onValueChange={(value) => setTemplateForm({ ...templateForm, fieldSeparator: value })}
+                          >
+                            <SelectTrigger className="mt-1 h-8 text-sm">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value={'\n'}>سطر جديد</SelectItem>
+                              <SelectItem value={'\n\n'}>سطرين</SelectItem>
+                              <SelectItem value={' | '}>شريط |</SelectItem>
+                              <SelectItem value={' - '}>شرطة -</SelectItem>
+                              <SelectItem value={' '}>مسافة</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1.5">
+                        <Switch
+                          checked={templateForm.isDefault ?? false}
+                          onCheckedChange={(checked) => setTemplateForm({ ...templateForm, isDefault: checked })}
+                          className="scale-90"
+                        />
+                        <Label className="text-xs">تعيين كقالب افتراضي</Label>
+                      </div>
+
+                      <Button
+                        onClick={handleSubmitTemplate}
+                        disabled={createTemplateMutation.isPending}
+                        className="w-full h-8 text-sm"
+                        size="sm"
                       >
-                        <SelectTrigger className="mt-1">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value={'\n'}>سطر جديد</SelectItem>
-                          <SelectItem value={'\n\n'}>سطرين</SelectItem>
-                          <SelectItem value={' | '}>شريط |</SelectItem>
-                          <SelectItem value={' - '}>شرطة -</SelectItem>
-                          <SelectItem value={' '}>مسافة</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      checked={templateForm.isDefault ?? false}
-                      onCheckedChange={(checked) => setTemplateForm({ ...templateForm, isDefault: checked })}
-                    />
-                    <Label>تعيين كقالب افتراضي</Label>
-                  </div>
-
-                  <Button
-                    onClick={handleSubmitTemplate}
-                    disabled={createTemplateMutation.isPending}
-                    className="w-full"
-                    size="lg"
-                  >
-                    {createTemplateMutation.isPending && <Loader className="h-4 w-4 mr-2 animate-spin" />}
-                    إنشاء القالب
-                  </Button>
-                </CardContent>
-              </Card>
+                        {createTemplateMutation.isPending && <Loader className="h-3 w-3 mr-2 animate-spin" />}
+                        إنشاء القالب
+                      </Button>
+                    </CardContent>
+                  </CollapsibleContent>
+                </Card>
+              </Collapsible>
 
               {/* Existing Templates List */}
               <div className="space-y-3">
