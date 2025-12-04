@@ -290,6 +290,7 @@ export default function AIRulesPage() {
   const [editingEntity, setEditingEntity] = useState<number | null>(null);
   const [editingContext, setEditingContext] = useState<number | null>(null);
   const [editingTraining, setEditingTraining] = useState<number | null>(null);
+  const [editingTemplate, setEditingTemplate] = useState<number | null>(null);
 
   const { data: tasks = [] } = useQuery({
     queryKey: ["tasks"],
@@ -420,6 +421,17 @@ export default function AIRulesPage() {
       resetTemplateForm();
     },
     onError: () => toast.error("فشل في إضافة القالب"),
+  });
+
+  const updateTemplateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: any }) => api.updatePublishingTemplate(id, data),
+    onSuccess: () => {
+      toast.success("تم تحديث القالب");
+      queryClient.invalidateQueries({ queryKey: ["publishing-templates"] });
+      resetTemplateForm();
+      setEditingTemplate(null);
+    },
+    onError: () => toast.error("فشل في تحديث القالب"),
   });
 
   const deleteTemplateMutation = useMutation({
@@ -581,7 +593,32 @@ export default function AIRulesPage() {
     }
 
     const data = { ...templateForm, taskId: selectedTaskId };
-    createTemplateMutation.mutate(data);
+    
+    if (editingTemplate) {
+      updateTemplateMutation.mutate({ id: editingTemplate, data });
+    } else {
+      createTemplateMutation.mutate(data);
+    }
+  };
+
+  const handleEditTemplate = (template: any) => {
+    setTemplateForm({
+      name: template.name,
+      templateType: template.templateType,
+      isDefault: template.isDefault,
+      headerText: template.headerText || '',
+      headerFormatting: template.headerFormatting || 'none',
+      footerText: template.footerText || '',
+      footerFormatting: template.footerFormatting || 'none',
+      fieldSeparator: template.fieldSeparator || '\n',
+      useNewlineAfterHeader: template.useNewlineAfterHeader ?? true,
+      useNewlineBeforeFooter: template.useNewlineBeforeFooter ?? true,
+      maxLength: template.maxLength,
+      extractionPrompt: template.extractionPrompt || '',
+      customFields: template.customFields || []
+    });
+    setEditingTemplate(template.id);
+    setIsTemplateFormOpen(true);
   };
 
   const handleAddCustomField = () => {
@@ -1559,7 +1596,7 @@ export default function AIRulesPage() {
                         <div className="flex items-center gap-2">
                           <Plus className="h-4 w-4 text-primary" />
                           <CardTitle className="text-sm font-medium">
-                            إنشاء قالب نشر مخصص
+                            {editingTemplate ? "تعديل قالب النشر" : "إنشاء قالب نشر مخصص"}
                           </CardTitle>
                         </div>
                         {isTemplateFormOpen ? (
@@ -1929,15 +1966,32 @@ export default function AIRulesPage() {
                         <Label className="text-xs">تعيين كقالب افتراضي</Label>
                       </div>
 
-                      <Button
-                        onClick={handleSubmitTemplate}
-                        disabled={createTemplateMutation.isPending}
-                        className="w-full h-8 text-sm"
-                        size="sm"
-                      >
-                        {createTemplateMutation.isPending && <Loader className="h-3 w-3 mr-2 animate-spin" />}
-                        إنشاء القالب
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={handleSubmitTemplate}
+                          disabled={createTemplateMutation.isPending || updateTemplateMutation.isPending}
+                          className="flex-1 h-8 text-sm"
+                          size="sm"
+                        >
+                          {(createTemplateMutation.isPending || updateTemplateMutation.isPending) && (
+                            <Loader className="h-3 w-3 mr-2 animate-spin" />
+                          )}
+                          {editingTemplate ? "حفظ التعديلات" : "إنشاء القالب"}
+                        </Button>
+                        {editingTemplate && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-8 text-sm"
+                            onClick={() => {
+                              resetTemplateForm();
+                              setEditingTemplate(null);
+                            }}
+                          >
+                            إلغاء
+                          </Button>
+                        )}
+                      </div>
                     </CardContent>
                   </CollapsibleContent>
                 </Card>
@@ -2018,14 +2072,23 @@ export default function AIRulesPage() {
                               </Badge>
                             )}
                           </div>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="text-red-600"
-                            onClick={() => deleteTemplateMutation.mutate(template.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => handleEditTemplate(template)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="text-red-600"
+                              onClick={() => deleteTemplateMutation.mutate(template.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </Card>
                     ))}
