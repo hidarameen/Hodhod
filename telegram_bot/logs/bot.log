@@ -15256,3 +15256,713 @@ FileNotFoundError: [Errno 2] No such file or directory: 'yt-dlp'
 2025-12-04 16:33:15,277 - main - INFO - [2025-12-04 16:33:15.277] [INFO] [warmup::cached] ✅ اختبار 2 already in peer cache | {}
 2025-12-04 16:33:15,277 - main - INFO - [2025-12-04 16:33:15.277] [INFO] [warmup::complete] ✅ Warmup complete: 2 success, 0 failed | {}
 2025-12-04 16:33:15,277 - main - INFO - [2025-12-04 16:33:15.277] [INFO] [main::idle] Userbot is now running and waiting for messages... | {}
+2025-12-04 16:33:49,494 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 16:33:49,495 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 16:33:49,498 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 16:33:49,499 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 16:33:49,501 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 16:33:49,502 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 16:33:49,505 - main - INFO - [2025-12-04 16:33:49.505] [INFO] [main::entry] Bot script started | {}
+2025-12-04 16:33:49,506 - main - INFO - [2025-12-04 16:33:49.505] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 16:33:49,506 - main - INFO - [2025-12-04 16:33:49.506] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-04 16:33:49,506 - main - INFO - [2025-12-04 16:33:49.506] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-04 16:33:51,464 - database - INFO - Database connected successfully | {}
+2025-12-04 16:33:51,891 - main - INFO - [2025-12-04 16:33:51.891] [INFO] [session::load] Found active session in database | {}
+2025-12-04 16:33:51,891 - main - INFO - [2025-12-04 16:33:51.891] [INFO] [main::init] Creating Pyrofork client | Data: {'api_id': 24343527, 'has_session': True, 'api_hash_set': True} | {}
+2025-12-04 16:33:53,664 - main - INFO - [2025-12-04 16:33:53.664] [INFO] [main::initialize_bot] Starting bot initialization... | {}
+2025-12-04 16:33:53,664 - main - INFO - [2025-12-04 16:33:53.664] [INFO] [database::connect] Connecting to database... | {}
+2025-12-04 16:33:55,457 - database - INFO - Database connected successfully | {}
+2025-12-04 16:33:55,457 - main - INFO - [2025-12-04 16:33:55.457] [INFO] [database::connect] Database connected successfully | {}
+2025-12-04 16:33:55,458 - main - INFO - [2025-12-04 16:33:55.458] [INFO] [ai_manager::init] Loading AI providers from database... | {}
+2025-12-04 16:33:55,869 - ai_providers - WARNING - No API key found for provider: claude | {}
+2025-12-04 16:33:55,869 - ai_providers - INFO - Loaded Groq provider from database | {}
+2025-12-04 16:33:55,869 - ai_providers - INFO - Loaded HuggingFace provider from database | {}
+2025-12-04 16:33:55,869 - main - INFO - [2025-12-04 16:33:55.869] [INFO] [ai_manager::init] AI providers loaded successfully | {}
+2025-12-04 16:33:55,869 - main - INFO - [2025-12-04 16:33:55.869] [INFO] [admin::check] Checking admin status for ID: 6556918772 | {}
+2025-12-04 16:33:56,282 - main - INFO - [2025-12-04 16:33:56.282] [INFO] [admin::check] Admin already exists: 6556918772 | {}
+2025-12-04 16:33:56,282 - main - INFO - [2025-12-04 16:33:56.282] [INFO] [forwarding_engine::init] Initializing forwarding engine... | {}
+2025-12-04 16:33:56,282 - forwarding_engine - INFO - [2025-12-04 16:33:56.282] [INFO] [forwarding_engine::__init__] Forwarding engine initialized | {}
+2025-12-04 16:33:56,282 - main - INFO - [2025-12-04 16:33:56.282] [INFO] [forwarding_engine::init] Forwarding engine initialized successfully | {}
+2025-12-04 16:33:56,282 - main - INFO - [2025-12-04 16:33:56.282] [INFO] [queue_manager::register] Registering job handlers... | {}
+2025-12-04 16:33:56,282 - queue_system - INFO - Registered handler for job type: forward | {}
+2025-12-04 16:33:56,282 - queue_system - INFO - Registered handler for job type: ai_process | {}
+2025-12-04 16:33:56,282 - queue_system - INFO - Registered handler for job type: video_process | {}
+2025-12-04 16:33:56,283 - main - INFO - [2025-12-04 16:33:56.282] [INFO] [queue_manager::register] All handlers registered: forward, ai_process, video_process | {}
+2025-12-04 16:33:56,283 - main - INFO - [2025-12-04 16:33:56.283] [INFO] [queue_manager::start] Starting queue manager... | {}
+2025-12-04 16:33:56,283 - queue_system - INFO - Queue manager started with 10 max workers | {}
+2025-12-04 16:33:56,284 - main - INFO - [2025-12-04 16:33:56.284] [INFO] [queue_manager::start] Queue manager started with 10 workers | {}
+2025-12-04 16:33:56,284 - main - INFO - [2025-12-04 16:33:56.284] [INFO] [tasks::load] Loading active tasks from database... | {}
+2025-12-04 16:33:56,696 - main - INFO - [2025-12-04 16:33:56.695] [INFO] [tasks::load] Found 1 tasks in database | {}
+2025-12-04 16:33:56,696 - main - INFO - [2025-12-04 16:33:56.696] [INFO] [tasks::check] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'is_active': True, 'source_channels': [4], 'target_channels': [5]} | {}
+2025-12-04 16:33:56,696 - forwarding_engine - INFO - [2025-12-04 16:33:56.696] [INFO] [forwarding_engine::start_task_monitoring] Started monitoring task 4 | {}
+2025-12-04 16:33:56,696 - main - INFO - [2025-12-04 16:33:56.696] [INFO] [tasks::monitor] Started monitoring task: توجيه الأخبار  | Data: {'task_id': 4} | {}
+2025-12-04 16:33:56,696 - main - INFO - [2025-12-04 16:33:56.696] [INFO] [tasks::load] Loaded 1 active tasks for monitoring | {}
+2025-12-04 16:33:56,696 - main - INFO - [2025-12-04 16:33:56.696] [INFO] [main::initialize_bot] ✅ Bot initialization completed successfully | {}
+2025-12-04 16:33:56,696 - main - INFO - [2025-12-04 16:33:56.696] [INFO] [pyrogram::start] Starting Pyrofork userbot client... | {}
+2025-12-04 16:33:56,909 - pyrogram.connection.connection - INFO - Connecting...
+2025-12-04 16:33:57,097 - pyrogram.connection.connection - INFO - Connected! Production DC4 - IPv4
+2025-12-04 16:33:57,098 - pyrogram.session.session - INFO - NetworkTask started
+2025-12-04 16:33:57,964 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-12-04 16:33:57,965 - pyrogram.session.session - INFO - Device: CPython 3.11.13 - Pyrogram 2.0.106
+2025-12-04 16:33:57,965 - pyrogram.session.session - INFO - System: Linux 6.14.11 (en)
+2025-12-04 16:33:57,965 - pyrogram.session.session - INFO - Session started
+2025-12-04 16:33:57,968 - pyrogram.session.session - INFO - PingTask started
+2025-12-04 16:33:58,461 - pyrogram.dispatcher - INFO - Started 12 HandlerTasks
+2025-12-04 16:33:58,721 - main - INFO - [2025-12-04 16:33:58.721] [INFO] [pyrogram::connected] ✅ Userbot connected to Telegram | Data: {'user_id': 7831798910, 'username': 'TTT1234TTTT', 'first_name': 'V'} | {}
+2025-12-04 16:33:58,722 - main - INFO - [2025-12-04 16:33:58.722] [INFO] [handlers::register] Registering message handlers... | {}
+2025-12-04 16:33:58,722 - main - INFO - [2025-12-04 16:33:58.722] [INFO] [handlers::register] ✅ All handlers registered successfully | {}
+2025-12-04 16:33:58,722 - main - INFO - [2025-12-04 16:33:58.722] [INFO] [warmup::post_connect] Starting post-connection warmup... | {}
+2025-12-04 16:33:58,722 - main - INFO - [2025-12-04 16:33:58.722] [INFO] [warmup::start] Starting channel peer warmup... | {}
+2025-12-04 16:33:58,722 - main - INFO - [2025-12-04 16:33:58.722] [INFO] [warmup::dialogs] Loading all dialogs to populate peer cache... | {}
+2025-12-04 16:34:01,321 - main - INFO - [2025-12-04 16:34:01.321] [DEBUG] [warmup::dialogs] Loaded 50 dialogs... | {}
+2025-12-04 16:34:01,321 - main - INFO - [2025-12-04 16:34:01.321] [DEBUG] [warmup::dialogs] Loaded 100 dialogs... | {}
+2025-12-04 16:34:01,932 - main - INFO - [2025-12-04 16:34:01.932] [DEBUG] [warmup::dialogs] Loaded 150 dialogs... | {}
+2025-12-04 16:34:02,168 - main - INFO - [2025-12-04 16:34:02.168] [INFO] [warmup::dialogs] ✅ Cached 164 dialogs in peer cache | {}
+2025-12-04 16:34:02,595 - main - INFO - [2025-12-04 16:34:02.595] [INFO] [warmup::channels] Found 2 channels to verify | {}
+2025-12-04 16:34:02,596 - main - INFO - [2025-12-04 16:34:02.596] [INFO] [warmup::cached] ✅ اختبار 1 already in peer cache | {}
+2025-12-04 16:34:02,596 - main - INFO - [2025-12-04 16:34:02.596] [INFO] [warmup::cached] ✅ اختبار 2 already in peer cache | {}
+2025-12-04 16:34:02,596 - main - INFO - [2025-12-04 16:34:02.596] [INFO] [warmup::complete] ✅ Warmup complete: 2 success, 0 failed | {}
+2025-12-04 16:34:02,596 - main - INFO - [2025-12-04 16:34:02.596] [INFO] [main::idle] Userbot is now running and waiting for messages... | {}
+2025-12-04 16:34:17,117 - main - INFO - [2025-12-04 16:34:17.117] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1002286144949', 'chat_title': 'منصة أبناء حضرموت', 'message_id': 676, 'message_type': 'media', 'has_text': False, 'has_caption': True, 'media_type': 'MessageMediaType.VIDEO', 'media_group_id': None} | {}
+2025-12-04 16:34:17,117 - main - INFO - [2025-12-04 16:34:17.117] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:34:17,545 - main - INFO - [2025-12-04 16:34:17.545] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:34:17,545 - main - INFO - [2025-12-04 16:34:17.545] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:34:17,971 - main - INFO - [2025-12-04 16:34:17.971] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1002286144949', 'match': False} | {}
+2025-12-04 16:34:17,973 - main - INFO - [2025-12-04 16:34:17.972] [INFO] [message_handler::skip] No matching task for chat: منصة أبناء حضرموت | Data: {'chat_id': '-1002286144949'} | {}
+2025-12-04 16:34:34,051 - main - INFO - [2025-12-04 16:34:34.051] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003277313221', 'chat_title': 'موقع أنصار الله الرسمي copy', 'message_id': 3536, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:34:34,052 - main - INFO - [2025-12-04 16:34:34.052] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:34:34,339 - main - INFO - [2025-12-04 16:34:34.339] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:34:34,339 - main - INFO - [2025-12-04 16:34:34.339] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:34:34,623 - main - INFO - [2025-12-04 16:34:34.623] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003277313221', 'match': False} | {}
+2025-12-04 16:34:34,624 - main - INFO - [2025-12-04 16:34:34.624] [INFO] [message_handler::skip] No matching task for chat: موقع أنصار الله الرسمي copy | Data: {'chat_id': '-1003277313221'} | {}
+2025-12-04 16:34:34,774 - main - INFO - [2025-12-04 16:34:34.774] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18172, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:34:34,774 - main - INFO - [2025-12-04 16:34:34.774] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:34:35,058 - main - INFO - [2025-12-04 16:34:35.058] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:34:35,058 - main - INFO - [2025-12-04 16:34:35.058] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:34:35,343 - main - INFO - [2025-12-04 16:34:35.343] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:34:35,343 - main - INFO - [2025-12-04 16:34:35.343] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:34:50,093 - main - INFO - [2025-12-04 16:34:50.092] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2339, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 16:34:50,093 - main - INFO - [2025-12-04 16:34:50.093] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:34:50,377 - main - INFO - [2025-12-04 16:34:50.377] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:34:50,377 - main - INFO - [2025-12-04 16:34:50.377] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:34:50,662 - main - INFO - [2025-12-04 16:34:50.662] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 16:34:50,662 - main - INFO - [2025-12-04 16:34:50.662] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 16:34:50,662 - main - INFO - [2025-12-04 16:34:50.662] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 16:34:50,662 - forwarding_engine - INFO - [2025-12-04 16:34:50.662] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2339, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': True, 'media_type': 'MessageMediaType.WEB_PAGE', 'media_group_id': None} | {}
+2025-12-04 16:34:50,662 - forwarding_engine - INFO - [2025-12-04 16:34:50.662] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 16:34:50,663 - forwarding_engine - INFO - [2025-12-04 16:34:50.662] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': False, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 16:34:50,664 - forwarding_engine - INFO - [2025-12-04 16:34:50.664] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 16:34:50,664 - forwarding_engine - INFO - [2025-12-04 16:34:50.664] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 16:34:50,665 - forwarding_engine - INFO - [2025-12-04 16:34:50.665] [INFO] [forwarding_engine::_process_message] Text length: 1003 chars | {}
+2025-12-04 16:34:51,092 - forwarding_engine - INFO - [2025-12-04 16:34:51.092] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 16:34:51,519 - forwarding_engine - INFO - [2025-12-04 16:34:51.519] [INFO] [forwarding_engine::_process_message] Using model: moonshotai/kimi-k2-instruct | {}
+2025-12-04 16:34:51,945 - forwarding_engine - INFO - [2025-12-04 16:34:51.945] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 16:34:52,373 - forwarding_engine - INFO - [2025-12-04 16:34:52.373] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 16:34:53,225 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 1003 | {}
+2025-12-04 16:34:53,233 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 0 | Sentiment: neutral | Keywords: 20 | Time: 0.008s | {}
+2025-12-04 16:34:53,234 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 0 | Sentiment: neutral | {}
+2025-12-04 16:34:53,660 - ai_rule_engine - INFO - [RuleEngine] Loaded 4 entity rules for task 4 from DB | {}
+2025-12-04 16:34:53,661 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 0 | {}
+2025-12-04 16:34:54,088 - ai_rule_engine - INFO - [RuleEngine] Loaded 1 context rules for task 4 from DB | {}
+2025-12-04 16:34:54,088 - ai_rule_engine - INFO - [RuleEngine] Applying 1 context rules | {}
+2025-12-04 16:34:54,088 - ai_rule_engine - INFO - [RuleEngine] Processing rule 2: type=neutralize_negative, instructions=اجعل النص محايد ... | {}
+2025-12-04 16:34:54,088 - ai_rule_engine - INFO - [RuleEngine] Neutralized 0 terms | {}
+2025-12-04 16:34:54,088 - ai_rule_engine - INFO - [RuleEngine] Context rules result: 1 applied, 1 AI instructions | {}
+2025-12-04 16:34:54,088 - ai_rule_engine - INFO - [RuleEngine] Context modifications: 1, AI instructions: 1 | {}
+2025-12-04 16:34:54,373 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 1 | Replacements: 0 | {}
+2025-12-04 16:34:54,373 - ai_pipeline - INFO - [Pipeline] Added 1 context instructions to prompt | {}
+2025-12-04 16:34:54,634 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 501 | Temperature: 0.7 | Input length: 1547 chars | {}
+2025-12-04 16:34:55,491 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 16:34:55,508 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 224 chars | First 100 chars: - **فرج البحسني** يُحَرِّك مجموعات مسلحة لاستهداف قوات حماية حضرموت  
+- الهدف: إفشال اتفاق التهدئة ب | {}
+2025-12-04 16:34:55,508 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 224 | {}
+2025-12-04 16:34:55,510 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 1.00 | {}
+2025-12-04 16:34:55,511 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 3.14s | Quality: 1.00 | Original: 1003 → Final: 224 chars | {}
+2025-12-04 16:34:55,511 - forwarding_engine - INFO - [2025-12-04 16:34:55.511] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 1003, 'final_length': 224, 'stages': 4, 'rules_applied': 1, 'quality_score': 1.0, 'total_time': '3.14s'} | {}
+2025-12-04 16:34:55,511 - forwarding_engine - INFO - [2025-12-04 16:34:55.511] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.01s) | {}
+2025-12-04 16:34:55,511 - forwarding_engine - INFO - [2025-12-04 16:34:55.511] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (1.14s) | {}
+2025-12-04 16:34:55,511 - forwarding_engine - INFO - [2025-12-04 16:34:55.511] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (1.14s) | {}
+2025-12-04 16:34:55,511 - forwarding_engine - INFO - [2025-12-04 16:34:55.511] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 16:34:55,937 - task_4 - INFO - AI Pipeline completed | From 1003 → 224 chars
+2025-12-04 16:34:56,792 - forwarding_engine - INFO - [2025-12-04 16:34:56.792] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 1003, 'processed_length': 224, 'total_reduction': 779, 'reduction_percent': 78, 'final_preview': '- **فرج البحسني** يُحَرِّك مجموعات مسلحة لاستهداف قوات حماية حضرموت  \n- الهدف: إفشال اتفاق التهدئة بين السلطة المحلية وحلف القبائل الضامن السعودي  \n- '} | {}
+2025-12-04 16:34:56,793 - forwarding_engine - INFO - [2025-12-04 16:34:56.793] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 16:34:56,793 - forwarding_engine - INFO - [2025-12-04 16:34:56.793] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2339, 'has_processed_text': True, 'task_id': 4} | {}
+2025-12-04 16:34:57,077 - forwarding_engine - INFO - [2025-12-04 16:34:57.077] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 16:34:57,077 - forwarding_engine - INFO - [2025-12-04 16:34:57.077] [INFO] [forwarding_engine::_forward_to_target] Applying publishing template as final step... | {}
+2025-12-04 16:34:58,925 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 500 | Temperature: 0.3 | Input length: 750 chars | {}
+2025-12-04 16:34:59,380 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 16:34:59,382 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 66 chars | First 100 chars: {
+  "رقم_القيد": "",
+  "التصنيف": "أمني",
+  "المحافظة": "حضرموت"
+} | {}
+2025-12-04 16:34:59,382 - forwarding_engine - INFO - [2025-12-04 16:34:59.382] [DEBUG] [forwarding_engine::_extract_fields_with_ai] AI response received | Data: {'response_length': 66, 'response_preview': '{\n  "رقم_القيد": "",\n  "التصنيف": "أمني",\n  "المحافظة": "حضرموت"\n}'} | {}
+2025-12-04 16:34:59,382 - forwarding_engine - INFO - [2025-12-04 16:34:59.382] [INFO] [forwarding_engine::_extract_fields_with_ai] AI extracted fields | Data: {'ai_extracted': {'رقم_القيد': '', 'التصنيف': 'أمني', 'المحافظة': 'حضرموت'}} | {}
+2025-12-04 16:34:59,382 - forwarding_engine - INFO - [2025-12-04 16:34:59.382] [INFO] [forwarding_engine::_extract_fields_with_ai] Final extracted fields | Data: {'extracted': {'التلخيص': '- **فرج البحسني** يُحَرِّك مجموعات مسلحة لاستهداف قوات حماية حضرموت  \n- الهدف: إفشال اتفاق التهدئة بين السلطة المحلية وحلف القبائل الضامن السعودي  \n- الصحفي عبدالجبار باجبير رفع بلاغاً عاجلاً إلى المحافظ والرياض لمنع التصعيد', 'التاريخ_': '2025-12-04', 'المختص': 'حيدر ', 'رقم_القيد': '', 'التصنيف_': '', 'المحافظه_': ''}} | {}
+2025-12-04 16:34:59,382 - forwarding_engine - INFO - [2025-12-04 16:34:59.382] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التلخيص | Data: {'formatting': 'quote', 'original_length': 224, 'formatted_length': 249, 'has_html_tags': True, 'formatted_preview': '<blockquote>- **فرج البحسني** يُحَرِّك مجموعات مسلحة لاستهداف قوات حماية حضرموت  \n- الهدف: إفشال اتف'} | {}
+2025-12-04 16:34:59,382 - forwarding_engine - INFO - [2025-12-04 16:34:59.382] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التاريخ_ | Data: {'formatting': 'none', 'original_length': 10, 'formatted_length': 10, 'has_html_tags': False, 'formatted_preview': '2025-12-04'} | {}
+2025-12-04 16:34:59,382 - forwarding_engine - INFO - [2025-12-04 16:34:59.382] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المختص | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'حيدر '} | {}
+2025-12-04 16:34:59,382 - forwarding_engine - INFO - [2025-12-04 16:34:59.382] [INFO] [forwarding_engine::_apply_publishing_template] Template applied: تلخيص2 | Data: {'output_length': 283, 'fields_count': 6, 'extracted_count': 6} | {}
+2025-12-04 16:34:59,383 - forwarding_engine - INFO - [2025-12-04 16:34:59.383] [INFO] [forwarding_engine::_forward_to_target] Template applied successfully | Data: {'original_length': 1003, 'final_length': 283} | {}
+2025-12-04 16:34:59,606 - forwarding_engine - INFO - [2025-12-04 16:34:59.606] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 1003, 'final_length': 357, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 16:34:59,606 - forwarding_engine - INFO - [2025-12-04 16:34:59.606] [INFO] [forwarding_engine::_forward_to_target] Sending text message... | Data: {'use_parse_mode': True, 'text_preview': '<blockquote>- **فرج البحسني** يُحَرِّك مجموعات مسلحة لاستهداف قوات حماية حضرموت  \n- الهدف: إفشال اتفاق التهدئة بين السلطة المحلية وحلف القبائل الضامن السعودي  \n- الصحفي عبدالجبار باجبير رفع بلاغاً عاجلاً إلى المحافظ والرياض لمنع التصعيد</blockquote>\nالتاريخ : 2025-12-04\nالمختص: حيدر\n\n📰 <a href="http', 'has_html_tags': True} | {}
+2025-12-04 16:34:59,921 - forwarding_engine - INFO - [2025-12-04 16:34:59.921] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 16:34:59,922 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 16:34:59,922 - forwarding_engine - INFO - [2025-12-04 16:34:59.922] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 16:35:01,154 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 16:35:01,154 - forwarding_engine - INFO - [2025-12-04 16:35:01.154] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 16:35:01,154 - main - INFO - [2025-12-04 16:35:01.154] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 16:35:05,773 - main - INFO - [2025-12-04 16:35:05.773] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003277313221', 'chat_title': 'موقع أنصار الله الرسمي copy', 'message_id': 3537, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:35:05,773 - main - INFO - [2025-12-04 16:35:05.773] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:35:06,058 - main - INFO - [2025-12-04 16:35:06.058] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:35:06,058 - main - INFO - [2025-12-04 16:35:06.058] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:35:06,266 - main - INFO - [2025-12-04 16:35:06.265] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18173, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:35:06,266 - main - INFO - [2025-12-04 16:35:06.266] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:35:06,344 - main - INFO - [2025-12-04 16:35:06.344] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003277313221', 'match': False} | {}
+2025-12-04 16:35:06,345 - main - INFO - [2025-12-04 16:35:06.344] [INFO] [message_handler::skip] No matching task for chat: موقع أنصار الله الرسمي copy | Data: {'chat_id': '-1003277313221'} | {}
+2025-12-04 16:35:06,698 - main - INFO - [2025-12-04 16:35:06.698] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:35:06,698 - main - INFO - [2025-12-04 16:35:06.698] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:35:07,149 - main - INFO - [2025-12-04 16:35:07.148] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:35:07,149 - main - INFO - [2025-12-04 16:35:07.149] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:35:35,930 - main - INFO - [2025-12-04 16:35:35.930] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1002286144949', 'chat_title': 'منصة أبناء حضرموت', 'message_id': 677, 'message_type': 'media', 'has_text': False, 'has_caption': True, 'media_type': 'MessageMediaType.VIDEO', 'media_group_id': None} | {}
+2025-12-04 16:35:35,930 - main - INFO - [2025-12-04 16:35:35.930] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:35:36,219 - main - INFO - [2025-12-04 16:35:36.218] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:35:36,219 - main - INFO - [2025-12-04 16:35:36.219] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:35:36,506 - main - INFO - [2025-12-04 16:35:36.506] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1002286144949', 'match': False} | {}
+2025-12-04 16:35:36,506 - main - INFO - [2025-12-04 16:35:36.506] [INFO] [message_handler::skip] No matching task for chat: منصة أبناء حضرموت | Data: {'chat_id': '-1002286144949'} | {}
+2025-12-04 16:35:50,217 - main - INFO - [2025-12-04 16:35:50.216] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003277313221', 'chat_title': 'موقع أنصار الله الرسمي copy', 'message_id': 3538, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:35:50,218 - main - INFO - [2025-12-04 16:35:50.218] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:35:50,492 - main - INFO - [2025-12-04 16:35:50.492] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:35:50,493 - main - INFO - [2025-12-04 16:35:50.493] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:35:50,675 - main - INFO - [2025-12-04 16:35:50.675] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18174, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:35:50,675 - main - INFO - [2025-12-04 16:35:50.675] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:35:50,904 - main - INFO - [2025-12-04 16:35:50.904] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003277313221', 'match': False} | {}
+2025-12-04 16:35:50,905 - main - INFO - [2025-12-04 16:35:50.905] [INFO] [message_handler::skip] No matching task for chat: موقع أنصار الله الرسمي copy | Data: {'chat_id': '-1003277313221'} | {}
+2025-12-04 16:35:50,963 - main - INFO - [2025-12-04 16:35:50.963] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:35:50,963 - main - INFO - [2025-12-04 16:35:50.963] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:35:51,251 - main - INFO - [2025-12-04 16:35:51.250] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:35:51,251 - main - INFO - [2025-12-04 16:35:51.251] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:35:58,372 - main - INFO - [2025-12-04 16:35:58.371] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003233977303', 'chat_title': 'عاجل | شبكة الفرقان copy', 'message_id': 2882, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:35:58,372 - main - INFO - [2025-12-04 16:35:58.372] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:35:58,596 - main - INFO - [2025-12-04 16:35:58.596] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18175, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:35:58,596 - main - INFO - [2025-12-04 16:35:58.596] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:35:58,610 - main - INFO - [2025-12-04 16:35:58.610] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1002542749883', 'chat_title': 'تجريبي 2', 'message_id': 5177, 'message_type': 'other', 'has_text': False, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:35:58,610 - main - INFO - [2025-12-04 16:35:58.610] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:35:58,661 - main - INFO - [2025-12-04 16:35:58.661] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:35:58,661 - main - INFO - [2025-12-04 16:35:58.661] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:35:58,870 - main - INFO - [2025-12-04 16:35:58.870] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:35:58,870 - main - INFO - [2025-12-04 16:35:58.870] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:35:58,896 - main - INFO - [2025-12-04 16:35:58.896] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:35:58,896 - main - INFO - [2025-12-04 16:35:58.896] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:35:58,950 - main - INFO - [2025-12-04 16:35:58.950] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003233977303', 'match': False} | {}
+2025-12-04 16:35:58,950 - main - INFO - [2025-12-04 16:35:58.950] [INFO] [message_handler::skip] No matching task for chat: عاجل | شبكة الفرقان copy | Data: {'chat_id': '-1003233977303'} | {}
+2025-12-04 16:35:59,143 - main - INFO - [2025-12-04 16:35:59.143] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:35:59,144 - main - INFO - [2025-12-04 16:35:59.144] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:35:59,180 - main - INFO - [2025-12-04 16:35:59.180] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1002542749883', 'match': False} | {}
+2025-12-04 16:35:59,180 - main - INFO - [2025-12-04 16:35:59.180] [INFO] [message_handler::skip] No matching task for chat: تجريبي 2 | Data: {'chat_id': '-1002542749883'} | {}
+2025-12-04 16:36:07,233 - main - INFO - [2025-12-04 16:36:07.233] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003233977303', 'chat_title': 'عاجل | شبكة الفرقان copy', 'message_id': 2883, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:36:07,233 - main - INFO - [2025-12-04 16:36:07.233] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:36:07,454 - main - INFO - [2025-12-04 16:36:07.454] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18176, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:36:07,454 - main - INFO - [2025-12-04 16:36:07.454] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:36:07,517 - main - INFO - [2025-12-04 16:36:07.517] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1002542749883', 'chat_title': 'تجريبي 2', 'message_id': 5178, 'message_type': 'other', 'has_text': False, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:36:07,518 - main - INFO - [2025-12-04 16:36:07.518] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:36:07,519 - main - INFO - [2025-12-04 16:36:07.519] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:36:07,521 - main - INFO - [2025-12-04 16:36:07.521] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:36:07,730 - main - INFO - [2025-12-04 16:36:07.729] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:36:07,731 - main - INFO - [2025-12-04 16:36:07.731] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:36:07,805 - main - INFO - [2025-12-04 16:36:07.805] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003233977303', 'match': False} | {}
+2025-12-04 16:36:07,805 - main - INFO - [2025-12-04 16:36:07.805] [INFO] [message_handler::skip] No matching task for chat: عاجل | شبكة الفرقان copy | Data: {'chat_id': '-1003233977303'} | {}
+2025-12-04 16:36:07,806 - main - INFO - [2025-12-04 16:36:07.806] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:36:07,806 - main - INFO - [2025-12-04 16:36:07.806] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:36:08,004 - main - INFO - [2025-12-04 16:36:08.004] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:36:08,005 - main - INFO - [2025-12-04 16:36:08.005] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:36:08,094 - main - INFO - [2025-12-04 16:36:08.094] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1002542749883', 'match': False} | {}
+2025-12-04 16:36:08,094 - main - INFO - [2025-12-04 16:36:08.094] [INFO] [message_handler::skip] No matching task for chat: تجريبي 2 | Data: {'chat_id': '-1002542749883'} | {}
+2025-12-04 16:36:19,335 - main - INFO - [2025-12-04 16:36:19.335] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003233977303', 'chat_title': 'عاجل | شبكة الفرقان copy', 'message_id': 2884, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:36:19,336 - main - INFO - [2025-12-04 16:36:19.336] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:36:19,616 - main - INFO - [2025-12-04 16:36:19.615] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1002542749883', 'chat_title': 'تجريبي 2', 'message_id': 5179, 'message_type': 'other', 'has_text': False, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:36:19,616 - main - INFO - [2025-12-04 16:36:19.616] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:36:19,626 - main - INFO - [2025-12-04 16:36:19.626] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:36:19,626 - main - INFO - [2025-12-04 16:36:19.626] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:36:19,700 - main - INFO - [2025-12-04 16:36:19.700] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18177, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:36:19,700 - main - INFO - [2025-12-04 16:36:19.700] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:36:19,890 - main - INFO - [2025-12-04 16:36:19.890] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:36:19,890 - main - INFO - [2025-12-04 16:36:19.890] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:36:19,915 - main - INFO - [2025-12-04 16:36:19.915] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003233977303', 'match': False} | {}
+2025-12-04 16:36:19,915 - main - INFO - [2025-12-04 16:36:19.915] [INFO] [message_handler::skip] No matching task for chat: عاجل | شبكة الفرقان copy | Data: {'chat_id': '-1003233977303'} | {}
+2025-12-04 16:36:19,987 - main - INFO - [2025-12-04 16:36:19.987] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:36:19,988 - main - INFO - [2025-12-04 16:36:19.988] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:36:20,163 - main - INFO - [2025-12-04 16:36:20.163] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1002542749883', 'match': False} | {}
+2025-12-04 16:36:20,165 - main - INFO - [2025-12-04 16:36:20.165] [INFO] [message_handler::skip] No matching task for chat: تجريبي 2 | Data: {'chat_id': '-1002542749883'} | {}
+2025-12-04 16:36:20,275 - main - INFO - [2025-12-04 16:36:20.275] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:36:20,275 - main - INFO - [2025-12-04 16:36:20.275] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:36:29,309 - main - INFO - [2025-12-04 16:36:29.309] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003233977303', 'chat_title': 'عاجل | شبكة الفرقان copy', 'message_id': 2885, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:36:29,310 - main - INFO - [2025-12-04 16:36:29.310] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:36:29,573 - main - INFO - [2025-12-04 16:36:29.573] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1002542749883', 'chat_title': 'تجريبي 2', 'message_id': 5180, 'message_type': 'other', 'has_text': False, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:36:29,575 - main - INFO - [2025-12-04 16:36:29.574] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:36:29,580 - main - INFO - [2025-12-04 16:36:29.580] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18178, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:36:29,582 - main - INFO - [2025-12-04 16:36:29.582] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:36:29,596 - main - INFO - [2025-12-04 16:36:29.596] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:36:29,597 - main - INFO - [2025-12-04 16:36:29.597] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:36:29,857 - main - INFO - [2025-12-04 16:36:29.857] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:36:29,857 - main - INFO - [2025-12-04 16:36:29.857] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:36:29,882 - main - INFO - [2025-12-04 16:36:29.882] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003233977303', 'match': False} | {}
+2025-12-04 16:36:29,882 - main - INFO - [2025-12-04 16:36:29.882] [INFO] [message_handler::skip] No matching task for chat: عاجل | شبكة الفرقان copy | Data: {'chat_id': '-1003233977303'} | {}
+2025-12-04 16:36:29,981 - main - INFO - [2025-12-04 16:36:29.980] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003277313221', 'chat_title': 'موقع أنصار الله الرسمي copy', 'message_id': 3539, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:36:29,981 - main - INFO - [2025-12-04 16:36:29.981] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:36:30,006 - main - INFO - [2025-12-04 16:36:30.006] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:36:30,006 - main - INFO - [2025-12-04 16:36:30.006] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:36:30,131 - main - INFO - [2025-12-04 16:36:30.131] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:36:30,131 - main - INFO - [2025-12-04 16:36:30.131] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:36:30,190 - main - INFO - [2025-12-04 16:36:30.190] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18179, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:36:30,191 - main - INFO - [2025-12-04 16:36:30.191] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:36:30,265 - main - INFO - [2025-12-04 16:36:30.265] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:36:30,265 - main - INFO - [2025-12-04 16:36:30.265] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:36:30,436 - main - INFO - [2025-12-04 16:36:30.436] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1002542749883', 'match': False} | {}
+2025-12-04 16:36:30,436 - main - INFO - [2025-12-04 16:36:30.436] [INFO] [message_handler::skip] No matching task for chat: تجريبي 2 | Data: {'chat_id': '-1002542749883'} | {}
+2025-12-04 16:36:30,466 - main - INFO - [2025-12-04 16:36:30.466] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:36:30,466 - main - INFO - [2025-12-04 16:36:30.466] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:36:30,549 - main - INFO - [2025-12-04 16:36:30.549] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003277313221', 'match': False} | {}
+2025-12-04 16:36:30,550 - main - INFO - [2025-12-04 16:36:30.549] [INFO] [message_handler::skip] No matching task for chat: موقع أنصار الله الرسمي copy | Data: {'chat_id': '-1003277313221'} | {}
+2025-12-04 16:36:30,740 - main - INFO - [2025-12-04 16:36:30.740] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:36:30,740 - main - INFO - [2025-12-04 16:36:30.740] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:36:50,873 - main - INFO - [2025-12-04 16:36:50.872] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003277313221', 'chat_title': 'موقع أنصار الله الرسمي copy', 'message_id': 3540, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:36:50,873 - main - INFO - [2025-12-04 16:36:50.873] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:36:51,161 - main - INFO - [2025-12-04 16:36:51.161] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:36:51,163 - main - INFO - [2025-12-04 16:36:51.162] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:36:51,411 - main - INFO - [2025-12-04 16:36:51.411] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18180, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:36:51,412 - main - INFO - [2025-12-04 16:36:51.412] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:36:51,448 - main - INFO - [2025-12-04 16:36:51.447] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003277313221', 'match': False} | {}
+2025-12-04 16:36:51,448 - main - INFO - [2025-12-04 16:36:51.448] [INFO] [message_handler::skip] No matching task for chat: موقع أنصار الله الرسمي copy | Data: {'chat_id': '-1003277313221'} | {}
+2025-12-04 16:36:51,685 - main - INFO - [2025-12-04 16:36:51.685] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:36:51,685 - main - INFO - [2025-12-04 16:36:51.685] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:36:51,959 - main - INFO - [2025-12-04 16:36:51.959] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:36:51,960 - main - INFO - [2025-12-04 16:36:51.960] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:37:18,178 - main - INFO - [2025-12-04 16:37:18.178] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003277313221', 'chat_title': 'موقع أنصار الله الرسمي copy', 'message_id': 3541, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:37:18,179 - main - INFO - [2025-12-04 16:37:18.179] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:37:18,463 - main - INFO - [2025-12-04 16:37:18.463] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:37:18,464 - main - INFO - [2025-12-04 16:37:18.464] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:37:18,674 - main - INFO - [2025-12-04 16:37:18.674] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18181, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:37:18,675 - main - INFO - [2025-12-04 16:37:18.675] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:37:18,748 - main - INFO - [2025-12-04 16:37:18.748] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003277313221', 'match': False} | {}
+2025-12-04 16:37:18,749 - main - INFO - [2025-12-04 16:37:18.749] [INFO] [message_handler::skip] No matching task for chat: موقع أنصار الله الرسمي copy | Data: {'chat_id': '-1003277313221'} | {}
+2025-12-04 16:37:18,950 - main - INFO - [2025-12-04 16:37:18.949] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:37:18,950 - main - INFO - [2025-12-04 16:37:18.950] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:37:19,225 - main - INFO - [2025-12-04 16:37:19.225] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:37:19,226 - main - INFO - [2025-12-04 16:37:19.225] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:37:27,200 - main - INFO - [2025-12-04 16:37:27.200] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2340, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:37:27,200 - main - INFO - [2025-12-04 16:37:27.200] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:37:27,474 - main - INFO - [2025-12-04 16:37:27.473] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:37:27,474 - main - INFO - [2025-12-04 16:37:27.474] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:37:27,749 - main - INFO - [2025-12-04 16:37:27.749] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 16:37:27,750 - main - INFO - [2025-12-04 16:37:27.750] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 16:37:27,750 - main - INFO - [2025-12-04 16:37:27.750] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 16:37:27,750 - forwarding_engine - INFO - [2025-12-04 16:37:27.750] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2340, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:37:27,750 - forwarding_engine - INFO - [2025-12-04 16:37:27.750] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 16:37:27,750 - forwarding_engine - INFO - [2025-12-04 16:37:27.750] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': False, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 16:37:27,750 - forwarding_engine - INFO - [2025-12-04 16:37:27.750] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 16:37:27,750 - forwarding_engine - INFO - [2025-12-04 16:37:27.750] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 16:37:27,750 - forwarding_engine - INFO - [2025-12-04 16:37:27.750] [INFO] [forwarding_engine::_process_message] Text length: 12 chars | {}
+2025-12-04 16:37:28,160 - forwarding_engine - INFO - [2025-12-04 16:37:28.160] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 16:37:28,570 - forwarding_engine - INFO - [2025-12-04 16:37:28.570] [INFO] [forwarding_engine::_process_message] Using model: moonshotai/kimi-k2-instruct | {}
+2025-12-04 16:37:28,980 - forwarding_engine - INFO - [2025-12-04 16:37:28.980] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 16:37:29,390 - forwarding_engine - INFO - [2025-12-04 16:37:29.390] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 16:37:30,211 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 12 | {}
+2025-12-04 16:37:30,211 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 0 | Sentiment: neutral | Keywords: 2 | Time: 0.000s | {}
+2025-12-04 16:37:30,211 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 0 | Sentiment: neutral | {}
+2025-12-04 16:37:30,622 - ai_rule_engine - INFO - [RuleEngine] Loaded 4 entity rules for task 4 from DB | {}
+2025-12-04 16:37:30,622 - ai_rule_engine - INFO - [RuleEngine] Replaced 'محمد علي' with 'البطل محمد علي' (1 times) | {}
+2025-12-04 16:37:30,622 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 1 | {}
+2025-12-04 16:37:31,032 - ai_rule_engine - INFO - [RuleEngine] Loaded 1 context rules for task 4 from DB | {}
+2025-12-04 16:37:31,032 - ai_rule_engine - INFO - [RuleEngine] Applying 1 context rules | {}
+2025-12-04 16:37:31,032 - ai_rule_engine - INFO - [RuleEngine] Processing rule 2: type=neutralize_negative, instructions=اجعل النص محايد ... | {}
+2025-12-04 16:37:31,032 - ai_rule_engine - INFO - [RuleEngine] Neutralized 0 terms | {}
+2025-12-04 16:37:31,032 - ai_rule_engine - INFO - [RuleEngine] Context rules result: 1 applied, 1 AI instructions | {}
+2025-12-04 16:37:31,032 - ai_rule_engine - INFO - [RuleEngine] Context modifications: 1, AI instructions: 1 | {}
+2025-12-04 16:37:31,306 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 2 | Replacements: 1 | {}
+2025-12-04 16:37:31,306 - ai_pipeline - INFO - [Pipeline] Added 1 context instructions to prompt | {}
+2025-12-04 16:37:31,306 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 500 | Temperature: 0.7 | Input length: 639 chars | {}
+2025-12-04 16:37:32,123 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 16:37:32,124 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 188 chars | First 100 chars: - البطل محمد علي يواصل تألقه في البطولة العربية لرفع الأثقال.  
+- حقق 3 ميداليات ذهبية وكسر الرقم ال | {}
+2025-12-04 16:37:32,124 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 188 | {}
+2025-12-04 16:37:32,125 - ai_postprocessing - INFO - [Postprocessing] Entity replacement not verified: محمد علي → البطل محمد علي | {}
+2025-12-04 16:37:32,125 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 0.78 | {}
+2025-12-04 16:37:32,126 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 2.74s | Quality: 0.78 | Original: 12 → Final: 188 chars | {}
+2025-12-04 16:37:32,126 - forwarding_engine - INFO - [2025-12-04 16:37:32.126] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 12, 'final_length': 188, 'stages': 4, 'rules_applied': 2, 'quality_score': 0.78, 'total_time': '2.74s'} | {}
+2025-12-04 16:37:32,126 - forwarding_engine - INFO - [2025-12-04 16:37:32.126] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.00s) | {}
+2025-12-04 16:37:32,126 - forwarding_engine - INFO - [2025-12-04 16:37:32.126] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (1.09s) | {}
+2025-12-04 16:37:32,126 - forwarding_engine - INFO - [2025-12-04 16:37:32.126] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (0.82s) | {}
+2025-12-04 16:37:32,126 - forwarding_engine - INFO - [2025-12-04 16:37:32.126] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 16:37:32,126 - forwarding_engine - INFO - [2025-12-04 16:37:32.126] [INFO] [forwarding_engine::_process_message]   ├─ Entity replacements (person): 1 | {}
+2025-12-04 16:37:32,536 - task_4 - INFO - AI Pipeline completed | From 12 → 188 chars
+2025-12-04 16:37:33,358 - forwarding_engine - INFO - [2025-12-04 16:37:33.357] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 12, 'processed_length': 188, 'total_reduction': -176, 'reduction_percent': -1466, 'final_preview': '- البطل محمد علي يواصل تألقه في البطولة العربية لرفع الأثقال.  \n- حقق 3 ميداليات ذهبية وكسر الرقم القياسي في وزن 81 كغ.  \n- أهدى الإنجاز إلى الجمهور ا'} | {}
+2025-12-04 16:37:33,358 - forwarding_engine - INFO - [2025-12-04 16:37:33.358] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 16:37:33,358 - forwarding_engine - INFO - [2025-12-04 16:37:33.358] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2340, 'has_processed_text': True, 'task_id': 4} | {}
+2025-12-04 16:37:33,632 - forwarding_engine - INFO - [2025-12-04 16:37:33.632] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 16:37:33,634 - forwarding_engine - INFO - [2025-12-04 16:37:33.634] [INFO] [forwarding_engine::_forward_to_target] Applying publishing template as final step... | {}
+2025-12-04 16:37:35,411 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 500 | Temperature: 0.3 | Input length: 714 chars | {}
+2025-12-04 16:37:35,820 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 16:37:35,821 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 63 chars | First 100 chars: {
+  "رقم_القيد": "",
+  "التصنيف_": "رياضي",
+  "المحافظه_": ""
+} | {}
+2025-12-04 16:37:35,821 - forwarding_engine - INFO - [2025-12-04 16:37:35.821] [DEBUG] [forwarding_engine::_extract_fields_with_ai] AI response received | Data: {'response_length': 63, 'response_preview': '{\n  "رقم_القيد": "",\n  "التصنيف_": "رياضي",\n  "المحافظه_": ""\n}'} | {}
+2025-12-04 16:37:35,821 - forwarding_engine - INFO - [2025-12-04 16:37:35.821] [INFO] [forwarding_engine::_extract_fields_with_ai] AI extracted fields | Data: {'ai_extracted': {'رقم_القيد': '', 'التصنيف_': 'رياضي', 'المحافظه_': ''}} | {}
+2025-12-04 16:37:35,821 - forwarding_engine - INFO - [2025-12-04 16:37:35.821] [INFO] [forwarding_engine::_extract_fields_with_ai] Final extracted fields | Data: {'extracted': {'التلخيص': '- البطل محمد علي يواصل تألقه في البطولة العربية لرفع الأثقال.  \n- حقق 3 ميداليات ذهبية وكسر الرقم القياسي في وزن 81 كغ.  \n- أهدى الإنجاز إلى الجمهور المصري وطالب بتكريم الأبطال الأولمبيين.', 'التاريخ_': '2025-12-04', 'المختص': 'حيدر ', 'رقم_القيد': '', 'التصنيف_': 'رياضي', 'المحافظه_': ''}} | {}
+2025-12-04 16:37:35,821 - forwarding_engine - INFO - [2025-12-04 16:37:35.821] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التصنيف_ | Data: {'formatting': 'quote', 'original_length': 5, 'formatted_length': 30, 'has_html_tags': True, 'formatted_preview': '<blockquote>رياضي</blockquote>'} | {}
+2025-12-04 16:37:35,821 - forwarding_engine - INFO - [2025-12-04 16:37:35.821] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التلخيص | Data: {'formatting': 'quote', 'original_length': 188, 'formatted_length': 213, 'has_html_tags': True, 'formatted_preview': '<blockquote>- البطل محمد علي يواصل تألقه في البطولة العربية لرفع الأثقال.  \n- حقق 3 ميداليات ذهبية و'} | {}
+2025-12-04 16:37:35,822 - forwarding_engine - INFO - [2025-12-04 16:37:35.822] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التاريخ_ | Data: {'formatting': 'none', 'original_length': 10, 'formatted_length': 10, 'has_html_tags': False, 'formatted_preview': '2025-12-04'} | {}
+2025-12-04 16:37:35,822 - forwarding_engine - INFO - [2025-12-04 16:37:35.822] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المختص | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'حيدر '} | {}
+2025-12-04 16:37:35,822 - forwarding_engine - INFO - [2025-12-04 16:37:35.822] [INFO] [forwarding_engine::_apply_publishing_template] Template applied: تلخيص2 | Data: {'output_length': 288, 'fields_count': 6, 'extracted_count': 6} | {}
+2025-12-04 16:37:35,822 - forwarding_engine - INFO - [2025-12-04 16:37:35.822] [INFO] [forwarding_engine::_forward_to_target] Template applied successfully | Data: {'original_length': 12, 'final_length': 288} | {}
+2025-12-04 16:37:36,028 - forwarding_engine - INFO - [2025-12-04 16:37:36.028] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 12, 'final_length': 362, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 16:37:36,028 - forwarding_engine - INFO - [2025-12-04 16:37:36.028] [INFO] [forwarding_engine::_forward_to_target] Sending text message... | Data: {'use_parse_mode': True, 'text_preview': 'التصنيف : <blockquote>رياضي</blockquote>\n<blockquote>- البطل محمد علي يواصل تألقه في البطولة العربية لرفع الأثقال.  \n- حقق 3 ميداليات ذهبية وكسر الرقم القياسي في وزن 81 كغ.  \n- أهدى الإنجاز إلى الجمهور المصري وطالب بتكريم الأبطال الأولمبيين.</blockquote>\nالتاريخ : 2025-12-04\nالمختص: حيدر\n\n📰 <a href=', 'has_html_tags': True} | {}
+2025-12-04 16:37:36,298 - forwarding_engine - INFO - [2025-12-04 16:37:36.298] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 16:37:36,298 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 16:37:36,298 - forwarding_engine - INFO - [2025-12-04 16:37:36.298] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 16:37:37,120 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 16:37:37,120 - forwarding_engine - INFO - [2025-12-04 16:37:37.120] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 16:37:37,120 - main - INFO - [2025-12-04 16:37:37.120] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 16:38:26,432 - main - INFO - [2025-12-04 16:38:26.432] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003277313221', 'chat_title': 'موقع أنصار الله الرسمي copy', 'message_id': 3542, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:38:26,432 - main - INFO - [2025-12-04 16:38:26.432] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:38:26,707 - main - INFO - [2025-12-04 16:38:26.707] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:38:26,707 - main - INFO - [2025-12-04 16:38:26.707] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:38:26,923 - main - INFO - [2025-12-04 16:38:26.923] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18182, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:38:26,923 - main - INFO - [2025-12-04 16:38:26.923] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:38:26,981 - main - INFO - [2025-12-04 16:38:26.981] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003277313221', 'match': False} | {}
+2025-12-04 16:38:26,981 - main - INFO - [2025-12-04 16:38:26.981] [INFO] [message_handler::skip] No matching task for chat: موقع أنصار الله الرسمي copy | Data: {'chat_id': '-1003277313221'} | {}
+2025-12-04 16:38:27,207 - main - INFO - [2025-12-04 16:38:27.207] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:38:27,208 - main - INFO - [2025-12-04 16:38:27.208] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:38:27,493 - main - INFO - [2025-12-04 16:38:27.493] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:38:27,494 - main - INFO - [2025-12-04 16:38:27.494] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:39:01,790 - main - INFO - [2025-12-04 16:39:01.790] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003277313221', 'chat_title': 'موقع أنصار الله الرسمي copy', 'message_id': 3543, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:39:01,792 - main - INFO - [2025-12-04 16:39:01.792] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:39:02,383 - main - INFO - [2025-12-04 16:39:02.383] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18183, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:39:02,384 - main - INFO - [2025-12-04 16:39:02.384] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:39:02,614 - main - INFO - [2025-12-04 16:39:02.614] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:39:02,614 - main - INFO - [2025-12-04 16:39:02.614] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:39:02,668 - main - INFO - [2025-12-04 16:39:02.668] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:39:02,669 - main - INFO - [2025-12-04 16:39:02.669] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:39:02,888 - main - INFO - [2025-12-04 16:39:02.888] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003277313221', 'match': False} | {}
+2025-12-04 16:39:02,888 - main - INFO - [2025-12-04 16:39:02.888] [INFO] [message_handler::skip] No matching task for chat: موقع أنصار الله الرسمي copy | Data: {'chat_id': '-1003277313221'} | {}
+2025-12-04 16:39:02,953 - main - INFO - [2025-12-04 16:39:02.953] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:39:02,953 - main - INFO - [2025-12-04 16:39:02.953] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:39:03,621 - main - INFO - [2025-12-04 16:39:03.621] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2341, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:39:03,622 - main - INFO - [2025-12-04 16:39:03.622] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:39:03,911 - main - INFO - [2025-12-04 16:39:03.910] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:39:03,911 - main - INFO - [2025-12-04 16:39:03.911] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:39:04,202 - main - INFO - [2025-12-04 16:39:04.202] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 16:39:04,203 - main - INFO - [2025-12-04 16:39:04.203] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 16:39:04,203 - main - INFO - [2025-12-04 16:39:04.203] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 16:39:04,203 - forwarding_engine - INFO - [2025-12-04 16:39:04.203] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2341, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:39:04,203 - forwarding_engine - INFO - [2025-12-04 16:39:04.203] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 16:39:04,203 - forwarding_engine - INFO - [2025-12-04 16:39:04.203] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': False, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 16:39:04,203 - forwarding_engine - INFO - [2025-12-04 16:39:04.203] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 16:39:04,203 - forwarding_engine - INFO - [2025-12-04 16:39:04.203] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 16:39:04,204 - forwarding_engine - INFO - [2025-12-04 16:39:04.204] [INFO] [forwarding_engine::_process_message] Text length: 14 chars | {}
+2025-12-04 16:39:04,635 - forwarding_engine - INFO - [2025-12-04 16:39:04.635] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 16:39:05,067 - forwarding_engine - INFO - [2025-12-04 16:39:05.067] [INFO] [forwarding_engine::_process_message] Using model: moonshotai/kimi-k2-instruct | {}
+2025-12-04 16:39:05,501 - forwarding_engine - INFO - [2025-12-04 16:39:05.501] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 16:39:05,933 - forwarding_engine - INFO - [2025-12-04 16:39:05.933] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 16:39:06,797 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 14 | {}
+2025-12-04 16:39:06,799 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 0 | Sentiment: neutral | Keywords: 2 | Time: 0.002s | {}
+2025-12-04 16:39:06,799 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 0 | Sentiment: neutral | {}
+2025-12-04 16:39:07,233 - ai_rule_engine - INFO - [RuleEngine] Loaded 5 entity rules for task 4 from DB | {}
+2025-12-04 16:39:07,235 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 0 | {}
+2025-12-04 16:39:07,667 - ai_rule_engine - INFO - [RuleEngine] Loaded 1 context rules for task 4 from DB | {}
+2025-12-04 16:39:07,667 - ai_rule_engine - INFO - [RuleEngine] Applying 1 context rules | {}
+2025-12-04 16:39:07,667 - ai_rule_engine - INFO - [RuleEngine] Processing rule 2: type=neutralize_negative, instructions=اجعل النص محايد ... | {}
+2025-12-04 16:39:07,667 - ai_rule_engine - INFO - [RuleEngine] Neutralized 0 terms | {}
+2025-12-04 16:39:07,667 - ai_rule_engine - INFO - [RuleEngine] Context rules result: 1 applied, 1 AI instructions | {}
+2025-12-04 16:39:07,667 - ai_rule_engine - INFO - [RuleEngine] Context modifications: 1, AI instructions: 1 | {}
+2025-12-04 16:39:07,955 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 1 | Replacements: 0 | {}
+2025-12-04 16:39:07,956 - ai_pipeline - INFO - [Pipeline] Added 1 context instructions to prompt | {}
+2025-12-04 16:39:07,956 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 500 | Temperature: 0.7 | Input length: 558 chars | {}
+2025-12-04 16:39:09,115 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 16:39:09,116 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 262 chars | First 100 chars: - جماعة مسلحة يمنية ظهرت مطلع التسعينات  
+- سيطرت على صنعاء ومناطق واسعة شمال اليمن  
+- تتبع نموذج « | {}
+2025-12-04 16:39:09,116 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 262 | {}
+2025-12-04 16:39:09,116 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 0.93 | {}
+2025-12-04 16:39:09,117 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 3.18s | Quality: 0.93 | Original: 14 → Final: 262 chars | {}
+2025-12-04 16:39:09,117 - forwarding_engine - INFO - [2025-12-04 16:39:09.117] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 14, 'final_length': 262, 'stages': 4, 'rules_applied': 1, 'quality_score': 0.9299999999999999, 'total_time': '3.18s'} | {}
+2025-12-04 16:39:09,117 - forwarding_engine - INFO - [2025-12-04 16:39:09.117] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.00s) | {}
+2025-12-04 16:39:09,117 - forwarding_engine - INFO - [2025-12-04 16:39:09.117] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (1.16s) | {}
+2025-12-04 16:39:09,117 - forwarding_engine - INFO - [2025-12-04 16:39:09.117] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (1.16s) | {}
+2025-12-04 16:39:09,117 - forwarding_engine - INFO - [2025-12-04 16:39:09.117] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 16:39:09,549 - task_4 - INFO - AI Pipeline completed | From 14 → 262 chars
+2025-12-04 16:39:10,421 - forwarding_engine - INFO - [2025-12-04 16:39:10.419] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 14, 'processed_length': 262, 'total_reduction': -248, 'reduction_percent': -1771, 'final_preview': '- جماعة مسلحة يمنية ظهرت مطلع التسعينات  \n- سيطرت على صنعاء ومناطق واسعة شمال اليمن  \n- تتبع نموذج «ولاية الفقيه» وتدعمها إيران بالسلاح والتمويل  \n- ت'} | {}
+2025-12-04 16:39:10,422 - forwarding_engine - INFO - [2025-12-04 16:39:10.422] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 16:39:10,423 - forwarding_engine - INFO - [2025-12-04 16:39:10.423] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2341, 'has_processed_text': True, 'task_id': 4} | {}
+2025-12-04 16:39:10,710 - forwarding_engine - INFO - [2025-12-04 16:39:10.710] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 16:39:10,711 - forwarding_engine - INFO - [2025-12-04 16:39:10.711] [INFO] [forwarding_engine::_forward_to_target] Applying publishing template as final step... | {}
+2025-12-04 16:39:12,580 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 500 | Temperature: 0.3 | Input length: 788 chars | {}
+2025-12-04 16:39:13,119 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 16:39:13,120 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 67 chars | First 100 chars: {
+  "رقم_القيد": "",
+  "التصنيف_": "أمني",
+  "المحافظه_": "صنعاء"
+} | {}
+2025-12-04 16:39:13,121 - forwarding_engine - INFO - [2025-12-04 16:39:13.121] [DEBUG] [forwarding_engine::_extract_fields_with_ai] AI response received | Data: {'response_length': 67, 'response_preview': '{\n  "رقم_القيد": "",\n  "التصنيف_": "أمني",\n  "المحافظه_": "صنعاء"\n}'} | {}
+2025-12-04 16:39:13,121 - forwarding_engine - INFO - [2025-12-04 16:39:13.121] [INFO] [forwarding_engine::_extract_fields_with_ai] AI extracted fields | Data: {'ai_extracted': {'رقم_القيد': '', 'التصنيف_': 'أمني', 'المحافظه_': 'صنعاء'}} | {}
+2025-12-04 16:39:13,121 - forwarding_engine - INFO - [2025-12-04 16:39:13.121] [INFO] [forwarding_engine::_extract_fields_with_ai] Final extracted fields | Data: {'extracted': {'التلخيص': '- جماعة مسلحة يمنية ظهرت مطلع التسعينات  \n- سيطرت على صنعاء ومناطق واسعة شمال اليمن  \n- تتبع نموذج «ولاية الفقيه» وتدعمها إيران بالسلاح والتمويل  \n- تصنفها الأمم المتحدة وواشنطن منظمة إرهابية  \n- تحارب التحالف العربي وتستهدف السعودية بالصواريخ والطائرات المسيّرة', 'التاريخ_': '2025-12-04', 'المختص': 'حيدر ', 'رقم_القيد': '', 'التصنيف_': 'أمني', 'المحافظه_': 'صنعاء'}} | {}
+2025-12-04 16:39:13,121 - forwarding_engine - INFO - [2025-12-04 16:39:13.121] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التصنيف_ | Data: {'formatting': 'quote', 'original_length': 4, 'formatted_length': 29, 'has_html_tags': True, 'formatted_preview': '<blockquote>أمني</blockquote>'} | {}
+2025-12-04 16:39:13,121 - forwarding_engine - INFO - [2025-12-04 16:39:13.121] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المحافظه_ | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'صنعاء'} | {}
+2025-12-04 16:39:13,121 - forwarding_engine - INFO - [2025-12-04 16:39:13.121] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التلخيص | Data: {'formatting': 'quote', 'original_length': 262, 'formatted_length': 287, 'has_html_tags': True, 'formatted_preview': '<blockquote>- جماعة مسلحة يمنية ظهرت مطلع التسعينات  \n- سيطرت على صنعاء ومناطق واسعة شمال اليمن  \n- '} | {}
+2025-12-04 16:39:13,121 - forwarding_engine - INFO - [2025-12-04 16:39:13.121] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التاريخ_ | Data: {'formatting': 'none', 'original_length': 10, 'formatted_length': 10, 'has_html_tags': False, 'formatted_preview': '2025-12-04'} | {}
+2025-12-04 16:39:13,121 - forwarding_engine - INFO - [2025-12-04 16:39:13.121] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المختص | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'حيدر '} | {}
+2025-12-04 16:39:13,122 - forwarding_engine - INFO - [2025-12-04 16:39:13.122] [INFO] [forwarding_engine::_apply_publishing_template] Template applied: تلخيص2 | Data: {'output_length': 378, 'fields_count': 6, 'extracted_count': 6} | {}
+2025-12-04 16:39:13,122 - forwarding_engine - INFO - [2025-12-04 16:39:13.122] [INFO] [forwarding_engine::_forward_to_target] Template applied successfully | Data: {'original_length': 14, 'final_length': 378} | {}
+2025-12-04 16:39:13,324 - forwarding_engine - INFO - [2025-12-04 16:39:13.324] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 14, 'final_length': 452, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 16:39:13,324 - forwarding_engine - INFO - [2025-12-04 16:39:13.324] [INFO] [forwarding_engine::_forward_to_target] Sending text message... | Data: {'use_parse_mode': True, 'text_preview': 'التصنيف : <blockquote>أمني</blockquote>\nالمحافظه : صنعاء\n<blockquote>- جماعة مسلحة يمنية ظهرت مطلع التسعينات  \n- سيطرت على صنعاء ومناطق واسعة شمال اليمن  \n- تتبع نموذج «ولاية الفقيه» وتدعمها إيران بالسلاح والتمويل  \n- تصنفها الأمم المتحدة وواشنطن منظمة إرهابية  \n- تحارب التحالف العربي وتستهدف السعود', 'has_html_tags': True} | {}
+2025-12-04 16:39:13,625 - forwarding_engine - INFO - [2025-12-04 16:39:13.625] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 16:39:13,625 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 16:39:13,626 - forwarding_engine - INFO - [2025-12-04 16:39:13.626] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 16:39:14,922 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 16:39:14,922 - forwarding_engine - INFO - [2025-12-04 16:39:14.922] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 16:39:14,922 - main - INFO - [2025-12-04 16:39:14.922] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 16:39:32,232 - main - INFO - [2025-12-04 16:39:32.231] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003277313221', 'chat_title': 'موقع أنصار الله الرسمي copy', 'message_id': 3544, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:39:32,232 - main - INFO - [2025-12-04 16:39:32.232] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:39:32,520 - main - INFO - [2025-12-04 16:39:32.520] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:39:32,521 - main - INFO - [2025-12-04 16:39:32.521] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:39:32,792 - main - INFO - [2025-12-04 16:39:32.792] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18184, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:39:32,793 - main - INFO - [2025-12-04 16:39:32.793] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:39:32,810 - main - INFO - [2025-12-04 16:39:32.810] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003277313221', 'match': False} | {}
+2025-12-04 16:39:32,811 - main - INFO - [2025-12-04 16:39:32.811] [INFO] [message_handler::skip] No matching task for chat: موقع أنصار الله الرسمي copy | Data: {'chat_id': '-1003277313221'} | {}
+2025-12-04 16:39:33,067 - main - INFO - [2025-12-04 16:39:33.067] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:39:33,068 - main - INFO - [2025-12-04 16:39:33.068] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:39:33,342 - main - INFO - [2025-12-04 16:39:33.342] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:39:33,342 - main - INFO - [2025-12-04 16:39:33.342] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
+2025-12-04 16:39:45,764 - main - INFO - [2025-12-04 16:39:45.764] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2342, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:39:45,764 - main - INFO - [2025-12-04 16:39:45.764] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:39:46,052 - main - INFO - [2025-12-04 16:39:46.052] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:39:46,053 - main - INFO - [2025-12-04 16:39:46.053] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:39:46,341 - main - INFO - [2025-12-04 16:39:46.341] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 16:39:46,341 - main - INFO - [2025-12-04 16:39:46.341] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 16:39:46,341 - main - INFO - [2025-12-04 16:39:46.341] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 16:39:46,341 - forwarding_engine - INFO - [2025-12-04 16:39:46.341] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2342, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:39:46,341 - forwarding_engine - INFO - [2025-12-04 16:39:46.341] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 16:39:46,341 - forwarding_engine - INFO - [2025-12-04 16:39:46.341] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': False, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 16:39:46,342 - forwarding_engine - INFO - [2025-12-04 16:39:46.341] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 16:39:46,342 - forwarding_engine - INFO - [2025-12-04 16:39:46.342] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 16:39:46,342 - forwarding_engine - INFO - [2025-12-04 16:39:46.342] [INFO] [forwarding_engine::_process_message] Text length: 14 chars | {}
+2025-12-04 16:39:46,629 - forwarding_engine - INFO - [2025-12-04 16:39:46.629] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 16:39:46,920 - forwarding_engine - INFO - [2025-12-04 16:39:46.920] [INFO] [forwarding_engine::_process_message] Using model: moonshotai/kimi-k2-instruct | {}
+2025-12-04 16:39:47,207 - forwarding_engine - INFO - [2025-12-04 16:39:47.207] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 16:39:47,495 - forwarding_engine - INFO - [2025-12-04 16:39:47.495] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 16:39:48,070 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 14 | {}
+2025-12-04 16:39:48,071 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 0 | Sentiment: neutral | Keywords: 2 | Time: 0.000s | {}
+2025-12-04 16:39:48,071 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 0 | Sentiment: neutral | {}
+2025-12-04 16:39:48,358 - ai_rule_engine - INFO - [RuleEngine] Loaded 5 entity rules for task 4 from DB | {}
+2025-12-04 16:39:48,359 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 0 | {}
+2025-12-04 16:39:48,646 - ai_rule_engine - INFO - [RuleEngine] Loaded 0 context rules for task 4 from DB | {}
+2025-12-04 16:39:48,933 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 0 | Replacements: 0 | {}
+2025-12-04 16:39:48,934 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 500 | Temperature: 0.7 | Input length: 475 chars | {}
+2025-12-04 16:39:49,871 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 16:39:49,875 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 205 chars | First 100 chars: - استهدفت مليشيات الحوثي سفينة تجارية في البحر الأحمر بصاروخ باليستي  
+- التصعيد يهدد الملاحة الدولي | {}
+2025-12-04 16:39:49,879 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 205 | {}
+2025-12-04 16:39:49,881 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 0.90 | {}
+2025-12-04 16:39:49,881 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 2.39s | Quality: 0.90 | Original: 14 → Final: 205 chars | {}
+2025-12-04 16:39:49,882 - forwarding_engine - INFO - [2025-12-04 16:39:49.882] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 14, 'final_length': 205, 'stages': 4, 'rules_applied': 0, 'quality_score': 0.9, 'total_time': '2.39s'} | {}
+2025-12-04 16:39:49,882 - forwarding_engine - INFO - [2025-12-04 16:39:49.882] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.00s) | {}
+2025-12-04 16:39:49,882 - forwarding_engine - INFO - [2025-12-04 16:39:49.882] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (0.86s) | {}
+2025-12-04 16:39:49,882 - forwarding_engine - INFO - [2025-12-04 16:39:49.882] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (0.95s) | {}
+2025-12-04 16:39:49,882 - forwarding_engine - INFO - [2025-12-04 16:39:49.882] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 16:39:50,170 - task_4 - INFO - AI Pipeline completed | From 14 → 205 chars
+2025-12-04 16:39:50,747 - forwarding_engine - INFO - [2025-12-04 16:39:50.747] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 14, 'processed_length': 205, 'total_reduction': -191, 'reduction_percent': -1364, 'final_preview': '- استهدفت مليشيات الحوثي سفينة تجارية في البحر الأحمر بصاروخ باليستي  \n- التصعيد يهدد الملاحة الدولية ويعرّض حركة التجارة العالمية للخطر  \n- المجتمع ا'} | {}
+2025-12-04 16:39:50,748 - forwarding_engine - INFO - [2025-12-04 16:39:50.748] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 16:39:50,749 - forwarding_engine - INFO - [2025-12-04 16:39:50.749] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2342, 'has_processed_text': True, 'task_id': 4} | {}
+2025-12-04 16:39:51,037 - forwarding_engine - INFO - [2025-12-04 16:39:51.037] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 16:39:51,037 - forwarding_engine - INFO - [2025-12-04 16:39:51.037] [INFO] [forwarding_engine::_forward_to_target] Applying publishing template as final step... | {}
+2025-12-04 16:39:52,476 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 500 | Temperature: 0.3 | Input length: 731 chars | {}
+2025-12-04 16:39:52,871 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 16:39:52,873 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 62 chars | First 100 chars: {
+  "رقم_القيد": "",
+  "التصنيف_": "أمني",
+  "المحافظه_": ""
+} | {}
+2025-12-04 16:39:52,873 - forwarding_engine - INFO - [2025-12-04 16:39:52.873] [DEBUG] [forwarding_engine::_extract_fields_with_ai] AI response received | Data: {'response_length': 62, 'response_preview': '{\n  "رقم_القيد": "",\n  "التصنيف_": "أمني",\n  "المحافظه_": ""\n}'} | {}
+2025-12-04 16:39:52,873 - forwarding_engine - INFO - [2025-12-04 16:39:52.873] [INFO] [forwarding_engine::_extract_fields_with_ai] AI extracted fields | Data: {'ai_extracted': {'رقم_القيد': '', 'التصنيف_': 'أمني', 'المحافظه_': ''}} | {}
+2025-12-04 16:39:52,873 - forwarding_engine - INFO - [2025-12-04 16:39:52.873] [INFO] [forwarding_engine::_extract_fields_with_ai] Final extracted fields | Data: {'extracted': {'التلخيص': '- استهدفت مليشيات الحوثي سفينة تجارية في البحر الأحمر بصاروخ باليستي  \n- التصعيد يهدد الملاحة الدولية ويعرّض حركة التجارة العالمية للخطر  \n- المجتمع الدولي يدين الهجمة ويُحذّر من تكرار الاعتداءات الإرهابية', 'التاريخ_': '2025-12-04', 'المختص': 'حيدر ', 'رقم_القيد': '', 'التصنيف_': 'أمني', 'المحافظه_': ''}} | {}
+2025-12-04 16:39:52,873 - forwarding_engine - INFO - [2025-12-04 16:39:52.873] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التصنيف_ | Data: {'formatting': 'quote', 'original_length': 4, 'formatted_length': 29, 'has_html_tags': True, 'formatted_preview': '<blockquote>أمني</blockquote>'} | {}
+2025-12-04 16:39:52,873 - forwarding_engine - INFO - [2025-12-04 16:39:52.873] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التلخيص | Data: {'formatting': 'quote', 'original_length': 205, 'formatted_length': 230, 'has_html_tags': True, 'formatted_preview': '<blockquote>- استهدفت مليشيات الحوثي سفينة تجارية في البحر الأحمر بصاروخ باليستي  \n- التصعيد يهدد ال'} | {}
+2025-12-04 16:39:52,873 - forwarding_engine - INFO - [2025-12-04 16:39:52.873] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التاريخ_ | Data: {'formatting': 'none', 'original_length': 10, 'formatted_length': 10, 'has_html_tags': False, 'formatted_preview': '2025-12-04'} | {}
+2025-12-04 16:39:52,873 - forwarding_engine - INFO - [2025-12-04 16:39:52.873] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المختص | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'حيدر '} | {}
+2025-12-04 16:39:52,873 - forwarding_engine - INFO - [2025-12-04 16:39:52.873] [INFO] [forwarding_engine::_apply_publishing_template] Template applied: تلخيص2 | Data: {'output_length': 304, 'fields_count': 6, 'extracted_count': 6} | {}
+2025-12-04 16:39:52,874 - forwarding_engine - INFO - [2025-12-04 16:39:52.874] [INFO] [forwarding_engine::_forward_to_target] Template applied successfully | Data: {'original_length': 14, 'final_length': 304} | {}
+2025-12-04 16:39:53,077 - forwarding_engine - INFO - [2025-12-04 16:39:53.077] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 14, 'final_length': 378, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 16:39:53,080 - forwarding_engine - INFO - [2025-12-04 16:39:53.080] [INFO] [forwarding_engine::_forward_to_target] Sending text message... | Data: {'use_parse_mode': True, 'text_preview': 'التصنيف : <blockquote>أمني</blockquote>\n<blockquote>- استهدفت مليشيات الحوثي سفينة تجارية في البحر الأحمر بصاروخ باليستي  \n- التصعيد يهدد الملاحة الدولية ويعرّض حركة التجارة العالمية للخطر  \n- المجتمع الدولي يدين الهجمة ويُحذّر من تكرار الاعتداءات الإرهابية</blockquote>\nالتاريخ : 2025-12-04\nالمختص: ', 'has_html_tags': True} | {}
+2025-12-04 16:39:53,367 - forwarding_engine - INFO - [2025-12-04 16:39:53.367] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 16:39:53,367 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 16:39:53,368 - forwarding_engine - INFO - [2025-12-04 16:39:53.368] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 16:39:54,190 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 16:39:54,190 - forwarding_engine - INFO - [2025-12-04 16:39:54.190] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 16:39:54,190 - main - INFO - [2025-12-04 16:39:54.190] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 16:40:39,693 - link_processor - INFO - LinkProcessor initialized | {}
+2025-12-04 16:40:39,693 - video_processor - INFO - VideoProcessor initialized | {}
+2025-12-04 16:40:39,696 - ai_preprocessing - INFO - [Preprocessing] Engine initialized with Arabic language support | {}
+2025-12-04 16:40:39,698 - ai_rule_engine - INFO - [RuleEngine] Engine initialized with TTL-based caching | {}
+2025-12-04 16:40:39,699 - ai_postprocessing - INFO - [Postprocessing] Engine initialized | {}
+2025-12-04 16:40:39,700 - ai_pipeline - INFO - [Pipeline] AI Processing Pipeline initialized | {}
+2025-12-04 16:40:39,702 - main - INFO - [2025-12-04 16:40:39.702] [INFO] [main::entry] Bot script started | {}
+2025-12-04 16:40:39,703 - main - INFO - [2025-12-04 16:40:39.703] [INFO] [main::startup] Validating settings... | {}
+2025-12-04 16:40:39,703 - main - INFO - [2025-12-04 16:40:39.703] [INFO] [main::startup] 🤖 Starting Telegram Forwarding Userbot... | Data: {'bot_admin': 6556918772, 'api_id': 24343527} | {}
+2025-12-04 16:40:39,703 - main - INFO - [2025-12-04 16:40:39.703] [INFO] [session::check] Checking for active userbot session... | {}
+2025-12-04 16:40:41,735 - database - INFO - Database connected successfully | {}
+2025-12-04 16:40:42,146 - main - INFO - [2025-12-04 16:40:42.145] [INFO] [session::load] Found active session in database | {}
+2025-12-04 16:40:42,146 - main - INFO - [2025-12-04 16:40:42.146] [INFO] [main::init] Creating Pyrofork client | Data: {'api_id': 24343527, 'has_session': True, 'api_hash_set': True} | {}
+2025-12-04 16:40:43,900 - main - INFO - [2025-12-04 16:40:43.900] [INFO] [main::initialize_bot] Starting bot initialization... | {}
+2025-12-04 16:40:43,900 - main - INFO - [2025-12-04 16:40:43.900] [INFO] [database::connect] Connecting to database... | {}
+2025-12-04 16:40:45,711 - database - INFO - Database connected successfully | {}
+2025-12-04 16:40:45,712 - main - INFO - [2025-12-04 16:40:45.712] [INFO] [database::connect] Database connected successfully | {}
+2025-12-04 16:40:45,712 - main - INFO - [2025-12-04 16:40:45.712] [INFO] [ai_manager::init] Loading AI providers from database... | {}
+2025-12-04 16:40:46,139 - ai_providers - WARNING - No API key found for provider: claude | {}
+2025-12-04 16:40:46,139 - ai_providers - INFO - Loaded Groq provider from database | {}
+2025-12-04 16:40:46,139 - ai_providers - INFO - Loaded HuggingFace provider from database | {}
+2025-12-04 16:40:46,139 - main - INFO - [2025-12-04 16:40:46.139] [INFO] [ai_manager::init] AI providers loaded successfully | {}
+2025-12-04 16:40:46,139 - main - INFO - [2025-12-04 16:40:46.139] [INFO] [admin::check] Checking admin status for ID: 6556918772 | {}
+2025-12-04 16:40:46,568 - main - INFO - [2025-12-04 16:40:46.568] [INFO] [admin::check] Admin already exists: 6556918772 | {}
+2025-12-04 16:40:46,568 - main - INFO - [2025-12-04 16:40:46.568] [INFO] [forwarding_engine::init] Initializing forwarding engine... | {}
+2025-12-04 16:40:46,568 - forwarding_engine - INFO - [2025-12-04 16:40:46.568] [INFO] [forwarding_engine::__init__] Forwarding engine initialized | {}
+2025-12-04 16:40:46,568 - main - INFO - [2025-12-04 16:40:46.568] [INFO] [forwarding_engine::init] Forwarding engine initialized successfully | {}
+2025-12-04 16:40:46,568 - main - INFO - [2025-12-04 16:40:46.568] [INFO] [queue_manager::register] Registering job handlers... | {}
+2025-12-04 16:40:46,568 - queue_system - INFO - Registered handler for job type: forward | {}
+2025-12-04 16:40:46,569 - queue_system - INFO - Registered handler for job type: ai_process | {}
+2025-12-04 16:40:46,569 - queue_system - INFO - Registered handler for job type: video_process | {}
+2025-12-04 16:40:46,569 - main - INFO - [2025-12-04 16:40:46.569] [INFO] [queue_manager::register] All handlers registered: forward, ai_process, video_process | {}
+2025-12-04 16:40:46,569 - main - INFO - [2025-12-04 16:40:46.569] [INFO] [queue_manager::start] Starting queue manager... | {}
+2025-12-04 16:40:46,569 - queue_system - INFO - Queue manager started with 10 max workers | {}
+2025-12-04 16:40:46,569 - main - INFO - [2025-12-04 16:40:46.569] [INFO] [queue_manager::start] Queue manager started with 10 workers | {}
+2025-12-04 16:40:46,569 - main - INFO - [2025-12-04 16:40:46.569] [INFO] [tasks::load] Loading active tasks from database... | {}
+2025-12-04 16:40:46,995 - main - INFO - [2025-12-04 16:40:46.995] [INFO] [tasks::load] Found 1 tasks in database | {}
+2025-12-04 16:40:46,996 - main - INFO - [2025-12-04 16:40:46.996] [INFO] [tasks::check] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'is_active': True, 'source_channels': [4], 'target_channels': [5]} | {}
+2025-12-04 16:40:46,996 - forwarding_engine - INFO - [2025-12-04 16:40:46.996] [INFO] [forwarding_engine::start_task_monitoring] Started monitoring task 4 | {}
+2025-12-04 16:40:46,998 - main - INFO - [2025-12-04 16:40:46.997] [INFO] [tasks::monitor] Started monitoring task: توجيه الأخبار  | Data: {'task_id': 4} | {}
+2025-12-04 16:40:46,998 - main - INFO - [2025-12-04 16:40:46.998] [INFO] [tasks::load] Loaded 1 active tasks for monitoring | {}
+2025-12-04 16:40:46,998 - main - INFO - [2025-12-04 16:40:46.998] [INFO] [main::initialize_bot] ✅ Bot initialization completed successfully | {}
+2025-12-04 16:40:46,999 - main - INFO - [2025-12-04 16:40:46.999] [INFO] [pyrogram::start] Starting Pyrofork userbot client... | {}
+2025-12-04 16:40:47,226 - pyrogram.connection.connection - INFO - Connecting...
+2025-12-04 16:40:47,421 - pyrogram.connection.connection - INFO - Connected! Production DC4 - IPv4
+2025-12-04 16:40:47,423 - pyrogram.session.session - INFO - NetworkTask started
+2025-12-04 16:40:48,307 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-12-04 16:40:48,308 - pyrogram.session.session - INFO - Device: CPython 3.11.13 - Pyrogram 2.0.106
+2025-12-04 16:40:48,308 - pyrogram.session.session - INFO - System: Linux 6.14.11 (en)
+2025-12-04 16:40:48,308 - pyrogram.session.session - INFO - Session started
+2025-12-04 16:40:48,311 - pyrogram.session.session - INFO - PingTask started
+2025-12-04 16:40:48,928 - pyrogram.dispatcher - INFO - Started 12 HandlerTasks
+2025-12-04 16:40:49,182 - main - INFO - [2025-12-04 16:40:49.181] [INFO] [pyrogram::connected] ✅ Userbot connected to Telegram | Data: {'user_id': 7831798910, 'username': 'TTT1234TTTT', 'first_name': 'V'} | {}
+2025-12-04 16:40:49,182 - main - INFO - [2025-12-04 16:40:49.182] [INFO] [handlers::register] Registering message handlers... | {}
+2025-12-04 16:40:49,183 - main - INFO - [2025-12-04 16:40:49.182] [INFO] [handlers::register] ✅ All handlers registered successfully | {}
+2025-12-04 16:40:49,183 - main - INFO - [2025-12-04 16:40:49.183] [INFO] [warmup::post_connect] Starting post-connection warmup... | {}
+2025-12-04 16:40:49,183 - main - INFO - [2025-12-04 16:40:49.183] [INFO] [warmup::start] Starting channel peer warmup... | {}
+2025-12-04 16:40:49,183 - main - INFO - [2025-12-04 16:40:49.183] [INFO] [warmup::dialogs] Loading all dialogs to populate peer cache... | {}
+2025-12-04 16:40:51,497 - main - INFO - [2025-12-04 16:40:51.497] [DEBUG] [warmup::dialogs] Loaded 50 dialogs... | {}
+2025-12-04 16:40:51,497 - main - INFO - [2025-12-04 16:40:51.497] [DEBUG] [warmup::dialogs] Loaded 100 dialogs... | {}
+2025-12-04 16:40:51,872 - main - INFO - [2025-12-04 16:40:51.872] [DEBUG] [warmup::dialogs] Loaded 150 dialogs... | {}
+2025-12-04 16:40:52,106 - main - INFO - [2025-12-04 16:40:52.105] [INFO] [warmup::dialogs] ✅ Cached 164 dialogs in peer cache | {}
+2025-12-04 16:40:52,530 - main - INFO - [2025-12-04 16:40:52.530] [INFO] [warmup::channels] Found 2 channels to verify | {}
+2025-12-04 16:40:52,530 - main - INFO - [2025-12-04 16:40:52.530] [INFO] [warmup::cached] ✅ اختبار 1 already in peer cache | {}
+2025-12-04 16:40:52,530 - main - INFO - [2025-12-04 16:40:52.530] [INFO] [warmup::cached] ✅ اختبار 2 already in peer cache | {}
+2025-12-04 16:40:52,530 - main - INFO - [2025-12-04 16:40:52.530] [INFO] [warmup::complete] ✅ Warmup complete: 2 success, 0 failed | {}
+2025-12-04 16:40:52,530 - main - INFO - [2025-12-04 16:40:52.530] [INFO] [main::idle] Userbot is now running and waiting for messages... | {}
+2025-12-04 16:40:56,417 - main - INFO - [2025-12-04 16:40:56.417] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003190233554', 'chat_title': 'Test1', 'message_id': 2343, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:40:56,417 - main - INFO - [2025-12-04 16:40:56.417] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:40:56,706 - main - INFO - [2025-12-04 16:40:56.706] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:40:56,707 - main - INFO - [2025-12-04 16:40:56.707] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:40:57,133 - main - INFO - [2025-12-04 16:40:57.133] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003190233554', 'match': True} | {}
+2025-12-04 16:40:57,133 - main - INFO - [2025-12-04 16:40:57.133] [INFO] [message_handler::match] ✅ Task matched! | Data: {'task_name': 'توجيه الأخبار ', 'task_id': 4} | {}
+2025-12-04 16:40:57,133 - main - INFO - [2025-12-04 16:40:57.133] [INFO] [message_handler::forward] Starting message forwarding... | Data: {'task_id': 4, 'target_channels': [5]} | {}
+2025-12-04 16:40:57,134 - forwarding_engine - INFO - [2025-12-04 16:40:57.134] [INFO] [forwarding_engine::forward_message] Starting message forward | Data: {'task_id': 4, 'task_name': 'توجيه الأخبار ', 'message_id': 2343, 'chat_id': -1003190233554, 'chat_title': 'Test1', 'has_text': True, 'has_caption': False, 'has_media': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:40:57,134 - forwarding_engine - INFO - [2025-12-04 16:40:57.134] [INFO] [forwarding_engine::forward_message] Target channels | Data: {'target_ids': [5], 'count': 1} | {}
+2025-12-04 16:40:57,134 - forwarding_engine - INFO - [2025-12-04 16:40:57.134] [INFO] [forwarding_engine::forward_message] Processing options | Data: {'ai_enabled': True, 'video_processing': False, 'summarization_enabled': True, 'link_processing': True} | {}
+2025-12-04 16:40:57,136 - forwarding_engine - INFO - [2025-12-04 16:40:57.136] [INFO] [forwarding_engine::forward_message] Processing message with AI... | {}
+2025-12-04 16:40:57,136 - forwarding_engine - INFO - [2025-12-04 16:40:57.136] [INFO] [forwarding_engine::_process_message] Starting message processing | Data: {'task_id': 4, 'has_text': True, 'has_caption': False, 'has_video': False, 'ai_enabled': True, 'summarization_enabled': True} | {}
+2025-12-04 16:40:57,136 - forwarding_engine - INFO - [2025-12-04 16:40:57.136] [INFO] [forwarding_engine::_process_message] Text length: 39 chars | {}
+2025-12-04 16:40:57,560 - forwarding_engine - INFO - [2025-12-04 16:40:57.560] [INFO] [forwarding_engine::_process_message] Using provider: groq | {}
+2025-12-04 16:40:57,985 - forwarding_engine - INFO - [2025-12-04 16:40:57.985] [INFO] [forwarding_engine::_process_message] Using model: moonshotai/kimi-k2-instruct | {}
+2025-12-04 16:40:58,410 - forwarding_engine - INFO - [2025-12-04 16:40:58.410] [INFO] [forwarding_engine::_process_message] Using system prompt: You are an expert summarizer and content curator. Your goal is to extract key in... | {}
+2025-12-04 16:40:58,835 - forwarding_engine - INFO - [2025-12-04 16:40:58.835] [INFO] [forwarding_engine::_process_message] 🚀 Starting AI Pipeline processing with 1 rules | {}
+2025-12-04 16:40:59,685 - ai_pipeline - INFO - [Pipeline] Starting processing | Task: 4 | Text length: 39 | {}
+2025-12-04 16:40:59,690 - ai_preprocessing - INFO - [Preprocessing] Completed | Entities: 0 | Sentiment: neutral | Keywords: 6 | Time: 0.005s | {}
+2025-12-04 16:40:59,691 - ai_pipeline - INFO - [Pipeline] Stage 1 complete | Entities: 0 | Sentiment: neutral | {}
+2025-12-04 16:41:00,116 - ai_rule_engine - INFO - [RuleEngine] Loaded 5 entity rules for task 4 from DB | {}
+2025-12-04 16:41:00,117 - ai_rule_engine - INFO - [RuleEngine] Replaced 'مليشيات الحوثي ' with 'جماعة أنصار الله ' (1 times) | {}
+2025-12-04 16:41:00,117 - ai_rule_engine - INFO - [RuleEngine] Entity replacements: 1 | {}
+2025-12-04 16:41:00,542 - ai_rule_engine - INFO - [RuleEngine] Loaded 0 context rules for task 4 from DB | {}
+2025-12-04 16:41:00,826 - ai_pipeline - INFO - [Pipeline] Stage 2 complete | Rules: 1 | Replacements: 1 | {}
+2025-12-04 16:41:01,101 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 500 | Temperature: 0.7 | Input length: 589 chars | {}
+2025-12-04 16:41:01,975 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 16:41:01,996 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 197 chars | First 100 chars: - جماعة أنصار الله أطلقت صاروخاً باتجاه إسرائيل  
+- الهجوم يمثل تصعيداً جديداً في التوترات الإقليمية | {}
+2025-12-04 16:41:01,997 - ai_pipeline - INFO - [Pipeline] Stage 3 complete | Output length: 197 | {}
+2025-12-04 16:41:01,999 - ai_pipeline - INFO - [Pipeline] Stage 4 complete | Quality: 0.93 | {}
+2025-12-04 16:41:01,999 - ai_pipeline - INFO - [Pipeline] ✅ Complete | Total time: 3.16s | Quality: 0.93 | Original: 39 → Final: 197 chars | {}
+2025-12-04 16:41:01,999 - forwarding_engine - INFO - [2025-12-04 16:41:01.999] [INFO] [forwarding_engine::_process_message] 📊 AI Pipeline completed | Data: {'original_length': 39, 'final_length': 197, 'stages': 4, 'rules_applied': 1, 'quality_score': 0.9299999999999999, 'total_time': '3.16s'} | {}
+2025-12-04 16:41:01,999 - forwarding_engine - INFO - [2025-12-04 16:41:01.999] [INFO] [forwarding_engine::_process_message]   ├─ preprocessing: ✅ (0.01s) | {}
+2025-12-04 16:41:01,999 - forwarding_engine - INFO - [2025-12-04 16:41:01.999] [INFO] [forwarding_engine::_process_message]   ├─ rule_engine: ✅ (1.13s) | {}
+2025-12-04 16:41:01,999 - forwarding_engine - INFO - [2025-12-04 16:41:01.999] [INFO] [forwarding_engine::_process_message]   ├─ ai_summarization: ✅ (1.17s) | {}
+2025-12-04 16:41:01,999 - forwarding_engine - INFO - [2025-12-04 16:41:01.999] [INFO] [forwarding_engine::_process_message]   ├─ postprocessing: ✅ (0.00s) | {}
+2025-12-04 16:41:01,999 - forwarding_engine - INFO - [2025-12-04 16:41:01.999] [INFO] [forwarding_engine::_process_message]   ├─ Entity replacements (person): 1 | {}
+2025-12-04 16:41:02,425 - task_4 - INFO - AI Pipeline completed | From 39 → 197 chars
+2025-12-04 16:41:03,277 - forwarding_engine - INFO - [2025-12-04 16:41:03.277] [INFO] [forwarding_engine::_process_message] ✅ Message processing completed | Data: {'original_length': 39, 'processed_length': 197, 'total_reduction': -158, 'reduction_percent': -405, 'final_preview': '- جماعة أنصار الله أطلقت صاروخاً باتجاه إسرائيل  \n- الهجوم يمثل تصعيداً جديداً في التوترات الإقليمية  \n- لم تُعلن تفاصيل عن نوع الصاروخ أو النتائج  \n-'} | {}
+2025-12-04 16:41:03,278 - forwarding_engine - INFO - [2025-12-04 16:41:03.278] [INFO] [forwarding_engine::forward_message] Forwarding to 1 targets in parallel... | {}
+2025-12-04 16:41:03,278 - forwarding_engine - INFO - [2025-12-04 16:41:03.278] [INFO] [forwarding_engine::_forward_to_target] Forwarding to target 5 | Data: {'message_id': 2343, 'has_processed_text': True, 'task_id': 4} | {}
+2025-12-04 16:41:03,561 - forwarding_engine - INFO - [2025-12-04 16:41:03.561] [INFO] [forwarding_engine::_forward_to_target] Target: اختبار 2 | Data: {'identifier': -1003110660765, 'identifier_type': 'int'} | {}
+2025-12-04 16:41:03,561 - forwarding_engine - INFO - [2025-12-04 16:41:03.561] [INFO] [forwarding_engine::_forward_to_target] Applying publishing template as final step... | {}
+2025-12-04 16:41:05,438 - ai_providers - INFO - [Groq] Starting request | Model: moonshotai/kimi-k2-instruct | Max Tokens: 500 | Temperature: 0.3 | Input length: 723 chars | {}
+2025-12-04 16:41:05,841 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-04 16:41:05,843 - ai_providers - INFO - [Groq] ✅ Success | Model: moonshotai/kimi-k2-instruct | Output length: 63 chars | First 100 chars: {
+  "رقم_القيد": "",
+  "التصنيف_": "عسكري",
+  "المحافظه_": ""
+} | {}
+2025-12-04 16:41:05,844 - forwarding_engine - INFO - [2025-12-04 16:41:05.844] [DEBUG] [forwarding_engine::_extract_fields_with_ai] AI response received | Data: {'response_length': 63, 'response_preview': '{\n  "رقم_القيد": "",\n  "التصنيف_": "عسكري",\n  "المحافظه_": ""\n}'} | {}
+2025-12-04 16:41:05,845 - forwarding_engine - INFO - [2025-12-04 16:41:05.845] [INFO] [forwarding_engine::_extract_fields_with_ai] AI extracted fields | Data: {'ai_extracted': {'رقم_القيد': '', 'التصنيف_': 'عسكري', 'المحافظه_': ''}} | {}
+2025-12-04 16:41:05,846 - forwarding_engine - INFO - [2025-12-04 16:41:05.846] [INFO] [forwarding_engine::_extract_fields_with_ai] Final extracted fields | Data: {'extracted': {'التلخيص': '- جماعة أنصار الله أطلقت صاروخاً باتجاه إسرائيل  \n- الهجوم يمثل تصعيداً جديداً في التوترات الإقليمية  \n- لم تُعلن تفاصيل عن نوع الصاروخ أو النتائج  \n- الأنظار تتجه إلى رد الفعل الإسرائيلي والإقليمي', 'التاريخ_': '2025-12-04', 'المختص': 'حيدر ', 'رقم_القيد': '', 'التصنيف_': 'عسكري', 'المحافظه_': ''}} | {}
+2025-12-04 16:41:05,846 - forwarding_engine - INFO - [2025-12-04 16:41:05.846] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التصنيف_ | Data: {'formatting': 'quote', 'original_length': 5, 'formatted_length': 30, 'has_html_tags': True, 'formatted_preview': '<blockquote>عسكري</blockquote>'} | {}
+2025-12-04 16:41:05,846 - forwarding_engine - INFO - [2025-12-04 16:41:05.846] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التلخيص | Data: {'formatting': 'quote', 'original_length': 197, 'formatted_length': 222, 'has_html_tags': True, 'formatted_preview': '<blockquote>- جماعة أنصار الله أطلقت صاروخاً باتجاه إسرائيل  \n- الهجوم يمثل تصعيداً جديداً في التوتر'} | {}
+2025-12-04 16:41:05,846 - forwarding_engine - INFO - [2025-12-04 16:41:05.846] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: التاريخ_ | Data: {'formatting': 'none', 'original_length': 10, 'formatted_length': 10, 'has_html_tags': False, 'formatted_preview': '2025-12-04'} | {}
+2025-12-04 16:41:05,846 - forwarding_engine - INFO - [2025-12-04 16:41:05.846] [DEBUG] [forwarding_engine::_apply_publishing_template] Field formatted: المختص | Data: {'formatting': 'none', 'original_length': 5, 'formatted_length': 5, 'has_html_tags': False, 'formatted_preview': 'حيدر '} | {}
+2025-12-04 16:41:05,847 - forwarding_engine - INFO - [2025-12-04 16:41:05.847] [INFO] [forwarding_engine::_apply_publishing_template] Template applied: تلخيص2 | Data: {'output_length': 297, 'fields_count': 6, 'extracted_count': 6} | {}
+2025-12-04 16:41:05,848 - forwarding_engine - INFO - [2025-12-04 16:41:05.848] [INFO] [forwarding_engine::_forward_to_target] Template applied successfully | Data: {'original_length': 39, 'final_length': 297} | {}
+2025-12-04 16:41:06,064 - forwarding_engine - INFO - [2025-12-04 16:41:06.064] [INFO] [forwarding_engine::_forward_to_target] Text processing | Data: {'original_length': 39, 'final_length': 371, 'use_processed': True, 'has_entities': False} | {}
+2025-12-04 16:41:06,064 - forwarding_engine - INFO - [2025-12-04 16:41:06.064] [INFO] [forwarding_engine::_forward_to_target] Sending text message... | Data: {'use_parse_mode': True, 'text_preview': 'التصنيف : <blockquote>عسكري</blockquote>\n<blockquote>- جماعة أنصار الله أطلقت صاروخاً باتجاه إسرائيل  \n- الهجوم يمثل تصعيداً جديداً في التوترات الإقليمية  \n- لم تُعلن تفاصيل عن نوع الصاروخ أو النتائج  \n- الأنظار تتجه إلى رد الفعل الإسرائيلي والإقليمي</blockquote>\nالتاريخ : 2025-12-04\nالمختص: حيدر\n\n📰', 'has_html_tags': True} | {}
+2025-12-04 16:41:06,369 - forwarding_engine - INFO - [2025-12-04 16:41:06.369] [INFO] [forwarding_engine::_forward_to_target] ✅ Forwarded to اختبار 2 | {}
+2025-12-04 16:41:06,370 - task_4 - INFO - Forwarded to اختبار 2
+2025-12-04 16:41:06,370 - forwarding_engine - INFO - [2025-12-04 16:41:06.370] [INFO] [forwarding_engine::forward_message] Forward results | Data: {'successful': 1, 'failed': 0, 'total': 1} | {}
+2025-12-04 16:41:07,657 - task_4 - INFO - Message forwarded to 1/1 targets
+2025-12-04 16:41:07,657 - forwarding_engine - INFO - [2025-12-04 16:41:07.657] [INFO] [forwarding_engine::forward_message] ✅ Forward completed successfully | {}
+2025-12-04 16:41:07,657 - main - INFO - [2025-12-04 16:41:07.657] [INFO] [message_handler::forward] ✅ Message forwarded successfully | {}
+2025-12-04 16:46:21,957 - main - INFO - [2025-12-04 16:46:21.957] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1002725187545', 'chat_title': 'مدار المهرة 24 Madar Almahrah', 'message_id': 1403, 'message_type': 'media', 'has_text': False, 'has_caption': True, 'media_type': 'MessageMediaType.PHOTO', 'media_group_id': 14118934252014076} | {}
+2025-12-04 16:46:21,958 - main - INFO - [2025-12-04 16:46:21.957] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:46:21,960 - main - INFO - [2025-12-04 16:46:21.960] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1002725187545', 'chat_title': 'مدار المهرة 24 Madar Almahrah', 'message_id': 1404, 'message_type': 'media', 'has_text': False, 'has_caption': False, 'media_type': 'MessageMediaType.PHOTO', 'media_group_id': 14118934252014076} | {}
+2025-12-04 16:46:21,960 - main - INFO - [2025-12-04 16:46:21.960] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:46:21,962 - main - INFO - [2025-12-04 16:46:21.962] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1002725187545', 'chat_title': 'مدار المهرة 24 Madar Almahrah', 'message_id': 1405, 'message_type': 'media', 'has_text': False, 'has_caption': False, 'media_type': 'MessageMediaType.PHOTO', 'media_group_id': 14118934252014076} | {}
+2025-12-04 16:46:21,964 - main - INFO - [2025-12-04 16:46:21.963] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:46:23,242 - main - INFO - [2025-12-04 16:46:23.242] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:46:23,242 - main - INFO - [2025-12-04 16:46:23.242] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:46:23,255 - main - INFO - [2025-12-04 16:46:23.254] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:46:23,255 - main - INFO - [2025-12-04 16:46:23.255] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:46:23,279 - main - INFO - [2025-12-04 16:46:23.279] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:46:23,279 - main - INFO - [2025-12-04 16:46:23.279] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:46:23,658 - main - INFO - [2025-12-04 16:46:23.658] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1002725187545', 'match': False} | {}
+2025-12-04 16:46:23,658 - main - INFO - [2025-12-04 16:46:23.658] [INFO] [message_handler::skip] No matching task for chat: مدار المهرة 24 Madar Almahrah | Data: {'chat_id': '-1002725187545'} | {}
+2025-12-04 16:46:23,667 - main - INFO - [2025-12-04 16:46:23.667] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1002725187545', 'match': False} | {}
+2025-12-04 16:46:23,667 - main - INFO - [2025-12-04 16:46:23.667] [INFO] [message_handler::skip] No matching task for chat: مدار المهرة 24 Madar Almahrah | Data: {'chat_id': '-1002725187545'} | {}
+2025-12-04 16:46:23,688 - main - INFO - [2025-12-04 16:46:23.688] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1002725187545', 'match': False} | {}
+2025-12-04 16:46:23,689 - main - INFO - [2025-12-04 16:46:23.689] [INFO] [message_handler::skip] No matching task for chat: مدار المهرة 24 Madar Almahrah | Data: {'chat_id': '-1002725187545'} | {}
+2025-12-04 16:48:04,475 - main - INFO - [2025-12-04 16:48:04.474] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003285265410', 'chat_title': 'الإعلام الشعبي اليمني copy', 'message_id': 2251, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:48:04,475 - main - INFO - [2025-12-04 16:48:04.475] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:48:04,747 - main - INFO - [2025-12-04 16:48:04.747] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:48:04,747 - main - INFO - [2025-12-04 16:48:04.747] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:48:05,021 - main - INFO - [2025-12-04 16:48:05.021] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003285265410', 'match': False} | {}
+2025-12-04 16:48:05,022 - main - INFO - [2025-12-04 16:48:05.022] [INFO] [message_handler::skip] No matching task for chat: الإعلام الشعبي اليمني copy | Data: {'chat_id': '-1003285265410'} | {}
+2025-12-04 16:48:05,242 - main - INFO - [2025-12-04 16:48:05.242] [INFO] [message_handler::receive] 📩 New message received | Data: {'chat_id': '-1003125831311', 'chat_title': 'Test10', 'message_id': 18185, 'message_type': 'text', 'has_text': True, 'has_caption': False, 'media_type': None, 'media_group_id': None} | {}
+2025-12-04 16:48:05,242 - main - INFO - [2025-12-04 16:48:05.242] [INFO] [message_handler::process] Fetching active tasks... | {}
+2025-12-04 16:48:05,515 - main - INFO - [2025-12-04 16:48:05.515] [INFO] [message_handler::process] Found 1 tasks to check | {}
+2025-12-04 16:48:05,516 - main - INFO - [2025-12-04 16:48:05.516] [DEBUG] [message_handler::match] Checking task: توجيه الأخبار  | Data: {'task_id': 4, 'source_channels': [4]} | {}
+2025-12-04 16:48:05,790 - main - INFO - [2025-12-04 16:48:05.789] [DEBUG] [message_handler::match] Comparing channel | Data: {'source_id': 4, 'source_identifier': '-1003190233554', 'incoming_chat_id': '-1003125831311', 'match': False} | {}
+2025-12-04 16:48:05,790 - main - INFO - [2025-12-04 16:48:05.790] [INFO] [message_handler::skip] No matching task for chat: Test10 | Data: {'chat_id': '-1003125831311'} | {}
