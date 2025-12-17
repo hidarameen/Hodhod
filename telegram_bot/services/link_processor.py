@@ -85,35 +85,43 @@ class LinkProcessor:
     
     def _get_format_options(self, quality: str) -> List[str]:
         """Get list of format options to try in order of preference
-        Tries to get requested quality first, then falls back to lower qualities
-        Finally tries ANY available format to ensure successful download"""
+        Tries combined video+audio first, then falls back to video-only,
+        audio-only, or any available format to ensure successful download"""
         formats = {
             "best": [
                 "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best",
                 "bestvideo+bestaudio/best",
                 "best[ext=mp4]/best",
-                "best",  # Any available video
+                "bestvideo[ext=mp4]",  # Video only (high quality)
+                "bestaudio[ext=m4a]/bestaudio",  # Audio only
+                "best",  # Any available format
             ],
             "high": [
                 "bestvideo[ext=mp4]+(bestaudio[ext=m4a]/bestaudio)/best",
                 "bestvideo[ext=mp4]+bestaudio/best",
                 "bestvideo+bestaudio/best",
                 "best[ext=mp4]/best",
-                "best",  # Any available video
+                "bestvideo[ext=mp4]",  # Video only
+                "bestaudio[ext=m4a]/bestaudio",  # Audio only
+                "best",  # Any available format
             ],
             "medium": [
                 "bestvideo[height<=720][ext=mp4]+(bestaudio[ext=m4a]/bestaudio)/best",
                 "bestvideo[height<=720]+bestaudio/best",
                 "bestvideo[ext=mp4]+bestaudio/best",
                 "best[ext=mp4]/best",
-                "best",  # Any available video
+                "bestvideo[height<=720][ext=mp4]",  # Video only
+                "bestaudio[ext=m4a]/bestaudio",  # Audio only
+                "best",  # Any available format
             ],
             "low": [
                 "bestvideo[height<=480][ext=mp4]+(bestaudio[ext=m4a]/bestaudio)/best",
                 "bestvideo[height<=480]+bestaudio/best",
                 "bestvideo[ext=mp4]+bestaudio/best",
                 "best[ext=mp4]/best",
-                "best",  # Any available video
+                "bestvideo[height<=480][ext=mp4]",  # Video only
+                "bestaudio[ext=m4a]/bestaudio",  # Audio only
+                "best",  # Any available format
             ],
         }
         return formats.get(quality, formats["high"])
