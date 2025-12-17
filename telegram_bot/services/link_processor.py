@@ -46,6 +46,22 @@ MAX_VIDEO_SIZE_MB = 50
 DOWNLOAD_TIMEOUT = 90
 MAX_RETRIES = 2
 
+def _get_cookies_path() -> Optional[str]:
+    """Get path to YouTube cookies file from environment variable.
+    The cookies should be in Netscape format stored in YOUTUBE_COOKIES env var."""
+    cookies_content = os.environ.get('YOUTUBE_COOKIES', '')
+    if not cookies_content:
+        return None
+    
+    cookies_path = "/tmp/youtube_cookies.txt"
+    try:
+        with open(cookies_path, 'w') as f:
+            f.write(cookies_content)
+        return cookies_path
+    except Exception as e:
+        error_logger.log_info(f"Failed to write cookies file: {str(e)}")
+        return None
+
 class LinkProcessor:
     """Process video links from social media with enhanced error handling"""
     
@@ -138,8 +154,13 @@ class LinkProcessor:
                 "--no-playlist",
                 "--dump-json",
                 "--socket-timeout", "15",
-                url
             ]
+            
+            cookies_path = _get_cookies_path()
+            if cookies_path:
+                cmd.extend(["--cookies", cookies_path])
+            
+            cmd.append(url)
             
             process = await asyncio.create_subprocess_exec(
                 *cmd,
@@ -236,6 +257,10 @@ class LinkProcessor:
                 "best",  # Just get the best available
             ])
             
+            cookies_path = _get_cookies_path()
+            if cookies_path:
+                await task_logger.log_info(f"   Using cookies from environment")
+            
             last_error = None
             for attempt, format_str in enumerate(format_options):
                 await task_logger.log_info(f"   Attempt {attempt + 1}/{len(format_options)}: format={format_str[:50]}...")
@@ -254,8 +279,12 @@ class LinkProcessor:
                     "--retries", "2",
                     "--fragment-retries", "3",
                     "--output", output_path,
-                    url
                 ]
+                
+                if cookies_path:
+                    cmd.extend(["--cookies", cookies_path])
+                
+                cmd.append(url)
                 
                 try:
                     process = await asyncio.create_subprocess_exec(
