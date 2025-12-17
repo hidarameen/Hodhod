@@ -85,23 +85,35 @@ class LinkProcessor:
     
     def _get_format_options(self, quality: str) -> List[str]:
         """Get list of format options to try in order of preference
-        Simplified formats for better compatibility across platforms"""
+        Tries to get requested quality first, then falls back to lower qualities
+        Finally tries ANY available format to ensure successful download"""
         formats = {
             "best": [
                 "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best",
+                "bestvideo+bestaudio/best",
                 "best[ext=mp4]/best",
+                "best",  # Any available video
             ],
             "high": [
-                "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best",
+                "bestvideo[ext=mp4]+(bestaudio[ext=m4a]/bestaudio)/best",
+                "bestvideo[ext=mp4]+bestaudio/best",
+                "bestvideo+bestaudio/best",
                 "best[ext=mp4]/best",
+                "best",  # Any available video
             ],
             "medium": [
-                "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best",
+                "bestvideo[height<=720][ext=mp4]+(bestaudio[ext=m4a]/bestaudio)/best",
+                "bestvideo[height<=720]+bestaudio/best",
+                "bestvideo[ext=mp4]+bestaudio/best",
                 "best[ext=mp4]/best",
+                "best",  # Any available video
             ],
             "low": [
-                "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best",
+                "bestvideo[height<=480][ext=mp4]+(bestaudio[ext=m4a]/bestaudio)/best",
+                "bestvideo[height<=480]+bestaudio/best",
+                "bestvideo[ext=mp4]+bestaudio/best",
                 "best[ext=mp4]/best",
+                "best",  # Any available video
             ],
         }
         return formats.get(quality, formats["high"])
