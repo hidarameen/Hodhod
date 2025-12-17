@@ -103,6 +103,11 @@ def normalize_task_config(task: Dict[str, Any]) -> Dict[str, Any]:
         'aiModelId': 'ai_model_id',
         'videoAiProviderId': 'video_ai_provider_id',
         'videoAiModelId': 'video_ai_model_id',
+        'videoProcessingEnabled': 'video_processing_enabled',
+        'audioProcessingEnabled': 'audio_processing_enabled',
+        'linkProcessingEnabled': 'link_processing_enabled',
+        'aiEnabled': 'ai_enabled',
+        'summarizationEnabled': 'summarization_enabled',
     }
     
     # Apply mappings
