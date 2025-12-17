@@ -1,0 +1,33 @@
+# Force LF line endings for shell scripts and Docker files
+*.sh text eol=lf
+*.bash text eol=lf
+Dockerfile text eol=lf
+Dockerfile.* text eol=lf
+docker-compose.yml text eol=lf
+docker-compose.*.yml text eol=lf
+docker-entrypoint.sh text eol=lf
+
+# Keep Windows batch files with CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+
+# Python files
+*.py text eol=lf
+requirements.txt text eol=lf
+
+# JSON and config files
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.toml text eol=lf

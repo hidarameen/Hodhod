@@ -1,0 +1,253 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* Local Fonts */
+@font-face {
+  font-family: 'Tajawal';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('@/assets/fonts/Tajawal-Light.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Tajawal';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('@/assets/fonts/Tajawal-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Tajawal';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('@/assets/fonts/Tajawal-Medium.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Tajawal';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('@/assets/fonts/Tajawal-Bold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Tajawal';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('@/assets/fonts/Tajawal-ExtraBold.woff2') format('woff2');
+}
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+
+  --font-sans: "Inter", "Tajawal", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-display: "Orbitron", sans-serif;
+  
+  --radius: 0.5rem;
+  
+  /* Theme Colors Mapped to CSS Variables */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+}
+
+@layer base {
+  :root {
+    /* Light Mode */
+    --background: 0 0% 98%;
+    --foreground: 240 10% 3.9%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    
+    --primary: 190 90% 40%;
+    --primary-foreground: 0 0% 98%;
+    
+    --secondary: 260 60% 60%;
+    --secondary-foreground: 0 0% 98%;
+    
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 190 90% 40%;
+
+    --chart-1: 190 90% 40%;
+    --chart-2: 260 60% 60%;
+    --chart-3: 320 60% 60%;
+    --chart-4: 45 90% 45%;
+    --chart-5: 150 90% 35%;
+
+    /* Sidebar Colors - Light Mode */
+    --sidebar: 0 0% 100%;
+    --sidebar-foreground: 240 10% 3.9%;
+    --sidebar-border: 240 5.9% 90%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-ring: 190 90% 40%;
+  }
+
+  .dark {
+    /* Dark Mode */
+    --background: 240 10% 4%;
+    --foreground: 0 0% 98%;
+    
+    --card: 240 10% 7%;
+    --card-foreground: 0 0% 98%;
+    
+    --popover: 240 10% 7%;
+    --popover-foreground: 0 0% 98%;
+    
+    --primary: 190 100% 50%;
+    --primary-foreground: 240 10% 4%;
+    
+    --secondary: 260 100% 65%;
+    --secondary-foreground: 0 0% 98%;
+    
+    --muted: 240 6% 15%;
+    --muted-foreground: 240 5% 65%;
+    
+    --accent: 240 6% 15%;
+    --accent-foreground: 0 0% 98%;
+    
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 240 6% 15%;
+    --input: 240 6% 15%;
+    --ring: 190 100% 50%;
+
+    --chart-1: 190 100% 50%;
+    --chart-2: 260 100% 65%;
+    --chart-3: 320 100% 60%;
+    --chart-4: 45 100% 55%;
+    --chart-5: 150 100% 45%;
+
+    /* Sidebar Colors - Dark Mode */
+    --sidebar: 240 10% 7%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-border: 240 6% 15%;
+    --sidebar-accent: 240 6% 15%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-ring: 190 100% 50%;
+  }
+
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    min-height: 100vh;
+  }
+  
+  .dark body {
+    background-image: 
+      radial-gradient(circle at 50% 0%, hsl(260 100% 65% / 0.05), transparent 40%),
+      radial-gradient(circle at 0% 50%, hsl(190 100% 50% / 0.05), transparent 40%);
+  }
+
+  body:not(.dark) {
+    background-image: 
+      radial-gradient(circle at 50% 0%, hsl(220 100% 90% / 0.5), transparent 40%),
+      radial-gradient(circle at 0% 50%, hsl(190 100% 90% / 0.5), transparent 40%);
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground;
+  }
+}
+
+@layer utilities {
+  .dark .glass-panel {
+    @apply bg-card/50 backdrop-blur-xl border border-white/5 shadow-xl;
+  }
+  
+  .glass-panel {
+    @apply bg-white/70 backdrop-blur-xl border border-black/5 shadow-lg;
+  }
+  
+  .dark .neon-text {
+    text-shadow: 0 0 10px hsl(var(--primary) / 0.5);
+  }
+  
+  .dark .neon-border {
+    box-shadow: 0 0 10px hsl(var(--primary) / 0.2);
+  }
+
+  /* Light mode dialog styles */
+  :not(.dark) {
+    --dialog-bg: hsl(var(--background));
+    --dialog-border: hsl(var(--border));
+    --dialog-text: hsl(var(--foreground));
+    --dialog-muted: hsl(var(--muted-foreground));
+  }
+
+  .dark {
+    --dialog-bg: hsl(var(--card));
+    --dialog-border: hsl(var(--border));
+    --dialog-text: hsl(var(--foreground));
+    --dialog-muted: hsl(var(--muted-foreground));
+  }
+
+  /* Ensure Dialog content respects theme */
+  [role="dialog"] {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
+  .dark [role="dialog"] {
+    background-color: hsl(var(--card));
+    color: hsl(var(--foreground));
+  }
+}
