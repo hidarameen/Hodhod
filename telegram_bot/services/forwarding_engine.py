@@ -291,39 +291,39 @@ class ForwardingEngine:
                                             log_detailed("debug", "forwarding_engine", "forward_message", 
                                                         f"Using default for {field_name}: {default_value}")
                             
-            # ✅ FIX: Use template_data (which contains merged extracted data) for template application
-            # Apply publishing template to the summary
-            log_detailed("info", "forwarding_engine", "forward_message", "Applying publishing template to link summary...", {
-                "template_data_keys": list(template_data.keys()),
-                "template_data_count": len(template_data)
-            })
-            template_res = await self._apply_publishing_template(
-                summary, 
-                task_id, 
-                template_data,  # ✅ CRITICAL FIX: Use template_data which contains all merged extracted fields
-                original_text=summary  # Pass summary as original for consistent extraction
-            )
-            
-            # Unpack template result
-            if isinstance(template_res, tuple):
-                template_result, extracted_fields_updated = template_res
-                # Update extracted_data for archiving
-                if extracted_fields_updated:
-                    template_data.update(extracted_fields_updated)
-            else:
-                template_result = template_res
+                            # ✅ FIX: Use template_data (which contains merged extracted data) for template application
+                            # Apply publishing template to the summary
+                            log_detailed("info", "forwarding_engine", "forward_message", "Applying publishing template to link summary...", {
+                                "template_data_keys": list(template_data.keys()),
+                                "template_data_count": len(template_data)
+                            })
+                            template_res = await self._apply_publishing_template(
+                                summary, 
+                                task_id, 
+                                template_data,  # ✅ CRITICAL FIX: Use template_data which contains all merged extracted fields
+                                original_text=summary  # Pass summary as original for consistent extraction
+                            )
+                            
+                            # Unpack template result
+                            if isinstance(template_res, tuple):
+                                template_result, extracted_fields_updated = template_res
+                                # Update extracted_data for archiving
+                                if extracted_fields_updated:
+                                    template_data.update(extracted_fields_updated)
+                            else:
+                                template_result = template_res
 
-            if template_result and template_result.strip():
-                caption = template_result
-                log_detailed("info", "forwarding_engine", "forward_message", f"Publishing template applied to link summary: {len(caption)} chars")
-            else:
-                # Fallback to default format if no template
-                caption = f'🔗 <b>ملخص الفيديو من الرابط:</b>\n\n{summary}'
-                log_detailed("info", "forwarding_engine", "forward_message", "No publishing template, using default format")
+                            if template_result and template_result.strip():
+                                caption = template_result
+                                log_detailed("info", "forwarding_engine", "forward_message", f"Publishing template applied to link summary: {len(caption)} chars")
+                            else:
+                                # Fallback to default format if no template
+                                caption = f'🔗 <b>ملخص الفيديو من الرابط:</b>\n\n{summary}'
+                                log_detailed("info", "forwarding_engine", "forward_message", "No publishing template, using default format")
 
-            # Add Telegraph link after template
-            if telegraph_url:
-                caption += f'\n\n📄 <a href="{telegraph_url}">اقرأ النص الأصلي الكامل</a>'
+                            # Add Telegraph link after template
+                            if telegraph_url:
+                                caption += f'\n\n📄 <a href="{telegraph_url}">اقرأ النص الأصلي الكامل</a>'
 
                             # Send to all target channels
                             for target_id in target_channels:
