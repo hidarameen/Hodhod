@@ -1088,6 +1088,8 @@ class Database:
         try:
             # Ensure task_id is int
             t_id = int(task_id)
+            if not self.pool:
+                await self.connect()
             async with self.pool.acquire() as conn:
                 async with conn.transaction():
                     existing = await conn.fetchrow(
@@ -1109,7 +1111,7 @@ class Database:
                         )
                         return 1
         except Exception as e:
-            error_logger.log_error(f"Error getting next serial number for task {task_id}: {str(e)}")
+            error_logger.log_info(f"Error getting next serial number for task {task_id}: {str(e)}")
             # Fallback to a simple count + 1 if the counter table fails
             try:
                 count = await self.fetchval("SELECT COUNT(*) FROM message_archive WHERE task_id = $1", int(task_id))

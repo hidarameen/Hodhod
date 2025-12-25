@@ -317,13 +317,13 @@ class ForwardingEngine:
                 caption = template_result
                 log_detailed("info", "forwarding_engine", "forward_message", f"Publishing template applied to link summary: {len(caption)} chars")
             else:
-                                # Fallback to default format if no template
-                                caption = f'🔗 <b>ملخص الفيديو من الرابط:</b>\n\n{summary}'
-                                log_detailed("info", "forwarding_engine", "forward_message", "No publishing template, using default format")
+                # Fallback to default format if no template
+                caption = f'🔗 <b>ملخص الفيديو من الرابط:</b>\n\n{summary}'
+                log_detailed("info", "forwarding_engine", "forward_message", "No publishing template, using default format")
 
-                            # Add Telegraph link after template
-                            if telegraph_url:
-                                caption += f'\n\n📄 <a href="{telegraph_url}">اقرأ النص الأصلي الكامل</a>'
+            # Add Telegraph link after template
+            if telegraph_url:
+                caption += f'\n\n📄 <a href="{telegraph_url}">اقرأ النص الأصلي الكامل</a>'
 
                             # Send to all target channels
                             for target_id in target_channels:
@@ -455,12 +455,24 @@ class ForwardingEngine:
             if video_processing and message.video:
                 log_detailed("info", "forwarding_engine", "forward_message", "Processing video message...")
                 try:
+                    # ✅ FIX: Extract caption summary and text for video processing
+                    # This ensures the caption fields are not empty after processing
+                    caption_text = message.caption or ""
+                    caption_summary = None
+                    if ai_enabled and summarization_enabled and caption_text:
+                        log_detailed("info", "forwarding_engine", "forward_message", "Summarizing caption before video processing...")
+                        processed_res = await self._process_message(caption_text, task_id, task_config, serial_number)
+                        if processed_res:
+                            caption_summary, _ = processed_res
+
                     video_result = await video_processor.process_video(
                         client=self.client,
                         message_id=message.id,
                         chat_id=message.chat.id,
                         task_id=task_id,
-                        task_config=task_config
+                        task_config=task_config,
+                        caption_summary=caption_summary,
+                        caption_text=caption_text
                     )
                     if video_result:
                         summary, transcript, telegraph_url = video_result
