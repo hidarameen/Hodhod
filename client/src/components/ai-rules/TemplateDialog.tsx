@@ -117,15 +117,26 @@ export function TemplateDialog({ open, onOpenChange, onSubmit, editingData, isLo
       isActive: true
     };
 
+    // Check for duplicate fieldName
+    const updatedFields = [...(form.customFields || [])];
+    const duplicateIndex = updatedFields.findIndex(f => f.fieldName === newField.fieldName);
+
     if (editingFieldIndex !== null) {
-      const updatedFields = [...(form.customFields || [])];
       updatedFields[editingFieldIndex] = newField;
       setForm({ ...form, customFields: updatedFields });
       toast.success("تم تحديث الحقل");
+    } else if (duplicateIndex !== -1) {
+      // If adding new and name exists, update existing instead of duplicating
+      updatedFields[duplicateIndex] = {
+        ...newField,
+        displayOrder: updatedFields[duplicateIndex].displayOrder
+      };
+      setForm({ ...form, customFields: updatedFields });
+      toast.success("تم تحديث الحقل الموجود مسبقاً");
     } else {
       setForm({
         ...form,
-        customFields: [...(form.customFields || []), newField]
+        customFields: [...updatedFields, newField]
       });
       toast.success("تم إضافة الحقل");
     }

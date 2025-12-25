@@ -122,7 +122,6 @@ class ForwardingEngine:
             # Pre-populate extracted_data with serial number for all media types
             initial_extracted_data = {
                 "رقم_القيد": f"#{serial_number}",
-                "رقم_القيد_": f"#{serial_number}",
                 "serial_number": serial_number
             }
 

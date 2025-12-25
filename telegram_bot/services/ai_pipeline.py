@@ -326,7 +326,6 @@ class AIPipeline:
         extracted_fields = {}
         if serial_number is not None:
             extracted_fields["رقم_القيد"] = f"#{serial_number}"
-            extracted_fields["رقم_القيد_"] = f"#{serial_number}"
             extracted_fields["serial_number"] = serial_number
         
         # Build enhanced prompt including field extraction if needed

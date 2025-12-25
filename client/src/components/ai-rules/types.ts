@@ -174,6 +174,15 @@ export interface PresetField {
 
 export const presetFields: PresetField[] = [
   {
+    id: 'serial_number',
+    fieldName: 'serial_number',
+    fieldLabel: 'رقم القيد',
+    fieldType: 'static',
+    extractionInstructions: 'هذا الحقل يتم ملؤه تلقائياً برقم القيد المتسلسل للمنشور.',
+    icon: '🔢',
+    description: 'رقم القيد المتسلسل للمنشور (يتم توحيده تلقائياً)'
+  },
+  {
     id: 'date',
     fieldName: 'date',
     fieldLabel: 'التاريخ',
@@ -213,9 +222,9 @@ export const presetFields: PresetField[] = [
     id: 'specialist',
     fieldName: 'specialist',
     fieldLabel: 'المختص',
+    icon: '👤',
     fieldType: 'extracted',
     extractionInstructions: 'استخرج اسم المختص أو المسؤول أو الجهة المعنية بالخبر. إذا لم يُذكر، اكتب "غير محدد"',
-    icon: '👤',
     description: 'الشخص أو الجهة المختصة'
   },
   {
@@ -226,15 +235,6 @@ export const presetFields: PresetField[] = [
     extractionInstructions: 'حدد التصنيف الرئيسي للمحتوى (محلي، دولي، إقليمي، خاص)',
     icon: '🏷️',
     description: 'التصنيف العام للمحتوى'
-  },
-  {
-    id: 'record_number',
-    fieldName: 'record_number',
-    fieldLabel: 'رقم القيد',
-    fieldType: 'extracted',
-    extractionInstructions: 'استخرج رقم القيد أو المرجع أو الرقم التسلسلي إن وُجد. إذا لم يُذكر، اكتب "---"',
-    icon: '🔢',
-    description: 'رقم القيد أو المرجع'
   },
   {
     id: 'source',
