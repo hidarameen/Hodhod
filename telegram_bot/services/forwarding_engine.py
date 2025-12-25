@@ -121,7 +121,6 @@ class ForwardingEngine:
             
             # Pre-populate extracted_data with serial number for all media types
             initial_extracted_data = {
-                "رقم_القيد": f"#{serial_number}",
                 "serial_number": serial_number
             }
 
@@ -841,18 +840,15 @@ class ForwardingEngine:
                     log_detailed("info", "forwarding_engine", "forward_message", "Using cached processed text")
             else:
                 # Even without AI processing, add serial number to extracted_data
-                extracted_data = {"رقم_القيد": f"#{serial_number}", "رقم_القيد_": f"#{serial_number}"}
+                extracted_data = {"serial_number": serial_number} if serial_number else {}
 
-            # CRITICAL: Ensure serial number is in extracted_data with # prefix
+            # CRITICAL: Ensure serial number is in extracted_data
             if not extracted_data:
                 extracted_data = {}
             if serial_number is not None:
-                serial_with_hash = f"#{serial_number}"
-                extracted_data["رقم_القيد"] = serial_with_hash
-                extracted_data["رقم_القيد_"] = serial_with_hash
                 extracted_data["serial_number"] = serial_number
                 log_detailed("info", "forwarding_engine", "forward_message",
-                            f"✅ Serial number set in extracted_data: {serial_with_hash}")
+                            f"✅ Serial number set in extracted_data: {serial_number}")
 
             # Forward to all targets in parallel
             log_detailed("info", "forwarding_engine", "forward_message", f"Forwarding to {len(target_channels)} targets in parallel...")
@@ -1717,14 +1713,11 @@ class ForwardingEngine:
         """
         extracted = {}
 
-        # Always add serial number FIRST with # prefix if provided
+        # Always add serial number FIRST (unified field name)
         if serial_number is not None:
-            serial_with_hash = f"#{serial_number}"
-            extracted["رقم_القيد"] = serial_with_hash
-            extracted["رقم_القيد_"] = serial_with_hash
             extracted["serial_number"] = serial_number
             log_detailed("debug", "forwarding_engine", "_extract_fields_with_ai",
-                        f"Set serial number: {serial_with_hash} (raw: {serial_number})")
+                        f"Set serial number: {serial_number}")
 
         if not fields:
             return extracted
@@ -2041,16 +2034,10 @@ class ForwardingEngine:
                         provider_name = None
                         model_name = None
 
-                # Get serial number from extracted_data (try multiple keys)
+                # Get serial number from extracted_data
                 current_serial = None
                 if extracted_data:
                     current_serial = extracted_data.get("serial_number")
-                    if current_serial is None:
-                        # Try to extract from Arabic keys
-                        arabic_serial = extracted_data.get("رقم_القيد") or extracted_data.get("رقم_القيد_")
-                        if arabic_serial:
-                            # Remove # if present and convert to int
-                            current_serial = int(str(arabic_serial).replace("#", "")) if arabic_serial else None
                 
                 log_detailed("debug", "forwarding_engine", "_apply_publishing_template",
                             f"Extracted serial from data: {current_serial}", {
@@ -2077,8 +2064,6 @@ class ForwardingEngine:
                     if "التلخيص" not in extracted_data and text:
                         extracted_data["التلخيص"] = text
                     if current_serial is not None:
-                        extracted_data["رقم_القيد"] = f"#{current_serial}"
-                        extracted_data["رقم_القيد_"] = f"#{current_serial}"
                         extracted_data["serial_number"] = current_serial
                 else:
                     # Extract new fields with AI (fallback for non-combined extraction)
@@ -2106,14 +2091,11 @@ class ForwardingEngine:
                     else:
                         extracted_data = new_extracted
                 
-                # Double-check serial number is present with # prefix
+                # Double-check serial number is present
                 if current_serial is not None:
-                    serial_with_hash = f"#{current_serial}"
-                    extracted_data["رقم_القيد"] = serial_with_hash
-                    extracted_data["رقم_القيد_"] = serial_with_hash
                     extracted_data["serial_number"] = current_serial
                     log_detailed("debug", "forwarding_engine", "_apply_publishing_template",
-                                f"Force-set serial in extracted_data: {serial_with_hash}")
+                                f"Force-set serial in extracted_data: {current_serial}")
             else:
                 extracted_data = extracted_data or {}
                 # Ensure at least the summary is present if no custom fields
@@ -2121,13 +2103,11 @@ class ForwardingEngine:
                     extracted_data["summary"] = text
             
             # Double-check serial number is in extracted_data
-            if extracted_data and "serial_number" not in extracted_data and "رقم_القيد" not in extracted_data:
+            if extracted_data and "serial_number" not in extracted_data:
                 # This should not happen, but as a safety measure
                 log_detailed("warning", "forwarding_engine", "_apply_publishing_template",
                             "Serial number missing from extracted_data, this should not happen!")
                 extracted_data["serial_number"] = 0
-                extracted_data["رقم_القيد"] = "غير محدد"
-                extracted_data["رقم_القيد_"] = "غير محدد"
 
             result_parts = []
 
@@ -2191,10 +2171,9 @@ class ForwardingEngine:
                 elif field_type == "static":
                     # ✅ FIXED: For static fields, ALWAYS use default_value (never from extracted_data)
                     # Exception: Serial number can come from extracted_data
-                    if field_name in ["رقم_القيد", "رقم_القيد_", "serial_number"]:
-                        value = extracted_data.get(field_name, "")
-                        if not value:
-                            value = field.get("default_value", "")
+                    if field_name == "serial_number":
+                        current_val = extracted_data.get(field_name, "") if extracted_data else ""
+                        value = f"#{current_val}" if current_val else field.get("default_value", "")
                     else:
                         # For all other static fields, use default_value ONLY
                         value = field.get("default_value", "")
@@ -2298,7 +2277,7 @@ class ForwardingEngine:
 
             if not text:
                 log_detailed("info", "forwarding_engine", "_process_message", "No text to process")
-                extracted = {"رقم_القيد": f"#{serial_number}", "رقم_القيد_": f"#{serial_number}"} if serial_number else {}
+                extracted = {"serial_number": serial_number} if serial_number else {}
                 return (None, extracted) if serial_number else None
 
             log_detailed("info", "forwarding_engine", "_process_message", f"Text length: {len(text)} chars")
@@ -2320,14 +2299,14 @@ class ForwardingEngine:
                     task_id=task_id,
                     priority=5
                 )
-                extracted = {"رقم_القيد": f"#{serial_number}", "رقم_القيد_": f"#{serial_number}"} if serial_number else {}
+                extracted = {"serial_number": serial_number} if serial_number else {}
                 return (None, extracted) if serial_number else None
 
             # Apply AI Pipeline if AI is enabled (regardless of summarization_enabled)
             # summarization_enabled controls whether to SUMMARIZE, but ai_enabled controls whether to apply AI RULES
             if not task_config.get("ai_enabled"):
                 log_detailed("info", "forwarding_engine", "_process_message", "AI not enabled for this task")
-                extracted = {"رقم_القيد": f"#{serial_number}", "رقم_القيد_": f"#{serial_number}"} if serial_number else {}
+                extracted = {"serial_number": serial_number} if serial_number else {}
                 return (text, extracted)
 
             provider_id = task_config.get("summarization_provider_id") or task_config.get("summarizationProviderId")
@@ -2364,7 +2343,7 @@ class ForwardingEngine:
 
             if not provider_name or not model_name:
                 log_detailed("error", "forwarding_engine", "_process_message", "AI processing skipped - no provider/model configured")
-                extracted = {"رقم_القيد": f"#{serial_number}", "رقم_القيد_": f"#{serial_number}"} if serial_number else {}
+                extracted = {"serial_number": serial_number} if serial_number else {}
                 return (text, extracted)
 
             system_prompt = await db.get_setting("default_prompt")
@@ -2484,9 +2463,8 @@ class ForwardingEngine:
 
             # Use extracted fields from pipeline (already includes serial number)
             extracted = pipeline_result.extracted_fields or {}
-            if serial_number and "رقم_القيد" not in extracted:
-                extracted["رقم_القيد"] = f"#{serial_number}"
-                extracted["رقم_القيد_"] = f"#{serial_number}"
+            if serial_number and "serial_number" not in extracted:
+                extracted["serial_number"] = serial_number
             
             # ✅ FIXED: Add PROCESSED (rules-applied) text as summary for template
             if processed_text and "التلخيص" not in extracted:
@@ -2505,7 +2483,7 @@ class ForwardingEngine:
             })
             await task_logger.log_error(f"AI processing error: {str(e)}")
             # Return tuple with serial number on error too
-            extracted = {"رقم_القيد": f"#{serial_number}", "رقم_القيد_": f"#{serial_number}"} if serial_number else {}
+            extracted = {"serial_number": serial_number} if serial_number else {}
             return (text, extracted)
 
     @handle_errors("forwarding_engine", "forward_to_target")
