@@ -120,17 +120,24 @@ class VideoProcessor:
         message_id: int,
         chat_id: int,
         task_id: int,
-        task_config: Dict[str, Any]
+        task_config: Dict[str, Any],
+        caption_summary: Optional[str] = None,
+        caption_text: Optional[str] = None
     ) -> Optional[Tuple[str, str, Optional[str]]]:
         """
         Process video: download -> extract audio -> transcribe -> summarize -> create Telegraph page
-        Returns tuple of (summary, transcript, telegraph_url)
+        Returns tuple of (combined_summary, transcript, telegraph_url)
         
         Enhanced with:
         - File size validation
         - Timeout handling for all operations
         - Better error recovery
         - Comprehensive logging
+        - ✅ NEW: Caption and video summary merging
+        
+        Args:
+            caption_summary: Pre-summarized caption text (if any)
+            caption_text: Original caption text (if any)
         """
         task_logger = TaskLogger(task_id)
         video_path = None
@@ -251,8 +258,14 @@ class VideoProcessor:
                 custom_rules=all_applicable_rules,
                 video_source_info=video_source_info
             )
-            summary = pipeline_result.final_text
-            await task_logger.log_info(f"Pipeline processing complete: {len(summary)} chars (quality: {pipeline_result.quality_score:.2f})")
+            video_summary = pipeline_result.final_text
+            await task_logger.log_info(f"Video summary created: {len(video_summary)} chars (quality: {pipeline_result.quality_score:.2f})")
+            
+            # ✅ NEW: Merge caption summary with video summary
+            combined_summary = video_summary
+            if caption_summary:
+                combined_summary = f"📝 ملخص الكابشن:\n{caption_summary}\n\n🎥 ملخص الفيديو:\n{video_summary}"
+                await task_logger.log_info(f"✅ Merged summaries: caption {len(caption_summary)} + video {len(video_summary)} = total {len(combined_summary)} chars")
             
             await task_logger.log_info("Creating Telegraph page for original transcript...")
             telegraph_url = None
@@ -269,11 +282,11 @@ class VideoProcessor:
             except Exception as telegraph_err:
                 await task_logger.log_warning(f"Failed to create Telegraph page: {str(telegraph_err)}")
             
-            summary_len = len(summary) if summary else 0
+            summary_len = len(combined_summary) if combined_summary else 0
             await task_logger.log_success(f"Video processing completed. Summary: {summary_len} chars, Telegraph: {telegraph_url or 'N/A'}")
             await db.update_task_stats(task_id, "video")
             
-            return (summary, transcript, telegraph_url)
+            return (combined_summary, transcript, telegraph_url)
             
         except Exception as e:
             await task_logger.log_error(f"Video processing error: {str(e)}")

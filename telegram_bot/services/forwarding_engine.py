@@ -2285,6 +2285,53 @@ class ForwardingEngine:
             if (task_config.get("videoProcessingEnabled") or task_config.get("video_processing_enabled")) and message.video:
                 log_detailed("info", "forwarding_engine", "_process_message", "Video detected, adding to queue")
                 await task_logger.log_info("Video detected, processing...")
+                
+                # ✅ NEW: If there's a caption AND summarization is enabled, summarize the caption first
+                caption_summary = None
+                caption_text = message.caption or ""
+                if caption_text and task_config.get("summarization_enabled"):
+                    log_detailed("info", "forwarding_engine", "_process_message", 
+                                f"Caption found ({len(caption_text)} chars), summarizing...")
+                    try:
+                        # Get summarization provider/model
+                        provider_id = task_config.get("summarization_provider_id") or task_config.get("summarizationProviderId")
+                        model_id = task_config.get("summarization_model_id") or task_config.get("summarizationModelId")
+                        
+                        provider_name = None
+                        model_name = None
+                        
+                        if provider_id:
+                            provider_info = await db.get_ai_provider(provider_id)
+                            if provider_info:
+                                provider_name = provider_info["name"]
+                        
+                        if model_id:
+                            model_info = await db.get_ai_model(model_id)
+                            if model_info:
+                                model_name = model_info.get("name") or model_info.get("model_name")
+                        
+                        if provider_name and model_name:
+                            # Get summarize rules for caption
+                            all_rules = await db.get_task_rules(task_id)
+                            rules = [r for r in all_rules if r["type"] == "summarize" and r["is_active"]]
+                            
+                            pipeline_result = await ai_pipeline.process(
+                                text=caption_text,
+                                task_id=task_id,
+                                provider=provider_name,
+                                model=model_name,
+                                custom_rules=rules
+                            )
+                            caption_summary = pipeline_result.final_text
+                            log_detailed("info", "forwarding_engine", "_process_message", 
+                                        f"✅ Caption summary created: {len(caption_summary)} chars")
+                        else:
+                            log_detailed("warning", "forwarding_engine", "_process_message", 
+                                        "No AI provider/model for caption summarization")
+                    except Exception as e:
+                        log_detailed("error", "forwarding_engine", "_process_message", 
+                                    f"Caption summarization error: {str(e)}")
+                
                 video_provider_id = task_config.get("video_ai_provider_id")
                 video_model_id = task_config.get("video_ai_model_id")
                 await queue_manager.add_job(
@@ -2294,7 +2341,9 @@ class ForwardingEngine:
                         "chat_id": message.chat.id,
                         "task_id": task_id,
                         "video_provider_id": video_provider_id,
-                        "video_model_id": video_model_id
+                        "video_model_id": video_model_id,
+                        "caption_text": caption_text,  # ✅ NEW: Pass caption for potential reuse
+                        "caption_summary": caption_summary  # ✅ NEW: Pass pre-summarized caption
                     },
                     task_id=task_id,
                     priority=5

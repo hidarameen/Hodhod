@@ -528,12 +528,18 @@ async def handle_video_job(job: dict) -> dict:
             "task_id": task_id
         })
         
+        # ✅ NEW: Pass caption_summary and caption_text for merging
+        caption_summary = payload.get('caption_summary')
+        caption_text = payload.get('caption_text')
+        
         result = await video_processor.process_video(
             client=app,
             message_id=message_id,
             chat_id=chat_id,
             task_id=task_id,
-            task_config=task_config
+            task_config=task_config,
+            caption_summary=caption_summary,
+            caption_text=caption_text
         )
         
         log_detailed("info", "job_handler", "video_process", "Video job completed successfully", {
