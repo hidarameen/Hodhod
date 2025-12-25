@@ -1085,24 +1085,37 @@ class Database:
 
     async def get_next_serial_number(self, task_id: int) -> int:
         """Get the next serial number for a task (رقم القيد)"""
-        existing = await self.fetchrow(
-            "SELECT last_serial FROM archive_serial_counter WHERE task_id = $1",
-            task_id
-        )
+        try:
+            # Ensure task_id is int
+            t_id = int(task_id)
+            async with self.pool.acquire() as conn:
+                async with conn.transaction():
+                    existing = await conn.fetchrow(
+                        "SELECT last_serial FROM archive_serial_counter WHERE task_id = $1 FOR UPDATE",
+                        t_id
+                    )
 
-        if existing:
-            new_serial = existing['last_serial'] + 1
-            await self.execute(
-                "UPDATE archive_serial_counter SET last_serial = $1, updated_at = NOW() WHERE task_id = $2",
-                new_serial, task_id
-            )
-            return new_serial
-        else:
-            await self.execute(
-                "INSERT INTO archive_serial_counter (task_id, last_serial) VALUES ($1, 1)",
-                task_id
-            )
-            return 1
+                    if existing:
+                        new_serial = existing['last_serial'] + 1
+                        await conn.execute(
+                            "UPDATE archive_serial_counter SET last_serial = $1, updated_at = NOW() WHERE task_id = $2",
+                            new_serial, t_id
+                        )
+                        return new_serial
+                    else:
+                        await conn.execute(
+                            "INSERT INTO archive_serial_counter (task_id, last_serial) VALUES ($1, 1)",
+                            t_id
+                        )
+                        return 1
+        except Exception as e:
+            error_logger.log_error(f"Error getting next serial number for task {task_id}: {str(e)}")
+            # Fallback to a simple count + 1 if the counter table fails
+            try:
+                count = await self.fetchval("SELECT COUNT(*) FROM message_archive WHERE task_id = $1", int(task_id))
+                return (count or 0) + 1
+            except:
+                return 1
 
     async def create_archive_message(self, data: Dict[str, Any]) -> int:
         """Create a new archive message entry"""
