@@ -1341,6 +1341,17 @@ function SummarizationList({ items, onEdit, onDelete, searchQuery }: {
   onDelete: (id: number) => void;
   searchQuery: string;
 }) {
+  const queryClient = useQueryClient();
+  const toggleActiveMutation = useMutation({
+    mutationFn: ({ id, isActive }: { id: number; isActive: boolean }) => 
+      api.updateSummarizationRule(id, { isActive }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["summarization-rules"] });
+      toast.success("تم تحديث حالة القاعدة");
+    },
+    onError: () => toast.error("فشل في تحديث القاعدة"),
+  });
+
   const filtered = items.filter((item: any) => 
     !searchQuery || 
     item.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -1378,6 +1389,20 @@ function SummarizationList({ items, onEdit, onDelete, searchQuery }: {
           <div className="flex items-center gap-1 opacity-100 transition-opacity">
             <Tooltip>
               <TooltipTrigger asChild>
+                <Button 
+                  size="icon" 
+                  variant="ghost" 
+                  className={`h-8 w-8 border ${rule.isActive ? 'hover:bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-800' : 'hover:bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800'}`}
+                  onClick={() => toggleActiveMutation.mutate({ id: rule.id, isActive: !rule.isActive })}
+                  disabled={toggleActiveMutation.isPending}
+                >
+                  {rule.isActive ? <ToggleRight className="h-4 w-4" /> : <ToggleRight className="h-4 w-4" />}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{rule.isActive ? 'تعطيل' : 'تفعيل'}</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
                 <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800" onClick={() => onEdit(rule)}>
                   <Edit className="h-4 w-4" />
                 </Button>
@@ -1405,6 +1430,17 @@ function AudioSummarizationRuleList({ items, onEdit, onDelete, searchQuery }: {
   onDelete: (id: number) => void;
   searchQuery: string;
 }) {
+  const queryClient = useQueryClient();
+  const toggleActiveMutation = useMutation({
+    mutationFn: ({ id, isActive }: { id: number; isActive: boolean }) => 
+      api.updateSummarizationRule(id, { isActive }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["audio-summarization-rules"] });
+      toast.success("تم تحديث حالة القاعدة");
+    },
+    onError: () => toast.error("فشل في تحديث القاعدة"),
+  });
+
   const filtered = items.filter((item: any) => 
     !searchQuery || 
     item.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -1415,7 +1451,7 @@ function AudioSummarizationRuleList({ items, onEdit, onDelete, searchQuery }: {
     return (
       <div className="text-center py-12 text-muted-foreground">
         <Mic className="h-12 w-12 mx-auto mb-3 opacity-30" />
-        <p>لا توجد قواعد تلخيص الصوت</p>
+        <p>لا توجد قواعس تلخيص الصوت</p>
         <p className="text-sm mt-1">أضف قاعدة جديدة للبدء</p>
       </div>
     );
@@ -1440,6 +1476,20 @@ function AudioSummarizationRuleList({ items, onEdit, onDelete, searchQuery }: {
             <div className="text-xs text-muted-foreground mt-2">الطول الأقصى: {rule.maxLength} حرف | النقاط الرئيسية: {rule.keyPointsCount}</div>
           </div>
           <div className="flex items-center gap-1 opacity-100 transition-opacity">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  size="icon" 
+                  variant="ghost" 
+                  className={`h-8 w-8 border ${rule.isActive ? 'hover:bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-800' : 'hover:bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800'}`}
+                  onClick={() => toggleActiveMutation.mutate({ id: rule.id, isActive: !rule.isActive })}
+                  disabled={toggleActiveMutation.isPending}
+                >
+                  {rule.isActive ? <ToggleRight className="h-4 w-4" /> : <ToggleRight className="h-4 w-4" />}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{rule.isActive ? 'تعطيل' : 'تفعيل'}</TooltipContent>
+            </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800" onClick={() => onEdit(rule)}>
