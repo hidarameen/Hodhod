@@ -240,21 +240,11 @@ class VideoProcessor:
             if video_rule:
                 await task_logger.log_info(f"Using video rule: {video_rule.get('name', 'unnamed')}")
             
-            await task_logger.log_info(f"Summarizing transcript with AI Pipeline ({provider_name}/{model_name})...")
+            await task_logger.log_info(f"Summarizing merged content (caption + transcript) with AI Pipeline ({provider_name}/{model_name})...")
             
-            # ✅ NEW: Summarize caption here if it exists, to avoid conflict with forwarding_engine
-            current_caption_summary = caption_summary
-            if not current_caption_summary and caption_text:
-                await task_logger.log_info("Summarizing caption inside video processor...")
-                caption_pipeline_result = await ai_pipeline.process(
-                    text=caption_text,
-                    task_id=task_id,
-                    provider=provider_name,
-                    model=model_name,
-                    serial_number=str(serial_number) if serial_number else None
-                )
-                current_caption_summary = caption_pipeline_result.final_text if caption_pipeline_result else None
-
+            # Combine caption and transcript for a single summarization
+            merged_content = f"الكابشن المصاحب للفيديو:\n{caption_text}\n\nنص الفيديو المستخرج (Transcription):\n{transcript}" if caption_text else transcript
+            
             # Apply BOTH video rules AND summarize rules
             video_rules = [r for r in rules if r["type"] == "video" and r["is_active"]]
             summarize_rules = [r for r in rules if r["type"] == "summarize" and r["is_active"]]
@@ -265,7 +255,7 @@ class VideoProcessor:
             video_source_info = None
             
             pipeline_result = await ai_pipeline.process(
-                text=transcript,
+                text=merged_content,
                 task_id=task_id,
                 provider=provider_name,
                 model=model_name,
@@ -273,15 +263,8 @@ class VideoProcessor:
                 custom_rules=all_applicable_rules,
                 video_source_info=video_source_info
             )
-            video_summary = pipeline_result.final_text
-            await task_logger.log_info(f"Video summary created: {len(video_summary)} chars (quality: {pipeline_result.quality_score:.2f})")
-            
-            # ✅ NEW: Merge caption summary with video summary
-            combined_summary = video_summary
-            if current_caption_summary:
-                # Use a cleaner merge that looks better in templates
-                combined_summary = f"{current_caption_summary}\n\n{video_summary}"
-                await task_logger.log_info(f"✅ Merged summaries: caption {len(current_caption_summary)} + video {len(video_summary)} = total {len(combined_summary)} chars")
+            combined_summary = pipeline_result.final_text
+            await task_logger.log_info(f"Merged summary created: {len(combined_summary)} chars (quality: {pipeline_result.quality_score:.2f})")
             
             await task_logger.log_info("Creating Telegraph page for original transcript...")
             telegraph_url = None

@@ -128,14 +128,14 @@ class ForwardingEngine:
                 log_detailed("info", "forwarding_engine", "forward_message", "Video detected and video processing is enabled. Skipping regular text summarization.")
                 try:
                     caption_text = message.caption or ""
-                    # We pass the original caption to the video processor which will handle its summarization
+                    # We pass the original caption to the video processor which will handle merging it with transcription
                     video_result = await video_processor.process_video(
                         client=self.client,
                         message_id=message.id,
                         chat_id=message.chat.id,
                         task_id=task_id,
                         task_config=task_config,
-                        caption_summary=None, # Will be summarized inside process_video if needed
+                        caption_summary=None, 
                         caption_text=caption_text,
                         serial_number=str(serial_number) if serial_number else None
                     )
@@ -145,7 +145,6 @@ class ForwardingEngine:
                         return
                     else:
                         log_detailed("warning", "forwarding_engine", "forward_message", "Video processing returned no result, falling back to regular forward")
-                        # Fallback logic here if needed, but usually process_video handles its own errors
                 except Exception as e:
                     log_detailed("error", "forwarding_engine", "forward_message", f"Video processing error: {str(e)}")
             
