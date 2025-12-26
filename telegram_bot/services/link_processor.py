@@ -46,36 +46,20 @@ MAX_VIDEO_SIZE_MB = 50
 DOWNLOAD_TIMEOUT = 90
 MAX_RETRIES = 2
 
-def _get_cookies_path(task_config: Optional[Dict[str, Any]] = None, platform: str = 'youtube') -> Optional[str]:
-    """Get path to cookies file for a specific platform.
-    Prioritizes cookies from task_config (database), then environment variables."""
-    cookies_content = None
-    
-    if task_config:
-        if platform == 'youtube':
-            cookies_content = task_config.get('youtubeCookies')
-        elif platform == 'facebook':
-            cookies_content = task_config.get('facebookCookies')
-        elif platform == 'tiktok':
-            cookies_content = task_config.get('tiktokCookies')
-        elif platform == 'x':
-            cookies_content = task_config.get('xCookies')
-        elif platform == 'instagram':
-            cookies_content = task_config.get('instagramCookies')
-            
-    if not cookies_content and platform == 'youtube':
-        cookies_content = os.environ.get('YOUTUBE_COOKIES', '')
-        
+def _get_cookies_path() -> Optional[str]:
+    """Get path to YouTube cookies file from environment variable.
+    The cookies should be in Netscape format stored in YOUTUBE_COOKIES env var."""
+    cookies_content = os.environ.get('YOUTUBE_COOKIES', '')
     if not cookies_content:
         return None
     
-    cookies_path = f"/tmp/{platform}_cookies.txt"
+    cookies_path = "/tmp/youtube_cookies.txt"
     try:
         with open(cookies_path, 'w') as f:
             f.write(cookies_content)
         return cookies_path
     except Exception as e:
-        error_logger.log_info(f"Failed to write {platform} cookies file: {str(e)}")
+        error_logger.log_info(f"Failed to write cookies file: {str(e)}")
         return None
 
 class LinkProcessor:
@@ -194,7 +178,7 @@ class LinkProcessor:
             error_logger.log_error(f"Merge error: {str(e)}", error=e)
             return False
 
-    async def get_video_info(self, url: str, task_config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    async def get_video_info(self, url: str) -> Dict[str, Any]:
         """Get comprehensive video info using yt-dlp --dump-json
         Extracts: title, description, uploader, channel, platform, duration, thumbnail"""
         try:
@@ -208,13 +192,7 @@ class LinkProcessor:
                 "--socket-timeout", "15",
             ]
             
-            platform = 'youtube'
-            if 'facebook' in url.lower() or 'fb.watch' in url.lower(): platform = 'facebook'
-            elif 'instagram' in url.lower(): platform = 'instagram'
-            elif 'tiktok' in url.lower(): platform = 'tiktok'
-            elif 'twitter' in url.lower() or 'x.com' in url.lower(): platform = 'x'
-            
-            cookies_path = _get_cookies_path(task_config, platform)
+            cookies_path = _get_cookies_path()
             if cookies_path:
                 cmd.extend(["--cookies", cookies_path])
             
@@ -243,18 +221,18 @@ class LinkProcessor:
                 channel = info.get('channel', '') or info.get('uploader', '') or ''
                 uploader_id = info.get('uploader_id', '') or info.get('channel_id', '') or ''
                 
-                platform_name = info.get('extractor_key', '') or info.get('extractor', '') or ''
-                if not platform_name:
+                platform = info.get('extractor_key', '') or info.get('extractor', '') or ''
+                if not platform:
                     if 'youtube' in url.lower():
-                        platform_name = 'YouTube'
+                        platform = 'YouTube'
                     elif 'facebook' in url.lower() or 'fb.watch' in url.lower():
-                        platform_name = 'Facebook'
+                        platform = 'Facebook'
                     elif 'instagram' in url.lower():
-                        platform_name = 'Instagram'
+                        platform = 'Instagram'
                     elif 'twitter' in url.lower() or 'x.com' in url.lower():
-                        platform_name = 'Twitter/X'
+                        platform = 'Twitter/X'
                     elif 'tiktok' in url.lower():
-                        platform_name = 'TikTok'
+                        platform = 'TikTok'
                 
                 thumbnail_url = info.get('thumbnail', '') or ''
                 duration = int(info.get('duration', 0) or 0)
@@ -269,7 +247,7 @@ class LinkProcessor:
                     'uploader': uploader,
                     'channel': channel,
                     'uploader_id': uploader_id,
-                    'platform': platform_name,
+                    'platform': platform,
                     'thumbnail_url': thumbnail_url,
                     'duration': duration,
                     'upload_date': upload_date,
@@ -278,7 +256,7 @@ class LinkProcessor:
                     'original_url': url
                 }
                 
-                error_logger.log_info(f"[VIDEO_INFO] title={title[:50]}, uploader={uploader}, platform={platform_name}, duration={duration}s")
+                error_logger.log_info(f"[VIDEO_INFO] title={title[:50]}, uploader={uploader}, platform={platform}, duration={duration}s")
                 
                 return result
                 
@@ -292,7 +270,7 @@ class LinkProcessor:
         }
 
     @handle_errors("link_processor", "download_video")
-    async def download_video(self, url: str, task_id: int, task_config: Optional[Dict[str, Any]] = None, quality: str = "high") -> Optional[str]:
+    async def download_video(self, url: str, task_id: int, quality: str = "high") -> Optional[str]:
         """Download video from URL using yt-dlp with specified quality and format fallbacks.
         Automatically handles separate audio/video streams by downloading and merging them."""
         task_logger = TaskLogger(task_id)
@@ -308,15 +286,9 @@ class LinkProcessor:
             )
             output_path = f"{output_template}.mp4"
             
-            platform = 'youtube'
-            if 'facebook' in url.lower() or 'fb.watch' in url.lower(): platform = 'facebook'
-            elif 'instagram' in url.lower(): platform = 'instagram'
-            elif 'tiktok' in url.lower(): platform = 'tiktok'
-            elif 'twitter' in url.lower() or 'x.com' in url.lower(): platform = 'x'
-            
             format_options = self._get_format_options(quality)
             format_options.append("best")
-            cookies_path = _get_cookies_path(task_config, platform)
+            cookies_path = _get_cookies_path()
             
             last_error = None
             for attempt, format_str in enumerate(format_options):

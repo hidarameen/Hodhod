@@ -439,14 +439,12 @@ export class DbStorage implements IStorage {
   }
 
   async updateTask(id: number, updates: Partial<InsertForwardingTask>): Promise<ForwardingTask | undefined> {
-    const [updatedTask] = await database.update(schema.forwardingTasks)
-      .set({
-        ...updates,
-        updatedAt: new Date()
-      })
+    const result = await database
+      .update(schema.forwardingTasks)
+      .set({ ...updates, updatedAt: new Date() })
       .where(eq(schema.forwardingTasks.id, id))
       .returning();
-    return updatedTask;
+    return result[0];
   }
 
   async deleteTask(id: number): Promise<void> {

@@ -253,18 +253,6 @@ class Database:
             rule_data.get("priority", 0)
         )
 
-    async def get_bot_config_value(self, key: str) -> Optional[str]:
-        """Get a configuration value from bot_config table"""
-        if not self.pool:
-            raise Exception("Database not connected")
-        try:
-            query = "SELECT value FROM bot_config WHERE key = $1"
-            row = await self.fetchrow(query, key)
-            return row['value'] if row else None
-        except Exception as e:
-            error_logger.log_info(f"Error getting bot config {key}: {e}")
-            return None
-
     async def get_task_rules(self, task_id: int) -> List[Dict[str, Any]]:
         """Get all active rules for a task"""
         if not self.pool:

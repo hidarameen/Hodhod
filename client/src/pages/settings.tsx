@@ -65,11 +65,6 @@ export default function SettingsPage() {
   });
   
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [youtubeCookies, setYoutubeCookies] = useState("");
-  const [facebookCookies, setFacebookCookies] = useState("");
-  const [tiktokCookies, setTiktokCookies] = useState("");
-  const [xCookies, setXCookies] = useState("");
-  const [instagramCookies, setInstagramCookies] = useState("");
   const [otpCode, setOtpCode] = useState("");
   const [twoFaPassword, setTwoFaPassword] = useState("");
   const [loginStep, setLoginStep] = useState<"phone" | "otp" | "2fa">("phone");
@@ -153,33 +148,11 @@ export default function SettingsPage() {
     });
   };
 
-  useEffect(() => {
-    if (settings.length > 0) {
-      setNotificationSettings({
-        errorAlerts: settings.find((s: any) => s.key === "error_alerts")?.value === "true",
-        taskCompletion: settings.find((s: any) => s.key === "task_completion")?.value === "true",
-        autoBackup: settings.find((s: any) => s.key === "auto_backup")?.value === "true"
-      });
-      setYoutubeCookies(settings.find((s: any) => s.key === "youtube_cookies")?.value || "");
-      setFacebookCookies(settings.find((s: any) => s.key === "facebook_cookies")?.value || "");
-      setTiktokCookies(settings.find((s: any) => s.key === "tiktok_cookies")?.value || "");
-      setXCookies(settings.find((s: any) => s.key === "x_cookies")?.value || "");
-      setInstagramCookies(settings.find((s: any) => s.key === "instagram_cookies")?.value || "");
-    }
-  }, [settings]);
-
   const handleSaveSettings = async () => {
     try {
       await saveSettingMutation.mutateAsync({ key: "error_alerts", value: notificationSettings.errorAlerts.toString() });
       await saveSettingMutation.mutateAsync({ key: "task_completion", value: notificationSettings.taskCompletion.toString() });
       await saveSettingMutation.mutateAsync({ key: "auto_backup", value: notificationSettings.autoBackup.toString() });
-      
-      await saveSettingMutation.mutateAsync({ key: "youtube_cookies", value: youtubeCookies });
-      await saveSettingMutation.mutateAsync({ key: "facebook_cookies", value: facebookCookies });
-      await saveSettingMutation.mutateAsync({ key: "tiktok_cookies", value: tiktokCookies });
-      await saveSettingMutation.mutateAsync({ key: "x_cookies", value: xCookies });
-      await saveSettingMutation.mutateAsync({ key: "instagram_cookies", value: instagramCookies });
-      
       toast.success("تم حفظ جميع الإعدادات");
     } catch (error) {
       toast.error("فشل حفظ بعض الإعدادات");
@@ -456,71 +429,6 @@ export default function SettingsPage() {
 
         {/* General Tab */}
         <TabsContent value="general" className="space-y-6">
-          <Card className="border shadow-sm border-primary/30">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-foreground">
-                <Smartphone className="h-4 w-4 text-primary" /> إعدادات ملفات تعريف الارتباط (Cookies)
-              </CardTitle>
-              <CardDescription>
-                أدخل ملفات تعريف الارتباط للمنصات المختلفة لتحسين عملية تحميل الفيديوهات
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="youtube-cookies">YouTube Cookies</Label>
-                  <textarea
-                    id="youtube-cookies"
-                    className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    value={youtubeCookies}
-                    onChange={(e) => setYoutubeCookies(e.target.value)}
-                    placeholder="ضع محتوى ملف cookies.txt هنا..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="facebook-cookies">Facebook Cookies</Label>
-                  <textarea
-                    id="facebook-cookies"
-                    className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    value={facebookCookies}
-                    onChange={(e) => setFacebookCookies(e.target.value)}
-                    placeholder="ضع محتوى ملف cookies.txt هنا..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="tiktok-cookies">TikTok Cookies</Label>
-                  <textarea
-                    id="tiktok-cookies"
-                    className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    value={tiktokCookies}
-                    onChange={(e) => setTiktokCookies(e.target.value)}
-                    placeholder="ضع محتوى ملف cookies.txt هنا..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="x-cookies">X.com Cookies</Label>
-                  <textarea
-                    id="x-cookies"
-                    className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    value={xCookies}
-                    onChange={(e) => setXCookies(e.target.value)}
-                    placeholder="ضع محتوى ملف cookies.txt هنا..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="instagram-cookies">Instagram Cookies</Label>
-                  <textarea
-                    id="instagram-cookies"
-                    className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    value={instagramCookies}
-                    onChange={(e) => setInstagramCookies(e.target.value)}
-                    placeholder="ضع محتوى ملف cookies.txt هنا..."
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
           <Card className="border shadow-sm border-primary/30">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-foreground">
