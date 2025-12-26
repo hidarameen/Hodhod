@@ -99,6 +99,13 @@ export const forwardingTasks = pgTable("forwarding_tasks", {
   linkVideoDownloadEnabled: boolean("link_video_download_enabled").notNull().default(true),
   linkVideoQuality: text("link_video_quality").notNull().default("high"), // 'low' | 'medium' | 'high' | 'best'
   
+  // Platform Cookies
+  youtubeCookies: text("youtube_cookies"),
+  facebookCookies: text("facebook_cookies"),
+  tiktokCookies: text("tiktok_cookies"),
+  xCookies: text("x_cookies"),
+  instagramCookies: text("instagram_cookies"),
+
   // Statistics
   totalForwarded: integer("total_forwarded").notNull().default(0),
   lastForwardedAt: timestamp("last_forwarded_at"),
