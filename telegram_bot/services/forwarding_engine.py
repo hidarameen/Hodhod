@@ -2181,20 +2181,23 @@ class ForwardingEngine:
                 elif field_type == "summary":
                     # ✅ CRITICAL FIX: Summary fields MUST use extracted_data which has processed text
                     # Try both Arabic and English names for summary field
-                    value = extracted_data.get(field_name, "") or extracted_data.get("التلخيص", "") or extracted_data.get("summary", "") if extracted_data else ""
-                    if value:
-                        log_detailed("info", "forwarding_engine", "_apply_publishing_template",
-                                    f"✅ Summary field '{field_name}' using extracted value: {len(value)} chars")
-                    else:
+                    value = (extracted_data.get(field_name, "") or 
+                             extracted_data.get("التلخيص", "") or 
+                             extracted_data.get("summary", "") if extracted_data else "")
+                    
+                    if not value:
                         # Fallback only if not in extracted_data
                         value = text if text else ""
                         log_detailed("warning", "forwarding_engine", "_apply_publishing_template",
                                     f"⚠️ Summary field '{field_name}' NOT in extracted_data, fallback to text: {len(value)} chars")
+                    else:
+                        log_detailed("info", "forwarding_engine", "_apply_publishing_template",
+                                    f"✅ Summary field '{field_name}' using extracted value: {len(value)} chars")
                 elif field_type == "static":
                     # ✅ FIXED: For static fields, ALWAYS use default_value (never from extracted_data)
                     # Exception: Serial number can come from extracted_data
-                    if field_name == "serial_number":
-                        current_val = extracted_data.get(field_name, "") if extracted_data else ""
+                    if field_name == "serial_number" or field_name == "رقم_القيد":
+                        current_val = extracted_data.get("serial_number", "") if extracted_data else ""
                         value = f"#{current_val}" if current_val else field.get("default_value", "")
                     else:
                         # For all other static fields, use default_value ONLY
