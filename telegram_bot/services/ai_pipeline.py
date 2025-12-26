@@ -74,7 +74,7 @@ class AIPipeline:
         custom_rules: Optional[List[Dict]] = None,
         config: Optional[Dict[str, Any]] = None,
         video_source_info: Optional[Dict[str, str]] = None,
-        fields_to_extract: Optional[List[Dict[str, Any]]] = None,
+        fields_to_extract: Optional[Any] = None,
         serial_number: Optional[int] = None
     ) -> PipelineResult:
         """
@@ -83,6 +83,11 @@ class AIPipeline:
         """
         start_time = datetime.now()
         config = config or await self._get_config(task_id)
+        
+        # If fields_to_extract is True, get them from the template
+        if fields_to_extract is True:
+            template = await db.get_task_publishing_template(task_id)
+            fields_to_extract = template.get("fields", []) if template else []
         
         if not text or not text.strip():
             return self._empty_result(text)

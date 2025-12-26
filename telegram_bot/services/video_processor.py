@@ -261,7 +261,8 @@ class VideoProcessor:
                 model=model_name,
                 system_prompt=custom_rule,
                 custom_rules=all_applicable_rules,
-                video_source_info=video_source_info
+                video_source_info=video_source_info,
+                fields_to_extract=True # Enable field extraction
             )
             combined_summary = pipeline_result.final_text
             await task_logger.log_info(f"Merged summary created: {len(combined_summary)} chars (quality: {pipeline_result.quality_score:.2f})")
@@ -298,8 +299,13 @@ class VideoProcessor:
             if pipeline_result and hasattr(pipeline_result, 'extracted_fields') and pipeline_result.extracted_fields:
                 final_extracted_data = pipeline_result.extracted_fields.copy()
             
+            # ✅ Ensure common fields are present for the template
+            if "التلخيص" not in final_extracted_data and combined_summary:
+                final_extracted_data["التلخيص"] = combined_summary
+            
             if serial_number:
                 final_extracted_data["serial_number"] = serial_number
+                final_extracted_data["رقم_القيد"] = f"#{serial_number}"
             if telegraph_url:
                 final_extracted_data["telegraph_url"] = telegraph_url
             if caption_text:
