@@ -336,6 +336,8 @@ class VideoProcessor:
                     task_id=task_id,
                     processed_text=combined_summary,
                     extracted_data=final_extracted_data,
+                    original_text=merged_content,  # Pass the combined text as original
+                    target_channels=target_channels, # Pass the targets
                     task_config=task_config
                 )
             except Exception as archive_err:
