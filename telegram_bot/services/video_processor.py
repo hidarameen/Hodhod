@@ -214,6 +214,7 @@ class VideoProcessor:
             
             transcript = transcript.strip()
             await task_logger.log_info(f"Transcription completed: {len(transcript)} characters")
+
             
             provider_id = task_config.get("video_ai_provider_id") or task_config.get("summarization_provider_id")
             model_id = task_config.get("video_ai_model_id") or task_config.get("summarization_model_id")

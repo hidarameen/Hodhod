@@ -146,7 +146,38 @@ class LinkProcessor:
         except Exception as e:
             error_logger.log_warning(f"Failed to verify video content: {str(e)}")
             return {'has_video': False, 'has_audio': False}
-    
+
+    @handle_errors("link_processor", "merge_video_audio")
+    async def merge_video_audio(self, video_path: str, audio_path: str, output_path: str) -> bool:
+        """Merge separate video and audio files into a single MP4 file"""
+        try:
+            import subprocess
+            cmd = [
+                "ffmpeg", "-y",
+                "-i", video_path,
+                "-i", audio_path,
+                "-c:v", "copy",
+                "-c:a", "aac",
+                "-strict", "experimental",
+                output_path
+            ]
+            process = await asyncio.create_subprocess_exec(
+                *cmd,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+            stdout, stderr = await process.communicate()
+            if process.returncode == 0 and os.path.exists(output_path):
+                error_logger.log_info(f"Successfully merged video and audio: {output_path}")
+                return True
+            else:
+                stderr_str = stderr.decode('utf-8', errors='ignore')
+                error_logger.log_warning(f"Merge failed: {stderr_str}")
+                return False
+        except Exception as e:
+            error_logger.log_error(f"Merge error: {str(e)}")
+            return False
+
     async def get_video_info(self, url: str) -> Dict[str, Any]:
         """Get comprehensive video info using yt-dlp --dump-json
         Extracts: title, description, uploader, channel, platform, duration, thumbnail"""
@@ -240,15 +271,14 @@ class LinkProcessor:
 
     @handle_errors("link_processor", "download_video")
     async def download_video(self, url: str, task_id: int, quality: str = "high") -> Optional[str]:
-        """Download video from URL using yt-dlp with specified quality and format fallbacks
-        Falls back to any available format and converts to MP4 if needed"""
+        """Download video from URL using yt-dlp with specified quality and format fallbacks.
+        Automatically handles separate audio/video streams by downloading and merging them."""
         task_logger = TaskLogger(task_id)
         
         try:
             await task_logger.log_info(f"🔗 DOWNLOADING VIDEO:")
             await task_logger.log_info(f"   URL: {url}")
             await task_logger.log_info(f"   Quality: {quality}")
-            error_logger.log_info(f"[LINK_DOWNLOAD] URL={url}, Quality={quality}")
             
             output_template = os.path.join(
                 self.temp_dir,
@@ -257,108 +287,72 @@ class LinkProcessor:
             output_path = f"{output_template}.mp4"
             
             format_options = self._get_format_options(quality)
-            # Add fallback formats that convert anything to MP4
-            format_options.extend([
-                "best",  # Just get the best available
-            ])
-            
+            format_options.append("best")
             cookies_path = _get_cookies_path()
-            if cookies_path:
-                await task_logger.log_info(f"   Using cookies from environment")
             
             last_error = None
             for attempt, format_str in enumerate(format_options):
                 await task_logger.log_info(f"   Attempt {attempt + 1}/{len(format_options)}: format={format_str[:50]}...")
                 
                 cmd = [
-                    "yt-dlp",
-                    "--no-warnings",
-                    "--no-playlist",
+                    "yt-dlp", "--no-warnings", "--no-playlist",
                     "--format", format_str,
                     "--merge-output-format", "mp4",
-                    "--recode-video", "mp4",
-                    "--postprocessor-args", "ffmpeg:-c:v libx264 -pix_fmt yuv420p -profile:v high -level 4.1 -crf 20 -preset faster -c:a aac -b:a 128k -ar 44100 -ac 2 -movflags +faststart",
-                    "--audio-quality", "0",
-                    "--max-filesize", f"{MAX_VIDEO_SIZE_MB}M",
-                    "--restrict-filenames",
-                    "--socket-timeout", "20",
-                    "--retries", "2",
-                    "--fragment-retries", "3",
-                    "--check-formats",  # Verify format has video stream
                     "--output", output_path,
                 ]
-                
-                if cookies_path:
-                    cmd.extend(["--cookies", cookies_path])
-                
+                if cookies_path: cmd.extend(["--cookies", cookies_path])
                 cmd.append(url)
                 
                 try:
-                    process = await asyncio.create_subprocess_exec(
-                        *cmd,
-                        stdout=asyncio.subprocess.PIPE,
-                        stderr=asyncio.subprocess.PIPE
-                    )
-                    
-                    stdout, stderr = await asyncio.wait_for(
-                        process.communicate(),
-                        timeout=DOWNLOAD_TIMEOUT
-                    )
+                    process = await asyncio.create_subprocess_exec(*cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+                    await asyncio.wait_for(process.communicate(), timeout=DOWNLOAD_TIMEOUT)
                     
                     if process.returncode == 0:
                         found_path = self._find_downloaded_file(task_id, output_path)
                         if found_path:
-                            # ✅ CRITICAL: Verify video has BOTH video and audio
                             verification = await self._verify_video_has_content(found_path)
-                            if not verification.get('has_video'):
-                                await task_logger.log_warning(f"Downloaded file is audio-only, rejecting and trying next format...")
-                                error_logger.log_info(f"[LINK_DOWNLOAD] Audio-only file detected, trying next format")
-                                # Remove the audio-only file and try next format
-                                try:
-                                    os.remove(found_path)
-                                except:
-                                    pass
-                                last_error = "Audio-only format detected"
-                                continue
-                            
-                            size_mb = os.path.getsize(found_path) / (1024 * 1024)
-                            await task_logger.log_success(f"✓ Video downloaded: {size_mb:.2f}MB (has video + audio)")
-                            error_logger.log_info(f"[LINK_DOWNLOAD] SUCCESS - size={size_mb:.2f}MB, format={format_str[:30]}")
-                            return found_path
-                    
-                    stderr_str = stderr.decode('utf-8', errors='ignore') if stderr else ""
-                    
-                    if not stderr_str and process.returncode != 0:
-                        last_error = f"Return code {process.returncode}"
-                        await task_logger.log_warning(f"Download failed: {last_error}")
-                        continue
-                    
-                    if "Requested format is not available" in stderr_str or "does not have a format" in stderr_str:
-                        await task_logger.log_warning(f"Format not available, trying next...")
-                        last_error = "Format not available"
-                        continue
-                    elif "Video unavailable" in stderr_str or "Private video" in stderr_str:
-                        await task_logger.log_error("❌ Video is private or unavailable")
-                        return None
-                    elif "HTTP Error 403" in stderr_str or "403 Forbidden" in stderr_str:
-                        await task_logger.log_warning(f"Video is geo-blocked, trying next...")
-                        last_error = "Geo-blocked"
-                        continue
-                    elif stderr_str:
-                        last_error = stderr_str[:150]
-                        await task_logger.log_warning(f"Attempt {attempt + 1} failed, trying next...")
-                        continue
-                    else:
-                        continue
-                        
-                except asyncio.TimeoutError:
-                    await task_logger.log_warning(f"Timeout on attempt {attempt + 1}, trying next format...")
-                    last_error = "Timeout"
+                            if verification.get('has_video') and verification.get('has_audio'):
+                                await task_logger.log_success(f"✓ Video downloaded successfully (video+audio)")
+                                return found_path
+                            elif verification.get('has_video') and not verification.get('has_audio'):
+                                await task_logger.log_warning("Video downloaded but has NO audio. Attempting separate audio download...")
+                                # Keep the video path
+                                video_only_path = found_path
+                                # Try downloading audio only
+                                audio_only_path = f"{output_template}_audio.m4a"
+                                audio_cmd = [
+                                    "yt-dlp", "--no-warnings", "--no-playlist",
+                                    "--format", "bestaudio",
+                                    "--output", audio_only_path,
+                                    url
+                                ]
+                                if cookies_path: 
+                                    audio_cmd.insert(-1, "--cookies")
+                                    audio_cmd.insert(-1, cookies_path)
+                                
+                                audio_proc = await asyncio.create_subprocess_exec(*audio_cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+                                await asyncio.wait_for(audio_proc.communicate(), timeout=60)
+                                
+                                if audio_proc.returncode == 0 and os.path.exists(audio_only_path):
+                                    merged_path = f"{output_template}_merged.mp4"
+                                    if await self.merge_video_audio(video_only_path, audio_only_path, merged_path):
+                                        await task_logger.log_success("✓ Merged video and audio successfully")
+                                        try: 
+                                            os.remove(video_only_path)
+                                            os.remove(audio_only_path)
+                                        except: pass
+                                        return merged_path
+                except Exception as e:
+                    last_error = str(e)
                     continue
             
             await task_logger.log_error(f"❌ All download attempts failed. Last error: {last_error}")
-            error_logger.log_info(f"[LINK_DOWNLOAD] FAILED - all formats failed, last_error={last_error}")
             return None
+                
+        except Exception as e:
+            await task_logger.log_error(f"❌ Download error: {str(e)}")
+            raise
+
                 
         except asyncio.TimeoutError:
             await task_logger.log_error(f"❌ Video download timeout ({DOWNLOAD_TIMEOUT}s)")
