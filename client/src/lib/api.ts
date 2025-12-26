@@ -524,6 +524,13 @@ class ApiClient {
     });
   }
 
+  async clearArchive(taskId?: number) {
+    const url = taskId ? `/archive/clear?taskId=${taskId}` : '/archive/clear';
+    return this.request<{ message: string }>(url, {
+      method: "DELETE",
+    });
+  }
+
   // ============================================
   // Summarization Rules
   // ============================================

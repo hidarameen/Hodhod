@@ -196,6 +196,7 @@ export default function ArchivePage() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
+  const [clearArchiveDialogOpen, setClearArchiveDialogOpen] = useState(false);
   const [messageToDelete, setMessageToDelete] = useState<ArchiveMessage | null>(null);
   const [editForm, setEditForm] = useState({ 
     title: '',
@@ -375,6 +376,20 @@ export default function ArchivePage() {
       toast.success(data.isFlagged ? "تم تعليم الرسالة" : "تم إلغاء تعليم الرسالة");
       queryClient.invalidateQueries({ queryKey: ["archive-messages"] });
       queryClient.invalidateQueries({ queryKey: ["archive-stats"] });
+    },
+  });
+
+  const clearArchiveMutation = useMutation({
+    mutationFn: (taskId?: number) => api.clearArchive(taskId),
+    onSuccess: () => {
+      toast.success("تم تفريغ الأرشيف وتصفير رقم القيد بنجاح");
+      queryClient.invalidateQueries({ queryKey: ["archive-messages"] });
+      queryClient.invalidateQueries({ queryKey: ["archive-stats"] });
+      setClearArchiveDialogOpen(false);
+      setPage(1);
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "فشل تفريغ الأرشيف");
     },
   });
 

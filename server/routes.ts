@@ -1124,6 +1124,16 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   });
 
   // ============ Message Archive ============
+  app.delete("/api/archive/clear", async (req: Request, res: Response) => {
+    try {
+      const taskId = req.query.taskId ? parseInt(req.query.taskId as string) : undefined;
+      await storage.clearArchive(taskId);
+      res.json({ message: "Archive cleared successfully" });
+    } catch (error) {
+      handleError(res, error, "Failed to clear archive");
+    }
+  });
+
   app.get("/api/archive", async (req: Request, res: Response) => {
     try {
       const filters = {

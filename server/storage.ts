@@ -350,6 +350,9 @@ export interface IStorage {
   setBotConfigValue(key: string, value: string, description?: string): Promise<void>;
   deleteBotConfig(key: string): Promise<void>;
 
+  // Message Archive
+  clearArchive(taskId?: number): Promise<void>;
+
   // Userbot Sessions
   getActiveUserbotSession(): Promise<UserbotSession | undefined>;
   createUserbotSession(data: InsertUserbotSession): Promise<UserbotSession>;
@@ -364,6 +367,30 @@ export interface IStorage {
 
   // Dashboard Stats
   getDashboardStats(): Promise<any>;
+
+  // Message Archive
+  clearArchive(taskId?: number): Promise<void>;
+
+  async clearArchive(taskId?: number): Promise<void> {
+    if (taskId) {
+      // Clear archive for specific task
+      await database.delete(schema.messageArchive).where(eq(schema.messageArchive.taskId, taskId));
+      
+      // Reset serial counter for this task
+      await database
+        .update(schema.archiveSerialCounter)
+        .set({ lastSerial: 0, updatedAt: new Date() })
+        .where(eq(schema.archiveSerialCounter.taskId, taskId));
+    } else {
+      // Clear entire archive
+      await database.delete(schema.messageArchive);
+      
+      // Reset ALL serial counters
+      await database
+        .update(schema.archiveSerialCounter)
+        .set({ lastSerial: 0, updatedAt: new Date() });
+    }
+  }
 
   // Advanced AI Rules - Entity Replacements
   getEntityReplacements(taskId: number): Promise<any[]>;
@@ -412,6 +439,21 @@ export class DbStorage implements IStorage {
   async getAdmin(telegramId: string): Promise<Admin | undefined> {
     const result = await database.select().from(schema.admins).where(eq(schema.admins.telegramId, telegramId)).limit(1);
     return result[0];
+  }
+
+  async clearArchive(taskId?: number): Promise<void> {
+    if (taskId) {
+      await database.delete(schema.messageArchive).where(eq(schema.messageArchive.taskId, taskId));
+      await database
+        .update(schema.archiveSerialCounter)
+        .set({ lastSerial: 0, updatedAt: new Date() })
+        .where(eq(schema.archiveSerialCounter.taskId, taskId));
+    } else {
+      await database.delete(schema.messageArchive);
+      await database
+        .update(schema.archiveSerialCounter)
+        .set({ lastSerial: 0, updatedAt: new Date() });
+    }
   }
 
   async createAdmin(insertAdmin: InsertAdmin): Promise<Admin> {
