@@ -463,10 +463,11 @@ class ForwardingEngine:
             if video_processing and message.video:
                 log_detailed("info", "forwarding_engine", "forward_message", "Processing video message...")
                 try:
-                    # ✅ FIX: Extract caption summary and text for video processing
-                    # This ensures the caption fields are not empty after processing
+                    # 1. First, wait for the full video processing (transcript + AI summary)
+                    # We MUST wait here to get the transcript for field extraction
                     caption_text = message.caption or ""
                     caption_summary = None
+                    
                     if ai_enabled and summarization_enabled and caption_text:
                         log_detailed("info", "forwarding_engine", "forward_message", "Summarizing caption before video processing...")
                         from telegram_bot.services.ai_pipeline import AIPipeline
@@ -478,6 +479,7 @@ class ForwardingEngine:
                             serial_number=serial_number
                         )
 
+                    # This call is BLOCKING, ensuring we have video_result before proceeding
                     video_result = await video_processor.process_video(
                         client=self.client,
                         message_id=message.id,
@@ -487,31 +489,19 @@ class ForwardingEngine:
                         caption_summary=caption_summary,
                         caption_text=caption_text
                     )
+                    
                     if video_result:
                         summary, transcript, telegraph_url = video_result
-                        video_transcript = transcript  # ✅ FIX: Store transcript for later use
-                        log_detailed("info", "forwarding_engine", "forward_message", f"Video processed successfully: summary={len(summary)} chars, telegraph={telegraph_url}")
-                        
-                        # Apply content filters to summary (same as regular text processing)
-                        should_forward, action, filter_matched, filtered_summary = await self._check_content_filters(
-                            summary, task_id, None
-                        )
-                        
-                        if not should_forward:
-                            log_detailed("info", "forwarding_engine", "forward_message", f"⛔ Video summary blocked by filter: {filter_matched['name'] if filter_matched else 'unknown'}")
-                            await task_logger.log_warning(f"Video summary blocked by content filter")
-                            video_summary = None
-                            video_processed = False
-                        else:
-                            summary = filtered_summary
-                            log_detailed("info", "forwarding_engine", "forward_message", f"✅ Video summary passed content filters, final length: {len(summary)} chars")
-                            video_summary = summary
-                            video_processed = True
+                        video_transcript = transcript
+                        video_summary = summary
+                        video_processed = True
+                        log_detailed("info", "forwarding_engine", "forward_message", f"✅ Video processing BLOCKED correctly: transcript={len(transcript) if transcript else 0} chars")
+                    else:
+                        log_detailed("warning", "forwarding_engine", "forward_message", "Video processing returned no result")
+                        video_processed = False
                 except Exception as e:
                     log_detailed("error", "forwarding_engine", "forward_message", f"Video processing error: {str(e)}")
-                    await task_logger.log_warning(f"Video processing failed, forwarding original with summary: {str(e)}")
-                    video_summary = None
-                    telegraph_url = None
+                    video_processed = False
 
             # If video was processed, forward the original video with summary as caption
             if video_processed and video_summary:
