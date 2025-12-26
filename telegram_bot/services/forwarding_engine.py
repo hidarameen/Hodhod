@@ -1172,9 +1172,17 @@ class ForwardingEngine:
             
             # ✅ Ensure serial number is always in extracted_data
             if serial_number is not None:
-                extracted_data["رقم_القيد"] = f"#{serial_number}"
-                extracted_data["رقم_القيد_"] = f"#{serial_number}"
-                extracted_data["serial_number"] = serial_number
+                val_str = str(serial_number).strip()
+                if val_str and val_str != "0":
+                    prefix_val = f"#{val_str}" if not val_str.startswith("#") else val_str
+                    extracted_data["رقم_القيد"] = prefix_val
+                    extracted_data["رقم_القيد_"] = prefix_val
+                    extracted_data["serial_number"] = val_str
+                else:
+                    # If serial is 0 or empty, don't add it to extracted_data or set it to empty
+                    extracted_data["رقم_القID"] = ""
+                    extracted_data["رقم_القيد_"] = ""
+                    extracted_data["serial_number"] = ""
             
             log_detailed("info", "forwarding_engine", "_process_media_group_after_delay", 
                        f"✅ Media group field extraction complete", {
@@ -2122,9 +2130,13 @@ class ForwardingEngine:
                 
                 # Double-check serial number is present
                 if current_serial is not None:
-                    extracted_data["serial_number"] = current_serial
-                    log_detailed("debug", "forwarding_engine", "_apply_publishing_template",
-                                f"Force-set serial in extracted_data: {current_serial}")
+                    val_str = str(current_serial).strip()
+                    if val_str and val_str != "0":
+                        extracted_data["serial_number"] = val_str
+                        log_detailed("debug", "forwarding_engine", "_apply_publishing_template",
+                                    f"Force-set serial in extracted_data: {val_str}")
+                    else:
+                        extracted_data["serial_number"] = ""
             else:
                 extracted_data = extracted_data or {}
                 # Ensure at least the summary is present if no custom fields
@@ -2216,13 +2228,16 @@ class ForwardingEngine:
                         # Clean the value and ensure # prefix
                         if current_val:
                             val_str = str(current_val).strip()
-                            if val_str and not val_str.startswith("#"):
+                            if val_str == "0": # Handle the "0" default case
+                                value = ""
+                            elif val_str and not val_str.startswith("#"):
                                 value = f"#{val_str}"
                             else:
                                 value = val_str
                         else:
                             # Last resort fallback if extracted_data somehow lost it
                             value = field.get("default_value", "")
+                            if value == "0": value = ""
                             
                         log_detailed("debug", "forwarding_engine", "_apply_publishing_template", f"📌 Serial field '{field_name}' resolved to: {value}")
                     else:
@@ -2337,6 +2352,11 @@ class ForwardingEngine:
                 log_detailed("info", "forwarding_engine", "_process_message", "Video detected, adding to queue")
                 await task_logger.log_info("Video detected, processing...")
                 
+                # ✅ FIX: Ensure we have a serial number for the video even if it's sent to queue
+                if not serial_number:
+                    serial_number = await db.get_next_serial_number(task_id)
+                    log_detailed("info", "forwarding_engine", "_process_message", f"Assigned serial #{serial_number} for video message")
+
                 # ✅ NEW: If there's a caption AND summarization is enabled, summarize the caption first
                 caption_summary = None
                 caption_text = message.caption or ""
@@ -2394,7 +2414,8 @@ class ForwardingEngine:
                         "video_provider_id": video_provider_id,
                         "video_model_id": video_model_id,
                         "caption_text": caption_text,  # ✅ NEW: Pass caption for potential reuse
-                        "caption_summary": caption_summary  # ✅ NEW: Pass pre-summarized caption
+                        "caption_summary": caption_summary,  # ✅ NEW: Pass pre-summarized caption
+                        "serial_number": serial_number # ✅ Pass assigned serial number
                     },
                     task_id=task_id,
                     priority=5
