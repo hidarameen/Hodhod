@@ -106,24 +106,26 @@ class LinkProcessor:
         formats = {
             "best": [
                 "bestvideo[ext=mp4][vcodec^=avc1]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+                "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best",
                 "bestvideo+bestaudio/best",
                 "best",
             ],
             "high": [
                 "bestvideo[height<=1080][ext=mp4][vcodec^=avc1]+(bestaudio[ext=m4a]/bestaudio)/best[ext=mp4]/best",
+                "bestvideo[ext=mp4]+(bestaudio[ext=m4a]/bestaudio)/best",
                 "bestvideo[ext=mp4]+bestaudio/best",
                 "bestvideo+bestaudio/best",
                 "best",
             ],
             "medium": [
                 "bestvideo[height<=720][ext=mp4][vcodec^=avc1]+(bestaudio[ext=m4a]/bestaudio)/best[ext=mp4]/best",
-                "bestvideo[height<=720]+bestaudio/best",
+                "bestvideo[height<=720][ext=mp4]+(bestaudio[ext=m4a]/bestaudio)/best",
                 "bestvideo[ext=mp4]+bestaudio/best",
                 "best",
             ],
             "low": [
                 "bestvideo[height<=480][ext=mp4][vcodec^=avc1]+(bestaudio[ext=m4a]/bestaudio)/best[ext=mp4]/best",
-                "bestvideo[height<=480]+bestaudio/best",
+                "bestvideo[height<=480][ext=mp4]+(bestaudio[ext=m4a]/bestaudio)/best",
                 "bestvideo[ext=mp4]+bestaudio/best",
                 "best",
             ],
@@ -260,7 +262,7 @@ class LinkProcessor:
                     "--format", format_str,
                     "--merge-output-format", "mp4",
                     "--recode-video", "mp4",
-                    "--postprocessor-args", "ffmpeg:-c:v libx264 -pix_fmt yuv420p -profile:v high -level 4.1 -crf 20 -preset faster -c:a aac -b:a 128k -movflags +faststart",
+                    "--postprocessor-args", "ffmpeg:-c:v libx264 -pix_fmt yuv420p -profile:v high -level 4.1 -crf 20 -preset faster -c:a aac -b:a 128k -ar 44100 -ac 2 -movflags +faststart",
                     "--audio-quality", "0",
                     "--max-filesize", f"{MAX_VIDEO_SIZE_MB}M",
                     "--restrict-filenames",
