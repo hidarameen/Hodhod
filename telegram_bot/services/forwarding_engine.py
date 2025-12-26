@@ -3061,10 +3061,28 @@ class ForwardingEngine:
             if extracted_data:
                 classification = extracted_data.get("التصنيف_") or extracted_data.get("التصنيف") or extracted_data.get("category") or extracted_data.get("classification")
                 news_type = extracted_data.get("نوع_الخبر") or extracted_data.get("news_type")
-                province = extracted_data.get("المحافظه_") or extracted_data.get("المحافظة") or extracted_data.get("المحافظه") or extracted_data.get("governorate") or extracted_data.get("province")
-                source = extracted_data.get("المصدر") or extracted_data.get("source")
+                # Handle all variations of Governorate
+                province = (
+                    extracted_data.get("المحافظه_") or 
+                    extracted_data.get("المحافظة") or 
+                    extracted_data.get("المحافظه") or 
+                    extracted_data.get("محافظة") or 
+                    extracted_data.get("محافظه") or 
+                    extracted_data.get("governorate") or 
+                    extracted_data.get("province")
+                )
+                # Handle Source
+                source = (
+                    extracted_data.get("المصدر") or 
+                    extracted_data.get("مصدر") or 
+                    extracted_data.get("source")
+                )
                 specialist = extracted_data.get("المختص") or extracted_data.get("specialist")
                 title = extracted_data.get("العنوان") or extracted_data.get("title")
+                
+                # ✅ Sync back to extracted_data for template consistency
+                extracted_data["المحافظة"] = province
+                extracted_data["المصدر"] = source
 
             # Apply summarization rule if configured
             try:

@@ -240,19 +240,16 @@ class VideoProcessor:
             if video_rule:
                 await task_logger.log_info(f"Using video rule: {video_rule.get('name', 'unnamed')}")
             
-            await task_logger.log_info(f"Summarizing merged content (caption + transcript) with AI Pipeline ({provider_name}/{model_name})...")
+            # ✅ FIX: Build comprehensive context for AI extraction
+            # Include captions, transcript, and ANY metadata
+            merged_content = f"الكابشن الأصلي:\n{caption_text}\n\nنص الفيديو المستخرج:\n{transcript}" if caption_text else transcript
             
-            # Combine caption and transcript for a single summarization
-            merged_content = f"الكابشن المصاحب للفيديو:\n{caption_text}\n\nنص الفيديو المستخرج (Transcription):\n{transcript}" if caption_text else transcript
+            await task_logger.log_info(f"Summarizing merged content (caption + transcript) with AI Pipeline ({provider_name}/{model_name})...")
             
             # Apply BOTH video rules AND summarize rules
             video_rules = [r for r in rules if r["type"] == "video" and r["is_active"]]
             summarize_rules = [r for r in rules if r["type"] == "summarize" and r["is_active"]]
             all_applicable_rules = video_rules + summarize_rules
-            
-            # Video source info not available for direct video uploads
-            # Only available when processing links via link_processor
-            video_source_info = None
             
             pipeline_result = await ai_pipeline.process(
                 text=merged_content,
@@ -261,7 +258,7 @@ class VideoProcessor:
                 model=model_name,
                 system_prompt=custom_rule,
                 custom_rules=all_applicable_rules,
-                video_source_info=video_source_info,
+                video_source_info=None,
                 fields_to_extract=True # Enable field extraction
             )
             combined_summary = pipeline_result.final_text
