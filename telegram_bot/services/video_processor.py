@@ -306,8 +306,9 @@ class VideoProcessor:
             if serial_number:
                 final_extracted_data["serial_number"] = serial_number
                 final_extracted_data["رقم_القيد"] = f"#{serial_number}"
-            if telegraph_url:
-                final_extracted_data["telegraph_url"] = telegraph_url
+            # ✅ Removed duplicated Telegraph link - it will be added by _forward_to_target via template or manually
+            # if telegraph_url:
+            #     final_extracted_data["telegraph_url"] = telegraph_url
             if caption_text:
                 # Store original caption for extraction in template
                 final_extracted_data["caption"] = caption_text
