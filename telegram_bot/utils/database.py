@@ -255,6 +255,8 @@ class Database:
 
     async def get_task_rules(self, task_id: int) -> List[Dict[str, Any]]:
         """Get all active rules for a task"""
+        if not self.pool:
+            raise Exception("Database not connected")
         return await self.fetch(
             """SELECT * FROM ai_rules 
                WHERE task_id = $1 AND is_active = true 

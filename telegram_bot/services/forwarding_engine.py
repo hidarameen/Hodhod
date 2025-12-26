@@ -119,14 +119,21 @@ class ForwardingEngine:
             serial_number = await db.get_next_serial_number(task_id)
             log_detailed("info", "forwarding_engine", "forward_message", f"Assigned serial number #{serial_number} (early generation)")
             
-            # Pre-populate extracted_data with serial number for all media types
+            # Ensure serial is always in initial_extracted_data
             initial_extracted_data = {
-                "serial_number": serial_number
+                "serial_number": serial_number,
+                "record_number": serial_number,
+                "رقم_القيد": f"#{serial_number}",
+                "رقم_القيد_": f"#{serial_number}"
             }
+            log_detailed("info", "forwarding_engine", "forward_message", f"📌 Injected serial #{serial_number} into initial_extracted_data")
 
             # Check for link processing (message contains only a URL)
             message_text = message.text or ""
             link_processed = False
+            summary = ""
+            caption = ""
+            extracted_data = initial_extracted_data.copy()
             if link_processing and message_text and link_processor.is_video_link(message_text):
                 log_detailed("info", "forwarding_engine", "forward_message", "Processing video link...")
                 url = link_processor.extract_url(message_text)
@@ -2196,9 +2203,28 @@ class ForwardingEngine:
                 elif field_type == "static":
                     # ✅ FIXED: For static fields, ALWAYS use default_value (never from extracted_data)
                     # Exception: Serial number can come from extracted_data
-                    if field_name == "serial_number" or field_name == "رقم_القيد":
-                        current_val = extracted_data.get("serial_number", "") if extracted_data else ""
-                        value = f"#{current_val}" if current_val else field.get("default_value", "")
+                    if field_name in ["serial_number", "رقم_القيد", "record_number", "رقم_القيد_"]:
+                        # Try all possible keys for serial number
+                        current_val = ""
+                        if extracted_data is not None:
+                            # Try Arabic field name variants
+                            current_val = (extracted_data.get("رقم_القيد") or 
+                                           extracted_data.get("رقم_القيد_") or 
+                                           extracted_data.get("serial_number") or
+                                           extracted_data.get("record_number") or "")
+                        
+                        # Clean the value and ensure # prefix
+                        if current_val:
+                            val_str = str(current_val).strip()
+                            if val_str and not val_str.startswith("#"):
+                                value = f"#{val_str}"
+                            else:
+                                value = val_str
+                        else:
+                            # Last resort fallback if extracted_data somehow lost it
+                            value = field.get("default_value", "")
+                            
+                        log_detailed("debug", "forwarding_engine", "_apply_publishing_template", f"📌 Serial field '{field_name}' resolved to: {value}")
                     else:
                         # For all other static fields, use default_value ONLY
                         value = field.get("default_value", "")

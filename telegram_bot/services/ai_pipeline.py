@@ -325,9 +325,12 @@ class AIPipeline:
         # Initialize extracted fields with serial number
         extracted_fields = {}
         if serial_number is not None:
-            extracted_fields["رقم_القيد"] = f"#{serial_number}"
-            extracted_fields["رقم_القيد_"] = f"#{serial_number}"
+            serial_val = f"#{serial_number}"
+            extracted_fields["رقم_القيد"] = serial_val
+            extracted_fields["رقم_القيد_"] = serial_val
             extracted_fields["serial_number"] = serial_number
+            extracted_fields["record_number"] = serial_number
+            error_logger.log_info(f"[Pipeline] 📌 Injected serial number: {serial_val}")
         
         # Build enhanced prompt including field extraction if needed
         error_logger.log_info(f"[Pipeline] 📝 BUILDING ENHANCED PROMPT...")
