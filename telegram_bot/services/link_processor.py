@@ -363,21 +363,35 @@ class LinkProcessor:
     async def extract_audio(self, video_path: str) -> Optional[str]:
         """Extract audio from video file"""
         try:
-            import ffmpeg
+            import subprocess
             
             audio_path = video_path.rsplit(".", 1)[0] + ".mp3"
             
-            stream = ffmpeg.input(video_path)
-            stream = ffmpeg.output(stream, audio_path, acodec='libmp3lame', ar='16000')
-            ffmpeg.run(stream, overwrite_output=True, quiet=True)
+            # Use subprocess directly to ensure we can see errors and it works reliably
+            cmd = [
+                "ffmpeg", "-y", "-i", video_path,
+                "-vn", "-acodec", "libmp3lame", "-ar", "16000", "-ac", "1",
+                audio_path
+            ]
             
-            if os.path.exists(audio_path):
+            process = await asyncio.create_subprocess_exec(
+                *cmd,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+            
+            stdout, stderr = await process.communicate()
+            
+            if os.path.exists(audio_path) and os.path.getsize(audio_path) > 1000:
                 error_logger.log_info(f"Audio extracted: {audio_path}")
                 return audio_path
+            
+            stderr_str = stderr.decode('utf-8', errors='ignore') if stderr else ""
+            error_logger.log_error(f"FFmpeg extraction failed: {stderr_str}")
             return None
             
         except Exception as e:
-            error_logger.log_info(f"Audio extraction error: {str(e)}")
+            error_logger.log_error(f"Audio extraction error: {str(e)}")
             return None
     
     @handle_errors("link_processor", "generate_thumbnail")
