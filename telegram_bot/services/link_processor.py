@@ -106,25 +106,27 @@ class LinkProcessor:
         formats = {
             "best": [
                 "bestvideo[ext=mp4][vcodec^=avc1]+bestaudio[ext=m4a]/best[ext=mp4]/best",
-                "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best",
+                "bestvideo[vcodec^=avc1]+bestaudio[acodec^=mp4a]/best[ext=mp4]/best",
                 "bestvideo+bestaudio/best",
                 "best",
             ],
             "high": [
                 "bestvideo[height<=1080][ext=mp4][vcodec^=avc1]+(bestaudio[ext=m4a]/bestaudio)/best[ext=mp4]/best",
-                "bestvideo[ext=mp4]+(bestaudio[ext=m4a]/bestaudio)/best",
+                "bestvideo[vcodec^=avc1]+bestaudio[acodec^=mp4a]/best[ext=mp4]/best",
                 "bestvideo[ext=mp4]+bestaudio/best",
                 "bestvideo+bestaudio/best",
                 "best",
             ],
             "medium": [
                 "bestvideo[height<=720][ext=mp4][vcodec^=avc1]+(bestaudio[ext=m4a]/bestaudio)/best[ext=mp4]/best",
-                "bestvideo[height<=720][ext=mp4]+(bestaudio[ext=m4a]/bestaudio)/best",
+                "bestvideo[vcodec^=avc1]+bestaudio[acodec^=mp4a]/best[ext=mp4]/best",
+                "bestvideo[height<=720]+bestaudio/best",
                 "bestvideo[ext=mp4]+bestaudio/best",
                 "best",
             ],
             "low": [
                 "bestvideo[height<=480][ext=mp4][vcodec^=avc1]+(bestaudio[ext=m4a]/bestaudio)/best[ext=mp4]/best",
+                "bestvideo[vcodec^=avc1]+bestaudio[acodec^=mp4a]/best[ext=mp4]/best",
                 "bestvideo[height<=480][ext=mp4]+(bestaudio[ext=m4a]/bestaudio)/best",
                 "bestvideo[ext=mp4]+bestaudio/best",
                 "best",
