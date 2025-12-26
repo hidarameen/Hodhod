@@ -241,8 +241,9 @@ class VideoProcessor:
                 await task_logger.log_info(f"Using video rule: {video_rule.get('name', 'unnamed')}")
             
             # ✅ FIX: Build comprehensive context for AI extraction
-            # Include captions, transcript, and ANY metadata
-            merged_content = f"الكابشن الأصلي:\n{caption_text}\n\nنص الفيديو المستخرج:\n{transcript}" if caption_text else transcript
+            # Force AI to look at BOTH caption and transcript for specific fields
+            # Using very explicit markers for the AI to distinguish between the caption and transcript
+            merged_content = f"---بداية الكابشن الأصلي---\n{caption_text}\n---نهاية الكابشن الأصلي---\n\n---بداية نص الفيديو المستخرج---\n{transcript}\n---نهاية نص الفيديو المستخرج---" if caption_text else transcript
             
             await task_logger.log_info(f"Summarizing merged content (caption + transcript) with AI Pipeline ({provider_name}/{model_name})...")
             
@@ -251,12 +252,17 @@ class VideoProcessor:
             summarize_rules = [r for r in rules if r["type"] == "summarize" and r["is_active"]]
             all_applicable_rules = video_rules + summarize_rules
             
+            # ✅ FIX: Add explicit instruction for AI to use BOTH sources for field extraction
+            extraction_prompt = custom_rule or ""
+            if caption_text:
+                extraction_prompt += "\n\nهام جداً: يجب تحليل الكابشن الأصلي ونص الفيديو معاً لاستخراج حقول المحافظة والمصدر والتصنيف بدقة عالية من النص المرفق."
+            
             pipeline_result = await ai_pipeline.process(
                 text=merged_content,
                 task_id=task_id,
                 provider=provider_name,
                 model=model_name,
-                system_prompt=custom_rule,
+                system_prompt=extraction_prompt,
                 custom_rules=all_applicable_rules,
                 video_source_info=None,
                 fields_to_extract=True # Enable field extraction

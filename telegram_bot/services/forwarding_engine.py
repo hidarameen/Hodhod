@@ -2611,6 +2611,22 @@ class ForwardingEngine:
                             })
                 # Pass original_text for field extraction (source, classification, etc.)
                 # Pass final_text (summarized) for summary field
+                
+                # ✅ FIX: Map all variations to normalized keys BEFORE template application
+                if extracted_data:
+                    p = (extracted_data.get("المحافظة") or extracted_data.get("المحافظه") or 
+                         extracted_data.get("governorate") or extracted_data.get("province") or
+                         extracted_data.get("محافظة") or extracted_data.get("محافظه") or
+                         extracted_data.get("المحافظه_"))
+                    s = (extracted_data.get("المصدر") or extracted_data.get("source") or 
+                         extracted_data.get("مصدر") or extracted_data.get("المصدر_"))
+                    if p: 
+                        extracted_data["المحافظة"] = p
+                        extracted_data["province"] = p
+                    if s: 
+                        extracted_data["المصدر"] = s
+                        extracted_data["source"] = s
+
                 template_result = await self._apply_publishing_template(final_text, task_id, extracted_data, original_text=original_text)
                 # Unpack the tuple: (formatted_text, extracted_data_dict)
                 template_applied_text, extracted_data = template_result if isinstance(template_result, tuple) else (template_result, extracted_data)
@@ -3061,28 +3077,32 @@ class ForwardingEngine:
             if extracted_data:
                 classification = extracted_data.get("التصنيف_") or extracted_data.get("التصنيف") or extracted_data.get("category") or extracted_data.get("classification")
                 news_type = extracted_data.get("نوع_الخبر") or extracted_data.get("news_type")
-                # Handle all variations of Governorate
+                
+                # ✅ FIX: Map all variations to normalized keys before template application
                 province = (
-                    extracted_data.get("المحافظه_") or 
-                    extracted_data.get("المحافظة") or 
-                    extracted_data.get("المحافظه") or 
-                    extracted_data.get("محافظة") or 
-                    extracted_data.get("محافظه") or 
-                    extracted_data.get("governorate") or 
-                    extracted_data.get("province")
+                    extracted_data.get("المحافظة") or extracted_data.get("المحافظه") or 
+                    extracted_data.get("governorate") or extracted_data.get("province") or 
+                    extracted_data.get("محافظة") or extracted_data.get("محافظه") or
+                    extracted_data.get("المحافظه_")
                 )
-                # Handle Source
                 source = (
-                    extracted_data.get("المصدر") or 
-                    extracted_data.get("مصدر") or 
-                    extracted_data.get("source")
+                    extracted_data.get("المصدر") or extracted_data.get("source") or 
+                    extracted_data.get("مصدر") or extracted_data.get("المصدر_")
                 )
+                
+                if province: 
+                    extracted_data["المحافظة"] = province
+                    extracted_data["province"] = province
+                if source: 
+                    extracted_data["المصدر"] = source
+                    extracted_data["source"] = source
+
                 specialist = extracted_data.get("المختص") or extracted_data.get("specialist")
                 title = extracted_data.get("العنوان") or extracted_data.get("title")
                 
-                # ✅ Sync back to extracted_data for template consistency
-                extracted_data["المحافظة"] = province
-                extracted_data["المصدر"] = source
+                # Update summarized_text with extracted title if needed
+                if title and not summarized_text:
+                    summarized_text = title
 
             # Apply summarization rule if configured
             try:
