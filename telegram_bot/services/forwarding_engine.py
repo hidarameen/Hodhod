@@ -2163,22 +2163,32 @@ class ForwardingEngine:
                         extracted_data["serial_number"] = current_serial
                 else:
                     # Extract new fields with AI (fallback for non-combined extraction)
-                    extraction_text = original_text if original_text else text
+                    # ✅ FIX: Extract fields from COMBINED text (caption + transcript)
+                    extraction_text = ""
+                    # For video with caption, caption_text is available in locals() or from extracted_data
+                    if extracted_data and extracted_data.get('caption'):
+                        extraction_text += f"الكابشن الأصلي:\n{extracted_data['caption']}\n\n"
+                    
+                    if original_text:
+                        extraction_text += f"محتوى الفيديو:\n{original_text}"
+                    else:
+                        extraction_text += text
+
                     log_detailed("info", "forwarding_engine", "_apply_publishing_template",
-                                f"📋 Using {'original' if original_text else 'summarized'} text for field extraction", {
+                                f"📋 Using combined text for field extraction", {
                                     "extraction_text_length": len(extraction_text),
                                     "summary_text_length": len(text)
                                 })
                     
                     new_extracted = await self._extract_fields_with_ai(
-                        extraction_text,  # Fallback text
+                        extraction_text,  # Use combined text for extraction
                         task_id,
                         provider_name,
                         model_name,
                         custom_fields,
                         serial_number=current_serial,
-                        processed_text=text,  # Use summarized text for summary field
-                        original_text=extraction_text  # Use original text for field extraction
+                        processed_text=text,  # Use summary for التلخيص field
+                        original_text=extraction_text
                     )
                     
                     # Merge with existing extracted_data instead of replacing
@@ -2354,6 +2364,14 @@ class ForwardingEngine:
             # Join all parts
             result = "\n".join(filter(None, result_parts))
 
+            # ✅ FIX: Add Telegraph link if available in extracted_data (from video/link processor)
+            if extracted_data and extracted_data.get("telegraph_url"):
+                telegraph_url = extracted_data["telegraph_url"]
+                # Avoid duplicate links
+                if telegraph_url not in result:
+                    result += f"\n\n📄 <a href=\"{telegraph_url}\">اقرأ النص الأصلي الكامل</a>"
+                    log_detailed("info", "forwarding_engine", "_apply_publishing_template", f"✅ Added Telegraph link to template: {telegraph_url}")
+
             # Apply max length
             if max_length and len(result) > max_length:
                 result = result[:max_length - 3] + "..."
@@ -2460,8 +2478,12 @@ class ForwardingEngine:
                         log_detailed("error", "forwarding_engine", "_process_message", 
                                     f"Caption summarization error: {str(e)}")
                 
+                # ✅ FIX: For videos with caption, use combined text for field extraction
                 video_provider_id = task_config.get("video_ai_provider_id")
                 video_model_id = task_config.get("video_ai_model_id")
+                
+                # We'll use the combined text (caption + video transcript) later in job_handler
+                # for now just pass everything to the queue
                 await queue_manager.add_job(
                     "video_process",
                     {
@@ -2470,9 +2492,9 @@ class ForwardingEngine:
                         "task_id": task_id,
                         "video_provider_id": video_provider_id,
                         "video_model_id": video_model_id,
-                        "caption_text": caption_text,  # ✅ NEW: Pass caption for potential reuse
-                        "caption_summary": caption_summary,  # ✅ NEW: Pass pre-summarized caption
-                        "serial_number": serial_number # ✅ Pass assigned serial number
+                        "caption_text": caption_text,
+                        "caption_summary": caption_summary,
+                        "serial_number": serial_number
                     },
                     task_id=task_id,
                     priority=5

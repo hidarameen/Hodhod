@@ -264,16 +264,19 @@ class VideoProcessor:
             # ✅ NEW: Merge caption summary with video summary
             combined_summary = video_summary
             if caption_summary:
-                combined_summary = f"📝 ملخص الكابشن:\n{caption_summary}\n\n🎥 ملخص الفيديو:\n{video_summary}"
+                # Use a cleaner merge that looks better in templates
+                combined_summary = f"{caption_summary}\n\n{video_summary}"
                 await task_logger.log_info(f"✅ Merged summaries: caption {len(caption_summary)} + video {len(video_summary)} = total {len(combined_summary)} chars")
             
             await task_logger.log_info("Creating Telegraph page for original transcript...")
             telegraph_url = None
             try:
+                # ✅ FIX: Include caption in Telegraph page for full context
+                full_content = f"الكابشن الأصلي:\n{caption_text}\n\n--- \n\nنص الفيديو:\n{transcript}" if caption_text else transcript
                 telegraph_url = await telegraph_manager.create_text_page(
                     title="نص الفيديو الأصلي",
-                    content=transcript,
-                    description="النص المستخرج من الفيديو باستخدام Whisper"
+                    content=full_content,
+                    description="النص المستخرج من الفيديو والملخص المصاحب"
                 )
                 if telegraph_url:
                     await task_logger.log_success(f"Telegraph page created: {telegraph_url}")
