@@ -1092,15 +1092,6 @@ class Database:
                 await self.connect()
             async with self.pool.acquire() as conn:
                 async with conn.transaction():
-                    # Create table if not exists (safety)
-                    await conn.execute("""
-                        CREATE TABLE IF NOT EXISTS archive_serial_counter (
-                            task_id INTEGER PRIMARY KEY,
-                            last_serial INTEGER DEFAULT 0,
-                            updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-                        )
-                    """)
-                    
                     existing = await conn.fetchrow(
                         "SELECT last_serial FROM archive_serial_counter WHERE task_id = $1 FOR UPDATE",
                         t_id
@@ -1114,19 +1105,14 @@ class Database:
                         )
                         return new_serial
                     else:
-                        # Fallback: check message_archive for last serial
-                        last_archived = await conn.fetchval(
-                            "SELECT MAX(serial_number) FROM message_archive WHERE task_id = $1",
+                        await conn.execute(
+                            "INSERT INTO archive_serial_counter (task_id, last_serial) VALUES ($1, 1)",
                             t_id
                         )
-                        start_serial = (last_archived or 0) + 1
-                        await conn.execute(
-                            "INSERT INTO archive_serial_counter (task_id, last_serial) VALUES ($1, $2)",
-                            t_id, start_serial
-                        )
-                        return start_serial
+                        return 1
         except Exception as e:
             error_logger.log_info(f"Error getting next serial number for task {task_id}: {str(e)}")
+            # Fallback to a simple count + 1 if the counter table fails
             try:
                 count = await self.fetchval("SELECT COUNT(*) FROM message_archive WHERE task_id = $1", int(task_id))
                 return (count or 0) + 1

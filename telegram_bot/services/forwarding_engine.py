@@ -291,25 +291,18 @@ class ForwardingEngine:
                                             log_detailed("debug", "forwarding_engine", "forward_message", 
                                                         f"Using default for {field_name}: {default_value}")
                             
-            # ✅ FIX: Use template_data (which contains merged extracted data) for template application
-            # Apply publishing template to the summary
-            log_detailed("info", "forwarding_engine", "forward_message", "Applying publishing template to link summary...", {
-                "template_data_keys": list(template_data.keys()),
-                "template_data_count": len(template_data)
-            })
-
-            # Ensure serial number is in template_data for the template
-            if serial_number:
-                template_data["serial_number"] = serial_number
-                template_data["رقم_القيد"] = f"#{serial_number}"
-                template_data["رقم_القيد_"] = f"#{serial_number}"
-
-            template_res = await self._apply_publishing_template(
-                summary, 
-                task_id, 
-                template_data,  # ✅ CRITICAL FIX: Use template_data which contains all merged extracted fields
-                original_text=summary  # Pass summary as original for consistent extraction
-            )
+                            # ✅ FIX: Use template_data (which contains merged extracted data) for template application
+                            # Apply publishing template to the summary
+                            log_detailed("info", "forwarding_engine", "forward_message", "Applying publishing template to link summary...", {
+                                "template_data_keys": list(template_data.keys()),
+                                "template_data_count": len(template_data)
+                            })
+                            template_res = await self._apply_publishing_template(
+                                summary, 
+                                task_id, 
+                                template_data,  # ✅ CRITICAL FIX: Use template_data which contains all merged extracted fields
+                                original_text=summary  # Pass summary as original for consistent extraction
+                            )
                             
                             # Unpack template result
                             if isinstance(template_res, tuple):
@@ -574,13 +567,6 @@ class ForwardingEngine:
                 # This ensures the summary field is available for template processing
                 template_data["التلخيص"] = video_summary
                 template_data["summary"] = video_summary
-                
-                # Ensure serial number is in template_data for the template
-                if serial_number:
-                    template_data["serial_number"] = serial_number
-                    template_data["رقم_القيد"] = f"#{serial_number}"
-                    template_data["رقم_القيد_"] = f"#{serial_number}"
-
                 log_detailed("debug", "forwarding_engine", "forward_message", 
                             f"✅ Added summary to template_data: {len(video_summary)} chars")
                 
@@ -770,13 +756,6 @@ class ForwardingEngine:
                 # This ensures the summary field is available for template processing
                 template_data["التلخيص"] = audio_summary
                 template_data["summary"] = audio_summary
-                
-                # Ensure serial number is in template_data for the template
-                if serial_number:
-                    template_data["serial_number"] = serial_number
-                    template_data["رقم_القيد"] = f"#{serial_number}"
-                    template_data["رقم_القيد_"] = f"#{serial_number}"
-
                 log_detailed("debug", "forwarding_engine", "forward_message", 
                             f"✅ Added summary to template_data: {len(audio_summary)} chars")
                 
