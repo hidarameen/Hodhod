@@ -599,7 +599,8 @@ class ForwardingEngine:
 
                 # Add Telegraph link after template
                 if telegraph_url:
-                    caption += f'\n\n📄 <a href="{telegraph_url}">اقرأ النص الأصلي الكامل</a>'
+                    caption += f'\n\n📰 <a href="{telegraph_url}">اقرأ كامل الخبر</a>'
+                    log_detailed("info", "forwarding_engine", "forward_message", f"✅ Added Telegraph link to video caption: {telegraph_url}")
 
                 # Truncate caption if too long (Telegram limit is 1024 chars for caption)
                 if len(caption) > 1024:
@@ -784,8 +785,10 @@ class ForwardingEngine:
                     caption = f'🎙️ <b>ملخص المقطع الصوتي:</b>\n\n{audio_summary}'
                     log_detailed("info", "forwarding_engine", "forward_message", "No publishing template, using default format")
 
+                # Add Telegraph link after template
                 if audio_telegraph_url:
-                    caption += f'\n\n📄 <a href="{audio_telegraph_url}">اقرأ النص الكامل المُفرّغ</a>'
+                    caption += f'\n\n📰 <a href="{audio_telegraph_url}">اقرأ كامل الخبر</a>'
+                    log_detailed("info", "forwarding_engine", "forward_message", f"✅ Added Telegraph link to audio caption: {audio_telegraph_url}")
 
                 if len(caption) > 1024:
                     caption = caption[:1020] + "..."
@@ -878,6 +881,15 @@ class ForwardingEngine:
                 extracted_data["serial_number"] = serial_number
                 log_detailed("info", "forwarding_engine", "forward_message",
                             f"✅ Serial number set in extracted_data: {serial_number}")
+
+            # ✅ NEW: Handle regular message Telegraph links if needed
+            # (Though usually text messages don't have them unless processed via link_processor)
+            if not link_processed and not video_processed and not audio_processed:
+                # Check if we have a transcript/telegraph from AI processing (unlikely but possible)
+                telegraph_url = extracted_data.get("telegraph_url")
+                if telegraph_url and final_text:
+                    final_text = f"{final_text}\n\n📰 <a href=\"{telegraph_url}\">اقرأ كامل الخبر</a>"
+                    log_detailed("info", "forwarding_engine", "forward_message", "✅ Added Telegraph link to final text")
 
             # Forward to all targets in parallel
             log_detailed("info", "forwarding_engine", "forward_message", f"Forwarding to {len(target_channels)} targets in parallel...")
@@ -2226,18 +2238,16 @@ class ForwardingEngine:
                                            extracted_data.get("record_number") or "")
                         
                         # Clean the value and ensure # prefix
-                        if current_val:
+                        if current_val and str(current_val).strip() not in ["", "0", "---", "-"]:
                             val_str = str(current_val).strip()
-                            if val_str == "0": # Handle the "0" default case
-                                value = ""
-                            elif val_str and not val_str.startswith("#"):
+                            if val_str and not val_str.startswith("#"):
                                 value = f"#{val_str}"
                             else:
                                 value = val_str
                         else:
-                            # Last resort fallback if extracted_data somehow lost it
+                            # Last resort fallback if extracted_data somehow lost it or has placeholder
                             value = field.get("default_value", "")
-                            if value == "0": value = ""
+                            if value in ["0", "---", "-"]: value = ""
                             
                         log_detailed("debug", "forwarding_engine", "_apply_publishing_template", f"📌 Serial field '{field_name}' resolved to: {value}")
                     else:
