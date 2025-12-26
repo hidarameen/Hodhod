@@ -140,7 +140,7 @@ class QueueManager:
                 self.workers = [w for w in self.workers if w.is_running]
                 
             except Exception as e:
-                await error_logger.log_error("process_queue", e)
+                error_logger.log_warning(f"Queue processing error: {str(e)}")
                 await asyncio.sleep(5)
     
     async def start(self):

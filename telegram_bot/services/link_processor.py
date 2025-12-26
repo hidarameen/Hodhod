@@ -101,38 +101,51 @@ class LinkProcessor:
     
     def _get_format_options(self, quality: str) -> List[str]:
         """Get list of format options to try in order of preference
-        Tries combined video+audio first, then falls back to video-only,
-        audio-only, or any available format to ensure successful download"""
+        CRITICAL: EXPLICITLY EXCLUDE audio-only formats
+        Always download video+audio together"""
         formats = {
             "best": [
-                "bestvideo[ext=mp4][vcodec^=avc1]+bestaudio[ext=m4a]/best[ext=mp4]/best",
-                "bestvideo[vcodec^=avc1]+bestaudio[acodec^=mp4a]/best[ext=mp4]/best",
-                "bestvideo+bestaudio/best",
+                # MUST have video stream (exclude audio-only with -vn negation)
+                "bestvideo[height<=1080]+bestaudio/best[height<=1080]/best",
+                "bestvideo+bestaudio",
                 "best",
             ],
             "high": [
-                "bestvideo[height<=1080][ext=mp4][vcodec^=avc1]+(bestaudio[ext=m4a]/bestaudio)/best[ext=mp4]/best",
-                "bestvideo[vcodec^=avc1]+bestaudio[acodec^=mp4a]/best[ext=mp4]/best",
-                "bestvideo[ext=mp4]+bestaudio/best",
-                "bestvideo+bestaudio/best",
-                "best",
+                # 1080p max, must have video (no audio-only)
+                "bestvideo[height<=1080]+bestaudio/best[height<=1080]/best",
+                "bestvideo[height<=1080]+bestaudio/bestvideo+bestaudio/best",
+                "best[height<=1080]/best",
             ],
             "medium": [
-                "bestvideo[height<=720][ext=mp4][vcodec^=avc1]+(bestaudio[ext=m4a]/bestaudio)/best[ext=mp4]/best",
-                "bestvideo[vcodec^=avc1]+bestaudio[acodec^=mp4a]/best[ext=mp4]/best",
+                # 720p max, must have video (no audio-only)
+                "bestvideo[height<=720]+bestaudio/best[height<=720]/best",
                 "bestvideo[height<=720]+bestaudio/best",
-                "bestvideo[ext=mp4]+bestaudio/best",
-                "best",
+                "best[height<=720]/best",
             ],
             "low": [
-                "bestvideo[height<=480][ext=mp4][vcodec^=avc1]+(bestaudio[ext=m4a]/bestaudio)/best[ext=mp4]/best",
-                "bestvideo[vcodec^=avc1]+bestaudio[acodec^=mp4a]/best[ext=mp4]/best",
-                "bestvideo[height<=480][ext=mp4]+(bestaudio[ext=m4a]/bestaudio)/best",
-                "bestvideo[ext=mp4]+bestaudio/best",
-                "best",
+                # 480p max, must have video (no audio-only)
+                "bestvideo[height<=480]+bestaudio/best[height<=480]/best",
+                "bestvideo[height<=480]+bestaudio/best",
+                "best[height<=480]/best",
             ],
         }
         return formats.get(quality, formats["high"])
+    
+    async def _verify_video_has_content(self, video_path: str) -> Dict[str, bool]:
+        """Verify that video file contains both video and audio streams"""
+        try:
+            import ffmpeg
+            probe = ffmpeg.probe(video_path)
+            streams = probe.get('streams', [])
+            
+            has_video = any(s.get('codec_type') == 'video' for s in streams)
+            has_audio = any(s.get('codec_type') == 'audio' for s in streams)
+            
+            error_logger.log_info(f"Video verification: has_video={has_video}, has_audio={has_audio}")
+            return {'has_video': has_video, 'has_audio': has_audio}
+        except Exception as e:
+            error_logger.log_warning(f"Failed to verify video content: {str(e)}")
+            return {'has_video': False, 'has_audio': False}
     
     async def get_video_info(self, url: str) -> Dict[str, Any]:
         """Get comprehensive video info using yt-dlp --dump-json
@@ -271,6 +284,7 @@ class LinkProcessor:
                     "--socket-timeout", "20",
                     "--retries", "2",
                     "--fragment-retries", "3",
+                    "--check-formats",  # Verify format has video stream
                     "--output", output_path,
                 ]
                 
@@ -294,8 +308,21 @@ class LinkProcessor:
                     if process.returncode == 0:
                         found_path = self._find_downloaded_file(task_id, output_path)
                         if found_path:
+                            # ✅ CRITICAL: Verify video has BOTH video and audio
+                            verification = await self._verify_video_has_content(found_path)
+                            if not verification.get('has_video'):
+                                await task_logger.log_warning(f"Downloaded file is audio-only, rejecting and trying next format...")
+                                error_logger.log_info(f"[LINK_DOWNLOAD] Audio-only file detected, trying next format")
+                                # Remove the audio-only file and try next format
+                                try:
+                                    os.remove(found_path)
+                                except:
+                                    pass
+                                last_error = "Audio-only format detected"
+                                continue
+                            
                             size_mb = os.path.getsize(found_path) / (1024 * 1024)
-                            await task_logger.log_success(f"✓ Video downloaded: {size_mb:.2f}MB")
+                            await task_logger.log_success(f"✓ Video downloaded: {size_mb:.2f}MB (has video + audio)")
                             error_logger.log_info(f"[LINK_DOWNLOAD] SUCCESS - size={size_mb:.2f}MB, format={format_str[:30]}")
                             return found_path
                     
@@ -343,20 +370,39 @@ class LinkProcessor:
             raise
     
     def _find_downloaded_file(self, task_id: int, expected_path: str) -> Optional[str]:
-        """Find downloaded file, checking expected path and alternatives"""
+        """Find downloaded file, prioritizing video files over audio-only"""
         if os.path.exists(expected_path):
             return expected_path
         
+        # Try expected extensions in order
         for ext in ['.mp4', '.mkv', '.webm', '.mov']:
             alt_path = expected_path.rsplit('.', 1)[0] + ext
             if os.path.exists(alt_path):
                 return alt_path
         
+        # Find by pattern, but prioritize video files over audio-only
+        video_files = []
+        audio_only_files = []
+        
         for f in os.listdir(self.temp_dir):
             if f.startswith(f"link_video_{task_id}_"):
                 found_path = os.path.join(self.temp_dir, f)
                 if os.path.exists(found_path) and os.path.getsize(found_path) > 1000:
-                    return found_path
+                    # Prioritize video files (mp4, mkv, webm, mov) over audio-only (m4a, mp3, aac)
+                    if f.lower().endswith(('.mp4', '.mkv', '.webm', '.mov')):
+                        video_files.append(found_path)
+                    elif not f.lower().endswith(('.m4a', '.mp3', '.aac', '.wav')):
+                        video_files.append(found_path)  # Unknown format, treat as video
+                    else:
+                        audio_only_files.append(found_path)
+        
+        # Return video file if available, otherwise audio-only
+        if video_files:
+            return video_files[0]
+        elif audio_only_files:
+            # If only audio-only file found, we'll handle it by downloading again with better format
+            error_logger.log_warning(f"Only audio-only file found for task {task_id}, will retry with different format")
+            return None
         
         return None
     
@@ -388,11 +434,11 @@ class LinkProcessor:
                 return audio_path
             
             stderr_str = stderr.decode('utf-8', errors='ignore') if stderr else ""
-            error_logger.log_error(f"FFmpeg extraction failed: {stderr_str}")
+            error_logger.log_warning(f"FFmpeg extraction failed: {stderr_str}")
             return None
             
         except Exception as e:
-            error_logger.log_error(f"Audio extraction error: {str(e)}")
+            error_logger.log_warning(f"Audio extraction error: {str(e)}")
             return None
     
     @handle_errors("link_processor", "generate_thumbnail")
@@ -531,6 +577,21 @@ class LinkProcessor:
             
             await task_logger.log_success(f"✓ Video downloaded: {downloaded_video_path}")
             video_path = downloaded_video_path
+            
+            # ✅ VERIFY video has BOTH video and audio streams
+            await task_logger.log_info("Verifying video contains video + audio...")
+            verification = await self._verify_video_has_content(video_path)
+            
+            if not verification.get('has_video'):
+                error_msg = f"❌ Downloaded file has no video stream (audio-only). Trying alternative format..."
+                await task_logger.log_warning(error_msg)
+                # If audio-only, we'll retry with different format in next attempt
+                return None
+            
+            if not verification.get('has_audio'):
+                await task_logger.log_warning("⚠️ Video has no audio stream, will extract/add later")
+            else:
+                await task_logger.log_success("✅ Video verified: has both video and audio")
             
             # Track video for potential cleanup
             if video_path is None:

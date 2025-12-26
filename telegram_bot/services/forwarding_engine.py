@@ -386,6 +386,22 @@ class ForwardingEngine:
 
                                         if os.path.exists(video_path):
                                             try:
+                                                # ✅ CRITICAL: Verify video has BOTH video and audio streams
+                                                log_detailed("info", "forwarding_engine", "forward_message", f"Verifying video contains video + audio before sending...")
+                                                verification = await link_processor._verify_video_has_content(video_path)
+                                                
+                                                if not verification.get('has_video'):
+                                                    log_detailed("error", "forwarding_engine", "forward_message", f"❌ Video file is audio-only, skipping video send and forwarding summary instead")
+                                                    await self.client.send_message(
+                                                        chat_id=target_identifier,
+                                                        text=caption,
+                                                        parse_mode=ParseMode.HTML
+                                                    )
+                                                    continue
+                                                
+                                                if not verification.get('has_audio'):
+                                                    log_detailed("warning", "forwarding_engine", "forward_message", f"⚠️ Video has no audio stream")
+                                                
                                                 # Ensure mp4 extension
                                                 video_path = link_processor.ensure_mp4_extension(video_path)
 
