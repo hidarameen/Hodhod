@@ -352,16 +352,6 @@ class LinkProcessor:
         except Exception as e:
             await task_logger.log_error(f"❌ Download error: {str(e)}")
             raise
-
-                
-        except asyncio.TimeoutError:
-            await task_logger.log_error(f"❌ Video download timeout ({DOWNLOAD_TIMEOUT}s)")
-            error_logger.log_info(f"[LINK_DOWNLOAD] TIMEOUT - url={url}")
-            return None
-        except Exception as e:
-            await task_logger.log_error(f"❌ Download error: {str(e)}")
-            error_logger.log_info(f"[LINK_DOWNLOAD] EXCEPTION - error={str(e)}")
-            raise
     
     def _find_downloaded_file(self, task_id: int, expected_path: str) -> Optional[str]:
         """Find downloaded file, prioritizing video files over audio-only"""
