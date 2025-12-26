@@ -312,11 +312,9 @@ class VideoProcessor:
                 final_extracted_data["serial_number"] = serial_number
                 final_extracted_data["رقم_القيد"] = f"#{serial_number}"
             
-            # ✅ SET THE CORRECT TELEGRAPH LINK TEXT
+            # ✅ REMOVED: Redundant telegraph_link from extracted_data to prevent double link in forwarding_engine
             if telegraph_url:
                 final_extracted_data["telegraph_url"] = telegraph_url
-                # Add specific field for the link text as requested
-                final_extracted_data["telegraph_link"] = f'📄 <a href="{telegraph_url}">اقرأ النص الأصلي الكامل</a>'
             
             if caption_text:
                 # Store original caption for extraction in template
