@@ -679,9 +679,11 @@ class ForwardingEngine:
 
                 # Add Telegraph link after template
                 if audio_telegraph_url:
-                    # Check if the link is already in the caption
+                    # Check if the link is already in the caption (including from template)
                     link_html = f'📄 <a href="{audio_telegraph_url}">اقرأ النص الأصلي الكامل</a>'
-                    if link_html not in caption:
+                    # Strip HTML tags for content check to avoid escaping issues
+                    link_text_only = "اقرأ النص الأصلي الكامل"
+                    if link_html not in caption and link_text_only not in caption:
                         caption += f'\n\n{link_html}'
                     log_detailed("info", "forwarding_engine", "forward_message", f"✅ Added Telegraph link to audio caption: {audio_telegraph_url}")
 
@@ -785,7 +787,8 @@ class ForwardingEngine:
                 if telegraph_url and final_text:
                     # Check if the link is already in the text
                     link_html = f'📄 <a href="{telegraph_url}">اقرأ النص الأصلي الكامل</a>'
-                    if link_html not in final_text:
+                    link_text_only = "اقرأ النص الأصلي الكامل"
+                    if link_html not in final_text and link_text_only not in final_text:
                         final_text = f"{final_text}\n\n{link_html}"
                     log_detailed("info", "forwarding_engine", "forward_message", "✅ Added Telegraph link to final text")
 
@@ -1252,7 +1255,8 @@ class ForwardingEngine:
                     # ✅ CRITICAL FIX: Use combined_caption (with template) NOT processed_caption (summary only)
                     # Check if the link is already in the caption
                     link_html = f'📄 <a href="{telegraph_url}">اقرأ النص الأصلي الكامل</a>'
-                    if link_html not in combined_caption:
+                    link_text_only = "اقرأ النص الأصلي الكامل"
+                    if link_html not in combined_caption and link_text_only not in combined_caption:
                         final_caption = f'{combined_caption}\n\n{link_html}'
                     else:
                         final_caption = combined_caption
@@ -2675,7 +2679,8 @@ class ForwardingEngine:
                     
                     # Check if the link is already in the text
                     link_html = f'📄 <a href="{telegraph_url}">اقرأ النص الأصلي الكامل</a>'
-                    if link_html not in final_text:
+                    link_text_only = "اقرأ النص الأصلي الكامل"
+                    if link_html not in final_text and link_text_only not in final_text:
                         final_text = f'{final_text}\n\n{link_html}'
                         
                     log_detailed("info", "forwarding_engine", "_forward_to_target",
