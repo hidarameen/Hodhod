@@ -589,22 +589,43 @@ class ForwardingEngine:
                     log_detailed("debug", "forwarding_engine", "forward_message", 
                                 "No template or fields configured for extraction")
                 
-                # ✅ CRITICAL FIX: Add summary to template_data BEFORE applying template
-                # This ensures the summary field is available for template processing
-                template_data["التلخيص"] = video_summary
-                template_data["summary"] = video_summary
-                log_detailed("debug", "forwarding_engine", "forward_message", 
-                            f"✅ Added summary to template_data: {len(video_summary)} chars")
+                # ✅ FIX: Final Text for summary and fields
+                # Use merged summary for the 'summary' and 'التلخيص' fields
+                video_final_summary = video_summary
+                if 'caption_summary' in locals() and caption_summary:
+                    video_final_summary = f"{caption_summary}\n\n{video_summary}"
                 
+                template_data["التلخيص"] = video_final_summary
+                template_data["summary"] = video_final_summary
+                log_detailed("debug", "forwarding_engine", "forward_message", 
+                            f"✅ Added final merged summary to template_data: {len(video_final_summary)} chars")
+                
+                # ✅ FIX: Extract fields again using COMBINED text if fields are empty
+                # The current logs show fields are empty because extraction happened too early or failed
+                if not any([template_data.get('category'), template_data.get('governorate'), template_data.get('source')]):
+                    log_detailed("info", "forwarding_engine", "forward_message", "Fields still empty, attempting one last extraction from combined text...")
+                    if provider_name and model_name:
+                         # Combine caption and transcript for best context
+                         extraction_text = f"الكابشن الأصلي:\n{caption_text}\n\nنص الفيديو:\n{video_transcript}" if caption_text else (video_transcript if video_transcript else video_final_summary)
+                         extracted_data = await self._extract_fields_with_ai(
+                            extraction_text,
+                            task_id,
+                            provider_name, model_name,
+                            fields_to_extract,
+                            serial_number=serial_number,
+                            processed_text=video_final_summary,
+                            original_text=extraction_text
+                        )
+                         template_data.update(extracted_data)
+
                 # ✅ FIX: Use template_data (which contains merged extracted data) for template application
-                # Apply publishing template to the video summary
                 log_detailed("info", "forwarding_engine", "forward_message", "Applying publishing template to video summary...", {
                     "template_data_keys": list(template_data.keys()),
                     "template_data_count": len(template_data)
                 })
-                # ✅ CRITICAL: Pass video_summary as TEXT and template_data as EXTRACTED_DATA
+                # ✅ CRITICAL: Pass video_final_summary as TEXT and template_data as EXTRACTED_DATA
                 template_result, updated_data = await self._apply_publishing_template(
-                    video_summary,  # The processed text (for summary field)
+                    video_final_summary,  # The processed text (for summary field)
                     task_id,
                     extracted_data=template_data  # All extracted fields including summary
                 )
