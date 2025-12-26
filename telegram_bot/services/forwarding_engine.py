@@ -119,6 +119,46 @@ class ForwardingEngine:
             serial_number = await db.get_next_serial_number(task_id)
             log_detailed("info", "forwarding_engine", "forward_message", f"Assigned serial number #{serial_number} (early generation)")
             
+            # Check if video processing is actually enabled and it's a video
+            video_proc_enabled = task_config.get("videoProcessingEnabled") or task_config.get("video_processing_enabled")
+            
+            # ✅ FIX: If video processing is enabled, SKIP the regular text summarization for the caption
+            # This prevents the "double processing" where the caption is summarized separately
+            if video_proc_enabled and message.video:
+                log_detailed("info", "forwarding_engine", "forward_message", "Video detected and video processing is enabled. Skipping regular text summarization.")
+                try:
+                    caption_text = message.caption or ""
+                    # We pass the original caption to the video processor which will handle its summarization
+                    video_result = await video_processor.process_video(
+                        client=self.client,
+                        message_id=message.id,
+                        chat_id=message.chat.id,
+                        task_id=task_id,
+                        task_config=task_config,
+                        caption_summary=None, # Will be summarized inside process_video if needed
+                        caption_text=caption_text,
+                        serial_number=str(serial_number) if serial_number else None
+                    )
+                    
+                    if video_result:
+                        log_detailed("info", "forwarding_engine", "forward_message", "✅ Video processing and forwarding handled by video_processor")
+                        return
+                    else:
+                        log_detailed("warning", "forwarding_engine", "forward_message", "Video processing returned no result, falling back to regular forward")
+                        # Fallback logic here if needed, but usually process_video handles its own errors
+                except Exception as e:
+                    log_detailed("error", "forwarding_engine", "forward_message", f"Video processing error: {str(e)}")
+            
+            # Regular processing for non-video or if video processing is disabled
+            # Check for link processing (message contains links)
+            link_processed = False
+            message_text = message.text or message.caption or ""
+            urls = re.findall(r'https?://[^\s<>"]+|www\.[^\s<>"]+', message_text)
+            
+            if link_processing and urls:
+                log_detailed("info", "forwarding_engine", "forward_message", f"Detected {len(urls)} URLs in message, checking for video links...")
+                # ... existing link processing ...
+            
             # Ensure serial is always in initial_extracted_data
             initial_extracted_data = {
                 "serial_number": serial_number,
@@ -474,14 +514,14 @@ class ForwardingEngine:
                     
                     if ai_enabled and summarization_enabled and caption_text:
                         log_detailed("info", "forwarding_engine", "forward_message", "Summarizing caption before video processing...")
-                        from telegram_bot.services.ai_pipeline import AIPipeline
-                        pipeline = AIPipeline(db)
-                        caption_summary = await pipeline.process(
+                        caption_summary_result = await ai_pipeline.process(
                             text=caption_text,
                             task_id=task_id,
-                            task_config=task_config,
-                            serial_number=serial_number
+                            provider=None, # Use default from task_config
+                            model=None,
+                            serial_number=str(serial_number)
                         )
+                        caption_summary = caption_summary_result.final_text if caption_summary_result else None
 
                     # This call is BLOCKING, ensuring we have video_result before proceeding
                     video_result = await video_processor.process_video(
@@ -492,7 +532,7 @@ class ForwardingEngine:
                         task_config=task_config,
                         caption_summary=caption_summary,
                         caption_text=caption_text,
-                        serial_number=serial_number
+                        serial_number=str(serial_number)
                     )
                     
                     if video_result:
@@ -506,204 +546,6 @@ class ForwardingEngine:
                 except Exception as e:
                     log_detailed("error", "forwarding_engine", "forward_message", f"Video processing error: {str(e)}")
                     video_processed = False
-
-            # If video was processed, forward the original video with summary as caption
-            if video_processed and video_summary:
-                log_detailed("info", "forwarding_engine", "forward_message", "Forwarding video with summary caption...")
-                
-                # ✅ FIX: Extract fields from video summary BEFORE applying template
-                # This ensures التصنيف, نوع_الخبر, المحافظة, المصدر are populated
-                log_detailed("info", "forwarding_engine", "forward_message", "Extracting fields from video summary...")
-                template = await db.get_task_publishing_template(task_id)
-                # ✅ CRITICAL FIX: Use "fields" key NOT "custom_fields" (matches link processing)
-                fields_to_extract = template.get("fields", []) or template.get("custom_fields", []) if template else []
-                
-                # ✅ CRITICAL FIX: Create template_data from initial_extracted_data (contains serial number)
-                template_data = initial_extracted_data.copy()
-                
-                if template and fields_to_extract:
-                    # Get AI provider/model for extraction
-                    provider_name = None
-                    model_name = None
-                    provider_id = task_config.get("summarization_provider_id") or task_config.get("summarizationProviderId")
-                    model_id = task_config.get("summarization_model_id") or task_config.get("summarizationModelId")
-                    
-                    if provider_id:
-                        provider_info = await db.get_ai_provider(provider_id)
-                        if provider_info:
-                            provider_name = provider_info["name"]
-                    
-                    if model_id:
-                        model_info = await db.get_ai_model(model_id)
-                        if model_info:
-                            model_name = model_info.get("name") or model_info.get("model_name")
-                    
-                            # ✅ FIX: Extract fields from COMBINED text (caption + transcript), not just summary
-                            # This ensures التصنيف, نوع_الخبر, المحافظة, المصدر are extracted correctly
-                            if provider_name and model_name:
-                                # Use combined text for field extraction (has more context)
-                                extraction_text = f"الكابشن الأصلي:\n{caption_text}\n\nنص الفيديو:\n{video_transcript}" if caption_text else (video_transcript if video_transcript else video_summary)
-                                text_source = "combined caption+transcript" if caption_text and video_transcript else ("transcript" if video_transcript else "summary")
-                                log_detailed("debug", "forwarding_engine", "forward_message", 
-                                            f"Using {text_source} for field extraction ({len(extraction_text)} chars)")
-                                
-                                extracted_data = await self._extract_fields_with_ai(
-                                    extraction_text,  # ✅ Use combined original text for better field extraction
-                                    task_id,
-                                    provider_name,
-                                    model_name,
-                                    fields_to_extract,
-                                    serial_number=serial_number,
-                                    processed_text=video_summary,  # Keep summary for التلخيص field
-                                    original_text=extraction_text,  # Use extraction text as original
-                                    video_metadata={
-                                        'caption': caption_text,
-                                        'has_transcript': bool(video_transcript)
-                                    }
-                                )
-                        # ✅ CRITICAL FIX: Merge with template_data (which contains merged extracted fields)
-                        template_data.update(extracted_data)
-                        log_detailed("info", "forwarding_engine", "forward_message", 
-                                    f"✅ Extracted {len(extracted_data)} fields from video summary", {
-                                        "fields": list(extracted_data.keys()),
-                                        "values_preview": {k: str(v)[:50] for k, v in extracted_data.items() if v}
-                                    })
-                    else:
-                        log_detailed("warning", "forwarding_engine", "forward_message", 
-                                    "❌ No AI provider/model configured for field extraction - using defaults")
-                        # ✅ FIX: Add default values for fields when AI is not available
-                        for field in fields_to_extract:
-                            field_name = field.get("field_name", "")
-                            default_value = field.get("default_value", "")
-                            if default_value:
-                                template_data[field_name] = default_value
-                                log_detailed("debug", "forwarding_engine", "forward_message", 
-                                            f"Using default for {field_name}: {default_value}")
-                else:
-                    log_detailed("debug", "forwarding_engine", "forward_message", 
-                                "No template or fields configured for extraction")
-                
-                # ✅ FIX: Final Text for summary and fields
-                # Use merged summary for the 'summary' and 'التلخيص' fields
-                video_final_summary = video_summary
-                if 'caption_summary' in locals() and caption_summary:
-                    video_final_summary = f"{caption_summary}\n\n{video_summary}"
-                
-                template_data["التلخيص"] = video_final_summary
-                template_data["summary"] = video_final_summary
-                log_detailed("debug", "forwarding_engine", "forward_message", 
-                            f"✅ Added final merged summary to template_data: {len(video_final_summary)} chars")
-                
-                # ✅ FIX: Extract fields again using COMBINED text if fields are empty
-                # The current logs show fields are empty because extraction happened too early or failed
-                if not any([template_data.get('category'), template_data.get('governorate'), template_data.get('source')]):
-                    log_detailed("info", "forwarding_engine", "forward_message", "Fields still empty, attempting one last extraction from combined text...")
-                    if provider_name and model_name:
-                         # Combine caption and transcript for best context
-                         extraction_text = f"الكابشن الأصلي:\n{caption_text}\n\nنص الفيديو:\n{video_transcript}" if caption_text else (video_transcript if video_transcript else video_final_summary)
-                         extracted_data = await self._extract_fields_with_ai(
-                            extraction_text,
-                            task_id,
-                            provider_name, model_name,
-                            fields_to_extract,
-                            serial_number=serial_number,
-                            processed_text=video_final_summary,
-                            original_text=extraction_text
-                        )
-                         template_data.update(extracted_data)
-
-                # ✅ FIX: Use template_data (which contains merged extracted data) for template application
-                log_detailed("info", "forwarding_engine", "forward_message", "Applying publishing template to video summary...", {
-                    "template_data_keys": list(template_data.keys()),
-                    "template_data_count": len(template_data)
-                })
-                # ✅ CRITICAL: Pass video_final_summary as TEXT and template_data as EXTRACTED_DATA
-                template_result, updated_data = await self._apply_publishing_template(
-                    video_final_summary,  # The processed text (for summary field)
-                    task_id,
-                    extracted_data=template_data  # All extracted fields including summary
-                )
-                if updated_data:
-                    template_data.update(updated_data)
-                    extracted_data = template_data # Ensure archive gets latest data
-                
-                if template_result and template_result.strip():
-                    caption = template_result
-                    log_detailed("info", "forwarding_engine", "forward_message", f"Publishing template applied to video summary: {len(caption)} chars")
-                else:
-                    # Fallback to default format if no template
-                    caption = f'📹 <b>ملخص الفيديو:</b>\n\n{video_summary}'
-                    log_detailed("info", "forwarding_engine", "forward_message", "No publishing template, using default format")
-
-                # ✅ CRITICAL FIX: Add Telegraph link properly at the VERY end
-                # Ensure it's added AFTER the template and specialist fields
-                if telegraph_url:
-                    telegraph_link = f'\n\n📄 <a href="{telegraph_url}">اقرأ الخبر كامل</a>'
-                    
-                    # Calculate total length (Telegram limit is 1024)
-                    max_caption_length = 1024
-                    current_length = len(caption)
-                    link_length = len(telegraph_link)
-                    
-                    if current_length + link_length > max_caption_length:
-                        # Truncate caption to make room for link
-                        caption = caption[:max_caption_length - link_length - 5] + "..."
-                    
-                    caption += telegraph_link
-                    log_detailed("info", "forwarding_engine", "forward_message", f"✅ Added Telegraph link to video caption: {telegraph_url}")
-                
-                # Final safety check: if we have a URL but it's not in the caption for some reason
-                if telegraph_url and telegraph_url not in caption:
-                     caption = caption.strip() + f'\n\n📄 <a href="{telegraph_url}">اقرأ الخبر كامل</a>'
-                     log_detailed("warning", "forwarding_engine", "forward_message", "Telegraph link was missing from caption, appended manually at the end")
-
-                for target_id in target_channels:
-                    target_channel = await db.get_channel(target_id)
-                    if target_channel:
-                        try:
-                            target_identifier = int(target_channel["identifier"])
-                        except (ValueError, TypeError):
-                            target_identifier = target_channel["identifier"]
-
-                        try:
-                            # Forward the original video with the summary caption (HTML format)
-                            await self.client.copy_message(
-                                chat_id=target_identifier,
-                                from_chat_id=message.chat.id,
-                                message_id=message.id,
-                                caption=caption,
-                                parse_mode=ParseMode.HTML
-                            )
-                            log_detailed("info", "forwarding_engine", "forward_message", f"Video forwarded to target {target_id} with summary and Telegraph link")
-                        except Exception as copy_err:
-                            # Fallback: send just the summary text
-                            log_detailed("warning", "forwarding_engine", "forward_message", f"Failed to copy video: {str(copy_err)}, sending summary as text")
-                            await self.client.send_message(
-                                chat_id=target_identifier,
-                                text=caption,
-                                parse_mode=ParseMode.HTML
-                            )
-
-                await db.increment_task_counter(task_id)
-                await db.update_task_stats(task_id, "forwarded")
-                await task_logger.log_success(f"Video with summary forwarded to {len(target_channels)} targets")
-                
-                # Save video to archive
-                try:
-                    await self._save_to_archive(
-                        message=message,
-                        task_id=task_id,
-                        task_config=task_config,
-                        original_text=transcript if transcript else (message.caption or ""),
-                        processed_text=video_summary,
-                        target_channels=target_channels,
-                        extracted_data=extracted_data,
-                        serial_number=serial_number
-                    )
-                except Exception as archive_err:
-                    log_detailed("warning", "forwarding_engine", "forward_message",
-                                f"Failed to save video to archive: {str(archive_err)}")
-                return
 
             # Check for audio processing (message contains audio, voice, or audio document)
             # Always try to process audio if present, regardless of flag setting

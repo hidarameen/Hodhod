@@ -241,6 +241,20 @@ class VideoProcessor:
                 await task_logger.log_info(f"Using video rule: {video_rule.get('name', 'unnamed')}")
             
             await task_logger.log_info(f"Summarizing transcript with AI Pipeline ({provider_name}/{model_name})...")
+            
+            # ✅ NEW: Summarize caption here if it exists, to avoid conflict with forwarding_engine
+            current_caption_summary = caption_summary
+            if not current_caption_summary and caption_text:
+                await task_logger.log_info("Summarizing caption inside video processor...")
+                caption_pipeline_result = await ai_pipeline.process(
+                    text=caption_text,
+                    task_id=task_id,
+                    provider=provider_name,
+                    model=model_name,
+                    serial_number=str(serial_number) if serial_number else None
+                )
+                current_caption_summary = caption_pipeline_result.final_text if caption_pipeline_result else None
+
             # Apply BOTH video rules AND summarize rules
             video_rules = [r for r in rules if r["type"] == "video" and r["is_active"]]
             summarize_rules = [r for r in rules if r["type"] == "summarize" and r["is_active"]]
@@ -264,10 +278,10 @@ class VideoProcessor:
             
             # ✅ NEW: Merge caption summary with video summary
             combined_summary = video_summary
-            if caption_summary:
+            if current_caption_summary:
                 # Use a cleaner merge that looks better in templates
-                combined_summary = f"{caption_summary}\n\n{video_summary}"
-                await task_logger.log_info(f"✅ Merged summaries: caption {len(caption_summary)} + video {len(video_summary)} = total {len(combined_summary)} chars")
+                combined_summary = f"{current_caption_summary}\n\n{video_summary}"
+                await task_logger.log_info(f"✅ Merged summaries: caption {len(current_caption_summary)} + video {len(video_summary)} = total {len(combined_summary)} chars")
             
             await task_logger.log_info("Creating Telegraph page for original transcript...")
             telegraph_url = None
@@ -296,7 +310,11 @@ class VideoProcessor:
             engine = ForwardingEngine(client)
             
             # Build extracted_data for template and archive
-            final_extracted_data = pipeline_result.extracted_fields or {}
+            # Ensure we have a valid extracted_data dict
+            final_extracted_data = {}
+            if pipeline_result and hasattr(pipeline_result, 'extracted_fields') and pipeline_result.extracted_fields:
+                final_extracted_data = pipeline_result.extracted_fields.copy()
+            
             if serial_number:
                 final_extracted_data["serial_number"] = serial_number
             if telegraph_url:
@@ -333,6 +351,7 @@ class VideoProcessor:
             except Exception as archive_err:
                 await task_logger.log_error(f"Error archiving video: {str(archive_err)}")
             
+            await task_logger.log_success(f"Video with summary forwarded to {len(target_channels)} targets")
             return (combined_summary, transcript, telegraph_url)
             
         except Exception as e:

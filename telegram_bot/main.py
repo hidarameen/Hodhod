@@ -532,6 +532,8 @@ async def handle_video_job(job: dict) -> dict:
         caption_summary = payload.get('caption_summary')
         caption_text = payload.get('caption_text')
         serial_number = payload.get('serial_number')
+        if serial_number is not None:
+            serial_number = str(serial_number)
         
         result = await video_processor.process_video(
             client=app,
