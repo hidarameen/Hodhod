@@ -108,8 +108,6 @@ class LinkProcessor:
                 "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best",
                 "bestvideo+bestaudio/best",
                 "best[ext=mp4]/best",
-                "bestvideo[ext=mp4]",  # Video only (high quality)
-                "bestaudio[ext=m4a]/bestaudio",  # Audio only
                 "best",  # Any available format
             ],
             "high": [
@@ -117,8 +115,6 @@ class LinkProcessor:
                 "bestvideo[ext=mp4]+bestaudio/best",
                 "bestvideo+bestaudio/best",
                 "best[ext=mp4]/best",
-                "bestvideo[ext=mp4]",  # Video only
-                "bestaudio[ext=m4a]/bestaudio",  # Audio only
                 "best",  # Any available format
             ],
             "medium": [
@@ -126,8 +122,6 @@ class LinkProcessor:
                 "bestvideo[height<=720]+bestaudio/best",
                 "bestvideo[ext=mp4]+bestaudio/best",
                 "best[ext=mp4]/best",
-                "bestvideo[height<=720][ext=mp4]",  # Video only
-                "bestaudio[ext=m4a]/bestaudio",  # Audio only
                 "best",  # Any available format
             ],
             "low": [
@@ -135,8 +129,6 @@ class LinkProcessor:
                 "bestvideo[height<=480]+bestaudio/best",
                 "bestvideo[ext=mp4]+bestaudio/best",
                 "best[ext=mp4]/best",
-                "bestvideo[height<=480][ext=mp4]",  # Video only
-                "bestaudio[ext=m4a]/bestaudio",  # Audio only
                 "best",  # Any available format
             ],
         }
