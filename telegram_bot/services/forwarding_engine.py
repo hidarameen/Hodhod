@@ -539,25 +539,25 @@ class ForwardingEngine:
                         if model_info:
                             model_name = model_info.get("name") or model_info.get("model_name")
                     
-                    # ✅ CRITICAL FIX: Extract fields from TRANSCRIPT (full text), not just summary
-                    # This ensures التصنيف, نوع_الخبر, المحافظة, المصدر are extracted correctly
-                    if provider_name and model_name:
-                        # Use transcript for field extraction (has more context)
-                        extraction_text = video_transcript if video_transcript else video_summary
-                        text_source = "transcript" if video_transcript else "summary"
-                        log_detailed("debug", "forwarding_engine", "forward_message", 
-                                    f"Using {text_source} for field extraction ({len(extraction_text)} chars)")
-                        
-                        extracted_data = await self._extract_fields_with_ai(
-                            extraction_text,  # ✅ Use full transcript for better field extraction
-                            task_id,
-                            provider_name,
-                            model_name,
-                            fields_to_extract,
-                            serial_number=serial_number,
-                            processed_text=video_summary,  # Keep summary for التلخيص field
-                            original_text=extraction_text  # Use extraction text as original
-                        )
+                        # ✅ CRITICAL FIX: Extract fields from COMBINED text (caption + transcript), not just summary
+                        # This ensures التصنيف, نوع_الخبر, المحافظة, المصدر are extracted correctly
+                        if provider_name and model_name:
+                            # Use combined text for field extraction (has more context)
+                            extraction_text = f"الكابشن الأصلي:\n{caption_text}\n\nنص الفيديو:\n{video_transcript}" if caption_text else (video_transcript if video_transcript else video_summary)
+                            text_source = "combined caption+transcript" if caption_text and video_transcript else ("transcript" if video_transcript else "summary")
+                            log_detailed("debug", "forwarding_engine", "forward_message", 
+                                        f"Using {text_source} for field extraction ({len(extraction_text)} chars)")
+                            
+                            extracted_data = await self._extract_fields_with_ai(
+                                extraction_text,  # ✅ Use combined original text for better field extraction
+                                task_id,
+                                provider_name,
+                                model_name,
+                                fields_to_extract,
+                                serial_number=serial_number,
+                                processed_text=video_summary,  # Keep summary for التلخيص field
+                                original_text=extraction_text  # Use extraction text as original
+                            )
                         # ✅ CRITICAL FIX: Merge with template_data (which contains merged extracted fields)
                         template_data.update(extracted_data)
                         log_detailed("info", "forwarding_engine", "forward_message", 
@@ -607,32 +607,21 @@ class ForwardingEngine:
                     caption = f'📹 <b>ملخص الفيديو:</b>\n\n{video_summary}'
                     log_detailed("info", "forwarding_engine", "forward_message", "No publishing template, using default format")
 
-                # ✅ CRITICAL FIX: Add Telegraph link BEFORE truncating to ensure it doesn't get cut off
-                telegraph_link = ""
+                # ✅ CRITICAL FIX: Add Telegraph link properly
                 if telegraph_url:
-                    telegraph_link = f'\n\n📰 <a href="{telegraph_url}">اقرأ كامل الخبر</a>'
-                    log_detailed("info", "forwarding_engine", "forward_message", f"✅ Telegraph link prepared: {telegraph_url}")
-
-                # Calculate the space we need for the Telegraph link
-                max_caption_length = 1024
-                reserved_for_link = len(telegraph_link) + 10  # Extra buffer
-                max_content_length = max_caption_length - reserved_for_link if telegraph_link else max_caption_length
-                
-                # Truncate caption if too long (Telegram limit is 1024 chars for caption)
-                if len(caption) > max_content_length:
-                    caption = caption[:max(max_content_length - 3, 100)] + "..."
-                    log_detailed("info", "forwarding_engine", "forward_message", f"Truncated caption to {len(caption)} chars to make room for Telegraph link")
-
-                # Now add the Telegraph link if it wasn't truncated away
-                if telegraph_link and len(caption) + len(telegraph_link) <= max_caption_length:
+                    telegraph_link = f'\n\n📄 <a href="{telegraph_url}">اقرأ الخبر كامل</a>'
+                    
+                    # Calculate total length
+                    max_caption_length = 1024
+                    current_length = len(caption)
+                    link_length = len(telegraph_link)
+                    
+                    if current_length + link_length > max_caption_length:
+                        # Truncate caption to make room for link
+                        caption = caption[:max_caption_length - link_length - 5] + "..."
+                    
                     caption += telegraph_link
-                    log_detailed("info", "forwarding_engine", "forward_message", f"✅ Added Telegraph link to video caption")
-                elif telegraph_link:
-                    # Link is too long, but try to add a short version
-                    short_link = f'\n\n<a href="{telegraph_url}">اقرأ الخبر</a>'
-                    if len(caption) + len(short_link) <= max_caption_length:
-                        caption += short_link
-                        log_detailed("info", "forwarding_engine", "forward_message", f"✅ Added short Telegraph link version")
+                    log_detailed("info", "forwarding_engine", "forward_message", f"✅ Added Telegraph link to video caption: {telegraph_url}")
 
                 for target_id in target_channels:
                     target_channel = await db.get_channel(target_id)
