@@ -334,11 +334,13 @@ class VideoProcessor:
                 await engine._save_to_archive(
                     message=message,
                     task_id=task_id,
-                    processed_text=combined_summary,
-                    extracted_data=final_extracted_data,
+                    task_config=task_config,
                     original_text=merged_content,  # Pass the combined text as original
+                    processed_text=combined_summary,
                     target_channels=target_channels, # Pass the targets
-                    task_config=task_config
+                    extracted_data=final_extracted_data,
+                    telegraph_url=telegraph_url,
+                    serial_number=int(serial_number) if serial_number else None
                 )
             except Exception as archive_err:
                 await task_logger.log_error(f"Error archiving video: {str(archive_err)}")
