@@ -289,6 +289,49 @@ class VideoProcessor:
             await task_logger.log_success(f"Video processing completed. Summary: {summary_len} chars, Telegraph: {telegraph_url or 'N/A'}")
             await db.update_task_stats(task_id, "video")
             
+            # ✅ NEW: Forward the video to targets AFTER processing
+            from services.forwarding_engine import ForwardingEngine
+            # Create a lightweight engine instance
+            engine = ForwardingEngine(client)
+            
+            # Build extracted_data for template and archive
+            final_extracted_data = pipeline_result.extracted_fields or {}
+            if serial_number:
+                final_extracted_data["serial_number"] = serial_number
+            if telegraph_url:
+                final_extracted_data["telegraph_url"] = telegraph_url
+            if caption_text:
+                # Store original caption for extraction in template
+                final_extracted_data["caption"] = caption_text
+            
+            # Get target channels
+            target_channels = task_config.get("target_channels", [])
+            for target_id in target_channels:
+                try:
+                    await engine._forward_to_target(
+                        message=message,
+                        target_id=target_id,
+                        processed_text=combined_summary,
+                        task_logger=task_logger,
+                        task_id=task_id,
+                        extracted_data=final_extracted_data
+                    )
+                except Exception as forward_err:
+                    await task_logger.log_error(f"Error forwarding video to {target_id}: {str(forward_err)}")
+            
+            # Archive the message
+            try:
+                # Use engine._save_to_archive which takes correct parameters
+                await engine._save_to_archive(
+                    message=message,
+                    task_id=task_id,
+                    processed_text=combined_summary,
+                    extracted_data=final_extracted_data,
+                    task_config=task_config
+                )
+            except Exception as archive_err:
+                await task_logger.log_error(f"Error archiving video: {str(archive_err)}")
+            
             return (combined_summary, transcript, telegraph_url)
             
         except Exception as e:

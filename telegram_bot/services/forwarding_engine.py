@@ -487,17 +487,17 @@ class ForwardingEngine:
                         task_id=task_id,
                         task_config=task_config,
                         caption_summary=caption_summary,
-                        caption_text=caption_text
+                        caption_text=caption_text,
+                        serial_number=serial_number
                     )
                     
                     if video_result:
-                        summary, transcript, telegraph_url = video_result
-                        video_transcript = transcript
-                        video_summary = summary
-                        video_processed = True
-                        log_detailed("info", "forwarding_engine", "forward_message", f"✅ Video processing BLOCKED correctly: transcript={len(transcript) if transcript else 0} chars")
+                        # ✅ NEW: Video processor now handles forwarding and archiving internally
+                        # We return here to prevent double forwarding
+                        log_detailed("info", "forwarding_engine", "forward_message", "✅ Video processing and forwarding handled by video_processor")
+                        return
                     else:
-                        log_detailed("warning", "forwarding_engine", "forward_message", "Video processing returned no result")
+                        log_detailed("warning", "forwarding_engine", "forward_message", "Video processing returned no result, falling back to regular forward")
                         video_processed = False
                 except Exception as e:
                     log_detailed("error", "forwarding_engine", "forward_message", f"Video processing error: {str(e)}")
