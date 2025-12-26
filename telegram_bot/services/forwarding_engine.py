@@ -679,7 +679,7 @@ class ForwardingEngine:
 
                 # Add Telegraph link after template
                 if audio_telegraph_url:
-                    caption += f'\n\n📰 <a href="{audio_telegraph_url}">اقرأ كامل الخبر</a>'
+                    caption += f'\n\n📄 <a href="{audio_telegraph_url}">اقرأ النص الأصلي الكامل</a>'
                     log_detailed("info", "forwarding_engine", "forward_message", f"✅ Added Telegraph link to audio caption: {audio_telegraph_url}")
 
                 if len(caption) > 1024:
@@ -780,7 +780,7 @@ class ForwardingEngine:
                 # Check if we have a transcript/telegraph from AI processing (unlikely but possible)
                 telegraph_url = extracted_data.get("telegraph_url")
                 if telegraph_url and final_text:
-                    final_text = f"{final_text}\n\n📰 <a href=\"{telegraph_url}\">اقرأ كامل الخبر</a>"
+                    final_text = f"{final_text}\n\n📄 <a href=\"{telegraph_url}\">اقرأ النص الأصلي الكامل</a>"
                     log_detailed("info", "forwarding_engine", "forward_message", "✅ Added Telegraph link to final text")
 
             # Forward to all targets in parallel
@@ -1244,7 +1244,7 @@ class ForwardingEngine:
                 )
                 if telegraph_url:
                     # ✅ CRITICAL FIX: Use combined_caption (with template) NOT processed_caption (summary only)
-                    final_caption = f'{combined_caption}\n\n📰 <a href="{telegraph_url}">اقرأ كامل الخبر</a>'
+                    final_caption = f'{combined_caption}\n\n📄 <a href="{telegraph_url}">اقرأ النص الأصلي الكامل</a>'
                     log_detailed("info", "forwarding_engine", "_forward_media_group", "✅ Added Telegraph link to album caption (with template applied)", {
                         "caption_with_template": len(combined_caption),
                         "final_caption": len(final_caption)
@@ -2660,7 +2660,7 @@ class ForwardingEngine:
                     log_detailed("info", "forwarding_engine", "_forward_to_target",
                                 "🔗 [TELEGRAPH STAGE 2] Telegraph page created, adding link")
                     final_text_before_link = final_text
-                    final_text = f'{final_text}\n\n📰 <a href="{telegraph_url}">اقرأ كامل الخبر</a>'
+                    final_text = f'{final_text}\n\n📄 <a href="{telegraph_url}">اقرأ النص الأصلي الكامل</a>'
                     log_detailed("info", "forwarding_engine", "_forward_to_target",
                                 "🔗 [TELEGRAPH STAGE 3] Link added to text", {
                                     "url": telegraph_url,
