@@ -175,7 +175,7 @@ class LinkProcessor:
                 error_logger.log_warning(f"Merge failed: {stderr_str}")
                 return False
         except Exception as e:
-            error_logger.log_error(f"Merge error: {str(e)}")
+            error_logger.log_error(f"Merge error: {str(e)}", error=e)
             return False
 
     async def get_video_info(self, url: str) -> Dict[str, Any]:
