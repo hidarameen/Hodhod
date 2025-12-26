@@ -299,6 +299,11 @@ class VideoProcessor:
             if pipeline_result and hasattr(pipeline_result, 'extracted_fields') and pipeline_result.extracted_fields:
                 final_extracted_data = pipeline_result.extracted_fields.copy()
             
+            # ✅ Sync fields from pipeline result to final_extracted_data
+            if pipeline_result and hasattr(pipeline_result, 'extracted_fields'):
+                # Update with all extracted fields
+                final_extracted_data.update(pipeline_result.extracted_fields)
+            
             # ✅ Ensure common fields are present for the template
             if "التلخيص" not in final_extracted_data and combined_summary:
                 final_extracted_data["التلخيص"] = combined_summary

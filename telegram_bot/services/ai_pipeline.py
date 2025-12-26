@@ -866,18 +866,35 @@ class AIPipeline:
                 # Extract summary
                 summary = parsed.get('التلخيص', '') or parsed.get('summary', '') or ''
                 
-                # Extract other fields
-                for field in fields_to_extract:
-                    field_name = field.get('field_name', '')
-                    if field_name and field_name in parsed:
-                        value = parsed[field_name]
-                        if value and str(value).strip():
-                            extracted[field_name] = str(value).strip()
-                
+                # Extract other fields with normalization
+                for k, v in parsed.items():
+                    if k in ['التلخيص', 'summary']: continue
+                    
+                    val = str(v).strip() if v is not None else ""
+                    # Store original key
+                    extracted[k] = val
+                    
+                    # Store normalized key (remove underscores and handle Arabic variants)
+                    norm_k = k.replace('_', '').replace(' ', '').strip()
+                    extracted[norm_k] = val
+                    
+                    # Handle specific Arabic field mappings
+                    if 'محافظه' in norm_k or 'محافظة' in norm_k or 'governorate' in norm_k:
+                        extracted['المحافظة'] = val
+                        extracted['المحافظه'] = val
+                        extracted['governorate'] = val
+                        
+                    if 'مصدر' in norm_k or 'source' in norm_k:
+                        extracted['المصدر'] = val
+                        extracted['source'] = val
+                        
+                    if 'تصنيف' in norm_k or 'classification' in norm_k or 'category' in norm_k:
+                        extracted['التصنيف'] = val
+                        extracted['category'] = val
+
                 error_logger.log_info(f"[Pipeline] ✅ Parsed combined response | Summary: {len(summary)} chars | Fields: {len(extracted)}")
         except json.JSONDecodeError as e:
             error_logger.log_warning(f"[Pipeline] ⚠️ Failed to parse JSON from response: {str(e)}")
-            # Use full response as summary if JSON parsing fails
             summary = response
         except Exception as e:
             error_logger.log_warning(f"[Pipeline] ⚠️ Error parsing combined response: {str(e)}")
