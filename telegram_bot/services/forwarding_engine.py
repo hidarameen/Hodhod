@@ -460,7 +460,11 @@ class ForwardingEngine:
             video_summary = None
             telegraph_url = None
             video_transcript = None  # ✅ FIX: Store transcript for field extraction
-            if video_processing and message.video:
+            
+            # Check if video processing is actually enabled and it's a video
+            video_proc_enabled = task_config.get("videoProcessingEnabled") or task_config.get("video_processing_enabled")
+            
+            if video_proc_enabled and message.video:
                 log_detailed("info", "forwarding_engine", "forward_message", "Processing video message...")
                 try:
                     # 1. First, wait for the full video processing (transcript + AI summary)

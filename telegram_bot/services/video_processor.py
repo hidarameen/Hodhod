@@ -122,7 +122,8 @@ class VideoProcessor:
         task_id: int,
         task_config: Dict[str, Any],
         caption_summary: Optional[str] = None,
-        caption_text: Optional[str] = None
+        caption_text: Optional[str] = None,
+        serial_number: Optional[str] = None
     ) -> Optional[Tuple[str, str, Optional[str]]]:
         """
         Process video: download -> extract audio -> transcribe -> summarize -> create Telegraph page
