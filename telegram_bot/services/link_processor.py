@@ -408,18 +408,31 @@ class LinkProcessor:
     
     @handle_errors("link_processor", "extract_audio")
     async def extract_audio(self, video_path: str) -> Optional[str]:
-        """Extract audio from video file"""
+        """Extract audio from video file. If file is audio-only, convert directly to MP3"""
         try:
             import subprocess
             
             audio_path = video_path.rsplit(".", 1)[0] + ".mp3"
             
-            # Use subprocess directly to ensure we can see errors and it works reliably
-            cmd = [
-                "ffmpeg", "-y", "-i", video_path,
-                "-vn", "-acodec", "libmp3lame", "-ar", "16000", "-ac", "1",
-                audio_path
-            ]
+            # First, check if the file is audio-only or video with audio
+            verification = await self._verify_video_has_content(video_path)
+            is_audio_only = not verification.get('has_video')
+            
+            if is_audio_only:
+                # File is audio-only, just convert to MP3 without -vn flag
+                error_logger.log_info(f"File is audio-only, converting directly to MP3: {video_path}")
+                cmd = [
+                    "ffmpeg", "-y", "-i", video_path,
+                    "-acodec", "libmp3lame", "-ar", "16000", "-ac", "1",
+                    audio_path
+                ]
+            else:
+                # File has video, extract audio only with -vn flag
+                cmd = [
+                    "ffmpeg", "-y", "-i", video_path,
+                    "-vn", "-acodec", "libmp3lame", "-ar", "16000", "-ac", "1",
+                    audio_path
+                ]
             
             process = await asyncio.create_subprocess_exec(
                 *cmd,
@@ -430,7 +443,7 @@ class LinkProcessor:
             stdout, stderr = await process.communicate()
             
             if os.path.exists(audio_path) and os.path.getsize(audio_path) > 1000:
-                error_logger.log_info(f"Audio extracted: {audio_path}")
+                error_logger.log_info(f"Audio extracted/converted: {audio_path} (audio_only={is_audio_only})")
                 return audio_path
             
             stderr_str = stderr.decode('utf-8', errors='ignore') if stderr else ""
