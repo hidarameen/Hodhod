@@ -469,9 +469,14 @@ class ForwardingEngine:
                     caption_summary = None
                     if ai_enabled and summarization_enabled and caption_text:
                         log_detailed("info", "forwarding_engine", "forward_message", "Summarizing caption before video processing...")
-                        processed_res = await self._process_message(caption_text, task_id, task_config, serial_number)
-                        if processed_res:
-                            caption_summary, _ = processed_res
+                        from telegram_bot.services.ai_pipeline import AIPipeline
+                        pipeline = AIPipeline(db)
+                        caption_summary = await pipeline.process(
+                            text=caption_text,
+                            task_id=task_id,
+                            task_config=task_config,
+                            serial_number=serial_number
+                        )
 
                     video_result = await video_processor.process_video(
                         client=self.client,
