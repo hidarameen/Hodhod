@@ -61,6 +61,10 @@ export const aiModels = pgTable("ai_models", {
   isActive: boolean("is_active").notNull().default(true),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => {
+  return {
+    providerModelUnique: sql`UNIQUE(${table.providerId}, ${table.modelName})`,
+  };
 });
 
 // Forwarding Tasks

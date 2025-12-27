@@ -1,5 +1,6 @@
 import { database } from "./storage";
 import * as schema from "@shared/schema";
+import { sql } from "drizzle-orm";
 
 async function seed() {
   console.log("🌱 Seeding database...");
@@ -10,21 +11,25 @@ async function seed() {
       {
         name: "openai",
         isActive: true,
+        displayName: "OpenAI",
         config: { baseUrl: "https://api.openai.com/v1" },
       },
       {
         name: "groq",
         isActive: true,
+        displayName: "Groq",
         config: { baseUrl: "https://api.groq.com/openai/v1" },
       },
       {
         name: "claude",
         isActive: true,
+        displayName: "Anthropic Claude",
         config: { baseUrl: "https://api.anthropic.com/v1" },
       },
       {
         name: "huggingface",
         isActive: true,
+        displayName: "Hugging Face",
         config: { baseUrl: "https://api-inference.huggingface.co" },
       },
     ];
@@ -35,7 +40,7 @@ async function seed() {
       .values(providers)
       .onConflictDoUpdate({
         target: schema.aiProviders.name,
-        set: { isActive: true },
+        set: { isActive: true, displayName: sql`EXCLUDED.display_name`, config: sql`EXCLUDED.config` },
       })
       .returning();
 
@@ -512,7 +517,10 @@ async function seed() {
     const insertedModels = await database
       .insert(schema.aiModels)
       .values(models)
-      .onConflictDoNothing()
+      .onConflictDoUpdate({
+        target: [schema.aiModels.providerId, schema.aiModels.modelName],
+        set: { isActive: true, displayName: sql`EXCLUDED.display_name` },
+      })
       .returning();
 
     console.log(`✅ Added ${insertedModels.length} AI models`);

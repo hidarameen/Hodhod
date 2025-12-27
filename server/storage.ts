@@ -155,8 +155,8 @@ async function seedProviders(): Promise<void> {
     
     for (const provider of providers) {
       await queryClient`
-        INSERT INTO ai_providers (name, is_active, config, created_at)
-        VALUES (${provider.name}, ${provider.isActive}, ${provider.config}, now())
+        INSERT INTO ai_providers (name, is_active, config)
+        VALUES (${provider.name}, ${provider.isActive}, ${provider.config})
         ON CONFLICT (name) DO NOTHING
       `;
     }
@@ -249,8 +249,8 @@ async function seedModels(): Promise<void> {
     for (const model of models) {
       if (model.providerId) {
         await queryClient`
-          INSERT INTO ai_models (provider_id, model_name, display_name, is_active, created_at)
-          VALUES (${model.providerId}, ${model.modelName}, ${model.displayName}, ${model.isActive}, now())
+          INSERT INTO ai_models (provider_id, model_name, display_name, is_active)
+          VALUES (${model.providerId}, ${model.modelName}, ${model.displayName}, ${model.isActive})
           ON CONFLICT DO NOTHING
         `;
       }
