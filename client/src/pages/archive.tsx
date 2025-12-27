@@ -531,7 +531,6 @@ export default function ArchivePage() {
         province: filters.province,
         newsType: filters.newsType,
         specialist: filters.specialist,
-        sourceChannelTitle: filters.sourceChannelTitle,
         search: filters.search,
         sortBy: 'serialNumber',
         sortOrder: 'asc',

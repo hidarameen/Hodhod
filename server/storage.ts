@@ -326,6 +326,8 @@ export interface IStorage {
   getAiModels(): Promise<AiModel[]>;
   getAiModelsByProvider(providerId: number): Promise<AiModel[]>;
   createAiModel(model: InsertAiModel): Promise<AiModel>;
+  updateModel(id: number, updates: any): Promise<AiModel | undefined>;
+  getModelUsageStats(modelId: number): Promise<any>;
 
   // AI Rule Management
   getTaskRules(taskId: number): Promise<AiRule[]>;
@@ -350,6 +352,18 @@ export interface IStorage {
   setBotConfigValue(key: string, value: string, description?: string): Promise<void>;
   deleteBotConfig(key: string): Promise<void>;
 
+  // Message Archive
+  clearArchive(taskId?: number): Promise<void>;
+  getArchiveMessages(filters: any): Promise<any>;
+  getArchiveStats(taskId?: number): Promise<any>;
+  getArchiveFilterOptions(taskId?: number): Promise<any>;
+  getArchiveMessage(id: number): Promise<any>;
+  updateArchiveMessage(id: number, data: any): Promise<any>;
+  deleteArchiveMessage(id: number): Promise<void>;
+  toggleArchivePin(id: number): Promise<any>;
+  toggleArchiveFlag(id: number, reason?: string): Promise<any>;
+  getCurrentSerialNumber(taskId: number): Promise<number>;
+
   // Userbot Sessions
   getActiveUserbotSession(): Promise<UserbotSession | undefined>;
   createUserbotSession(data: InsertUserbotSession): Promise<UserbotSession>;
@@ -364,9 +378,6 @@ export interface IStorage {
 
   // Dashboard Stats
   getDashboardStats(): Promise<any>;
-
-  // Message Archive
-  clearArchive(taskId?: number): Promise<void>;
 
   // Advanced AI Rules - Entity Replacements
   getEntityReplacements(taskId: number): Promise<any[]>;
@@ -388,6 +399,27 @@ export interface IStorage {
   // Advanced AI Rules - Processing Config
   getProcessingConfig(taskId?: number): Promise<any>;
   saveProcessingConfig(data: any): Promise<number>;
+
+  // AI Publishing Templates
+  getPublishingTemplates(taskId: number): Promise<any[]>;
+  getPublishingTemplate(id: number): Promise<any>;
+  getDefaultPublishingTemplate(taskId: number): Promise<any>;
+  createPublishingTemplate(data: any): Promise<any>;
+  updatePublishingTemplate(id: number, data: any): Promise<void>;
+  deletePublishingTemplate(id: number): Promise<void>;
+  setDefaultPublishingTemplate(taskId: number, templateId: number): Promise<void>;
+
+  // Template Custom Fields
+  getTemplateCustomFields(templateId: number): Promise<any[]>;
+  createTemplateCustomField(data: any): Promise<any>;
+  updateTemplateCustomField(id: number, data: any): Promise<void>;
+  deleteTemplateCustomField(id: number): Promise<void>;
+  reorderTemplateCustomFields(templateId: number, fieldOrders: { id: number; order: number }[]): Promise<void>;
+
+  // AI Usage Tracking
+  getUsageStats(filters: any): Promise<any[]>;
+  getUsageStatsSummary(filters: any): Promise<any>;
+  recordUsage(data: any): Promise<any>;
 }
 
 export class DbStorage implements IStorage {
@@ -415,21 +447,6 @@ export class DbStorage implements IStorage {
   async getAdmin(telegramId: string): Promise<Admin | undefined> {
     const result = await database.select().from(schema.admins).where(eq(schema.admins.telegramId, telegramId)).limit(1);
     return result[0];
-  }
-
-  async clearArchive(taskId?: number): Promise<void> {
-    if (taskId) {
-      await database.delete(schema.messageArchive).where(eq(schema.messageArchive.taskId, taskId));
-      await database
-        .update(schema.archiveSerialCounter)
-        .set({ lastSerial: 0, updatedAt: new Date() })
-        .where(eq(schema.archiveSerialCounter.taskId, taskId));
-    } else {
-      await database.delete(schema.messageArchive);
-      await database
-        .update(schema.archiveSerialCounter)
-        .set({ lastSerial: 0, updatedAt: new Date() });
-    }
   }
 
   async createAdmin(insertAdmin: InsertAdmin): Promise<Admin> {
@@ -567,167 +584,38 @@ export class DbStorage implements IStorage {
     return result[0];
   }
 
-  async getAiModel(id: number): Promise<AiModel | undefined> {
-    const result = await database.select().from(schema.aiModels).where(eq(schema.aiModels.id, id)).limit(1);
-    return result[0];
-  }
-
-  async updateModel(id: number, data: Partial<InsertAiModel>): Promise<AiModel | undefined> {
+  async updateModel(id: number, updates: any): Promise<AiModel | undefined> {
     const result = await database
       .update(schema.aiModels)
-      .set(data)
+      .set({ ...updates, updatedAt: new Date() })
       .where(eq(schema.aiModels.id, id))
       .returning();
     return result[0];
   }
 
-  async getModelsByProvider(providerId: number): Promise<AiModel[]> {
-    return await database
-      .select()
-      .from(schema.aiModels)
-      .where(eq(schema.aiModels.providerId, providerId));
-  }
-
-  // AI Usage Statistics
-  async getUsageStats(filters: {
-    providerId?: number;
-    modelId?: number;
-    taskId?: number;
-    dateFrom?: Date;
-    dateTo?: Date;
-  }): Promise<AiUsageStats[]> {
-    const conditions = [];
-    
-    if (filters.providerId) {
-      conditions.push(eq(schema.aiUsageStats.providerId, filters.providerId));
-    }
-    if (filters.modelId) {
-      conditions.push(eq(schema.aiUsageStats.modelId, filters.modelId));
-    }
-    if (filters.taskId) {
-      conditions.push(eq(schema.aiUsageStats.taskId, filters.taskId));
-    }
-    if (filters.dateFrom) {
-      conditions.push(sql`${schema.aiUsageStats.usageDate} >= ${filters.dateFrom}`);
-    }
-    if (filters.dateTo) {
-      conditions.push(sql`${schema.aiUsageStats.usageDate} <= ${filters.dateTo}`);
-    }
-    
-    if (conditions.length === 0) {
-      return await database
-        .select()
-        .from(schema.aiUsageStats)
-        .orderBy(desc(schema.aiUsageStats.usageDate))
-        .limit(100);
-    }
-    
-    return await database
-      .select()
-      .from(schema.aiUsageStats)
-      .where(and(...conditions))
-      .orderBy(desc(schema.aiUsageStats.usageDate))
-      .limit(100);
-  }
-
-  async getUsageStatsSummary(filters: {
-    providerId?: number;
-    dateFrom?: Date;
-    dateTo?: Date;
-  }): Promise<{
-    totalRequests: number;
-    totalTokensInput: number;
-    totalTokensOutput: number;
-    totalCost: string;
-    byModel: Array<{ modelName: string; requests: number; tokens: number }>;
-  }> {
-    const conditions = [];
-    
-    if (filters.providerId) {
-      conditions.push(eq(schema.aiUsageStats.providerId, filters.providerId));
-    }
-    if (filters.dateFrom) {
-      conditions.push(sql`${schema.aiUsageStats.usageDate} >= ${filters.dateFrom}`);
-    }
-    if (filters.dateTo) {
-      conditions.push(sql`${schema.aiUsageStats.usageDate} <= ${filters.dateTo}`);
-    }
-    
-    let stats: AiUsageStats[];
-    if (conditions.length === 0) {
-      stats = await database.select().from(schema.aiUsageStats);
-    } else {
-      stats = await database
-        .select()
-        .from(schema.aiUsageStats)
-        .where(and(...conditions));
-    }
-    
-    let totalRequests = 0;
-    let totalTokensInput = 0;
-    let totalTokensOutput = 0;
-    let totalCost = 0;
-    const modelStats: Record<string, { requests: number; tokens: number }> = {};
-    
-    for (const stat of stats) {
-      totalRequests += stat.requestCount;
-      totalTokensInput += stat.totalTokensInput;
-      totalTokensOutput += stat.totalTokensOutput;
-      totalCost += parseFloat(stat.totalCost || '0');
-      
-      if (!modelStats[stat.modelName]) {
-        modelStats[stat.modelName] = { requests: 0, tokens: 0 };
-      }
-      modelStats[stat.modelName].requests += stat.requestCount;
-      modelStats[stat.modelName].tokens += stat.totalTokensInput + stat.totalTokensOutput;
-    }
-    
-    const byModel = Object.entries(modelStats).map(([modelName, data]) => ({
-      modelName,
-      requests: data.requests,
-      tokens: data.tokens,
-    }));
-    
-    return {
-      totalRequests,
-      totalTokensInput,
-      totalTokensOutput,
-      totalCost: totalCost.toFixed(6),
-      byModel,
-    };
-  }
-
-  async getModelUsageStats(modelId: number): Promise<AiUsageStats[]> {
-    return await database
-      .select()
-      .from(schema.aiUsageStats)
-      .where(eq(schema.aiUsageStats.modelId, modelId))
-      .orderBy(desc(schema.aiUsageStats.usageDate))
-      .limit(30);
-  }
-
-  async recordUsage(data: InsertAiUsageStats): Promise<AiUsageStats> {
+  async getModelUsageStats(modelId: number): Promise<any> {
     const result = await database
-      .insert(schema.aiUsageStats)
-      .values(data)
-      .returning();
+      .select({
+        totalRequests: sql`SUM(request_count)`,
+        totalTokens: sql`SUM(total_tokens_input + total_tokens_output)`,
+        totalErrors: sql`SUM(error_count)`,
+        avgLatency: sql`AVG(avg_latency)`
+      })
+      .from(schema.aiUsageStats)
+      .where(eq(schema.aiUsageStats.modelId, modelId));
     return result[0];
   }
 
   // AI Rule Management
   async getTaskRules(taskId: number): Promise<AiRule[]> {
-    return await database
-      .select()
-      .from(schema.aiRules)
-      .where(eq(schema.aiRules.taskId, taskId))
-      .orderBy(desc(schema.aiRules.priority));
+    return await database.select().from(schema.aiRules).where(eq(schema.aiRules.taskId, taskId)).orderBy(desc(schema.aiRules.priority));
   }
 
   async getTaskRulesByType(taskId: number, type: string): Promise<AiRule[]> {
     return await database
       .select()
       .from(schema.aiRules)
-      .where(and(eq(schema.aiRules.taskId, taskId), eq(schema.aiRules.type, type)))
+      .where(and(eq(schema.aiRules.taskId, taskId), eq(schema.aiRules.type, type), eq(schema.aiRules.isActive, true)))
       .orderBy(desc(schema.aiRules.priority));
   }
 
@@ -737,24 +625,22 @@ export class DbStorage implements IStorage {
   }
 
   async updateRule(id: number, updates: Partial<InsertAiRule>): Promise<AiRule | undefined> {
-    // Filter out fields that should not be updated (createdAt, id, taskId)
-    const { createdAt, id: _, taskId, ...filteredUpdates } = updates as any;
-    
     const result = await database
       .update(schema.aiRules)
-      .set(filteredUpdates)
+      .set(updates)
       .where(eq(schema.aiRules.id, id))
       .returning();
     return result[0];
   }
 
   async toggleRule(id: number): Promise<AiRule | undefined> {
-    const rule = await database.select().from(schema.aiRules).where(eq(schema.aiRules.id, id)).limit(1);
-    if (!rule[0]) return undefined;
+    const rules = await database.select().from(schema.aiRules).where(eq(schema.aiRules.id, id)).limit(1);
+    const rule = rules[0];
+    if (!rule) return undefined;
     
     const result = await database
       .update(schema.aiRules)
-      .set({ isActive: !rule[0].isActive })
+      .set({ isActive: !rule.isActive })
       .where(eq(schema.aiRules.id, id))
       .returning();
     return result[0];
@@ -765,7 +651,7 @@ export class DbStorage implements IStorage {
   }
 
   // Task Logs and Stats
-  async getTaskLogs(taskId: number, limit: number = 100): Promise<TaskLog[]> {
+  async getTaskLogs(taskId: number, limit: number = 50): Promise<TaskLog[]> {
     return await database
       .select()
       .from(schema.taskLogs)
@@ -775,12 +661,12 @@ export class DbStorage implements IStorage {
   }
 
   async getTaskStats(taskId: number, days: number = 7): Promise<TaskStats[]> {
+    const startDate = format(subDays(new Date(), days), 'yyyy-MM-dd');
     return await database
       .select()
       .from(schema.taskStats)
-      .where(eq(schema.taskStats.taskId, taskId))
-      .orderBy(desc(schema.taskStats.date))
-      .limit(days);
+      .where(and(eq(schema.taskStats.taskId, taskId), sql`${schema.taskStats.date} >= ${startDate}`))
+      .orderBy(desc(schema.taskStats.date));
   }
 
   async getAllLogs(limit: number = 100): Promise<TaskLog[]> {
@@ -792,7 +678,7 @@ export class DbStorage implements IStorage {
   }
 
   // Error Logs
-  async getErrorLogs(limit: number = 100): Promise<any[]> {
+  async getErrorLogs(limit: number = 50): Promise<any[]> {
     return await database
       .select()
       .from(schema.errorLogs)
@@ -801,17 +687,13 @@ export class DbStorage implements IStorage {
   }
 
   async createErrorLog(data: any): Promise<any> {
-    const result = await database
-      .insert(schema.errorLogs)
-      .values(data)
-      .returning();
+    const result = await database.insert(schema.errorLogs).values(data).returning();
     return result[0];
   }
 
   // Bot Config / Settings
   async getBotConfig(): Promise<{ key: string; value: string }[]> {
-    const configs = await database.select().from(schema.botConfig);
-    return configs.map(c => ({ key: c.key, value: c.value }));
+    return await database.select({ key: schema.botConfig.key, value: schema.botConfig.value }).from(schema.botConfig);
   }
 
   async getBotConfigValue(key: string): Promise<string | undefined> {
@@ -833,1083 +715,120 @@ export class DbStorage implements IStorage {
     await database.delete(schema.botConfig).where(eq(schema.botConfig.key, key));
   }
 
-  // Userbot Sessions
-  async getActiveUserbotSession(): Promise<UserbotSession | undefined> {
-    const result = await database
-      .select()
-      .from(schema.userbotSessions)
-      .where(
-        and(
-          eq(schema.userbotSessions.isActive, true),
-          eq(schema.userbotSessions.isPrimary, true)
-        )
-      )
-      .limit(1);
-    return result[0];
-  }
-
-  async createUserbotSession(data: InsertUserbotSession): Promise<UserbotSession> {
-    // Deactivate any existing sessions for this phone number first
-    await database
-      .update(schema.userbotSessions)
-      .set({ isActive: false, isPrimary: false })
-      .where(eq(schema.userbotSessions.phoneNumber, data.phoneNumber));
-    
-    const result = await database
-      .insert(schema.userbotSessions)
-      .values({
-        ...data,
-        status: "pending",
-      })
-      .returning();
-    return result[0];
-  }
-
-  async activateUserbotSession(phoneNumber: string, sessionString: string): Promise<void> {
-    // First deactivate all other sessions
-    await database
-      .update(schema.userbotSessions)
-      .set({ isActive: false, isPrimary: false })
-      .where(eq(schema.userbotSessions.isActive, true));
-    
-    // Then activate the new session
-    await database
-      .update(schema.userbotSessions)
-      .set({
-        sessionString,
-        isActive: true,
-        isPrimary: true,
-        status: "active",
-        lastLoginAt: new Date(),
-        updatedAt: new Date(),
-      })
-      .where(eq(schema.userbotSessions.phoneNumber, phoneNumber));
-  }
-
-  async deactivateUserbotSession(): Promise<void> {
-    await database
-      .update(schema.userbotSessions)
-      .set({
-        isActive: false,
-        isPrimary: false,
-        status: "expired",
-        sessionString: null,
-        loginState: null,
-        updatedAt: new Date(),
-      })
-      .where(eq(schema.userbotSessions.isActive, true));
-  }
-
-  async cancelPendingLogin(phoneNumber: string): Promise<void> {
-    await database
-      .update(schema.userbotSessions)
-      .set({
-        status: "cancelled",
-        loginState: null,
-        updatedAt: new Date(),
-      })
-      .where(
-        and(
-          eq(schema.userbotSessions.phoneNumber, phoneNumber),
-          sql`${schema.userbotSessions.status} IN ('awaiting_code', 'awaiting_password')`
-        )
-      );
-  }
-
-  // GitHub Settings
-  async getGithubSettings(): Promise<any> {
-    const result = await database.select().from(schema.githubSettings).limit(1);
-    return result[0] || null;
-  }
-
-  async linkGithubRepository(owner: string, repo: string): Promise<any> {
-    const existing = await this.getGithubSettings();
-    if (existing) {
-      const result = await database
-        .update(schema.githubSettings)
-        .set({ repoOwner: owner, repoName: repo, updatedAt: new Date() })
-        .where(eq(schema.githubSettings.id, existing.id))
-        .returning();
-      return result[0];
-    } else {
-      const result = await database
-        .insert(schema.githubSettings)
-        .values({ repoOwner: owner, repoName: repo })
-        .returning();
-      return result[0];
-    }
-  }
-
-  async unlinkGithubRepository(): Promise<void> {
-    await database.delete(schema.githubSettings);
-  }
-
-  // Dashboard Stats
-  async getDashboardStats(): Promise<any> {
-    const tasks = await this.getTasks();
-    const channels = await this.getChannels();
-    
-    const activeTasks = tasks.filter(t => t.isActive).length;
-    const totalForwarded = tasks.reduce((sum, t) => sum + t.totalForwarded, 0);
-    
-    return {
-      totalTasks: tasks.length,
-      activeTasks,
-      inactiveTasks: tasks.length - activeTasks,
-      totalChannels: channels.length,
-      totalForwarded,
-      aiEnabledTasks: tasks.filter(t => t.aiEnabled).length,
-      videoEnabledTasks: tasks.filter(t => t.videoProcessingEnabled).length,
-    };
-  }
-
-  // ============ Advanced AI Rules - Entity Replacements ============
-  async getEntityReplacements(taskId: number): Promise<any[]> {
-    return await database
-      .select()
-      .from(schema.aiEntityReplacements)
-      .where(
-        and(
-          eq(schema.aiEntityReplacements.taskId, taskId),
-          eq(schema.aiEntityReplacements.isActive, true)
-        )
-      )
-      .orderBy(desc(schema.aiEntityReplacements.priority));
-  }
-
-  async createEntityReplacement(data: any): Promise<any> {
-    const result = await database
-      .insert(schema.aiEntityReplacements)
-      .values({
-        taskId: data.taskId,
-        entityType: data.entityType || 'custom',
-        originalText: data.originalText,
-        replacementText: data.replacementText,
-        caseSensitive: data.caseSensitive ?? false,
-        useContext: data.useContext ?? true,
-        isActive: data.isActive ?? true,
-        priority: data.priority ?? 0,
-      })
-      .returning();
-    return result[0];
-  }
-
-  async updateEntityReplacement(id: number, data: any): Promise<void> {
-    const { createdAt, updatedAt, id: _, ...updateData } = data;
-    await database
-      .update(schema.aiEntityReplacements)
-      .set({
-        ...updateData,
-        updatedAt: new Date(),
-      })
-      .where(eq(schema.aiEntityReplacements.id, id));
-  }
-
-  async deleteEntityReplacement(id: number): Promise<void> {
-    await database
-      .delete(schema.aiEntityReplacements)
-      .where(eq(schema.aiEntityReplacements.id, id));
-  }
-
-  // ============ Advanced AI Rules - Context Rules ============
-  async getContextRules(taskId: number): Promise<any[]> {
-    return await database
-      .select()
-      .from(schema.aiContextRules)
-      .where(
-        and(
-          eq(schema.aiContextRules.taskId, taskId),
-          eq(schema.aiContextRules.isActive, true)
-        )
-      )
-      .orderBy(desc(schema.aiContextRules.priority));
-  }
-
-  async createContextRule(data: any): Promise<any> {
-    const result = await database
-      .insert(schema.aiContextRules)
-      .values({
-        taskId: data.taskId,
-        ruleType: data.ruleType,
-        triggerPattern: data.triggerPattern || null,
-        targetSentiment: data.targetSentiment || 'neutral',
-        instructions: data.instructions,
-        examples: data.examples || null,
-        isActive: data.isActive ?? true,
-        priority: data.priority ?? 0,
-      })
-      .returning();
-    return result[0];
-  }
-
-  async updateContextRule(id: number, data: any): Promise<void> {
-    const { createdAt, updatedAt, id: _, ...updateData } = data;
-    await database
-      .update(schema.aiContextRules)
-      .set({
-        ...updateData,
-        updatedAt: new Date(),
-      })
-      .where(eq(schema.aiContextRules.id, id));
-  }
-
-  async deleteContextRule(id: number): Promise<void> {
-    await database
-      .delete(schema.aiContextRules)
-      .where(eq(schema.aiContextRules.id, id));
-  }
-
-  // ============ Advanced AI Rules - Training Examples ============
-  async getTrainingExamples(taskId?: number, exampleType?: string): Promise<any[]> {
-    let query = database.select().from(schema.aiTrainingExamples);
-    
-    if (taskId && exampleType) {
-      return await query.where(
-        and(
-          eq(schema.aiTrainingExamples.taskId, taskId),
-          eq(schema.aiTrainingExamples.exampleType, exampleType),
-          eq(schema.aiTrainingExamples.isActive, true)
-        )
-      ).orderBy(desc(schema.aiTrainingExamples.useCount));
-    } else if (taskId) {
-      return await query.where(
-        and(
-          eq(schema.aiTrainingExamples.taskId, taskId),
-          eq(schema.aiTrainingExamples.isActive, true)
-        )
-      ).orderBy(desc(schema.aiTrainingExamples.useCount));
-    } else if (exampleType) {
-      return await query.where(
-        and(
-          eq(schema.aiTrainingExamples.exampleType, exampleType),
-          eq(schema.aiTrainingExamples.isActive, true)
-        )
-      ).orderBy(desc(schema.aiTrainingExamples.useCount));
-    }
-    
-    return await query
-      .where(eq(schema.aiTrainingExamples.isActive, true))
-      .orderBy(desc(schema.aiTrainingExamples.useCount))
-      .limit(100);
-  }
-
-  async createTrainingExample(data: any): Promise<any> {
-    if (!data.taskId) {
-      throw new Error("taskId is required for training examples");
-    }
-    
-    const result = await database
-      .insert(schema.aiTrainingExamples)
-      .values({
-        taskId: data.taskId,
-        exampleType: data.exampleType,
-        inputText: data.inputText,
-        expectedOutput: data.expectedOutput,
-        explanation: data.explanation || null,
-        tags: data.tags || null,
-        isActive: data.isActive ?? true,
-      })
-      .returning();
-    return result[0];
-  }
-
-  async updateTrainingExample(id: number, data: any): Promise<any> {
-    const updateData: any = {};
-    
-    if (data.exampleType !== undefined) updateData.exampleType = data.exampleType;
-    if (data.inputText !== undefined) updateData.inputText = data.inputText;
-    if (data.expectedOutput !== undefined) updateData.expectedOutput = data.expectedOutput;
-    if (data.explanation !== undefined) updateData.explanation = data.explanation;
-    if (data.tags !== undefined) updateData.tags = data.tags;
-    if (data.isActive !== undefined) updateData.isActive = data.isActive;
-    
-    const result = await database
-      .update(schema.aiTrainingExamples)
-      .set(updateData)
-      .where(eq(schema.aiTrainingExamples.id, id))
-      .returning();
-    return result[0];
-  }
-
-  async deleteTrainingExample(id: number): Promise<void> {
-    await database
-      .delete(schema.aiTrainingExamples)
-      .where(eq(schema.aiTrainingExamples.id, id));
-  }
-
-  // ============ Advanced AI Rules - Processing Config ============
-  async getProcessingConfig(taskId?: number): Promise<any> {
+  // Message Archive
+  async clearArchive(taskId?: number): Promise<void> {
     if (taskId) {
-      const result = await database
-        .select()
-        .from(schema.aiProcessingConfig)
-        .where(eq(schema.aiProcessingConfig.taskId, taskId))
-        .limit(1);
-      if (result[0]) return result[0];
-    }
-    
-    const globalConfig = await database
-      .select()
-      .from(schema.aiProcessingConfig)
-      .where(
-        and(
-          eq(schema.aiProcessingConfig.configType, 'global'),
-          sql`${schema.aiProcessingConfig.taskId} IS NULL`
-        )
-      )
-      .limit(1);
-    
-    return globalConfig[0] || null;
-  }
-
-  async saveProcessingConfig(data: any): Promise<number> {
-    const taskId = data.taskId || null;
-    const configType = data.configType || (taskId ? 'task_specific' : 'global');
-    
-    let existing = null;
-    if (taskId) {
-      const result = await database
-        .select()
-        .from(schema.aiProcessingConfig)
-        .where(eq(schema.aiProcessingConfig.taskId, taskId))
-        .limit(1);
-      existing = result[0];
-    } else {
-      const result = await database
-        .select()
-        .from(schema.aiProcessingConfig)
-        .where(
-          and(
-            eq(schema.aiProcessingConfig.configType, 'global'),
-            sql`${schema.aiProcessingConfig.taskId} IS NULL`
-          )
-        )
-        .limit(1);
-      existing = result[0];
-    }
-    
-    if (existing) {
-      await database
-        .update(schema.aiProcessingConfig)
-        .set({
-          enableEntityExtraction: data.enableEntityExtraction ?? true,
-          enableSentimentAnalysis: data.enableSentimentAnalysis ?? true,
-          enableKeywordDetection: data.enableKeywordDetection ?? true,
-          maxRetries: data.maxRetries ?? 3,
-          timeoutSeconds: data.timeoutSeconds ?? 60,
-          preserveFormatting: data.preserveFormatting ?? true,
-          enableOutputValidation: data.enableOutputValidation ?? true,
-          enableRuleVerification: data.enableRuleVerification ?? true,
-          outputFormat: data.outputFormat ?? 'markdown',
-          temperature: data.temperature?.toString() ?? '0.7',
-          qualityLevel: data.qualityLevel ?? 'balanced',
-          updatedAt: new Date(),
-        })
-        .where(eq(schema.aiProcessingConfig.id, existing.id));
-      return existing.id;
-    } else {
-      const result = await database
-        .insert(schema.aiProcessingConfig)
-        .values({
-          taskId: taskId,
-          configType: configType,
-          enableEntityExtraction: data.enableEntityExtraction ?? true,
-          enableSentimentAnalysis: data.enableSentimentAnalysis ?? true,
-          enableKeywordDetection: data.enableKeywordDetection ?? true,
-          maxRetries: data.maxRetries ?? 3,
-          timeoutSeconds: data.timeoutSeconds ?? 60,
-          preserveFormatting: data.preserveFormatting ?? true,
-          enableOutputValidation: data.enableOutputValidation ?? true,
-          enableRuleVerification: data.enableRuleVerification ?? true,
-          outputFormat: data.outputFormat ?? 'markdown',
-          temperature: data.temperature?.toString() ?? '0.7',
-          qualityLevel: data.qualityLevel ?? 'balanced',
-        })
-        .returning();
-      return result[0].id;
-    }
-  }
-
-  // ============ AI Content Filters ============
-  async getContentFilters(taskId: number): Promise<any[]> {
-    return await database
-      .select()
-      .from(schema.aiContentFilters)
-      .where(
-        and(
-          eq(schema.aiContentFilters.taskId, taskId),
-          eq(schema.aiContentFilters.isActive, true)
-        )
-      )
-      .orderBy(desc(schema.aiContentFilters.priority));
-  }
-
-  async createContentFilter(data: any): Promise<any> {
-    const result = await database
-      .insert(schema.aiContentFilters)
-      .values({
-        taskId: data.taskId,
-        name: data.filterName || data.name,
-        filterType: data.filterType || 'block',
-        matchType: data.matchType,
-        pattern: data.pattern,
-        contextDescription: data.contextDescription,
-        sentimentTarget: data.sentimentTarget,
-        action: data.action || 'skip',
-        modifyInstructions: data.modifyInstructions,
-        isActive: data.isActive ?? true,
-        priority: data.priority ?? 0,
-      })
-      .returning();
-    return result[0];
-  }
-
-  async updateContentFilter(id: number, data: any): Promise<void> {
-    const { createdAt, updatedAt, id: _, ...updateData } = data;
-    await database
-      .update(schema.aiContentFilters)
-      .set({
-        ...updateData,
-        updatedAt: new Date(),
-      })
-      .where(eq(schema.aiContentFilters.id, id));
-  }
-
-  async deleteContentFilter(id: number): Promise<void> {
-    await database
-      .delete(schema.aiContentFilters)
-      .where(eq(schema.aiContentFilters.id, id));
-  }
-
-  async incrementFilterMatchCount(id: number): Promise<void> {
-    await database
-      .update(schema.aiContentFilters)
-      .set({ matchCount: sql`${schema.aiContentFilters.matchCount} + 1` })
-      .where(eq(schema.aiContentFilters.id, id));
-  }
-
-  // ============ AI Publishing Templates ============
-  async getPublishingTemplates(taskId: number): Promise<any[]> {
-    const templates = await database
-      .select()
-      .from(schema.aiPublishingTemplates)
-      .where(
-        and(
-          eq(schema.aiPublishingTemplates.taskId, taskId),
-          eq(schema.aiPublishingTemplates.isActive, true)
-        )
-      )
-      .orderBy(desc(schema.aiPublishingTemplates.isDefault));
-    
-    // Load custom fields for each template
-    const templatesWithFields = await Promise.all(
-      templates.map(async (template) => {
-        const customFields = await this.getTemplateCustomFields(template.id);
-        return { ...template, customFields };
-      })
-    );
-    
-    return templatesWithFields;
-  }
-
-  async getDefaultTemplate(taskId: number): Promise<any> {
-    const result = await database
-      .select()
-      .from(schema.aiPublishingTemplates)
-      .where(
-        and(
-          eq(schema.aiPublishingTemplates.taskId, taskId),
-          eq(schema.aiPublishingTemplates.isDefault, true),
-          eq(schema.aiPublishingTemplates.isActive, true)
-        )
-      )
-      .limit(1);
-    
-    if (!result[0]) return null;
-    
-    // Load custom fields for the template
-    const customFields = await this.getTemplateCustomFields(result[0].id);
-    return { ...result[0], customFields };
-  }
-
-  async createPublishingTemplate(data: any): Promise<any> {
-    if (data.isDefault) {
-      await database
-        .update(schema.aiPublishingTemplates)
-        .set({ isDefault: false })
-        .where(eq(schema.aiPublishingTemplates.taskId, data.taskId));
-    }
-    
-    const result = await database
-      .insert(schema.aiPublishingTemplates)
-      .values({
-        taskId: data.taskId,
-        name: data.name,
-        isDefault: data.isDefault ?? false,
-        templateType: data.templateType || 'custom',
-        headerText: data.headerText || null,
-        headerFormatting: data.headerFormatting || 'none',
-        footerText: data.footerText || null,
-        footerFormatting: data.footerFormatting || 'none',
-        fieldSeparator: data.fieldSeparator || '\n',
-        useNewlineAfterHeader: data.useNewlineAfterHeader ?? true,
-        useNewlineBeforeFooter: data.useNewlineBeforeFooter ?? true,
-        maxLength: data.maxLength || null,
-        extractionPrompt: data.extractionPrompt || null,
-        isActive: data.isActive ?? true,
-      })
-      .returning();
-    
-    // Create custom fields if provided
-    if (data.customFields && Array.isArray(data.customFields)) {
-      for (const field of data.customFields) {
-        await this.createTemplateCustomField({
-          ...field,
-          templateId: result[0].id
-        });
-      }
-    }
-    
-    return result[0];
-  }
-
-  async updatePublishingTemplate(id: number, data: any): Promise<void> {
-    if (data.isDefault && data.taskId) {
-      await database
-        .update(schema.aiPublishingTemplates)
-        .set({ isDefault: false })
-        .where(eq(schema.aiPublishingTemplates.taskId, data.taskId));
-    }
-    
-    const { customFields, createdAt, updatedAt, id: _, ...templateData } = data;
-    
-    await database
-      .update(schema.aiPublishingTemplates)
-      .set({ ...templateData, updatedAt: new Date() })
-      .where(eq(schema.aiPublishingTemplates.id, id));
-    
-    if (customFields && Array.isArray(customFields)) {
-      await database
-        .delete(schema.templateCustomFields)
-        .where(eq(schema.templateCustomFields.templateId, id));
-      
-      for (let i = 0; i < customFields.length; i++) {
-        const field = customFields[i];
-        await this.createTemplateCustomField({
-          templateId: id,
-          fieldName: field.fieldName,
-          fieldLabel: field.fieldLabel,
-          extractionInstructions: field.extractionInstructions,
-          defaultValue: field.defaultValue,
-          useDefaultIfEmpty: field.useDefaultIfEmpty,
-          formatting: field.formatting,
-          displayOrder: i,
-          showLabel: field.showLabel,
-          labelSeparator: field.labelSeparator,
-          prefix: field.prefix,
-          suffix: field.suffix,
-          fieldType: field.fieldType,
-          isActive: field.isActive ?? true
-        });
-      }
-    }
-  }
-
-  async deletePublishingTemplate(id: number): Promise<void> {
-    // Custom fields are deleted automatically via cascade
-    await database
-      .delete(schema.aiPublishingTemplates)
-      .where(eq(schema.aiPublishingTemplates.id, id));
-  }
-
-  // ============ Template Custom Fields ============
-  async getTemplateCustomFields(templateId: number): Promise<any[]> {
-    return await database
-      .select()
-      .from(schema.templateCustomFields)
-      .where(
-        and(
-          eq(schema.templateCustomFields.templateId, templateId),
-          eq(schema.templateCustomFields.isActive, true)
-        )
-      )
-      .orderBy(schema.templateCustomFields.displayOrder);
-  }
-
-  async getTemplateCustomField(id: number): Promise<any> {
-    const result = await database
-      .select()
-      .from(schema.templateCustomFields)
-      .where(eq(schema.templateCustomFields.id, id))
-      .limit(1);
-    return result[0] || null;
-  }
-
-  async createTemplateCustomField(data: any): Promise<any> {
-    const result = await database
-      .insert(schema.templateCustomFields)
-      .values({
-        templateId: data.templateId,
-        fieldName: data.fieldName,
-        fieldLabel: data.fieldLabel,
-        extractionInstructions: data.extractionInstructions,
-        defaultValue: data.defaultValue || null,
-        useDefaultIfEmpty: data.useDefaultIfEmpty ?? true,
-        formatting: data.formatting || 'none',
-        displayOrder: data.displayOrder || 0,
-        showLabel: data.showLabel ?? false,
-        labelSeparator: data.labelSeparator || ': ',
-        prefix: data.prefix || null,
-        suffix: data.suffix || null,
-        fieldType: data.fieldType || 'extracted',
-        isActive: data.isActive ?? true,
-      })
-      .returning();
-    return result[0];
-  }
-
-  async updateTemplateCustomField(id: number, data: any): Promise<void> {
-    const { createdAt, updatedAt, id: _, ...updateData } = data;
-    await database
-      .update(schema.templateCustomFields)
-      .set({
-        ...updateData,
-        updatedAt: new Date(),
-      })
-      .where(eq(schema.templateCustomFields.id, id));
-  }
-
-  async deleteTemplateCustomField(id: number): Promise<void> {
-    await database
-      .delete(schema.templateCustomFields)
-      .where(eq(schema.templateCustomFields.id, id));
-  }
-
-  async reorderTemplateCustomFields(templateId: number, fieldOrders: { id: number; order: number }[]): Promise<void> {
-    for (const { id, order } of fieldOrders) {
-      await database
-        .update(schema.templateCustomFields)
-        .set({ displayOrder: order })
-        .where(
-          and(
-            eq(schema.templateCustomFields.id, id),
-            eq(schema.templateCustomFields.templateId, templateId)
-          )
-        );
-    }
-  }
-
-  // ============ Message Archive ============
-  async getArchiveMessages(filters: {
-    taskId?: number;
-    search?: string;
-    classification?: string;
-    province?: string;
-    specialist?: string;
-    newsType?: string;
-    status?: string;
-    dateFrom?: string;
-    dateTo?: string;
-    isPinned?: boolean;
-    isFlagged?: boolean;
-    hasMedia?: boolean;
-    limit?: number;
-    offset?: number;
-    sortBy?: string;
-    sortOrder?: 'asc' | 'desc';
-  } = {}): Promise<{ messages: any[]; total: number }> {
-    const conditions: any[] = [];
-    
-    if (filters.taskId) {
-      conditions.push(eq(schema.messageArchive.taskId, filters.taskId));
-    }
-    if (filters.classification) {
-      conditions.push(eq(schema.messageArchive.classification, filters.classification));
-    }
-    if (filters.province) {
-      conditions.push(eq(schema.messageArchive.province, filters.province));
-    }
-    if (filters.specialist) {
-      conditions.push(eq(schema.messageArchive.specialist, filters.specialist));
-    }
-    if (filters.newsType) {
-      conditions.push(eq(schema.messageArchive.newsType, filters.newsType));
-    }
-    if (filters.status) {
-      conditions.push(eq(schema.messageArchive.status, filters.status));
-    }
-    if (filters.isPinned !== undefined) {
-      conditions.push(eq(schema.messageArchive.isPinned, filters.isPinned));
-    }
-    if (filters.isFlagged !== undefined) {
-      conditions.push(eq(schema.messageArchive.isFlagged, filters.isFlagged));
-    }
-    if (filters.hasMedia !== undefined) {
-      conditions.push(eq(schema.messageArchive.hasMedia, filters.hasMedia));
-    }
-    if (filters.dateFrom) {
-      conditions.push(sql`${schema.messageArchive.createdAt} >= ${filters.dateFrom}::timestamp`);
-    }
-    if (filters.dateTo) {
-      conditions.push(sql`${schema.messageArchive.createdAt} <= ${filters.dateTo}::timestamp`);
-    }
-    if (filters.search) {
-      conditions.push(sql`(
-        ${schema.messageArchive.title} ILIKE ${'%' + filters.search + '%'} OR
-        ${schema.messageArchive.originalText} ILIKE ${'%' + filters.search + '%'} OR
-        ${schema.messageArchive.processedText} ILIKE ${'%' + filters.search + '%'} OR
-        ${schema.messageArchive.publishedText} ILIKE ${'%' + filters.search + '%'}
-      )`);
-    }
-
-    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
-    
-    // Get total count
-    const countResult = await database
-      .select({ count: sql<number>`count(*)::int` })
-      .from(schema.messageArchive)
-      .where(whereClause);
-    const total = countResult[0]?.count || 0;
-
-    // Get messages with pagination
-    let query = database
-      .select()
-      .from(schema.messageArchive)
-      .where(whereClause);
-
-    // Apply sorting
-    const sortColumn = filters.sortBy === 'serialNumber' ? schema.messageArchive.serialNumber :
-                       filters.sortBy === 'title' ? schema.messageArchive.title :
-                       schema.messageArchive.createdAt;
-    
-    if (filters.sortOrder === 'asc') {
-      query = query.orderBy(sortColumn) as any;
-    } else {
-      query = query.orderBy(desc(sortColumn)) as any;
-    }
-
-    // Apply pagination
-    const limit = filters.limit || 50;
-    const offset = filters.offset || 0;
-    query = query.limit(limit).offset(offset) as any;
-
-    const messages = await query;
-    return { messages, total };
-  }
-
-  async getArchiveMessage(id: number): Promise<any> {
-    const result = await database
-      .select()
-      .from(schema.messageArchive)
-      .where(eq(schema.messageArchive.id, id))
-      .limit(1);
-    return result[0] || null;
-  }
-
-  async getArchiveMessageBySerial(taskId: number, serialNumber: number): Promise<any> {
-    const result = await database
-      .select()
-      .from(schema.messageArchive)
-      .where(
-        and(
-          eq(schema.messageArchive.taskId, taskId),
-          eq(schema.messageArchive.serialNumber, serialNumber)
-        )
-      )
-      .limit(1);
-    return result[0] || null;
-  }
-
-  async createArchiveMessage(data: any): Promise<any> {
-    const result = await database
-      .insert(schema.messageArchive)
-      .values({
-        taskId: data.taskId,
-        serialNumber: data.serialNumber,
-        sourceMessageId: data.sourceMessageId,
-        sourceChannelId: data.sourceChannelId,
-        sourceChannelTitle: data.sourceChannelTitle,
-        targetChannelId: data.targetChannelId,
-        targetChannelTitle: data.targetChannelTitle,
-        targetMessageId: data.targetMessageId,
-        title: data.title,
-        originalText: data.originalText,
-        processedText: data.processedText,
-        publishedText: data.publishedText,
-        telegraphUrl: data.telegraphUrl,
-        telegraphTitle: data.telegraphTitle,
-        classification: data.classification,
-        newsType: data.newsType,
-        province: data.province,
-        specialist: data.specialist,
-        tags: data.tags,
-        extractedFields: data.extractedFields,
-        hasMedia: data.hasMedia || false,
-        mediaType: data.mediaType,
-        mediaCount: data.mediaCount || 0,
-        mediaGroupId: data.mediaGroupId,
-        processingDuration: data.processingDuration,
-        aiProvider: data.aiProvider,
-        aiModel: data.aiModel,
-        templateName: data.templateName,
-        status: data.status || 'published',
-        isEdited: data.isEdited || false,
-        isPinned: data.isPinned || false,
-        isFlagged: data.isFlagged || false,
-        flagReason: data.flagReason,
-        notes: data.notes,
-      })
-      .returning();
-    return result[0];
-  }
-
-  async updateArchiveMessage(id: number, data: any): Promise<any> {
-    // Get current message to merge extractedFields
-    const current = await this.getArchiveMessage(id);
-    
-    const updateData: any = { ...data, updatedAt: new Date() };
-    
-    // Mark as edited if content changed
-    if (data.title !== undefined || data.processedText !== undefined || data.publishedText !== undefined) {
-      updateData.isEdited = true;
-      updateData.editedAt = new Date();
-    }
-    
-    // Handle extractedFields - merge with existing if partial update
-    if (data.extractedFields) {
-      // If extractedFields is provided, merge with existing
-      const currentExtracted = current?.extractedFields || {};
-      updateData.extractedFields = { ...currentExtracted, ...data.extractedFields };
-    }
-    
-    // Sync individual fields to extractedFields for consistency
-    const fieldsToSync = ['classification', 'newsType', 'province', 'specialist', 'title'];
-    const arabicFieldMap: Record<string, string> = {
-      'classification': 'التصنيف_',
-      'newsType': 'نوع_الخبر',
-      'province': 'المحافظه_',
-      'specialist': 'المختص',
-      'title': 'العنوان'
-    };
-    
-    // Check if any syncable field is being updated
-    const hasFieldUpdates = fieldsToSync.some(f => data[f] !== undefined);
-    
-    if (hasFieldUpdates) {
-      // Get current extractedFields or create new
-      const currentExtracted = updateData.extractedFields || current?.extractedFields || {};
-      
-      // Sync each updated field to extractedFields
-      for (const field of fieldsToSync) {
-        if (data[field] !== undefined) {
-          const arabicKey = arabicFieldMap[field];
-          if (arabicKey) {
-            currentExtracted[arabicKey] = data[field];
-          }
-          currentExtracted[field] = data[field];
-        }
-      }
-      
-      updateData.extractedFields = currentExtracted;
-      updateData.isEdited = true;
-      updateData.editedAt = new Date();
-    }
-    
-    const result = await database
-      .update(schema.messageArchive)
-      .set(updateData)
-      .where(eq(schema.messageArchive.id, id))
-      .returning();
-    return result[0];
-  }
-
-  async deleteArchiveMessage(id: number): Promise<void> {
-    await database
-      .delete(schema.messageArchive)
-      .where(eq(schema.messageArchive.id, id));
-  }
-
-  async deleteArchiveMessagesByTask(taskId: number): Promise<number> {
-    const result = await database
-      .delete(schema.messageArchive)
-      .where(eq(schema.messageArchive.taskId, taskId))
-      .returning();
-    return result.length;
-  }
-
-  async toggleArchivePin(id: number): Promise<any> {
-    const message = await this.getArchiveMessage(id);
-    if (!message) return null;
-    
-    return await this.updateArchiveMessage(id, { isPinned: !message.isPinned });
-  }
-
-  async toggleArchiveFlag(id: number, reason?: string): Promise<any> {
-    const message = await this.getArchiveMessage(id);
-    if (!message) return null;
-    
-    return await this.updateArchiveMessage(id, { 
-      isFlagged: !message.isFlagged,
-      flagReason: !message.isFlagged ? reason : null
-    });
-  }
-
-  // ============ Archive Serial Counter ============
-  async getNextSerialNumber(taskId: number): Promise<number> {
-    // Try to get existing counter
-    const existing = await database
-      .select()
-      .from(schema.archiveSerialCounter)
-      .where(eq(schema.archiveSerialCounter.taskId, taskId))
-      .limit(1);
-
-    if (existing.length > 0) {
-      // Increment and return
-      const newSerial = existing[0].lastSerial + 1;
+      await database.delete(schema.messageArchive).where(eq(schema.messageArchive.taskId, taskId));
       await database
         .update(schema.archiveSerialCounter)
-        .set({ lastSerial: newSerial, updatedAt: new Date() })
+        .set({ lastSerial: 0, updatedAt: new Date() })
         .where(eq(schema.archiveSerialCounter.taskId, taskId));
-      return newSerial;
     } else {
-      // Create new counter
+      await database.delete(schema.messageArchive);
       await database
-        .insert(schema.archiveSerialCounter)
-        .values({ taskId, lastSerial: 1 });
-      return 1;
+        .update(schema.archiveSerialCounter)
+        .set({ lastSerial: 0, updatedAt: new Date() });
     }
   }
 
-  async getCurrentSerialNumber(taskId: number): Promise<number> {
-    const existing = await database
-      .select()
-      .from(schema.archiveSerialCounter)
-      .where(eq(schema.archiveSerialCounter.taskId, taskId))
-      .limit(1);
-    return existing[0]?.lastSerial || 0;
-  }
+  async getArchiveMessages(filters: any) {
+    const { 
+      taskId, search, classification, province, specialist, newsType, 
+      status, dateFrom, dateTo, isPinned, isFlagged, hasMedia,
+      limit = 50, offset = 0, sortBy = 'createdAt', sortOrder = 'desc' 
+    } = filters;
 
-  async resetSerialCounter(taskId: number): Promise<void> {
-    await database
-      .update(schema.archiveSerialCounter)
-      .set({ lastSerial: 0, updatedAt: new Date() })
-      .where(eq(schema.archiveSerialCounter.taskId, taskId));
-  }
-
-  // ============ Archive Statistics ============
-  async getArchiveStats(taskId?: number): Promise<{
-    totalMessages: number;
-    todayMessages: number;
-    pinnedMessages: number;
-    flaggedMessages: number;
-    byClassification: { classification: string; count: number }[];
-    byProvince: { province: string; count: number }[];
-    byNewsType: { newsType: string; count: number }[];
-    recentActivity: { date: string; count: number }[];
-  }> {
-    const conditions: any[] = [];
-    if (taskId) {
-      conditions.push(eq(schema.messageArchive.taskId, taskId));
+    let conditions = [];
+    if (taskId) conditions.push(eq(schema.messageArchive.taskId, taskId));
+    if (classification) conditions.push(eq(schema.messageArchive.classification, classification));
+    if (province) conditions.push(eq(schema.messageArchive.province, province));
+    if (specialist) conditions.push(eq(schema.messageArchive.specialist, specialist));
+    if (newsType) conditions.push(eq(schema.messageArchive.newsType, newsType));
+    if (status) conditions.push(eq(schema.messageArchive.status, status));
+    if (isPinned !== undefined) conditions.push(eq(schema.messageArchive.isPinned, isPinned));
+    if (isFlagged !== undefined) conditions.push(eq(schema.messageArchive.isFlagged, isFlagged));
+    if (hasMedia !== undefined) conditions.push(eq(schema.messageArchive.hasMedia, hasMedia));
+    
+    if (dateFrom) conditions.push(sql`${schema.messageArchive.createdAt} >= ${new Date(dateFrom)}`);
+    if (dateTo) conditions.push(sql`${schema.messageArchive.createdAt} <= ${new Date(dateTo)}`);
+    
+    if (search) {
+      conditions.push(sql`(${schema.messageArchive.title} ILIKE ${'%' + search + '%'} OR ${schema.messageArchive.originalText} ILIKE ${'%' + search + '%'} OR ${schema.messageArchive.processedText} ILIKE ${'%' + search + '%'})`);
     }
+
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-    // Total messages
+    const messages = await database
+      .select()
+      .from(schema.messageArchive)
+      .where(whereClause)
+      .orderBy(sortOrder === 'desc' ? desc((schema.messageArchive as any)[sortBy]) : (schema.messageArchive as any)[sortBy])
+      .limit(limit)
+      .offset(offset);
+
     const totalResult = await database
-      .select({ count: sql<number>`count(*)::int` })
+      .select({ count: sql`count(*)` })
       .from(schema.messageArchive)
       .where(whereClause);
-    const totalMessages = totalResult[0]?.count || 0;
 
-    // Today's messages
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const todayConditions = [...conditions, sql`${schema.messageArchive.createdAt} >= ${today.toISOString()}::timestamp`];
-    const todayResult = await database
-      .select({ count: sql<number>`count(*)::int` })
-      .from(schema.messageArchive)
-      .where(and(...todayConditions));
-    const todayMessages = todayResult[0]?.count || 0;
+    return {
+      messages,
+      total: Number(totalResult[0].count),
+      limit,
+      offset
+    };
+  }
 
-    // Pinned messages
-    const pinnedConditions = [...conditions, eq(schema.messageArchive.isPinned, true)];
-    const pinnedResult = await database
-      .select({ count: sql<number>`count(*)::int` })
-      .from(schema.messageArchive)
-      .where(and(...pinnedConditions));
-    const pinnedMessages = pinnedResult[0]?.count || 0;
+  async getArchiveStats(taskId?: number) {
+    const conditions = taskId ? [eq(schema.messageArchive.taskId, taskId)] : [];
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-    // Flagged messages
-    const flaggedConditions = [...conditions, eq(schema.messageArchive.isFlagged, true)];
-    const flaggedResult = await database
-      .select({ count: sql<number>`count(*)::int` })
-      .from(schema.messageArchive)
-      .where(and(...flaggedConditions));
-    const flaggedMessages = flaggedResult[0]?.count || 0;
-
-    // By classification
+    const totalCount = await database.select({ count: sql`count(*)` }).from(schema.messageArchive).where(whereClause);
+    const pinnedCount = await database.select({ count: sql`count(*)` }).from(schema.messageArchive).where(and(whereClause as any, eq(schema.messageArchive.isPinned, true)));
+    const flaggedCount = await database.select({ count: sql`count(*)` }).from(schema.messageArchive).where(and(whereClause as any, eq(schema.messageArchive.isFlagged, true)));
+    
     const byClassification = await database
-      .select({
-        classification: schema.messageArchive.classification,
-        count: sql<number>`count(*)::int`
-      })
+      .select({ classification: schema.messageArchive.classification, count: sql`count(*)` })
       .from(schema.messageArchive)
       .where(whereClause)
       .groupBy(schema.messageArchive.classification);
 
-    // By province
     const byProvince = await database
-      .select({
-        province: schema.messageArchive.province,
-        count: sql<number>`count(*)::int`
-      })
+      .select({ province: schema.messageArchive.province, count: sql`count(*)` })
       .from(schema.messageArchive)
       .where(whereClause)
       .groupBy(schema.messageArchive.province);
 
-    // By news type
     const byNewsType = await database
-      .select({
-        newsType: schema.messageArchive.newsType,
-        count: sql<number>`count(*)::int`
-      })
+      .select({ newsType: schema.messageArchive.newsType, count: sql`count(*)` })
       .from(schema.messageArchive)
       .where(whereClause)
       .groupBy(schema.messageArchive.newsType);
 
-    // Recent activity (last 7 days)
     const recentActivity = await database
-      .select({
-        date: sql<string>`DATE(${schema.messageArchive.createdAt})::text`,
-        count: sql<number>`count(*)::int`
+      .select({ 
+        date: sql`DATE(${schema.messageArchive.createdAt})`, 
+        count: sql`count(*)` 
       })
       .from(schema.messageArchive)
       .where(whereClause)
       .groupBy(sql`DATE(${schema.messageArchive.createdAt})`)
       .orderBy(desc(sql`DATE(${schema.messageArchive.createdAt})`))
-      .limit(7);
+      .limit(14);
 
     return {
-      totalMessages,
-      todayMessages,
-      pinnedMessages,
-      flaggedMessages,
-      byClassification: byClassification.filter(c => c.classification) as any,
-      byProvince: byProvince.filter(p => p.province) as any,
-      byNewsType: byNewsType.filter(n => n.newsType) as any,
-      recentActivity: recentActivity as any
+      total: Number(totalCount[0].count),
+      pinned: Number(pinnedCount[0].count),
+      flagged: Number(flaggedCount[0].count),
+      byClassification,
+      byProvince,
+      byNewsType,
+      recentActivity: recentActivity.map(r => ({ date: String(r.date), count: Number(r.count) }))
     };
   }
 
-  async getArchiveFilterOptions(taskId?: number): Promise<{
-    classifications: string[];
-    provinces: string[];
-    newsTypes: string[];
-    specialists: string[];
-  }> {
-    const conditions: any[] = [];
-    if (taskId) {
-      conditions.push(eq(schema.messageArchive.taskId, taskId));
-    }
+  async getArchiveFilterOptions(taskId?: number) {
+    const conditions = taskId ? [eq(schema.messageArchive.taskId, taskId)] : [];
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
     const classifications = await database
@@ -1932,12 +851,369 @@ export class DbStorage implements IStorage {
       .from(schema.messageArchive)
       .where(whereClause);
 
+    const sources = await database
+      .selectDistinct({ value: schema.messageArchive.sourceChannelTitle })
+      .from(schema.messageArchive)
+      .where(whereClause);
+
     return {
-      classifications: classifications.map(c => c.value).filter(Boolean) as string[],
-      provinces: provinces.map(p => p.value).filter(Boolean) as string[],
-      newsTypes: newsTypes.map(n => n.value).filter(Boolean) as string[],
-      specialists: specialists.map(s => s.value).filter(Boolean) as string[]
+      classifications: classifications.map(c => c.value).filter(Boolean),
+      provinces: provinces.map(p => p.value).filter(Boolean),
+      newsTypes: newsTypes.map(n => n.value).filter(Boolean),
+      specialists: specialists.map(s => s.value).filter(Boolean),
+      sources: sources.map(s => s.value).filter(Boolean)
     };
+  }
+
+  async getArchiveMessage(id: number) {
+    const result = await database.select().from(schema.messageArchive).where(eq(schema.messageArchive.id, id)).limit(1);
+    return result[0];
+  }
+
+  async updateArchiveMessage(id: number, data: any) {
+    const result = await database
+      .update(schema.messageArchive)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(schema.messageArchive.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async deleteArchiveMessage(id: number) {
+    await database.delete(schema.messageArchive).where(eq(schema.messageArchive.id, id));
+  }
+
+  async toggleArchivePin(id: number) {
+    const message = await this.getArchiveMessage(id);
+    if (!message) return undefined;
+    
+    const result = await database
+      .update(schema.messageArchive)
+      .set({ isPinned: !message.isPinned, updatedAt: new Date() })
+      .where(eq(schema.messageArchive.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async toggleArchiveFlag(id: number, reason?: string) {
+    const message = await this.getArchiveMessage(id);
+    if (!message) return undefined;
+    
+    const result = await database
+      .update(schema.messageArchive)
+      .set({ 
+        isFlagged: !message.isFlagged, 
+        flagReason: !message.isFlagged ? reason || null : null,
+        updatedAt: new Date() 
+      })
+      .where(eq(schema.messageArchive.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async getCurrentSerialNumber(taskId: number): Promise<number> {
+    const result = await database
+      .select({ lastSerial: schema.archiveSerialCounter.lastSerial })
+      .from(schema.archiveSerialCounter)
+      .where(eq(schema.archiveSerialCounter.taskId, taskId))
+      .limit(1);
+    
+    return result[0]?.lastSerial || 0;
+  }
+
+  // Userbot Sessions
+  async getActiveUserbotSession(): Promise<UserbotSession | undefined> {
+    const result = await database
+      .select()
+      .from(schema.userbotSessions)
+      .where(eq(schema.userbotSessions.isActive, true))
+      .limit(1);
+    return result[0];
+  }
+
+  async createUserbotSession(data: InsertUserbotSession): Promise<UserbotSession> {
+    const result = await database.insert(schema.userbotSessions).values(data).returning();
+    return result[0];
+  }
+
+  async activateUserbotSession(phoneNumber: string, sessionString: string): Promise<void> {
+    // Deactivate all first
+    await database.update(schema.userbotSessions).set({ isActive: false });
+    
+    // Activate specific one
+    await database
+      .update(schema.userbotSessions)
+      .set({ 
+        sessionString, 
+        isActive: true, 
+        status: 'active',
+        lastLoginAt: new Date(),
+        updatedAt: new Date() 
+      })
+      .where(eq(schema.userbotSessions.phoneNumber, phoneNumber));
+  }
+
+  async deactivateUserbotSession(): Promise<void> {
+    await database.update(schema.userbotSessions).set({ isActive: false, status: 'expired' });
+  }
+
+  async cancelPendingLogin(phoneNumber: string): Promise<void> {
+    await database.delete(schema.userbotSessions).where(eq(schema.userbotSessions.phoneNumber, phoneNumber));
+  }
+
+  // GitHub Settings
+  async getGithubSettings(): Promise<any> {
+    const result = await database.select().from(schema.githubSettings).limit(1);
+    return result[0];
+  }
+
+  async linkGithubRepository(owner: string, repo: string): Promise<any> {
+    await database.delete(schema.githubSettings);
+    const result = await database.insert(schema.githubSettings).values({
+      repoOwner: owner,
+      repoName: repo,
+    }).returning();
+    return result[0];
+  }
+
+  async unlinkGithubRepository(): Promise<void> {
+    await database.delete(schema.githubSettings);
+  }
+
+  // Dashboard Stats
+  async getDashboardStats(): Promise<any> {
+    const today = format(new Date(), 'yyyy-MM-dd');
+    const yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd');
+
+    const totalTasks = await database.select({ count: sql`count(*)` }).from(schema.forwardingTasks);
+    const activeTasks = await database.select({ count: sql`count(*)` }).from(schema.forwardingTasks).where(eq(schema.forwardingTasks.isActive, true));
+    
+    const todayStats = await database.select().from(schema.taskStats).where(eq(schema.taskStats.date, today));
+    const yesterdayStats = await database.select().from(schema.taskStats).where(eq(schema.taskStats.date, yesterday));
+
+    const todayTotal = todayStats.reduce((acc, curr) => acc + curr.messagesForwarded, 0);
+    const yesterdayTotal = yesterdayStats.reduce((acc, curr) => acc + curr.messagesForwarded, 0);
+
+    const todayChange = yesterdayTotal === 0 ? 100 : Math.round(((todayTotal - yesterdayTotal) / yesterdayTotal) * 100);
+
+    return {
+      totalTasks: Number(totalTasks[0].count),
+      activeTasks: Number(activeTasks[0].count),
+      messagesToday: todayTotal,
+      messagesYesterday: yesterdayTotal,
+      trend: todayChange,
+      recentActivity: [] // Will be populated if needed
+    };
+  }
+
+  // Advanced AI Rules - Entity Replacements
+  async getEntityReplacements(taskId: number): Promise<any[]> {
+    return await database
+      .select()
+      .from(schema.aiEntityReplacements)
+      .where(eq(schema.aiEntityReplacements.taskId, taskId))
+      .orderBy(desc(schema.aiEntityReplacements.priority));
+  }
+
+  async createEntityReplacement(data: any): Promise<any> {
+    const result = await database.insert(schema.aiEntityReplacements).values(data).returning();
+    return result[0];
+  }
+
+  async updateEntityReplacement(id: number, data: any): Promise<void> {
+    await database.update(schema.aiEntityReplacements).set(data).where(eq(schema.aiEntityReplacements.id, id));
+  }
+
+  async deleteEntityReplacement(id: number): Promise<void> {
+    await database.delete(schema.aiEntityReplacements).where(eq(schema.aiEntityReplacements.id, id));
+  }
+
+  // Advanced AI Rules - Context Rules
+  async getContextRules(taskId: number): Promise<any[]> {
+    return await database
+      .select()
+      .from(schema.aiContextRules)
+      .where(eq(schema.aiContextRules.taskId, taskId))
+      .orderBy(desc(schema.aiContextRules.priority));
+  }
+
+  async createContextRule(data: any): Promise<any> {
+    const result = await database.insert(schema.aiContextRules).values(data).returning();
+    return result[0];
+  }
+
+  async updateContextRule(id: number, data: any): Promise<void> {
+    await database.update(schema.aiContextRules).set(data).where(eq(schema.aiContextRules.id, id));
+  }
+
+  async deleteContextRule(id: number): Promise<void> {
+    await database.delete(schema.aiContextRules).where(eq(schema.aiContextRules.id, id));
+  }
+
+  // Advanced AI Rules - Training Examples
+  async getTrainingExamples(taskId?: number, exampleType?: string): Promise<any[]> {
+    let conditions = [];
+    if (taskId) conditions.push(eq(schema.aiTrainingExamples.taskId, taskId));
+    if (exampleType) conditions.push(eq(schema.aiTrainingExamples.exampleType, exampleType));
+    
+    return await database
+      .select()
+      .from(schema.aiTrainingExamples)
+      .where(conditions.length > 0 ? and(...conditions) : undefined)
+      .orderBy(desc(schema.aiTrainingExamples.createdAt));
+  }
+
+  async createTrainingExample(data: any): Promise<any> {
+    const result = await database.insert(schema.aiTrainingExamples).values(data).returning();
+    return result[0];
+  }
+
+  async deleteTrainingExample(id: number): Promise<void> {
+    await database.delete(schema.aiTrainingExamples).where(eq(schema.aiTrainingExamples.id, id));
+  }
+
+  // Advanced AI Rules - Processing Config
+  async getProcessingConfig(taskId?: number): Promise<any> {
+    const result = await database
+      .select()
+      .from(schema.aiProcessingConfig)
+      .where(taskId ? eq(schema.aiProcessingConfig.taskId, taskId) : eq(schema.aiProcessingConfig.configType, 'global'))
+      .limit(1);
+    return result[0];
+  }
+
+  async saveProcessingConfig(data: any): Promise<number> {
+    const { id, ...rest } = data;
+    if (id) {
+      await database.update(schema.aiProcessingConfig).set({ ...rest, updatedAt: new Date() }).where(eq(schema.aiProcessingConfig.id, id));
+      return id;
+    } else {
+      const result = await database.insert(schema.aiProcessingConfig).values(rest).returning();
+      return result[0].id;
+    }
+  }
+
+  // AI Publishing Templates
+  async getPublishingTemplates(taskId: number): Promise<any[]> {
+    return await database
+      .select()
+      .from(schema.aiPublishingTemplates)
+      .where(eq(schema.aiPublishingTemplates.taskId, taskId))
+      .orderBy(desc(schema.aiPublishingTemplates.isDefault), desc(schema.aiPublishingTemplates.createdAt));
+  }
+
+  async getPublishingTemplate(id: number): Promise<any> {
+    const result = await database.select().from(schema.aiPublishingTemplates).where(eq(schema.aiPublishingTemplates.id, id)).limit(1);
+    return result[0];
+  }
+
+  async getDefaultPublishingTemplate(taskId: number): Promise<any> {
+    const result = await database
+      .select()
+      .from(schema.aiPublishingTemplates)
+      .where(and(eq(schema.aiPublishingTemplates.taskId, taskId), eq(schema.aiPublishingTemplates.isDefault, true)))
+      .limit(1);
+    return result[0];
+  }
+
+  async createPublishingTemplate(data: any): Promise<any> {
+    const result = await database.insert(schema.aiPublishingTemplates).values(data).returning();
+    return result[0];
+  }
+
+  async updatePublishingTemplate(id: number, data: any): Promise<void> {
+    await database.update(schema.aiPublishingTemplates).set({ ...data, updatedAt: new Date() }).where(eq(schema.aiPublishingTemplates.id, id));
+  }
+
+  async deletePublishingTemplate(id: number): Promise<void> {
+    await database.delete(schema.aiPublishingTemplates).where(eq(schema.aiPublishingTemplates.id, id));
+  }
+
+  async setDefaultPublishingTemplate(taskId: number, templateId: number): Promise<void> {
+    // Unset current default
+    await database
+      .update(schema.aiPublishingTemplates)
+      .set({ isDefault: false })
+      .where(eq(schema.aiPublishingTemplates.taskId, taskId));
+    
+    // Set new default
+    await database
+      .update(schema.aiPublishingTemplates)
+      .set({ isDefault: true })
+      .where(eq(schema.aiPublishingTemplates.id, templateId));
+  }
+
+  // Template Custom Fields
+  async getTemplateCustomFields(templateId: number): Promise<any[]> {
+    return await database
+      .select()
+      .from(schema.templateCustomFields)
+      .where(eq(schema.templateCustomFields.templateId, templateId))
+      .orderBy(schema.templateCustomFields.displayOrder);
+  }
+
+  async createTemplateCustomField(data: any): Promise<any> {
+    const result = await database.insert(schema.templateCustomFields).values(data).returning();
+    return result[0];
+  }
+
+  async updateTemplateCustomField(id: number, data: any): Promise<void> {
+    await database.update(schema.templateCustomFields).set(data).where(eq(schema.templateCustomFields.id, id));
+  }
+
+  async deleteTemplateCustomField(id: number): Promise<void> {
+    await database.delete(schema.templateCustomFields).where(eq(schema.templateCustomFields.id, id));
+  }
+
+  async reorderTemplateCustomFields(templateId: number, fieldOrders: { id: number; order: number }[]): Promise<void> {
+    for (const item of fieldOrders) {
+      await database
+        .update(schema.templateCustomFields)
+        .set({ displayOrder: item.order })
+        .where(eq(schema.templateCustomFields.id, item.id));
+    }
+  }
+
+  // AI Usage Tracking
+  async getUsageStats(filters: any): Promise<any[]> {
+    let conditions = [];
+    if (filters.providerId) conditions.push(eq(schema.aiUsageStats.providerId, filters.providerId));
+    if (filters.modelId) conditions.push(eq(schema.aiUsageStats.modelId, filters.modelId));
+    if (filters.taskId) conditions.push(eq(schema.aiUsageStats.taskId, filters.taskId));
+    if (filters.dateFrom) conditions.push(sql`${schema.aiUsageStats.usageDate} >= ${filters.dateFrom}`);
+    if (filters.dateTo) conditions.push(sql`${schema.aiUsageStats.usageDate} <= ${filters.dateTo}`);
+
+    return await database
+      .select()
+      .from(schema.aiUsageStats)
+      .where(conditions.length > 0 ? and(...conditions) : undefined)
+      .orderBy(desc(schema.aiUsageStats.usageDate));
+  }
+
+  async getUsageStatsSummary(filters: any): Promise<any> {
+    let conditions = [];
+    if (filters.providerId) conditions.push(eq(schema.aiUsageStats.providerId, filters.providerId));
+    if (filters.dateFrom) conditions.push(sql`${schema.aiUsageStats.usageDate} >= ${filters.dateFrom}`);
+    if (filters.dateTo) conditions.push(sql`${schema.aiUsageStats.usageDate} <= ${filters.dateTo}`);
+
+    const result = await database
+      .select({
+        totalRequests: sql`SUM(request_count)`,
+        totalTokens: sql`SUM(total_tokens_input + total_tokens_output)`,
+        totalTokensInput: sql`SUM(total_tokens_input)`,
+        totalTokensOutput: sql`SUM(total_tokens_output)`,
+        successCount: sql`SUM(success_count)`,
+        errorCount: sql`SUM(error_count)`
+      })
+      .from(schema.aiUsageStats)
+      .where(conditions.length > 0 ? and(...conditions) : undefined);
+
+    return result[0];
+  }
+
+  async recordUsage(data: any): Promise<any> {
+    const result = await database.insert(schema.aiUsageStats).values(data).returning();
+    return result[0];
   }
 }
 
