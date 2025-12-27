@@ -129,7 +129,27 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   app.patch("/api/tasks/:id", async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
-      const task = await storage.updateTask(id, req.body);
+      // Ensure all boolean fields are explicitly set for database update
+      const taskData = {
+        ...req.body,
+        updatedAt: new Date()
+      };
+      
+      // Log incoming data for debugging
+      console.log(`[API] Updating task ${id}:`, {
+        videoProcessingEnabled: taskData.videoProcessingEnabled,
+        audioProcessingEnabled: taskData.audioProcessingEnabled,
+        linkProcessingEnabled: taskData.linkProcessingEnabled
+      });
+      
+      const task = await storage.updateTask(id, taskData);
+      
+      console.log(`[API] Task updated:`, {
+        videoProcessingEnabled: task?.videoProcessingEnabled,
+        audioProcessingEnabled: task?.audioProcessingEnabled,
+        linkProcessingEnabled: task?.linkProcessingEnabled
+      });
+      
       res.json({ task });
     } catch (error) {
       handleError(res, error, "Failed to update task");

@@ -60,6 +60,9 @@ interface TaskFormData {
   videoProcessingEnabled: boolean;
   videoAiProviderId: number | null;
   videoAiModelId: number | null;
+  audioProcessingEnabled: boolean;
+  audioAiProviderId: number | null;
+  audioAiModelId: number | null;
   linkProcessingEnabled: boolean;
   linkVideoDownloadEnabled: boolean;
   linkVideoQuality: string;
@@ -86,6 +89,9 @@ const initialFormData: TaskFormData = {
   videoProcessingEnabled: false,
   videoAiProviderId: null,
   videoAiModelId: null,
+  audioProcessingEnabled: false,
+  audioAiProviderId: null,
+  audioAiModelId: null,
   linkProcessingEnabled: false,
   linkVideoDownloadEnabled: true,
   linkVideoQuality: "high",

@@ -454,11 +454,35 @@ export class DbStorage implements IStorage {
   }
 
   async updateTask(id: number, updates: Partial<InsertForwardingTask>): Promise<ForwardingTask | undefined> {
+    // Ensure all processing flags are properly set
+    const updateData: any = {
+      ...updates,
+      updatedAt: new Date()
+    };
+    
+    // Explicitly set boolean fields to ensure they're saved
+    if ('videoProcessingEnabled' in updateData) {
+      updateData.videoProcessingEnabled = Boolean(updateData.videoProcessingEnabled);
+    }
+    if ('audioProcessingEnabled' in updateData) {
+      updateData.audioProcessingEnabled = Boolean(updateData.audioProcessingEnabled);
+    }
+    if ('linkProcessingEnabled' in updateData) {
+      updateData.linkProcessingEnabled = Boolean(updateData.linkProcessingEnabled);
+    }
+    if ('aiEnabled' in updateData) {
+      updateData.aiEnabled = Boolean(updateData.aiEnabled);
+    }
+    if ('summarizationEnabled' in updateData) {
+      updateData.summarizationEnabled = Boolean(updateData.summarizationEnabled);
+    }
+    
     const result = await database
       .update(schema.forwardingTasks)
-      .set({ ...updates, updatedAt: new Date() })
+      .set(updateData)
       .where(eq(schema.forwardingTasks.id, id))
       .returning();
+    
     return result[0];
   }
 
