@@ -52,7 +52,7 @@ function startTelegramBot() {
     lines.forEach((line: string) => {
       if (line.trim()) {
         console.log(`[telegram-bot] ${line}`);
-        // logger.info("telegram-bot", "process", line); // Disabled for web dashboard
+        logger.info("telegram-bot", "process", line); // Enabled for web dashboard
       }
     });
   });
@@ -62,7 +62,7 @@ function startTelegramBot() {
     lines.forEach((line: string) => {
       if (line.trim()) {
         console.error(`[telegram-bot-err] ${line}`);
-        // logger.error("telegram-bot", "process", line); // Disabled for web dashboard
+        logger.error("telegram-bot", "process", line); // Enabled for web dashboard
       }
     });
   });
@@ -136,7 +136,7 @@ export function log(message: string, source = "express") {
   });
 
   console.log(`${formattedTime} [${source}] ${message}`);
-  // logger.info(source, "log", message); // Disabled for web dashboard
+  logger.info(source, "log", message); // Enabled for web dashboard
 }
 
 app.use((req, res, next) => {
