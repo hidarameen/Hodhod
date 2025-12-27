@@ -163,23 +163,37 @@ class ForwardingEngine:
             }
             log_detailed("info", "forwarding_engine", "forward_message", f"📌 Injected serial #{serial_number} into initial_extracted_data")
 
-            # Check for link processing (message contains only a URL)
-            message_text = message.text or ""
+            # Check for link processing (message contains only a URL or contains URLs)
+            message_text = message.text or message.caption or ""
             link_processed = False
             summary = ""
             caption = ""
             extracted_data = initial_extracted_data.copy()
-            if link_processing and message_text and link_processor.is_video_link(message_text):
-                log_detailed("info", "forwarding_engine", "forward_message", "Processing video link...")
-                url = link_processor.extract_url(message_text)
-                log_detailed("info", "forwarding_engine", "forward_message", f"Extracted URL: {url}")
-                if url:
-                    try:
-                        link_result = await link_processor.process_link(url, task_id, task_config)
-                        if link_result:
-                            summary, video_path, telegraph_url, video_info = link_result
-                            video_title = video_info.get('title', '') if video_info else ''
-                            log_detailed("info", "forwarding_engine", "forward_message", f"Link processed: summary={len(summary)} chars, has_video={video_path is not None}, telegraph={telegraph_url}, title={video_title[:30]}")
+            
+            # Improved link detection and extraction
+            url = None
+            if link_processing and message_text:
+                if link_processor.is_video_link(message_text):
+                    url = link_processor.extract_url(message_text)
+                else:
+                    # Look for URLs within larger text
+                    urls = re.findall(r'https?://[^\s<>"]+|www\.[^\s<>"]+', message_text)
+                    if urls:
+                        # Prioritize video links if multiple URLs found
+                        for u in urls:
+                            if any(domain in u.lower() for domain in ['youtube.com', 'youtu.be', 'instagram.com', 'tiktok.com', 'facebook.com', 'fb.watch', 'x.com', 'twitter.com']):
+                                url = u
+                                break
+                        if not url: url = urls[0]
+            
+            if url:
+                log_detailed("info", "forwarding_engine", "forward_message", f"Processing video link: {url}")
+                try:
+                    link_result = await link_processor.process_link(url, task_id, task_config)
+                    if link_result:
+                        summary, video_path, telegraph_url, video_info = link_result
+                        video_title = video_info.get('title', '') if video_info else ''
+                        log_detailed("info", "forwarding_engine", "forward_message", f"Link processed: summary={len(summary)} chars, has_video={video_path is not None}, telegraph={telegraph_url}, title={video_title[:30]}")
 
                             # Apply content filters to summary (same as regular text processing)
                             should_forward, action, filter_matched, filtered_summary = await self._check_content_filters(

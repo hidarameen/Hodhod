@@ -46,18 +46,47 @@ MAX_VIDEO_SIZE_MB = 50
 DOWNLOAD_TIMEOUT = 90
 MAX_RETRIES = 2
 
-def _get_cookies_path() -> Optional[str]:
-    """Get path to YouTube cookies file from environment variable.
-    The cookies should be in Netscape format stored in YOUTUBE_COOKIES env var."""
-    cookies_content = os.environ.get('YOUTUBE_COOKIES', '')
+def _get_cookies_path(platform: Optional[str] = None) -> Optional[str]:
+    """Get path to cookies file from environment variable.
+    Supports YOUTUBE_COOKIES, INSTAGRAM_COOKIES, FACEBOOK_COOKIES, TIKTOK_COOKIES.
+    Returns path to the specific cookies file or None."""
+    
+    # Map platforms to env vars
+    env_vars = {
+        'youtube': 'YOUTUBE_COOKIES',
+        'instagram': 'INSTAGRAM_COOKIES',
+        'facebook': 'FACEBOOK_COOKIES',
+        'tiktok': 'TIKTOK_COOKIES'
+    }
+    
+    # Try platform-specific cookies first
+    env_var = None
+    if platform:
+        p_lower = platform.lower()
+        if 'youtube' in p_lower: env_var = env_vars['youtube']
+        elif 'instagram' in p_lower: env_var = env_vars['instagram']
+        elif 'facebook' in p_lower: env_var = env_vars['facebook']
+        elif 'tiktok' in p_lower: env_var = env_vars['tiktok']
+    
+    # If no specific platform or specific env var is empty, try YouTube as fallback for generic links
+    cookies_content = ""
+    target_path = "/tmp/cookies.txt"
+    
+    if env_var:
+        cookies_content = os.environ.get(env_var, '')
+        target_path = f"/tmp/{env_var.lower()}.txt"
+    
+    if not cookies_content:
+        cookies_content = os.environ.get('YOUTUBE_COOKIES', '')
+        target_path = "/tmp/youtube_cookies.txt"
+        
     if not cookies_content:
         return None
     
-    cookies_path = "/tmp/youtube_cookies.txt"
     try:
-        with open(cookies_path, 'w') as f:
+        with open(target_path, 'w') as f:
             f.write(cookies_content)
-        return cookies_path
+        return target_path
     except Exception as e:
         error_logger.log_info(f"Failed to write cookies file: {str(e)}")
         return None
@@ -184,6 +213,13 @@ class LinkProcessor:
         try:
             import json
             
+            # Determine platform for cookies
+            platform_hint = None
+            if 'youtube' in url.lower(): platform_hint = 'youtube'
+            elif 'instagram' in url.lower(): platform_hint = 'instagram'
+            elif 'facebook' in url.lower() or 'fb.watch' in url.lower(): platform_hint = 'facebook'
+            elif 'tiktok' in url.lower(): platform_hint = 'tiktok'
+            
             cmd = [
                 "yt-dlp",
                 "--no-warnings",
@@ -192,7 +228,7 @@ class LinkProcessor:
                 "--socket-timeout", "15",
             ]
             
-            cookies_path = _get_cookies_path()
+            cookies_path = _get_cookies_path(platform_hint)
             if cookies_path:
                 cmd.extend(["--cookies", cookies_path])
             
@@ -276,9 +312,17 @@ class LinkProcessor:
         task_logger = TaskLogger(task_id)
         
         try:
+            # Determine platform for cookies
+            platform_hint = None
+            if 'youtube' in url.lower(): platform_hint = 'youtube'
+            elif 'instagram' in url.lower(): platform_hint = 'instagram'
+            elif 'facebook' in url.lower() or 'fb.watch' in url.lower(): platform_hint = 'facebook'
+            elif 'tiktok' in url.lower(): platform_hint = 'tiktok'
+            
             await task_logger.log_info(f"🔗 DOWNLOADING VIDEO:")
             await task_logger.log_info(f"   URL: {url}")
             await task_logger.log_info(f"   Quality: {quality}")
+            await task_logger.log_info(f"   Platform: {platform_hint or 'Generic'}")
             
             output_template = os.path.join(
                 self.temp_dir,
@@ -288,7 +332,7 @@ class LinkProcessor:
             
             format_options = self._get_format_options(quality)
             format_options.append("best")
-            cookies_path = _get_cookies_path()
+            cookies_path = _get_cookies_path(platform_hint)
             
             last_error = None
             for attempt, format_str in enumerate(format_options):
