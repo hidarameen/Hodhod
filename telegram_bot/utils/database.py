@@ -974,12 +974,24 @@ class Database:
 
     async def get_default_template_with_fields(self, task_id: int) -> Optional[Dict[str, Any]]:
         """Get default publishing template for a task with its custom fields"""
+        # Ensure task_id is int
+        t_id = int(task_id)
         template = await self.fetchrow(
             """SELECT * FROM ai_publishing_templates 
                WHERE task_id = $1 AND is_default = true AND is_active = true
                LIMIT 1""",
-            task_id
+            t_id
         )
+        if not template:
+            # Fallback: check if there is ANY active template if no default is marked
+            template = await self.fetchrow(
+                """SELECT * FROM ai_publishing_templates 
+                   WHERE task_id = $1 AND is_active = true
+                   ORDER BY is_default DESC, created_at DESC
+                   LIMIT 1""",
+                t_id
+            )
+            
         if not template:
             return None
 
@@ -992,12 +1004,24 @@ class Database:
 
     async def get_task_publishing_template(self, task_id: int) -> Optional[Dict[str, Any]]:
         """Get default publishing template for a task with fields formatted for AI extraction"""
+        # Ensure task_id is int
+        t_id = int(task_id)
         template = await self.fetchrow(
             """SELECT * FROM ai_publishing_templates 
                WHERE task_id = $1 AND is_default = true AND is_active = true
                LIMIT 1""",
-            task_id
+            t_id
         )
+        if not template:
+            # Fallback: check if there is ANY active template if no default is marked
+            template = await self.fetchrow(
+                """SELECT * FROM ai_publishing_templates 
+                   WHERE task_id = $1 AND is_active = true
+                   ORDER BY is_default DESC, created_at DESC
+                   LIMIT 1""",
+                t_id
+            )
+            
         if not template:
             return None
 
