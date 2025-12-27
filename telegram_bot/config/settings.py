@@ -99,9 +99,41 @@ class Settings:
     # AI Models Configuration
     AI_MODELS = {
         "openai": [
-            {"name": "gpt-4-turbo-preview", "display": "GPT-4 Turbo", "type": "text"},
-            {"name": "gpt-4", "display": "GPT-4", "type": "text"},
-            {"name": "gpt-3.5-turbo", "display": "GPT-3.5 Turbo", "type": "text"},
+            # Latest Frontier Models (December 2025)
+            {"name": "gpt-5.2", "display": "GPT-5.2 (Latest)", "type": "text"},
+            {"name": "gpt-5.2-pro", "display": "GPT-5.2 Pro", "type": "text"},
+            
+            # GPT-5 Series
+            {"name": "gpt-5.1", "display": "GPT-5.1", "type": "text"},
+            {"name": "gpt-5.1-codex", "display": "GPT-5.1 Codex", "type": "text"},
+            {"name": "gpt-5.1-codex-max", "display": "GPT-5.1 Codex Max", "type": "text"},
+            {"name": "gpt-5", "display": "GPT-5", "type": "text"},
+            {"name": "gpt-5-pro", "display": "GPT-5 Pro", "type": "text"},
+            {"name": "gpt-5-codex", "display": "GPT-5 Codex", "type": "text"},
+            {"name": "gpt-5-mini", "display": "GPT-5 Mini", "type": "text"},
+            {"name": "gpt-5-nano", "display": "GPT-5 Nano", "type": "text"},
+            
+            # Reasoning Models (o-series)
+            {"name": "o3", "display": "o3 (Reasoning)", "type": "text"},
+            {"name": "o3-pro", "display": "o3 Pro", "type": "text"},
+            {"name": "o3-mini", "display": "o3 Mini", "type": "text"},
+            {"name": "o3-deep-research", "display": "o3 Deep Research", "type": "text"},
+            {"name": "o4-mini", "display": "o4 Mini", "type": "text"},
+            {"name": "o4-mini-deep-research", "display": "o4 Mini Deep Research", "type": "text"},
+            {"name": "o1-pro", "display": "o1 Pro", "type": "text"},
+            
+            # GPT-4 Series
+            {"name": "gpt-4.1", "display": "GPT-4.1", "type": "text"},
+            {"name": "gpt-4.1-mini", "display": "GPT-4.1 Mini", "type": "text"},
+            {"name": "gpt-4.1-nano", "display": "GPT-4.1 Nano", "type": "text"},
+            {"name": "gpt-4o", "display": "GPT-4o", "type": "text"},
+            {"name": "gpt-4o-mini", "display": "GPT-4o Mini", "type": "text"},
+            {"name": "gpt-4-turbo", "display": "GPT-4 Turbo", "type": "text"},
+            {"name": "gpt-4-turbo-preview", "display": "GPT-4 Turbo Preview", "type": "text"},
+            
+            # Legacy Models (Supported)
+            {"name": "gpt-4", "display": "GPT-4 (Legacy)", "type": "text"},
+            {"name": "gpt-3.5-turbo", "display": "GPT-3.5 Turbo (Legacy)", "type": "text"},
         ],
         "groq": [
             # Production Models - نماذج الإنتاج

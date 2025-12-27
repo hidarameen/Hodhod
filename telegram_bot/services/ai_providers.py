@@ -90,53 +90,73 @@ class OpenAIProvider(AIProvider):
             # Build fallback chain based on model
             model_lower = model.lower()
             
-            # GPT-5.x family (future/beta models)
-            if "gpt-5" in model_lower:
-                models_to_try.extend(["gpt-4o", "gpt-4-turbo", "gpt-4"])
-            # GPT-4.1 family (future/beta models)
+            # List of all known available models
+            known_models = {
+                "gpt-5.2", "gpt-5.2-pro",
+                "gpt-5.1", "gpt-5.1-codex", "gpt-5.1-codex-max",
+                "gpt-5", "gpt-5-pro", "gpt-5-codex", "gpt-5-mini", "gpt-5-nano",
+                "o3", "o3-pro", "o3-mini", "o3-deep-research",
+                "o4-mini", "o4-mini-deep-research", "o1-pro",
+                "gpt-4.1", "gpt-4.1-mini", "gpt-4.1-nano",
+                "gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-4-turbo-preview",
+                "gpt-4", "gpt-3.5-turbo"
+            }
+            
+            # Fallback chain: try newer models if primary fails
+            if model_lower not in known_models:
+                # Unknown model, use best fallback chain
+                models_to_try.extend(["gpt-4o", "gpt-4.1", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"])
+            elif "gpt-5" in model_lower or "o3" in model_lower or "o4" in model_lower or "o1" in model_lower:
+                # Try other reasoning/frontier models if primary fails
+                models_to_try.extend(["gpt-4o", "gpt-4.1", "gpt-4-turbo", "gpt-4"])
             elif "gpt-4.1" in model_lower:
-                models_to_try.extend(["gpt-4o", "gpt-4-turbo", "gpt-4"])
-            # O3 family (reasoning models)
-            elif "o3" in model_lower:
-                models_to_try.extend(["gpt-4o", "gpt-4-turbo", "gpt-4"])
-            # O4 family (future reasoning)
-            elif "o4" in model_lower:
-                models_to_try.extend(["gpt-4o", "gpt-4-turbo", "gpt-4"])
-            # Current stable models
-            # ✅ Fix: Use gpt-4o as default for unknown models to avoid 404
-            elif model_lower not in ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"]:
-                if model_lower == "whisper-1":
-                    # Whisper-1 is an audio model, not a chat model
-                    error_logger.log_warning(f"[OpenAI] ⚠️ whisper-1 is not a chat model, falling back to gpt-4o")
-                    models_to_try = ["gpt-4o", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"]
-                else:
-                    # Unknown model, try fallbacks
-                    models_to_try.extend(["gpt-4o", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"])
+                # Try other GPT-4.1 variants first
+                models_to_try.extend(["gpt-4.1", "gpt-4o", "gpt-4-turbo", "gpt-4"])
             
             # Per-model max_tokens limits
-            # Based on OpenAI's actual context windows and safe completion token limits
+            # Based on OpenAI's official documentation (https://platform.openai.com/docs/models)
             model_token_limits = {
-                "gpt-5.1": 12000,
-                "gpt-5": 12000,
-                "gpt-5-mini": 12000,
-                "gpt-5-nano": 12000,
-                "gpt-5-pro": 12000,
-                "gpt-5.1-codex": 12000,
-                "gpt-5.1-codex-max": 12000,
-                "gpt-4.1": 8000,
-                "gpt-4.1-mini": 8000,
-                "gpt-4.1-nano": 8000,
-                "gpt-4o": 8000,  # 128K context, but use conservative limit
-                "gpt-4o-mini": 8000,  # 128K context, but use conservative limit
-                "gpt-4-turbo": 8000,  # 128K context, but use conservative limit
-                "gpt-4-turbo-preview": 8000,  # 128K context, but use conservative limit
-                "gpt-4": 8000,  # 8K context window, reserve for prompt
-                "o3": 8000,
-                "o3-pro": 8000,
-                "o3-mini": 8000,
-                "o3-deep-research": 8000,
-                "o4-mini": 8000,
-                "gpt-3.5-turbo": 3000  # 4K context window, leave buffer for prompt
+                # Latest Models (GPT-5.2 Series) - 400K context
+                "gpt-5.2": 100000,  # 400K context window
+                "gpt-5.2-pro": 100000,  # 400K context window
+                
+                # GPT-5.1 Series - 1M context
+                "gpt-5.1": 32000,  # 1M+ context window, max 32K output
+                "gpt-5.1-codex": 32000,
+                "gpt-5.1-codex-max": 32000,
+                
+                # GPT-5 Series - Very large context
+                "gpt-5": 20000,  # Large context model
+                "gpt-5-pro": 20000,
+                "gpt-5-codex": 20000,
+                "gpt-5-mini": 16000,
+                "gpt-5-nano": 16000,
+                
+                # Reasoning Models (o-series)
+                "o3": 15000,  # Reasoning model, conservative limit
+                "o3-pro": 20000,
+                "o3-mini": 10000,  # Smaller reasoning model
+                "o3-deep-research": 15000,
+                "o4-mini": 12000,  # Reasoning model
+                "o4-mini-deep-research": 15000,
+                "o1-pro": 12000,
+                
+                # GPT-4.1 Series - 1M context
+                "gpt-4.1": 32000,  # 1M+ context window, max 32K output
+                "gpt-4.1-mini": 16000,  # Smaller version
+                "gpt-4.1-nano": 8000,   # Fastest version
+                
+                # GPT-4o Series - 128K context
+                "gpt-4o": 8000,  # 128K context window
+                "gpt-4o-mini": 8000,  # 128K context window
+                
+                # GPT-4 Series
+                "gpt-4-turbo": 8000,  # 128K context window
+                "gpt-4-turbo-preview": 8000,
+                "gpt-4": 4000,  # 8K context window, conservative
+                
+                # Legacy Models
+                "gpt-3.5-turbo": 3000  # 4K context window
             }
             
             last_error = None
