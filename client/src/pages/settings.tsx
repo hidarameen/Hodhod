@@ -116,7 +116,7 @@ export default function SettingsPage() {
   // Auto-scroll logic
   useEffect(() => {
     if (autoRefresh && logsEndRef.current) {
-      logsEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+      logsEndRef.current.scrollIntoView({ behavior: "instant", block: "end" });
     }
   }, [eventLogs, autoRefresh]);
 

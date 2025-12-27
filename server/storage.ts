@@ -686,7 +686,7 @@ export class DbStorage implements IStorage {
     return await database
       .select()
       .from(schema.errorLogs)
-      .orderBy(desc(schema.errorLogs.timestamp))
+      .orderBy(sql`${schema.errorLogs.timestamp} ASC`)
       .limit(limit);
   }
 
