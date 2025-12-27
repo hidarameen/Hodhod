@@ -189,6 +189,9 @@ class ForwardingEngine:
             if url:
                 log_detailed("info", "forwarding_engine", "forward_message", f"Processing video link: {url}")
                 try:
+            if url:
+                log_detailed("info", "forwarding_engine", "forward_message", f"Processing video link: {url}")
+                try:
                     link_result = await link_processor.process_link(url, task_id, task_config)
                     if link_result:
                         summary, video_path, telegraph_url, video_info = link_result
@@ -395,112 +398,111 @@ class ForwardingEngine:
                                     log_detailed("info", "forwarding_engine", "forward_message", f"Video from link: path={video_path[:50]}..., exists={os.path.exists(video_path)}")
 
                                     if os.path.exists(video_path):
-                                            try:
-                                                # ✅ CRITICAL: Verify video has BOTH video and audio streams
-                                                log_detailed("info", "forwarding_engine", "forward_message", f"Verifying video contains video + audio before sending...")
-                                                verification = await link_processor._verify_video_has_content(video_path)
-                                                
-                                                if not verification.get('has_video'):
-                                                    log_detailed("error", "forwarding_engine", "forward_message", f"❌ Video file is audio-only, skipping video send and forwarding summary instead")
-                                                    await self.client.send_message(
-                                                        chat_id=target_identifier,
-                                                        text=caption,
-                                                        parse_mode=ParseMode.HTML
-                                                    )
-                                                    continue
-                                                
-                                                if not verification.get('has_audio'):
-                                                    log_detailed("warning", "forwarding_engine", "forward_message", f"⚠️ Video has no audio stream")
-                                                
-                                                # Ensure mp4 extension
-                                                video_path = link_processor.ensure_mp4_extension(video_path)
-
-                                                # Get video metadata (duration, width, height)
-                                                metadata = link_processor.get_video_metadata(video_path)
-                                                duration = metadata.get('duration', 0)
-                                                width = metadata.get('width', 0)
-                                                height = metadata.get('height', 0)
-
-                                                # Generate thumbnail
-                                                thumb_path = await link_processor.generate_thumbnail(video_path)
-
-                                                log_detailed("info", "forwarding_engine", "forward_message", f"Video metadata: duration={duration}s, {width}x{height}, thumb={thumb_path is not None}")
-
-                                                # Truncate caption if too long (Telegram max is 1024)
-                                                send_caption = caption
-                                                if len(send_caption) > 1024:
-                                                    send_caption = send_caption[:1020] + "..."
-
-                                                log_detailed("info", "forwarding_engine", "forward_message", f"Sending video from link to {target_id} with caption ({len(send_caption)} chars)...")
-
-                                                # Get filename from video title or path
-                                                if video_title:
-                                                    safe_title = "".join(c for c in video_title if c.isalnum() or c in (' ', '-', '_', '.'))[:50]
-                                                    file_name = f"{safe_title}.mp4" if safe_title else "video.mp4"
-                                                else:
-                                                    file_name = os.path.basename(video_path)
-                                                    if not file_name.lower().endswith('.mp4'):
-                                                        file_name = file_name.rsplit('.', 1)[0] + '.mp4'
-
-                                                log_detailed("info", "forwarding_engine", "forward_message", f"Using file_name: {file_name}")
-
-                                                await self.client.send_video(
-                                                    chat_id=target_identifier,
-                                                    video=video_path,
-                                                    caption=send_caption,
-                                                    parse_mode=ParseMode.HTML,
-                                                    duration=duration,
-                                                    width=width,
-                                                    height=height,
-                                                    thumb=thumb_path,
-                                                    file_name=file_name,
-                                                    supports_streaming=True
-                                                )
-
-                                                log_detailed("info", "forwarding_engine", "forward_message", f"✓ Video sent successfully to {target_id}")
-
-                                                # Try to cleanup after sending
-                                                try:
-                                                    if os.path.exists(video_path):
-                                                        os.remove(video_path)
-                                                        log_detailed("info", "forwarding_engine", "forward_message", f"Cleaned up video file after sending")
-                                                    if thumb_path and os.path.exists(thumb_path):
-                                                        os.remove(thumb_path)
-                                                        log_detailed("info", "forwarding_engine", "forward_message", f"Cleaned up thumbnail after sending")
-                                                except Exception as cleanup_err:
-                                                    log_detailed("warning", "forwarding_engine", "forward_message", f"Failed to cleanup video: {str(cleanup_err)}")
-
-                                            except Exception as send_err:
-                                                log_detailed("error", "forwarding_engine", "forward_message", f"Failed to send video: {str(send_err)}, sending summary as text instead")
+                                        try:
+                                            # ✅ CRITICAL: Verify video has BOTH video and audio streams
+                                            log_detailed("info", "forwarding_engine", "forward_message", "Verifying video contains video + audio before sending...")
+                                            verification = await link_processor._verify_video_has_content(video_path)
+                                            
+                                            if not verification.get('has_video'):
+                                                log_detailed("error", "forwarding_engine", "forward_message", "❌ Video file is audio-only, skipping video send and forwarding summary instead")
                                                 await self.client.send_message(
                                                     chat_id=target_identifier,
                                                     text=caption,
                                                     parse_mode=ParseMode.HTML
                                                 )
-                                        else:
-                                            log_detailed("error", "forwarding_engine", "forward_message", f"Video file not found (already deleted?): {video_path}")
+                                                continue
+                                            
+                                            if not verification.get('has_audio'):
+                                                log_detailed("warning", "forwarding_engine", "forward_message", "⚠️ Video has no audio stream")
+                                            
+                                            # Ensure mp4 extension
+                                            video_path = link_processor.ensure_mp4_extension(video_path)
+
+                                            # Get video metadata (duration, width, height)
+                                            metadata = link_processor.get_video_metadata(video_path)
+                                            duration = metadata.get('duration', 0)
+                                            width = metadata.get('width', 0)
+                                            height = metadata.get('height', 0)
+
+                                            # Generate thumbnail
+                                            thumb_path = await link_processor.generate_thumbnail(video_path)
+
+                                            log_detailed("info", "forwarding_engine", "forward_message", f"Video metadata: duration={duration}s, {width}x{height}, thumb={thumb_path is not None}")
+
+                                            # Truncate caption if too long (Telegram max is 1024)
+                                            send_caption = caption
+                                            if len(send_caption) > 1024:
+                                                send_caption = send_caption[:1020] + "..."
+
+                                            log_detailed("info", "forwarding_engine", "forward_message", f"Sending video from link to {target_id} with caption ({len(send_caption)} chars)...")
+
+                                            # Get filename from video title or path
+                                            if video_title:
+                                                safe_title = "".join(c for c in video_title if c.isalnum() or c in (' ', '-', '_', '.'))[:50]
+                                                file_name = f"{safe_title}.mp4" if safe_title else "video.mp4"
+                                            else:
+                                                file_name = os.path.basename(video_path)
+                                                if not file_name.lower().endswith('.mp4'):
+                                                    file_name = file_name.rsplit('.', 1)[0] + '.mp4'
+
+                                            log_detailed("info", "forwarding_engine", "forward_message", f"Using file_name: {file_name}")
+
+                                            await self.client.send_video(
+                                                chat_id=target_identifier,
+                                                video=video_path,
+                                                caption=send_caption,
+                                                parse_mode=ParseMode.HTML,
+                                                duration=duration,
+                                                width=width,
+                                                height=height,
+                                                thumb=thumb_path,
+                                                file_name=file_name,
+                                                supports_streaming=True
+                                            )
+
+                                            log_detailed("info", "forwarding_engine", "forward_message", f"✓ Video sent successfully to {target_id}")
+
+                                            # Try to cleanup after sending
+                                            try:
+                                                if os.path.exists(video_path):
+                                                    os.remove(video_path)
+                                                    log_detailed("info", "forwarding_engine", "forward_message", "Cleaned up video file after sending")
+                                                if thumb_path and os.path.exists(thumb_path):
+                                                    os.remove(thumb_path)
+                                                    log_detailed("info", "forwarding_engine", "forward_message", "Cleaned up thumbnail after sending")
+                                            except Exception as cleanup_err:
+                                                log_detailed("warning", "forwarding_engine", "forward_message", f"Failed to cleanup video: {str(cleanup_err)}")
+
+                                        except Exception as send_err:
+                                            log_detailed("error", "forwarding_engine", "forward_message", f"Failed to send video: {str(send_err)}, sending summary as text instead")
                                             await self.client.send_message(
                                                 chat_id=target_identifier,
                                                 text=caption,
                                                 parse_mode=ParseMode.HTML
                                             )
                                     else:
-                                        # No video to send, send summary as text only
-                                        log_detailed("info", "forwarding_engine", "forward_message", f"No video from link, sending summary as text only")
+                                        log_detailed("error", "forwarding_engine", "forward_message", f"Video file not found (already deleted?): {video_path}")
                                         await self.client.send_message(
                                             chat_id=target_identifier,
                                             text=caption,
                                             parse_mode=ParseMode.HTML
                                         )
+                                else:
+                                    # No video to send, send summary as text only
+                                    log_detailed("info", "forwarding_engine", "forward_message", "No video from link, sending summary as text only")
+                                    await self.client.send_message(
+                                        chat_id=target_identifier,
+                                        text=caption,
+                                        parse_mode=ParseMode.HTML
+                                    )
 
-                            await db.increment_task_counter(task_id)
-                            await db.update_task_stats(task_id, "forwarded")
-                            await task_logger.log_success(f"Link processed and forwarded to {len(target_channels)} targets")
-                            link_processed = True
-                    except Exception as e:
-                        log_detailed("error", "forwarding_engine", "forward_message", f"Link processing error: {str(e)}")
-                        await task_logger.log_warning(f"Link processing failed, forwarding original: {str(e)}")
-
+                        await db.increment_task_counter(task_id)
+                        await db.update_task_stats(task_id, "forwarded")
+                        await task_logger.log_success(f"Link processed and forwarded to {len(target_channels)} targets")
+                        link_processed = True
+                except Exception as e:
+                    log_detailed("error", "forwarding_engine", "forward_message", f"Link processing error: {str(e)}")
+                    await task_logger.log_warning(f"Link processing failed, forwarding original: {str(e)}")
             # If link was processed successfully, save to archive and return
             if link_processed:
                 # Save link to archive
