@@ -1656,10 +1656,11 @@ export default function ArchivePage() {
                           <SelectValue placeholder="الكل" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="all">الكل</SelectItem>
-                          {filterOptions?.sources?.map((s: string) => (
-                            <SelectItem key={s} value={s}>{s}</SelectItem>
-                          ))}
+    const classifications = filterOptions?.classifications || [];
+    const provinces = filterOptions?.provinces || [];
+    const newsTypes = filterOptions?.newsTypes || [];
+    const specialists = filterOptions?.specialists || [];
+    const sources = filterOptions?.sources || [];
                         </SelectContent>
                       </Select>
                     </div>
