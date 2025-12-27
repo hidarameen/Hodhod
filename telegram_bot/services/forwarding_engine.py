@@ -122,10 +122,10 @@ class ForwardingEngine:
             # Check if video processing is actually enabled and it's a video
             video_proc_enabled = task_config.get("videoProcessingEnabled") or task_config.get("video_processing_enabled")
             
-            # ✅ FIX: If video processing is enabled, SKIP the regular text summarization for the caption
-            # This prevents the "double processing" where the caption is summarized separately
+            # ✅ FIX: Enhanced field extraction for video and link processing
+            # Ensure AI analyzes all available metadata (title, description, transcript, and caption)
             if video_proc_enabled and message.video:
-                log_detailed("info", "forwarding_engine", "forward_message", "Video detected and video processing is enabled. Skipping regular text summarization.")
+                log_detailed("info", "forwarding_engine", "forward_message", "Video detected and video processing is enabled.")
                 try:
                     caption_text = message.caption or ""
                     # We pass the original caption to the video processor which will handle merging it with transcription
