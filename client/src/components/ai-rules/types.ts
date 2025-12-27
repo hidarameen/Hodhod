@@ -83,6 +83,7 @@ export interface PublishingTemplate {
   maxLength?: number;
   extractionPrompt?: string;
   customFields?: TemplateCustomField[];
+  fields?: TemplateCustomField[];
 }
 
 export const entityTypes = [

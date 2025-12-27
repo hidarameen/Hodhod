@@ -1129,11 +1129,20 @@ export class DbStorage implements IStorage {
 
   // AI Publishing Templates
   async getPublishingTemplates(taskId: number): Promise<any[]> {
-    return await database
+    const templates = await database
       .select()
       .from(schema.aiPublishingTemplates)
       .where(eq(schema.aiPublishingTemplates.taskId, taskId))
       .orderBy(desc(schema.aiPublishingTemplates.isDefault), desc(schema.aiPublishingTemplates.createdAt));
+    
+    // Load fields for each template
+    return Promise.all(
+      templates.map(async (template) => ({
+        ...template,
+        fields: await this.getTemplateCustomFields(template.id),
+        customFields: await this.getTemplateCustomFields(template.id)
+      }))
+    );
   }
 
   async getPublishingTemplate(id: number): Promise<any> {
@@ -1167,12 +1176,16 @@ export class DbStorage implements IStorage {
   }
 
   async createPublishingTemplate(data: any): Promise<any> {
-    const result = await database.insert(schema.aiPublishingTemplates).values(data).returning();
+    // Filter out customFields before saving to database
+    const { customFields, ...templateData } = data;
+    const result = await database.insert(schema.aiPublishingTemplates).values(templateData).returning();
     return result[0];
   }
 
   async updatePublishingTemplate(id: number, data: any): Promise<void> {
-    await database.update(schema.aiPublishingTemplates).set({ ...data, updatedAt: new Date() }).where(eq(schema.aiPublishingTemplates.id, id));
+    // Filter out customFields before saving to database
+    const { customFields, ...templateData } = data;
+    await database.update(schema.aiPublishingTemplates).set({ ...templateData, updatedAt: new Date() }).where(eq(schema.aiPublishingTemplates.id, id));
   }
 
   async deletePublishingTemplate(id: number): Promise<void> {

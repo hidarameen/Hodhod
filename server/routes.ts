@@ -1106,7 +1106,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   app.get("/api/tasks/:taskId/publishing-templates/default", async (req: Request, res: Response) => {
     try {
       const taskId = parseInt(req.params.taskId);
-      const template = await storage.getDefaultTemplate(taskId);
+      const template = await storage.getDefaultPublishingTemplate(taskId);
       res.json(template || {});
     } catch (error) {
       handleError(res, error, "Failed to get default template");
@@ -1116,9 +1116,23 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   app.post("/api/tasks/:taskId/publishing-templates", async (req: Request, res: Response) => {
     try {
       const taskId = parseInt(req.params.taskId);
-      const data = { ...req.body, taskId };
+      const { customFields, ...templateData } = req.body;
+      const data = { ...templateData, taskId };
       const template = await storage.createPublishingTemplate(data);
-      res.json(template);
+      
+      // Save custom fields if provided
+      if (customFields && Array.isArray(customFields) && customFields.length > 0) {
+        for (const field of customFields) {
+          await storage.createTemplateCustomField({
+            ...field,
+            templateId: template.id
+          });
+        }
+      }
+      
+      // Return template with its fields
+      const fullTemplate = await storage.getPublishingTemplate(template.id);
+      res.json(fullTemplate);
     } catch (error) {
       handleError(res, error, "Failed to create publishing template");
     }
@@ -1127,8 +1141,42 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   app.patch("/api/publishing-templates/:id", async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
-      await storage.updatePublishingTemplate(id, req.body);
-      res.json({ message: "Publishing template updated" });
+      const { customFields, ...templateData } = req.body;
+      
+      // Update template
+      await storage.updatePublishingTemplate(id, templateData);
+      
+      // Handle custom fields if provided
+      if (customFields && Array.isArray(customFields)) {
+        // Get existing fields
+        const existingFields = await storage.getTemplateCustomFields(id);
+        const existingIds = new Set(existingFields.map(f => f.id));
+        const newFieldIds = new Set(customFields.filter(f => f.id).map(f => f.id));
+        
+        // Delete fields that were removed
+        for (const field of existingFields) {
+          if (!newFieldIds.has(field.id)) {
+            await storage.deleteTemplateCustomField(field.id);
+          }
+        }
+        
+        // Create or update fields
+        for (const field of customFields) {
+          if (field.id && existingIds.has(field.id)) {
+            // Update existing field
+            await storage.updateTemplateCustomField(field.id, field);
+          } else {
+            // Create new field
+            await storage.createTemplateCustomField({
+              ...field,
+              templateId: id
+            });
+          }
+        }
+      }
+      
+      const updatedTemplate = await storage.getPublishingTemplate(id);
+      res.json(updatedTemplate);
     } catch (error) {
       handleError(res, error, "Failed to update publishing template");
     }

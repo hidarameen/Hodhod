@@ -60,6 +60,7 @@ export function TemplateDialog({ open, onOpenChange, onSubmit, editingData, isLo
 
   useEffect(() => {
     if (editingData) {
+      const fields = editingData.customFields || editingData.fields || [];
       setForm({
         name: editingData.name,
         templateType: editingData.templateType,
@@ -73,7 +74,7 @@ export function TemplateDialog({ open, onOpenChange, onSubmit, editingData, isLo
         useNewlineBeforeFooter: editingData.useNewlineBeforeFooter ?? true,
         maxLength: editingData.maxLength,
         extractionPrompt: editingData.extractionPrompt || '',
-        customFields: editingData.customFields || []
+        customFields: fields
       });
     } else {
       setForm(defaultForm);
@@ -84,6 +85,10 @@ export function TemplateDialog({ open, onOpenChange, onSubmit, editingData, isLo
   }, [editingData, open]);
 
   const handleSubmit = () => {
+    if (!form.name || form.name.trim() === '') {
+      toast.error("يرجى إدخال اسم القالب");
+      return;
+    }
     if (!form.customFields || form.customFields.length === 0) {
       toast.error("يرجى إضافة حقل واحد على الأقل");
       return;
