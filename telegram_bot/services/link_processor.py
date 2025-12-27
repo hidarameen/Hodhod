@@ -78,7 +78,9 @@ def _get_cookies_path(platform: Optional[str] = None) -> Optional[str]:
     if env_var:
         cookies_content = os.environ.get(env_var, '')
         if cookies_content:
-            error_logger.log_info(f"Found specific cookies for {platform} in {env_var}")
+            error_logger.log_info(f"Found specific cookies for {platform} in {env_var} (Length: {len(cookies_content)})")
+            if not cookies_content.startswith('#'):
+                error_logger.log_warning(f"Cookies in {env_var} DO NOT start with # Netscape header! This might fail.")
         target_path = f"/tmp/{env_var.lower()}.txt"
     
     # Check if we have specific cookies, if not, fallback to YOUTUBE_COOKIES
