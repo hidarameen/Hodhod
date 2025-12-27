@@ -74,7 +74,7 @@ function startTelegramBot() {
   });
 
   botProcess.on("close", (code) => {
-    console.log(`[telegram-bot] Process exited with code ${code}`);
+    // console.log(`[telegram-bot] Process exited with code ${code}`);
     botProcess = null;
 
     // Auto-restart if not too many attempts

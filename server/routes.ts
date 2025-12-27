@@ -27,7 +27,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       const secretPassword = process.env.ADMIN_PASSWORD;
       
       if (!secretUsername || !secretPassword) {
-        console.error("[Auth] Admin credentials not configured in secrets");
+        // console.error("[Auth] Admin credentials not configured in secrets");
         return res.status(500).json({ error: "Admin authentication not configured" });
       }
       
