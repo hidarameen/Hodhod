@@ -52,6 +52,43 @@ async function seed() {
 
     // Seed AI Models
     const models = [
+      // OpenAI - GPT-5 Series
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "gpt-5.2",
+        displayName: "GPT-5.2 (Latest Frontier)",
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "gpt-5.2-pro",
+        displayName: "GPT-5.2 Pro",
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "gpt-5.1",
+        displayName: "GPT-5.1",
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "gpt-5",
+        displayName: "GPT-5",
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "gpt-5-mini",
+        displayName: "GPT-5 mini",
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "gpt-5-nano",
+        displayName: "GPT-5 nano",
+        isActive: true,
+      },
       // OpenAI - GPT-4o Series
       {
         providerId: insertedProviders.find(p => p.name === "openai")!.id,
@@ -65,12 +102,70 @@ async function seed() {
         displayName: "GPT-4o mini",
         isActive: true,
       },
-      // OpenAI - Audio
+      // OpenAI - o-series
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "o1",
+        displayName: "o1",
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "o1-mini",
+        displayName: "o1-mini",
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "o1-pro",
+        displayName: "o1-pro",
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "o3",
+        displayName: "o3",
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "o3-mini",
+        displayName: "o3-mini",
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "o3-pro",
+        displayName: "o3-pro",
+        isActive: true,
+      },
+      // OpenAI - Specialized
       {
         providerId: insertedProviders.find(p => p.name === "openai")!.id,
         modelName: "whisper-1",
         displayName: "Whisper-1 (Audio Only)",
         capabilities: ["audio"],
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "tts-1",
+        displayName: "TTS-1",
+        capabilities: ["tts"],
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "tts-1-hd",
+        displayName: "TTS-1 HD",
+        capabilities: ["tts"],
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "dall-e-3",
+        displayName: "DALL-E 3",
+        capabilities: ["image"],
         isActive: true,
       },
       // Groq Production Models

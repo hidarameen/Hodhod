@@ -171,9 +171,45 @@ async function seedModels(): Promise<void> {
     const providerMap = new Map(providers.map((p: any) => [p.name, p.id]));
     
     const models = [
+      // GPT-5.2 Series
+      { providerId: providerMap.get('openai'), modelName: 'gpt-5.2', displayName: 'GPT-5.2', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'gpt-5.2-pro', displayName: 'GPT-5.2 Pro', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'gpt-5-mini', displayName: 'GPT-5 Mini', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'gpt-5-nano', displayName: 'GPT-5 Nano', isActive: true },
+      
+      // GPT-5 Series
+      { providerId: providerMap.get('openai'), modelName: 'gpt-5', displayName: 'GPT-5', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'gpt-5.1', displayName: 'GPT-5.1', isActive: true },
+      
+      // GPT-4o Series
       { providerId: providerMap.get('openai'), modelName: 'gpt-4o', displayName: 'GPT-4o', isActive: true },
       { providerId: providerMap.get('openai'), modelName: 'gpt-4o-mini', displayName: 'GPT-4o Mini', isActive: true },
+      { providerId: providerMap.get('chatgpt-4o-latest',), modelName: 'chatgpt-4o-latest', displayName: 'ChatGPT-4o (Latest)', isActive: false },
+      
+      // o-series (Reasoning)
+      { providerId: providerMap.get('openai'), modelName: 'o1', displayName: 'o1', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'o1-mini', displayName: 'o1 Mini', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'o1-pro', displayName: 'o1 Pro', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'o3', displayName: 'o3', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'o3-mini', displayName: 'o3-mini', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'o3-pro', displayName: 'o3-pro', isActive: true },
+      
+      // Specialized & Audio
       { providerId: providerMap.get('openai'), modelName: 'whisper-1', displayName: 'Whisper-1 (Audio Only)', isActive: true, capabilities: JSON.stringify(['audio']) },
+      { providerId: providerMap.get('openai'), modelName: 'gpt-4o-realtime-preview', displayName: 'GPT-4o Realtime', isActive: true, capabilities: JSON.stringify(['audio']) },
+      { providerId: providerMap.get('openai'), modelName: 'gpt-4o-audio-preview', displayName: 'GPT-4o Audio', isActive: true, capabilities: JSON.stringify(['audio']) },
+      { providerId: providerMap.get('openai'), modelName: 'tts-1', displayName: 'TTS-1', isActive: true, capabilities: JSON.stringify(['tts']) },
+      { providerId: providerMap.get('openai'), modelName: 'tts-1-hd', displayName: 'TTS-1 HD', isActive: true, capabilities: JSON.stringify(['tts']) },
+      
+      // Image & Video
+      { providerId: providerMap.get('openai'), modelName: 'dall-e-3', displayName: 'DALL-E 3', isActive: true, capabilities: JSON.stringify(['image']) },
+      { providerId: providerMap.get('openai'), modelName: 'dall-e-2', displayName: 'DALL-E 2', isActive: true, capabilities: JSON.stringify(['image']) },
+      
+      // Legacy & Others
+      { providerId: providerMap.get('openai'), modelName: 'gpt-4-turbo', displayName: 'GPT-4 Turbo', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'gpt-4', displayName: 'GPT-4', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'gpt-3.5-turbo', displayName: 'GPT-3.5 Turbo', isActive: true },
+      
       { providerId: providerMap.get('groq'), modelName: 'llama-3.3-70b-versatile', displayName: 'LLaMA 3.3 70B', isActive: true },
       { providerId: providerMap.get('claude'), modelName: 'claude-3-opus-20240229', displayName: 'Claude 3 Opus', isActive: true },
       { providerId: providerMap.get('claude'), modelName: 'claude-3-sonnet-20240229', displayName: 'Claude 3 Sonnet', isActive: true },
