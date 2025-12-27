@@ -195,206 +195,206 @@ class ForwardingEngine:
                         video_title = video_info.get('title', '') if video_info else ''
                         log_detailed("info", "forwarding_engine", "forward_message", f"Link processed: summary={len(summary)} chars, has_video={video_path is not None}, telegraph={telegraph_url}, title={video_title[:30]}")
 
-                            # Apply content filters to summary (same as regular text processing)
-                            should_forward, action, filter_matched, filtered_summary = await self._check_content_filters(
-                                summary, task_id, None
-                            )
-                            
-                            if not should_forward:
-                                log_detailed("info", "forwarding_engine", "forward_message", f"⛔ Link summary blocked by filter: {filter_matched['name'] if filter_matched else 'unknown'}")
-                                await task_logger.log_warning(f"Link summary blocked by content filter")
-                                return
-                            
-                            summary = filtered_summary
-                            log_detailed("info", "forwarding_engine", "forward_message", f"✅ Link summary passed content filters, final length: {len(summary)} chars")
+                        # Apply content filters to summary (same as regular text processing)
+                        should_forward, action, filter_matched, filtered_summary = await self._check_content_filters(
+                            summary, task_id, None
+                        )
+                        
+                        if not should_forward:
+                            log_detailed("info", "forwarding_engine", "forward_message", f"⛔ Link summary blocked by filter: {filter_matched['name'] if filter_matched else 'unknown'}")
+                            await task_logger.log_warning(f"Link summary blocked by content filter")
+                            return
+                        
+                        summary = filtered_summary
+                        log_detailed("info", "forwarding_engine", "forward_message", f"✅ Link summary passed content filters, final length: {len(summary)} chars")
 
-                            # ✅ COMPREHENSIVE FIX: Extract fields from ALL video data (title, description, transcript)
-                            # This ensures التصنيف, نوع_الخبر, المحافظة, المصدر are populated from actual video content
-                            template_data = initial_extracted_data.copy()
+                        # ✅ COMPREHENSIVE FIX: Extract fields from ALL video data (title, description, transcript)
+                        # This ensures التصنيف, نوع_الخبر, المحافظة, المصدر are populated from actual video content
+                        template_data = initial_extracted_data.copy()
+                        
+                        # Get ALL video data for field extraction
+                        transcript = video_info.get('transcript', '') if video_info else ''
+                        video_title = video_info.get('title', '') if video_info else ''
+                        video_description = video_info.get('description', '') if video_info else ''
+                        uploader = video_info.get('uploader', '') if video_info else ''
+                        platform = video_info.get('platform', '') if video_info else ''
+                        channel = video_info.get('channel', '') if video_info else ''
+                        
+                        log_detailed("info", "forwarding_engine", "forward_message", f"📝 Video data available:", {
+                            "transcript_chars": len(transcript),
+                            "title": video_title[:50] if video_title else "EMPTY",
+                            "description_chars": len(video_description),
+                            "uploader": uploader or "EMPTY",
+                            "platform": platform or "EMPTY"
+                        })
+                        
+                        # ✅ FIX: Build comprehensive source info with fallbacks
+                        if video_info:
+                            # Build source info with multiple fallbacks
+                            source_parts = []
+                            if uploader and uploader.strip():
+                                source_parts.append(uploader.strip())
+                            elif channel and channel.strip():
+                                source_parts.append(channel.strip())
                             
-                            # Get ALL video data for field extraction
-                            transcript = video_info.get('transcript', '') if video_info else ''
-                            video_title = video_info.get('title', '') if video_info else ''
-                            video_description = video_info.get('description', '') if video_info else ''
-                            uploader = video_info.get('uploader', '') if video_info else ''
-                            platform = video_info.get('platform', '') if video_info else ''
-                            channel = video_info.get('channel', '') if video_info else ''
-                            
-                            log_detailed("info", "forwarding_engine", "forward_message", f"📝 Video data available:", {
-                                "transcript_chars": len(transcript),
-                                "title": video_title[:50] if video_title else "EMPTY",
-                                "description_chars": len(video_description),
-                                "uploader": uploader or "EMPTY",
-                                "platform": platform or "EMPTY"
-                            })
-                            
-                            # ✅ FIX: Build comprehensive source info with fallbacks
-                            if video_info:
-                                # Build source info with multiple fallbacks
-                                source_parts = []
-                                if uploader and uploader.strip():
-                                    source_parts.append(uploader.strip())
-                                elif channel and channel.strip():
-                                    source_parts.append(channel.strip())
-                                
-                                if platform and platform.strip():
-                                    if source_parts:
-                                        source_parts.append(f"({platform.strip()})")
-                                    else:
-                                        source_parts.append(platform.strip())
-                                
-                                source_info = " ".join(source_parts) if source_parts else "غير محدد"
-                                template_data['المصدر'] = source_info
-                                template_data['source'] = source_info
-                                log_detailed("info", "forwarding_engine", "forward_message", f"✅ Added video source to template: {source_info}")
-                            
-                            # ✅ FIX: Build COMBINED extraction text from ALL sources (title + description + transcript)
-                            # This gives AI more context to extract fields accurately
-                            extraction_parts = []
-                            if video_title and video_title.strip():
-                                extraction_parts.append(f"عنوان الفيديو: {video_title.strip()}")
-                            if video_description and video_description.strip():
-                                extraction_parts.append(f"وصف الفيديو: {video_description.strip()}")
-                            if transcript and transcript.strip():
-                                # Limit transcript to first 3000 chars to avoid overwhelming AI
-                                transcript_text = transcript.strip()[:3000]
-                                extraction_parts.append(f"محتوى الفيديو المُفرّغ: {transcript_text}")
-                            
-                            combined_extraction_text = "\n\n".join(extraction_parts) if extraction_parts else transcript
-                            
-                            log_detailed("info", "forwarding_engine", "forward_message", 
-                                        f"🤖 Built combined extraction text: {len(combined_extraction_text)} chars from {len(extraction_parts)} sources")
-                            
-                            # Get template and fields
-                            template = await db.get_task_publishing_template(task_id)
-                            # ✅ FIX: get_task_publishing_template returns 'fields' NOT 'custom_fields'
-                            fields_to_extract = template.get("fields", []) if template else []
-                            
-                            # ✅ FIX: Check extraction conditions with better logging
-                            if not template:
-                                log_detailed("warning", "forwarding_engine", "forward_message", 
-                                            "⚠️ NO TEMPLATE found for this task - cannot extract fields!")
-                            elif not fields_to_extract:
-                                log_detailed("warning", "forwarding_engine", "forward_message", 
-                                            "⚠️ Template has NO fields defined - cannot extract fields!")
-                            elif not combined_extraction_text:
-                                log_detailed("warning", "forwarding_engine", "forward_message", 
-                                            "⚠️ No video content available (title/description/transcript all empty) - cannot extract fields!")
-                            
-                            # ✅ FIX: Try to extract fields even with partial data
-                            if template and fields_to_extract and combined_extraction_text:
-                                provider_name = None
-                                model_name = None
-                                provider_id = task_config.get("summarization_provider_id") or task_config.get("summarizationProviderId")
-                                model_id = task_config.get("summarization_model_id") or task_config.get("summarizationModelId")
-                                
-                                log_detailed("debug", "forwarding_engine", "forward_message", 
-                                            f"📋 Template found with {len(fields_to_extract)} fields to extract", {
-                                                "provider_id": provider_id, "model_id": model_id,
-                                                "fields": [f.get('field_name') for f in fields_to_extract]
-                                            })
-                                
-                                if provider_id:
-                                    provider_info = await db.get_ai_provider(provider_id)
-                                    if provider_info:
-                                        provider_name = provider_info["name"]
-                                
-                                if model_id:
-                                    model_info = await db.get_ai_model(model_id)
-                                    if model_info:
-                                        model_name = model_info.get("name") or model_info.get("model_name")
-                                
-                                log_detailed("debug", "forwarding_engine", "forward_message", 
-                                            f"🔧 Provider/Model resolved", {
-                                                "provider_name": provider_name, "model_name": model_name
-                                            })
-                                
-                                if provider_name and model_name:
-                                    # ✅ CRITICAL FIX: Use combined_extraction_text which includes title, description AND transcript
-                                    extracted_data = await self._extract_fields_with_ai(
-                                        combined_extraction_text,  # ✅ Use ALL video data (title + description + transcript)
-                                        task_id,
-                                        provider_name,
-                                        model_name,
-                                        fields_to_extract,
-                                        serial_number=serial_number,
-                                        processed_text=summary,  # Use summary as processed text for التلخيص field
-                                        original_text=combined_extraction_text,  # Use combined text for field extraction
-                                        video_metadata={  # ✅ NEW: Pass video metadata for better extraction
-                                            'title': video_title,
-                                            'description': video_description,
-                                            'uploader': uploader,
-                                            'platform': platform,
-                                            'channel': channel
-                                        }
-                                    )
-                                    # Merge with template_data
-                                    template_data.update(extracted_data)
-                                    log_detailed("info", "forwarding_engine", "forward_message", 
-                                                f"✅ Extracted {len(extracted_data)} fields from link summary", {
-                                                    "fields": list(extracted_data.keys()),
-                                                    "values_preview": {k: str(v)[:50] for k, v in extracted_data.items() if v}
-                                                })
+                            if platform and platform.strip():
+                                if source_parts:
+                                    source_parts.append(f"({platform.strip()})")
                                 else:
-                                    log_detailed("warning", "forwarding_engine", "forward_message", 
-                                                "❌ No AI provider/model configured for field extraction - using defaults")
-                                    # ✅ FIX: Add default values for fields when AI is not available
-                                    for field in fields_to_extract:
-                                        field_name = field.get("field_name", "")
-                                        default_value = field.get("default_value", "")
-                                        if default_value:
-                                            template_data[field_name] = default_value
-                                            log_detailed("debug", "forwarding_engine", "forward_message", 
-                                                        f"Using default for {field_name}: {default_value}")
+                                    source_parts.append(platform.strip())
                             
-                            # ✅ FIX: Use template_data (which contains merged extracted data) for template application
-                            # Apply publishing template to the summary
-                            log_detailed("info", "forwarding_engine", "forward_message", "Applying publishing template to link summary...", {
-                                "template_data_keys": list(template_data.keys()),
-                                "template_data_count": len(template_data)
-                            })
-                            template_res = await self._apply_publishing_template(
-                                summary, 
-                                task_id, 
-                                template_data,  # ✅ CRITICAL FIX: Use template_data which contains all merged extracted fields
-                                original_text=summary  # Pass summary as original for consistent extraction
-                            )
+                            source_info = " ".join(source_parts) if source_parts else "غير محدد"
+                            template_data['المصدر'] = source_info
+                            template_data['source'] = source_info
+                            log_detailed("info", "forwarding_engine", "forward_message", f"✅ Added video source to template: {source_info}")
+                        
+                        # ✅ FIX: Build COMBINED extraction text from ALL sources (title + description + transcript)
+                        # This gives AI more context to extract fields accurately
+                        extraction_parts = []
+                        if video_title and video_title.strip():
+                            extraction_parts.append(f"عنوان الفيديو: {video_title.strip()}")
+                        if video_description and video_description.strip():
+                            extraction_parts.append(f"وصف الفيديو: {video_description.strip()}")
+                        if transcript and transcript.strip():
+                            # Limit transcript to first 3000 chars to avoid overwhelming AI
+                            transcript_text = transcript.strip()[:3000]
+                            extraction_parts.append(f"محتوى الفيديو المُفرّغ: {transcript_text}")
+                        
+                        combined_extraction_text = "\n\n".join(extraction_parts) if extraction_parts else transcript
+                        
+                        log_detailed("info", "forwarding_engine", "forward_message", 
+                                    f"🤖 Built combined extraction text: {len(combined_extraction_text)} chars from {len(extraction_parts)} sources")
+                        
+                        # Get template and fields
+                        template = await db.get_task_publishing_template(task_id)
+                        # ✅ FIX: get_task_publishing_template returns 'fields' NOT 'custom_fields'
+                        fields_to_extract = template.get("fields", []) if template else []
+                        
+                        # ✅ FIX: Check extraction conditions with better logging
+                        if not template:
+                            log_detailed("warning", "forwarding_engine", "forward_message", 
+                                        "⚠️ NO TEMPLATE found for this task - cannot extract fields!")
+                        elif not fields_to_extract:
+                            log_detailed("warning", "forwarding_engine", "forward_message", 
+                                        "⚠️ Template has NO fields defined - cannot extract fields!")
+                        elif not combined_extraction_text:
+                            log_detailed("warning", "forwarding_engine", "forward_message", 
+                                        "⚠️ No video content available (title/description/transcript all empty) - cannot extract fields!")
+                        
+                        # ✅ FIX: Try to extract fields even with partial data
+                        if template and fields_to_extract and combined_extraction_text:
+                            provider_name = None
+                            model_name = None
+                            provider_id = task_config.get("summarization_provider_id") or task_config.get("summarizationProviderId")
+                            model_id = task_config.get("summarization_model_id") or task_config.get("summarizationModelId")
                             
-                            # Unpack template result
-                            if isinstance(template_res, tuple):
-                                template_result, extracted_fields_updated = template_res
-                                # Update extracted_data for archiving
-                                if extracted_fields_updated:
-                                    template_data.update(extracted_fields_updated)
+                            log_detailed("debug", "forwarding_engine", "forward_message", 
+                                        f"📋 Template found with {len(fields_to_extract)} fields to extract", {
+                                            "provider_id": provider_id, "model_id": model_id,
+                                            "fields": [f.get('field_name') for f in fields_to_extract]
+                                        })
+                            
+                            if provider_id:
+                                provider_info = await db.get_ai_provider(provider_id)
+                                if provider_info:
+                                    provider_name = provider_info["name"]
+                            
+                            if model_id:
+                                model_info = await db.get_ai_model(model_id)
+                                if model_info:
+                                    model_name = model_info.get("name") or model_info.get("model_name")
+                            
+                            log_detailed("debug", "forwarding_engine", "forward_message", 
+                                        f"🔧 Provider/Model resolved", {
+                                            "provider_name": provider_name, "model_name": model_name
+                                        })
+                            
+                            if provider_name and model_name:
+                                # ✅ CRITICAL FIX: Use combined_extraction_text which includes title, description AND transcript
+                                extracted_data = await self._extract_fields_with_ai(
+                                    combined_extraction_text,  # ✅ Use ALL video data (title + description + transcript)
+                                    task_id,
+                                    provider_name,
+                                    model_name,
+                                    fields_to_extract,
+                                    serial_number=serial_number,
+                                    processed_text=summary,  # Use summary as processed text for التلخيص field
+                                    original_text=combined_extraction_text,  # Use combined text for field extraction
+                                    video_metadata={  # ✅ NEW: Pass video metadata for better extraction
+                                        'title': video_title,
+                                        'description': video_description,
+                                        'uploader': uploader,
+                                        'platform': platform,
+                                        'channel': channel
+                                    }
+                                )
+                                # Merge with template_data
+                                template_data.update(extracted_data)
+                                log_detailed("info", "forwarding_engine", "forward_message", 
+                                            f"✅ Extracted {len(extracted_data)} fields from link summary", {
+                                                "fields": list(extracted_data.keys()),
+                                                "values_preview": {k: str(v)[:50] for k, v in extracted_data.items() if v}
+                                            })
                             else:
-                                template_result = template_res
+                                log_detailed("warning", "forwarding_engine", "forward_message", 
+                                            "❌ No AI provider/model configured for field extraction - using defaults")
+                                # ✅ FIX: Add default values for fields when AI is not available
+                                for field in fields_to_extract:
+                                    field_name = field.get("field_name", "")
+                                    default_value = field.get("default_value", "")
+                                    if default_value:
+                                        template_data[field_name] = default_value
+                                        log_detailed("debug", "forwarding_engine", "forward_message", 
+                                                    f"Using default for {field_name}: {default_value}")
+                        
+                        # ✅ FIX: Use template_data (which contains merged extracted data) for template application
+                        # Apply publishing template to the summary
+                        log_detailed("info", "forwarding_engine", "forward_message", "Applying publishing template to link summary...", {
+                            "template_data_keys": list(template_data.keys()),
+                            "template_data_count": len(template_data)
+                        })
+                        template_res = await self._apply_publishing_template(
+                            summary, 
+                            task_id, 
+                            template_data,  # ✅ CRITICAL FIX: Use template_data which contains all merged extracted fields
+                            original_text=summary  # Pass summary as original for consistent extraction
+                        )
+                        
+                        # Unpack template result
+                        if isinstance(template_res, tuple):
+                            template_result, extracted_fields_updated = template_res
+                            # Update extracted_data for archiving
+                            if extracted_fields_updated:
+                                template_data.update(extracted_fields_updated)
+                        else:
+                            template_result = template_res
 
-                            if template_result and template_result.strip():
-                                caption = template_result
-                                log_detailed("info", "forwarding_engine", "forward_message", f"Publishing template applied to link summary: {len(caption)} chars")
-                            else:
-                                # Fallback to default format if no template
-                                caption = f'🔗 <b>ملخص الفيديو من الرابط:</b>\n\n{summary}'
-                                log_detailed("info", "forwarding_engine", "forward_message", "No publishing template, using default format")
+                        if template_result and template_result.strip():
+                            caption = template_result
+                            log_detailed("info", "forwarding_engine", "forward_message", f"Publishing template applied to link summary: {len(caption)} chars")
+                        else:
+                            # Fallback to default format if no template
+                            caption = f'🔗 <b>ملخص الفيديو من الرابط:</b>\n\n{summary}'
+                            log_detailed("info", "forwarding_engine", "forward_message", "No publishing template, using default format")
 
-                            # Add Telegraph link after template
-                            if telegraph_url:
-                                caption += f'\n\n📄 <a href="{telegraph_url}">اقرأ النص الأصلي الكامل</a>'
+                        # Add Telegraph link after template
+                        if telegraph_url:
+                            caption += f'\n\n📄 <a href="{telegraph_url}">اقرأ النص الأصلي الكامل</a>'
 
-                            # Send to all target channels
-                            for target_id in target_channels:
-                                target_channel = await db.get_channel(target_id)
-                                if target_channel:
-                                    try:
-                                        target_identifier = int(target_channel["identifier"])
-                                    except (ValueError, TypeError):
-                                        target_identifier = target_channel["identifier"]
+                        # Send to all target channels
+                        for target_id in target_channels:
+                            target_channel = await db.get_channel(target_id)
+                            if target_channel:
+                                try:
+                                    target_identifier = int(target_channel["identifier"])
+                                except (ValueError, TypeError):
+                                    target_identifier = target_channel["identifier"]
 
-                                    # Check if video should be sent
-                                    if video_path:
-                                        log_detailed("info", "forwarding_engine", "forward_message", f"Video from link: path={video_path[:50]}..., exists={os.path.exists(video_path)}")
+                                # Check if video should be sent
+                                if video_path:
+                                    log_detailed("info", "forwarding_engine", "forward_message", f"Video from link: path={video_path[:50]}..., exists={os.path.exists(video_path)}")
 
-                                        if os.path.exists(video_path):
+                                    if os.path.exists(video_path):
                                             try:
                                                 # ✅ CRITICAL: Verify video has BOTH video and audio streams
                                                 log_detailed("info", "forwarding_engine", "forward_message", f"Verifying video contains video + audio before sending...")
