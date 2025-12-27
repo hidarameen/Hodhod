@@ -76,9 +76,15 @@ def _get_cookies_path(platform: Optional[str] = None) -> Optional[str]:
         cookies_content = os.environ.get(env_var, '')
         target_path = f"/tmp/{env_var.lower()}.txt"
     
+    # Check if we have specific cookies, if not, fallback to YOUTUBE_COOKIES
     if not cookies_content:
         cookies_content = os.environ.get('YOUTUBE_COOKIES', '')
         target_path = "/tmp/youtube_cookies.txt"
+    
+    # If still no cookies, try generic COOKIES env var as last resort
+    if not cookies_content:
+        cookies_content = os.environ.get('COOKIES', '')
+        target_path = "/tmp/general_cookies.txt"
         
     if not cookies_content:
         return None
