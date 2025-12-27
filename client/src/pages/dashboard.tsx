@@ -151,8 +151,8 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Live Logs Panel */}
-        <Card className="border shadow-sm flex flex-col">
+        {/* Live Logs Panel - Disabled */}
+        {/* <Card className="border shadow-sm flex flex-col">
           <CardHeader className="pb-2">
             <CardTitle className="text-base md:text-lg font-medium text-foreground flex items-center justify-between">
               <span className="flex items-center gap-2"><Clock className="h-5 w-5 text-primary" /> {t('dashboard.live_logs')}</span>
@@ -166,7 +166,7 @@ export default function Dashboard() {
             <div className="text-xs text-muted-foreground">∘ القنوات المراقبة: {stats?.totalChannels || 0}</div>
             <div className="text-xs text-purple-600 dark:text-purple-400">◇ الذكاء الصناعي: نشط</div>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
     </div>
   );

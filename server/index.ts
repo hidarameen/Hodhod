@@ -15,8 +15,8 @@ async function startAuthService() {
   try {
     await authServiceManager.start();
   } catch (error) {
-    // console.error("[auth-service] Failed to start:", error);
-    // console.log("[auth-service] Continuing without auth service...");
+    console.error("[auth-service] Failed to start:", error);
+    console.log("[auth-service] Continuing without auth service...");
   }
 }
 
@@ -51,9 +51,8 @@ function startTelegramBot() {
     const lines = data.toString().trim().split("\n");
     lines.forEach((line: string) => {
       if (line.trim()) {
-        // Send to internal logger for Web Dashboard ONLY
-        // We DO NOT use console.log here to keep Replit console clean
-        logger.info("telegram-bot", "process", line);
+        console.log(`[telegram-bot] ${line}`);
+        // logger.info("telegram-bot", "process", line); // Disabled for web dashboard
       }
     });
   });
@@ -62,29 +61,28 @@ function startTelegramBot() {
     const lines = data.toString().trim().split("\n");
     lines.forEach((line: string) => {
       if (line.trim()) {
-        // Send to internal logger for Web Dashboard ONLY
-        // We DO NOT use console.error here to keep Replit console clean
-        logger.error("telegram-bot", "process", line);
+        console.error(`[telegram-bot-err] ${line}`);
+        // logger.error("telegram-bot", "process", line); // Disabled for web dashboard
       }
     });
   });
 
   botProcess.on("close", (code) => {
-    // console.log(`[telegram-bot] Process exited with code ${code}`);
+    console.log(`[telegram-bot] Process exited with code ${code}`);
     botProcess = null;
 
     // Auto-restart if not too many attempts
     if (botRestartAttempts < MAX_RESTART_ATTEMPTS) {
       botRestartAttempts++;
-      // console.log(`[telegram-bot] Restarting in ${RESTART_DELAY / 1000}s (attempt ${botRestartAttempts}/${MAX_RESTART_ATTEMPTS})`);
+      console.log(`[telegram-bot] Restarting in ${RESTART_DELAY / 1000}s (attempt ${botRestartAttempts}/${MAX_RESTART_ATTEMPTS})`);
       setTimeout(startTelegramBot, RESTART_DELAY);
     } else {
-      // console.error("[telegram-bot] Max restart attempts reached. Bot stopped.");
+      console.error("[telegram-bot] Max restart attempts reached. Bot stopped.");
     }
   });
 
   botProcess.on("error", (err) => {
-    // console.error(`[telegram-bot] Failed to start: ${err.message}`);
+    console.error(`[telegram-bot] Failed to start: ${err.message}`);
     botProcess = null;
   });
 
@@ -137,9 +135,8 @@ export function log(message: string, source = "express") {
     hour12: true,
   });
 
-  // Log only to internal logger (accessible by web dashboard)
-  // but NOT to console.log (which appears in Replit console)
-  logger.info(source, "log", message);
+  console.log(`${formattedTime} [${source}] ${message}`);
+  // logger.info(source, "log", message); // Disabled for web dashboard
 }
 
 app.use((req, res, next) => {

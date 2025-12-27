@@ -8,7 +8,7 @@ import { z } from "zod";
 import { pushToGitHub, getGitHubInfo, listGitHubRepos, pushToGitHubRepo, getBranches, getFileChanges } from "./github-sync";
 
 const handleError = (res: Response, error: unknown, message: string = "An error occurred") => {
-  // console.error(error);
+  console.error(error);
   res.status(500).json({ error: message, details: error instanceof Error ? error.message : String(error) });
 };
 
@@ -27,7 +27,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       const secretPassword = process.env.ADMIN_PASSWORD;
       
       if (!secretUsername || !secretPassword) {
-        // console.error("[Auth] Admin credentials not configured in secrets");
+        console.error("[Auth] Admin credentials not configured in secrets");
         return res.status(500).json({ error: "Admin authentication not configured" });
       }
       
