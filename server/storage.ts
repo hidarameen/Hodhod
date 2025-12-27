@@ -1189,7 +1189,7 @@ export class DbStorage implements IStorage {
 
   async createPublishingTemplate(data: any): Promise<any> {
     // Filter out customFields before saving to database
-    const { customFields, ...templateData } = data;
+    const { customFields, createdAt, updatedAt, ...templateData } = data;
     const result = await database.insert(schema.aiPublishingTemplates).values(templateData).returning();
     return result[0];
   }
