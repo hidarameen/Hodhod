@@ -1183,9 +1183,33 @@ export class DbStorage implements IStorage {
   }
 
   async updatePublishingTemplate(id: number, data: any): Promise<void> {
-    // Filter out customFields before saving to database
-    const { customFields, ...templateData } = data;
-    await database.update(schema.aiPublishingTemplates).set({ ...templateData, updatedAt: new Date() }).where(eq(schema.aiPublishingTemplates.id, id));
+    // Filter out customFields and fields before saving to database
+    const { customFields, fields, ...templateData } = data;
+    
+    // Only include allowed fields
+    const allowedFields = {
+      name: templateData.name,
+      templateType: templateData.templateType,
+      isDefault: templateData.isDefault,
+      headerText: templateData.headerText,
+      headerFormatting: templateData.headerFormatting,
+      footerText: templateData.footerText,
+      footerFormatting: templateData.footerFormatting,
+      fieldSeparator: templateData.fieldSeparator,
+      useNewlineAfterHeader: templateData.useNewlineAfterHeader,
+      useNewlineBeforeFooter: templateData.useNewlineBeforeFooter,
+      maxLength: templateData.maxLength,
+      extractionPrompt: templateData.extractionPrompt,
+      isActive: templateData.isActive,
+      updatedAt: new Date()
+    };
+    
+    // Filter out undefined values
+    const updateData = Object.fromEntries(
+      Object.entries(allowedFields).filter(([_, v]) => v !== undefined)
+    );
+    
+    await database.update(schema.aiPublishingTemplates).set(updateData).where(eq(schema.aiPublishingTemplates.id, id));
   }
 
   async deletePublishingTemplate(id: number): Promise<void> {
