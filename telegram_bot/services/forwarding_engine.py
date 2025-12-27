@@ -189,9 +189,6 @@ class ForwardingEngine:
             if url:
                 log_detailed("info", "forwarding_engine", "forward_message", f"Processing video link: {url}")
                 try:
-            if url:
-                log_detailed("info", "forwarding_engine", "forward_message", f"Processing video link: {url}")
-                try:
                     link_result = await link_processor.process_link(url, task_id, task_config)
                     if link_result:
                         summary, video_path, telegraph_url, video_info = link_result
