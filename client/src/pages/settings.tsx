@@ -100,7 +100,7 @@ export default function SettingsPage() {
 
   const { data: eventLogs = [], isLoading: loadingLogs, refetch: refetchLogs } = useQuery({
     queryKey: ["error-logs"],
-    queryFn: () => api.getErrorLogs(500),
+    queryFn: () => api.getErrorLogs(10000),
     refetchInterval: autoRefresh ? 5000 : false,
   });
 
@@ -352,22 +352,8 @@ export default function SettingsPage() {
     return matchesSearch && matchesLevel;
   });
 
-  // Deduplicate logs by component + function + message
-  const deduplicatedLogs = filteredLogs.reduce((acc: any[], log: any) => {
-    const key = `${log.component}|${log.function}|${log.errorMessage}`;
-    const exists = acc.some((l: any) => `${l.component}|${l.function}|${l.errorMessage}` === key);
-    if (!exists) acc.push(log);
-    return acc;
-  }, []);
-
-  // Auto-scroll to bottom when new logs arrive
-  useEffect(() => {
-    if (logsEndRef.current && logsContainerRef.current) {
-      setTimeout(() => {
-        logsEndRef.current?.scrollIntoView({ behavior: "smooth" });
-      }, 100);
-    }
-  }, [filteredLogs]);
+  // Show all logs without deduplication
+  const deduplicatedLogs = filteredLogs;
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -852,7 +838,7 @@ export default function SettingsPage() {
               </div>
 
               <div className="text-sm text-muted-foreground flex justify-between">
-                <span>عرض <span className="font-semibold text-foreground">{deduplicatedLogs.length}</span> من <span className="font-semibold text-foreground">{eventLogs.length}</span> سجل</span>
+                <span>إجمالي السجلات: <span className="font-semibold text-foreground">{deduplicatedLogs.length}</span></span>
                 {autoRefresh && <span className="flex items-center gap-1"><span className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></span> بث مباشر</span>}
               </div>
 
