@@ -39,7 +39,7 @@ class AIProvider:
         self, 
         prompt: str, 
         model: str, 
-        max_tokens: int = 8000,
+        max_tokens: int = 3000,
         temperature: float = 0.7
     ) -> str:
         """Generate text from prompt"""
@@ -58,7 +58,7 @@ class OpenAIProvider(AIProvider):
         self,
         prompt: str,
         model: str = "gpt-3.5-turbo",
-        max_tokens: int = 8000,
+        max_tokens: int = 3000,
         temperature: float = 0.7,
         tpm_limit: Optional[int] = None,
         rpm_limit: Optional[int] = None,
@@ -114,27 +114,29 @@ class OpenAIProvider(AIProvider):
                     models_to_try.extend(["gpt-4o", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"])
             
             # Per-model max_tokens limits
+            # Based on OpenAI's actual context windows and safe completion token limits
             model_token_limits = {
-                "gpt-5.1": 16000,
-                "gpt-5": 16000,
-                "gpt-5-mini": 16000,
-                "gpt-5-nano": 16000,
-                "gpt-5-pro": 16000,
-                "gpt-5.1-codex": 16000,
-                "gpt-5.1-codex-max": 16000,
-                "gpt-4.1": 8192,
-                "gpt-4.1-mini": 8192,
-                "gpt-4.1-nano": 8192,
-                "gpt-4o": 4096,
-                "gpt-4o-mini": 4096,
-                "gpt-4-turbo": 4096,
-                "gpt-4": 8192,
-                "o3": 4096,
-                "o3-pro": 4096,
-                "o3-mini": 4096,
-                "o3-deep-research": 4096,
-                "o4-mini": 4096,
-                "gpt-3.5-turbo": 4096
+                "gpt-5.1": 12000,
+                "gpt-5": 12000,
+                "gpt-5-mini": 12000,
+                "gpt-5-nano": 12000,
+                "gpt-5-pro": 12000,
+                "gpt-5.1-codex": 12000,
+                "gpt-5.1-codex-max": 12000,
+                "gpt-4.1": 8000,
+                "gpt-4.1-mini": 8000,
+                "gpt-4.1-nano": 8000,
+                "gpt-4o": 8000,  # 128K context, but use conservative limit
+                "gpt-4o-mini": 8000,  # 128K context, but use conservative limit
+                "gpt-4-turbo": 8000,  # 128K context, but use conservative limit
+                "gpt-4-turbo-preview": 8000,  # 128K context, but use conservative limit
+                "gpt-4": 8000,  # 8K context window, reserve for prompt
+                "o3": 8000,
+                "o3-pro": 8000,
+                "o3-mini": 8000,
+                "o3-deep-research": 8000,
+                "o4-mini": 8000,
+                "gpt-3.5-turbo": 3000  # 4K context window, leave buffer for prompt
             }
             
             last_error = None
@@ -229,7 +231,7 @@ class GroqProvider(AIProvider):
         self,
         prompt: str,
         model: str = "llama-3.1-8b-instant",
-        max_tokens: int = 8000,
+        max_tokens: int = 6000,
         temperature: float = 0.7
     ) -> str:
         """Generate text using Groq with fallback models"""
@@ -374,7 +376,7 @@ class ClaudeProvider(AIProvider):
         self,
         prompt: str,
         model: str = "claude-3-sonnet-20240229",
-        max_tokens: int = 8000,
+        max_tokens: int = 6000,
         temperature: float = 0.7
     ) -> str:
         """Generate text using Claude"""
@@ -414,7 +416,7 @@ class HuggingFaceProvider(AIProvider):
         self,
         prompt: str,
         model: str = "meta-llama/Llama-2-70b-chat-hf",
-        max_tokens: int = 8000,
+        max_tokens: int = 3000,
         temperature: float = 0.7
     ) -> str:
         """Generate text using HuggingFace"""
@@ -488,7 +490,7 @@ class AIManager:
         provider: str,
         model: str,
         prompt: str,
-        max_tokens: int = 8000,
+        max_tokens: int = 3000,
         temperature: float = 0.7
     ) -> Optional[str]:
         """Generate text using specified provider"""
@@ -550,7 +552,7 @@ class AIManager:
             elif text_length < 1500:
                 max_tokens = 600
             elif text_length < 4000:
-                max_tokens = 8000
+                max_tokens = 3000
             else:
                 max_tokens = 1500
         
