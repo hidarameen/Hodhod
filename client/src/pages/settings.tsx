@@ -99,8 +99,8 @@ export default function SettingsPage() {
   });
 
   const { data: eventLogs = [], isLoading: loadingLogs, refetch: refetchLogs } = useQuery({
-    queryKey: ["error-logs", logLevelFilter, autoRefresh],
-    queryFn: () => api.getErrorLogs(1000, autoRefresh ? 5 : undefined),
+    queryKey: ["logs", logLevelFilter, autoRefresh],
+    queryFn: () => api.getLogs(1000),
     refetchInterval: autoRefresh ? 2000 : false, // تحديث أسرع (كل ثانيتين)
   });
 

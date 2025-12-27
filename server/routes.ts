@@ -639,6 +639,17 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
+  // ============ Logs ============
+  app.get("/api/logs", async (req: Request, res: Response) => {
+    try {
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
+      const logs = await storage.getErrorLogs(limit);
+      res.json(logs);
+    } catch (error) {
+      handleError(res, error, "Failed to get logs");
+    }
+  });
+
   // ============ Error Logs ============
   app.get("/api/error-logs", async (req: Request, res: Response) => {
     try {
