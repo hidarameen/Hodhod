@@ -30,7 +30,7 @@ export default function Dashboard() {
   const { data: stats, isLoading } = useQuery({
     queryKey: ["dashboard-stats"],
     queryFn: () => api.getDashboardStats(),
-    refetchInterval: 5000,
+    refetchInterval: 15000, // زيادة الفاصل الزمني إلى 15 ثانية لتقليل الضغط
   });
 
   if (isLoading) {

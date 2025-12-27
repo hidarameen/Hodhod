@@ -24,8 +24,8 @@ export default function ErrorLogsPage() {
 
   const { data: errors = [], isLoading, refetch } = useQuery({
     queryKey: ["error-logs"],
-    queryFn: () => api.getErrorLogs(),
-    refetchInterval: 5000, // التحديث كل 5 ثواني
+    queryFn: () => api.getErrorLogs(50), // تقليل العدد المسترجع إلى 50 خطأ فقط
+    refetchInterval: 20000, // التحديث كل 20 ثانية بدلاً من 5
   });
 
   const filteredErrors = errors.filter(
