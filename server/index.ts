@@ -48,29 +48,25 @@ function startTelegramBot() {
   });
 
   botProcess.stdout?.on("data", (data) => {
-    // Disabled bot stdout logging to Replit console
-    /*
     const lines = data.toString().trim().split("\n");
     lines.forEach((line: string) => {
       if (line.trim()) {
-        console.log(`[telegram-bot] ${line}`);
+        // Send to internal logger for Web Dashboard ONLY
+        // We DO NOT use console.log here to keep Replit console clean
         logger.info("telegram-bot", "process", line);
       }
     });
-    */
   });
 
   botProcess.stderr?.on("data", (data) => {
-    // Disabled bot stderr logging to Replit console
-    /*
     const lines = data.toString().trim().split("\n");
     lines.forEach((line: string) => {
       if (line.trim()) {
-        console.error(`[telegram-bot-err] ${line}`);
+        // Send to internal logger for Web Dashboard ONLY
+        // We DO NOT use console.error here to keep Replit console clean
         logger.error("telegram-bot", "process", line);
       }
     });
-    */
   });
 
   botProcess.on("close", (code) => {
@@ -134,15 +130,16 @@ app.use(
 app.use(express.urlencoded({ extended: false }));
 
 export function log(message: string, source = "express") {
-  // Disabled console logging to improve performance and privacy in Replit console
-  // const formattedTime = new Date().toLocaleTimeString("en-US", {
-  //   hour: "numeric",
-  //   minute: "2-digit",
-  //   second: "2-digit",
-  //   hour12: true,
-  // });
-  // console.log(`${formattedTime} [${source}] ${message}`);
-  // logger.info(source, "log", message);
+  const formattedTime = new Date().toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  });
+
+  // Log only to internal logger (accessible by web dashboard)
+  // but NOT to console.log (which appears in Replit console)
+  logger.info(source, "log", message);
 }
 
 app.use((req, res, next) => {
