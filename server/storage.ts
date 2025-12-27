@@ -1195,35 +1195,17 @@ export class DbStorage implements IStorage {
   }
 
   async updatePublishingTemplate(id: number, data: any): Promise<void> {
-    // Build update object - ONLY allowed fields with strict type checking
-    const updateData: Record<string, any> = {};
+    const { id: _, createdAt, updatedAt, ...templateData } = data;
     
-    // Whitelist of allowed string fields
-    const stringFields = ['name', 'templateType', 'headerText', 'headerFormatting', 'footerText', 'footerFormatting', 'fieldSeparator', 'extractionPrompt'];
-    for (const field of stringFields) {
-      if (field in data && typeof data[field] === 'string') {
-        updateData[field] = data[field];
-      }
-    }
-    
-    // Whitelist of allowed boolean fields
-    const booleanFields = ['isDefault', 'useNewlineAfterHeader', 'useNewlineBeforeFooter', 'isActive'];
-    for (const field of booleanFields) {
-      if (field in data && typeof data[field] === 'boolean') {
-        updateData[field] = data[field];
-      }
-    }
-    
-    // Whitelist of allowed integer fields
-    if ('maxLength' in data && typeof data.maxLength === 'number' && Number.isInteger(data.maxLength)) {
-      updateData.maxLength = data.maxLength;
-    }
-    
-    // Always set the timestamp
+    // Convert string dates to Date objects if they exist to satisfy Drizzle types
+    // but we generally shouldn't be updating these manually
+    const updateData: any = { ...templateData };
     updateData.updatedAt = new Date();
-    
-    // Execute the update
-    await database.update(schema.aiPublishingTemplates).set(updateData).where(eq(schema.aiPublishingTemplates.id, id));
+
+    await database
+      .update(schema.aiPublishingTemplates)
+      .set(updateData)
+      .where(eq(schema.aiPublishingTemplates.id, id));
   }
 
   async deletePublishingTemplate(id: number): Promise<void> {
@@ -1259,7 +1241,8 @@ export class DbStorage implements IStorage {
   }
 
   async updateTemplateCustomField(id: number, data: any): Promise<void> {
-    await database.update(schema.templateCustomFields).set(data).where(eq(schema.templateCustomFields.id, id));
+    const { id: _, createdAt, ...updateData } = data;
+    await database.update(schema.templateCustomFields).set(updateData).where(eq(schema.templateCustomFields.id, id));
   }
 
   async deleteTemplateCustomField(id: number): Promise<void> {

@@ -1144,7 +1144,21 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       const { customFields, fields, createdAt, updatedAt, id: _, taskId, ...templateData } = req.body;
       
       // Update template (all dangerous/metadata fields stripped)
-      await storage.updatePublishingTemplate(id, templateData);
+      const sanitizedData: any = {};
+      const allowedFields = [
+        'name', 'templateType', 'headerText', 'headerFormatting', 
+        'footerText', 'footerFormatting', 'fieldSeparator', 
+        'useNewlineAfterHeader', 'useNewlineBeforeFooter', 'maxLength', 
+        'extractionPrompt', 'isActive', 'isDefault'
+      ];
+      
+      for (const key of allowedFields) {
+        if (key in templateData) {
+          sanitizedData[key] = templateData[key];
+        }
+      }
+
+      await storage.updatePublishingTemplate(id, sanitizedData);
       
       // Handle custom fields if provided
       if (customFields && Array.isArray(customFields)) {
@@ -1162,13 +1176,14 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
         
         // Create or update fields
         for (const field of customFields) {
-          if (field.id && existingIds.has(field.id)) {
+          const { id: fieldId, createdAt: fcAt, ...fieldData } = field;
+          if (fieldId && existingIds.has(fieldId)) {
             // Update existing field
-            await storage.updateTemplateCustomField(field.id, field);
+            await storage.updateTemplateCustomField(fieldId, fieldData);
           } else {
             // Create new field
             await storage.createTemplateCustomField({
-              ...field,
+              ...fieldData,
               templateId: id
             });
           }
