@@ -44,7 +44,6 @@ import {
   ContextDialog,
   FilterDialog,
   TemplateDialog,
-  ProviderModelSelector,
 } from "@/components/ai-rules";
 
 interface TaskFormData {
@@ -553,6 +552,9 @@ export default function TasksPage() {
       videoProcessingEnabled: task.videoProcessingEnabled || false,
       videoAiProviderId: task.videoAiProviderId || null,
       videoAiModelId: task.videoAiModelId || null,
+      audioProcessingEnabled: task.audioProcessingEnabled || false,
+      audioAiProviderId: task.audioAiProviderId || null,
+      audioAiModelId: task.audioAiModelId || null,
       linkProcessingEnabled: task.linkProcessingEnabled || false,
       linkVideoDownloadEnabled: task.linkVideoDownloadEnabled !== false,
       linkVideoQuality: task.linkVideoQuality || "high",
