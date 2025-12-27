@@ -1319,7 +1319,28 @@ export default function ArchivePage() {
         )}
 
         {/* Bulk Actions Bar */}
-        <AnimatePresence>
+        {/* Clear Archive Confirmation */}
+      <AlertDialog open={clearArchiveDialogOpen} onOpenChange={setClearArchiveDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-right">هل أنت متأكد من تفريغ الأرشيف؟</AlertDialogTitle>
+            <AlertDialogDescription className="text-right">
+              سيتم حذف جميع الرسائل في الأرشيف وتصفير رقم القيد ليعود إلى الصفر. هذا الإجراء لا يمكن التراجع عنه.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-row-reverse gap-2">
+            <AlertDialogAction 
+              onClick={() => clearArchiveMutation.mutate(filters.taskId)}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              تأكيد الحذف
+            </AlertDialogAction>
+            <AlertDialogCancel>إلغاء</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AnimatePresence>
           {selectedIds.size > 0 && (
             <motion.div
               initial={{ opacity: 0, y: -20 }}
@@ -1380,7 +1401,28 @@ export default function ArchivePage() {
         </AnimatePresence>
 
         {/* Filters Section */}
-        <AnimatePresence>
+        {/* Clear Archive Confirmation */}
+      <AlertDialog open={clearArchiveDialogOpen} onOpenChange={setClearArchiveDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-right">هل أنت متأكد من تفريغ الأرشيف؟</AlertDialogTitle>
+            <AlertDialogDescription className="text-right">
+              سيتم حذف جميع الرسائل في الأرشيف وتصفير رقم القيد ليعود إلى الصفر. هذا الإجراء لا يمكن التراجع عنه.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-row-reverse gap-2">
+            <AlertDialogAction 
+              onClick={() => clearArchiveMutation.mutate(filters.taskId)}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              تأكيد الحذف
+            </AlertDialogAction>
+            <AlertDialogCancel>إلغاء</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AnimatePresence>
           {showFilters && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
