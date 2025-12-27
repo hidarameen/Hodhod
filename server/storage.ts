@@ -173,6 +173,7 @@ async function seedModels(): Promise<void> {
     const models = [
       { providerId: providerMap.get('openai'), modelName: 'gpt-4o', displayName: 'GPT-4o', isActive: true },
       { providerId: providerMap.get('openai'), modelName: 'gpt-4o-mini', displayName: 'GPT-4o Mini', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'whisper-1', displayName: 'Whisper-1 (Audio Only)', isActive: true, capabilities: JSON.stringify(['audio']) },
       { providerId: providerMap.get('groq'), modelName: 'llama-3.3-70b-versatile', displayName: 'LLaMA 3.3 70B', isActive: true },
       { providerId: providerMap.get('claude'), modelName: 'claude-3-opus-20240229', displayName: 'Claude 3 Opus', isActive: true },
       { providerId: providerMap.get('claude'), modelName: 'claude-3-sonnet-20240229', displayName: 'Claude 3 Sonnet', isActive: true },
@@ -181,11 +182,12 @@ async function seedModels(): Promise<void> {
     for (const model of models) {
       if (model.providerId) {
         await queryClient`
-          INSERT INTO ai_models (provider_id, model_name, display_name, is_active)
-          VALUES (${model.providerId}, ${model.modelName}, ${model.displayName}, ${model.isActive})
+          INSERT INTO ai_models (provider_id, model_name, display_name, is_active, capabilities)
+          VALUES (${model.providerId}, ${model.modelName}, ${model.displayName}, ${model.isActive}, ${model.capabilities || null})
           ON CONFLICT (provider_id, model_name) DO UPDATE SET
             display_name = EXCLUDED.display_name,
-            is_active = EXCLUDED.is_active
+            is_active = EXCLUDED.is_active,
+            capabilities = EXCLUDED.capabilities
         `;
       }
     }
