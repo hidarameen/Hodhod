@@ -100,8 +100,17 @@ export default function SettingsPage() {
 
   const { data: eventLogs = [], isLoading: loadingLogs, refetch: refetchLogs } = useQuery({
     queryKey: ["logs", logLevelFilter, autoRefresh],
-    queryFn: () => api.getLogs(1000),
-    refetchInterval: autoRefresh ? 2000 : false, // تحديث أسرع (كل ثانيتين)
+    queryFn: async () => {
+      try {
+        const data = await api.getLogs(1000);
+        return Array.isArray(data) ? data : [];
+      } catch (err) {
+        console.error("Error fetching logs:", err);
+        return [];
+      }
+    },
+    refetchInterval: autoRefresh ? 2000 : false,
+    placeholderData: (previousData) => previousData,
   });
 
   // Auto-scroll logic
@@ -849,15 +858,17 @@ export default function SettingsPage() {
                 {autoRefresh && <span className="flex items-center gap-1"><span className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></span> بث مباشر</span>}
               </div>
 
-              <div ref={logsContainerRef} className="bg-slate-950 dark:bg-slate-950 border border-slate-700 dark:border-slate-700 rounded-lg font-mono text-xs overflow-y-auto max-h-[600px] md:max-h-[700px] p-4 space-y-1 shadow-lg" style={{ backgroundColor: '#0f1729' }}>
-                {loadingLogs && eventLogs.length === 0 ? (
-                  <div className="flex justify-center p-8">
-                    <Loader className="h-6 w-6 animate-spin text-blue-400" />
+              <div ref={logsContainerRef} className="bg-slate-950 border border-slate-700 rounded-lg font-mono text-xs overflow-y-auto max-h-[600px] md:max-h-[700px] p-4 space-y-1 shadow-lg" style={{ backgroundColor: '#0f1729' }}>
+                {loadingLogs && (!eventLogs || eventLogs.length === 0) ? (
+                  <div className="flex flex-col items-center justify-center p-8 space-y-3">
+                    <Loader className="h-8 w-8 animate-spin text-blue-400" />
+                    <p className="text-slate-400 text-sm animate-pulse">جاري الاتصال بقاعدة البيانات...</p>
                   </div>
-                ) : deduplicatedLogs.length === 0 ? (
-                  <div className="text-center text-slate-500 py-8">
-                    <ScrollText className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                    لا توجد أحداث حالياً
+                ) : !eventLogs || eventLogs.length === 0 ? (
+                  <div className="text-center text-slate-500 py-8 flex flex-col items-center justify-center">
+                    <ScrollText className="h-10 w-10 mb-2 opacity-20" />
+                    <p className="text-sm">لا توجد أحداث مسجلة حالياً</p>
+                    <p className="text-xs opacity-50 mt-1">تأكد من تشغيل البوت لتوليد السجلات</p>
                   </div>
                 ) : (
                   <>

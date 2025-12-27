@@ -644,7 +644,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     try {
       const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
       const logs = await storage.getErrorLogs(limit);
-      res.json(logs);
+      res.json(logs || []);
     } catch (error) {
       handleError(res, error, "Failed to get logs");
     }
