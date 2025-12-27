@@ -29,16 +29,12 @@ from handlers import admin, task
 error_logger = ErrorLogger("main")
 
 def log_detailed(level: str, component: str, function: str, message: str, data: dict | None = None):
-    """Log with full details"""
+    """Log with full details - single output only to avoid duplication"""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
     log_msg = f"[{timestamp}] [{level.upper()}] [{component}::{function}] {message}"
     if data:
         log_msg += f" | Data: {data}"
     print(log_msg)
-    if level == "error":
-        error_logger.log_warning(log_msg)
-    else:
-        error_logger.log_info(log_msg)
 
 # Global client - will be initialized with session from database
 app: Client | None = None

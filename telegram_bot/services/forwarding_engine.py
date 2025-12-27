@@ -28,16 +28,12 @@ from services.ai_pipeline import ai_pipeline
 error_logger = ErrorLogger("forwarding_engine")
 
 def log_detailed(level: str, component: str, function: str, message: str, data: Optional[Dict[str, Any]] = None):
-    """Log with full details"""
+    """Log with full details - single output only to avoid duplication"""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
     log_msg = f"[{timestamp}] [{level.upper()}] [{component}::{function}] {message}"
     if data:
         log_msg += f" | Data: {data}"
     print(log_msg)
-    if level == "error":
-        error_logger.log_warning(log_msg)
-    else:
-        error_logger.log_info(log_msg)
 
 class ForwardingEngine:
     """Main forwarding engine"""
