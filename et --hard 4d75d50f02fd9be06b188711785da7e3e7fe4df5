@@ -1,0 +1,65 @@
+[33mcommit 6478abd511b0c1dc3b365a7eb35e0bcdb67f4f53[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31mgitsafe-backup/main[m[33m)[m
+Author: kian510 <51851594-kian510@users.noreply.replit.com>
+Date:   Sat Dec 27 02:38:48 2025 +0000
+
+    Filter logs to show only recent activity and improve display
+    
+    Update API to filter logs by timestamp, enhancing the settings page to display only live logs since the session started.
+    
+    Replit-Commit-Author: Agent
+    Replit-Commit-Session-Id: 6ebbf752-86e1-427d-a4e4-a34b191aa1d0
+    Replit-Commit-Checkpoint-Type: full_checkpoint
+    Replit-Commit-Event-Id: ae69681b-afac-40f9-b833-c35c6cc53c13
+    Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/c1dfbc0b-d20e-4048-b60f-6e0a28d0d34c/6ebbf752-86e1-427d-a4e4-a34b191aa1d0/d5A3ovQ
+
+[33mcommit 4d75d50f02fd9be06b188711785da7e3e7fe4df5[m
+Author: kian510 <51851594-kian510@users.noreply.replit.com>
+Date:   Sat Dec 27 02:36:37 2025 +0000
+
+    Saved progress at the end of the loop
+    
+    Replit-Commit-Author: Agent
+    Replit-Commit-Session-Id: 6ebbf752-86e1-427d-a4e4-a34b191aa1d0
+    Replit-Commit-Checkpoint-Type: full_checkpoint
+    Replit-Commit-Event-Id: 80dc0d32-73e0-4546-bb70-db6255af1093
+    Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/c1dfbc0b-d20e-4048-b60f-6e0a28d0d34c/6ebbf752-86e1-427d-a4e4-a34b191aa1d0/d5A3ovQ
+
+[33mcommit 58035be18856eb53231a6ae6e34ee1a90e951b35[m
+Author: kian510 <51851594-kian510@users.noreply.replit.com>
+Date:   Sat Dec 27 02:35:57 2025 +0000
+
+    Fix live log display and scrolling in settings page
+    
+    Update settings page to use smooth scrolling to instant, and change error log ordering from descending to ascending timestamp.
+    
+    Replit-Commit-Author: Agent
+    Replit-Commit-Session-Id: 6ebbf752-86e1-427d-a4e4-a34b191aa1d0
+    Replit-Commit-Checkpoint-Type: intermediate_checkpoint
+    Replit-Commit-Event-Id: 646ee949-a6b7-42a0-9650-c2a6b8328723
+    Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/c1dfbc0b-d20e-4048-b60f-6e0a28d0d34c/6ebbf752-86e1-427d-a4e4-a34b191aa1d0/d5A3ovQ
+
+[33mcommit 0412ee5c767fa43d385034f302ff70e764690ef3[m
+Author: kian510 <51851594-kian510@users.noreply.replit.com>
+Date:   Sat Dec 27 02:30:11 2025 +0000
+
+    Saved progress at the end of the loop
+    
+    Replit-Commit-Author: Agent
+    Replit-Commit-Session-Id: 6ebbf752-86e1-427d-a4e4-a34b191aa1d0
+    Replit-Commit-Checkpoint-Type: full_checkpoint
+    Replit-Commit-Event-Id: 94545fce-dbba-4a49-85b8-98147fba37d7
+    Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/c1dfbc0b-d20e-4048-b60f-6e0a28d0d34c/6ebbf752-86e1-427d-a4e4-a34b191aa1d0/d5A3ovQ
+
+[33mcommit f7deaae9aa0b157fee38b249b12488e59124fda1[m
+Author: kian510 <51851594-kian510@users.noreply.replit.com>
+Date:   Sat Dec 27 02:29:17 2025 +0000
+
+    Fix live log display in settings and improve error handling
+    
+    Introduce a new `/api/logs` endpoint in `server/routes.ts` and update `client/src/pages/settings.tsx` to fetch and display logs with improved error handling and placeholder data, resolving the previous loading loop issue.
+    
+    Replit-Commit-Author: Agent
+    Replit-Commit-Session-Id: 6ebbf752-86e1-427d-a4e4-a34b191aa1d0
+    Replit-Commit-Checkpoint-Type: intermediate_checkpoint
+    Replit-Commit-Event-Id: 1bf99348-ac09-4a02-b0e1-f5d80ce060c8
+    Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/c1dfbc0b-d20e-4048-b60f-6e0a28d0d34c/6ebbf752-86e1-427d-a4e4-a34b191aa1d0/d5A3ovQ
