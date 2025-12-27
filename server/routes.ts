@@ -8,7 +8,7 @@ import { z } from "zod";
 import { pushToGitHub, getGitHubInfo, listGitHubRepos, pushToGitHubRepo, getBranches, getFileChanges } from "./github-sync";
 
 const handleError = (res: Response, error: unknown, message: string = "An error occurred") => {
-  console.error(error);
+  // console.error(error);
   res.status(500).json({ error: message, details: error instanceof Error ? error.message : String(error) });
 };
 

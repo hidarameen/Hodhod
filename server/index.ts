@@ -15,8 +15,8 @@ async function startAuthService() {
   try {
     await authServiceManager.start();
   } catch (error) {
-    console.error("[auth-service] Failed to start:", error);
-    console.log("[auth-service] Continuing without auth service...");
+    // console.error("[auth-service] Failed to start:", error);
+    // console.log("[auth-service] Continuing without auth service...");
   }
 }
 
@@ -48,6 +48,8 @@ function startTelegramBot() {
   });
 
   botProcess.stdout?.on("data", (data) => {
+    // Disabled bot stdout logging to Replit console
+    /*
     const lines = data.toString().trim().split("\n");
     lines.forEach((line: string) => {
       if (line.trim()) {
@@ -55,9 +57,12 @@ function startTelegramBot() {
         logger.info("telegram-bot", "process", line);
       }
     });
+    */
   });
 
   botProcess.stderr?.on("data", (data) => {
+    // Disabled bot stderr logging to Replit console
+    /*
     const lines = data.toString().trim().split("\n");
     lines.forEach((line: string) => {
       if (line.trim()) {
@@ -65,6 +70,7 @@ function startTelegramBot() {
         logger.error("telegram-bot", "process", line);
       }
     });
+    */
   });
 
   botProcess.on("close", (code) => {
@@ -74,15 +80,15 @@ function startTelegramBot() {
     // Auto-restart if not too many attempts
     if (botRestartAttempts < MAX_RESTART_ATTEMPTS) {
       botRestartAttempts++;
-      console.log(`[telegram-bot] Restarting in ${RESTART_DELAY / 1000}s (attempt ${botRestartAttempts}/${MAX_RESTART_ATTEMPTS})`);
+      // console.log(`[telegram-bot] Restarting in ${RESTART_DELAY / 1000}s (attempt ${botRestartAttempts}/${MAX_RESTART_ATTEMPTS})`);
       setTimeout(startTelegramBot, RESTART_DELAY);
     } else {
-      console.error("[telegram-bot] Max restart attempts reached. Bot stopped.");
+      // console.error("[telegram-bot] Max restart attempts reached. Bot stopped.");
     }
   });
 
   botProcess.on("error", (err) => {
-    console.error(`[telegram-bot] Failed to start: ${err.message}`);
+    // console.error(`[telegram-bot] Failed to start: ${err.message}`);
     botProcess = null;
   });
 
@@ -128,15 +134,15 @@ app.use(
 app.use(express.urlencoded({ extended: false }));
 
 export function log(message: string, source = "express") {
-  const formattedTime = new Date().toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true,
-  });
-
-  console.log(`${formattedTime} [${source}] ${message}`);
-  logger.info(source, "log", message);
+  // Disabled console logging to improve performance and privacy in Replit console
+  // const formattedTime = new Date().toLocaleTimeString("en-US", {
+  //   hour: "numeric",
+  //   minute: "2-digit",
+  //   second: "2-digit",
+  //   hour12: true,
+  // });
+  // console.log(`${formattedTime} [${source}] ${message}`);
+  // logger.info(source, "log", message);
 }
 
 app.use((req, res, next) => {
