@@ -40,7 +40,11 @@ async function seed() {
       .values(providers)
       .onConflictDoUpdate({
         target: schema.aiProviders.name,
-        set: { isActive: true, displayName: sql`EXCLUDED.display_name`, config: sql`EXCLUDED.config` },
+        set: { 
+          isActive: true, 
+          displayName: sql`EXCLUDED.display_name`, 
+          config: sql`EXCLUDED.config` 
+        },
       })
       .returning();
 

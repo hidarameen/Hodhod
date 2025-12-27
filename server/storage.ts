@@ -137,15 +137,8 @@ async function runMigrations(): Promise<void> {
 // Seed default AI providers and models
 async function seedProviders(): Promise<void> {
   try {
-    const providerCount = await queryClient`SELECT COUNT(*) as count FROM ai_providers`;
-    if (providerCount[0]?.count > 0) {
-      console.log('[DB] Providers already seeded');
-      return;
-    }
+    console.log('[DB] Ensuring default AI providers exist...');
     
-    console.log('[DB] Seeding default AI providers...');
-    
-    // Insert default providers
     const providers = [
       { name: 'openai', isActive: true, config: JSON.stringify({ baseUrl: 'https://api.openai.com/v1' }) },
       { name: 'groq', isActive: true, config: JSON.stringify({ baseUrl: 'https://api.groq.com/openai/v1' }) },
@@ -157,11 +150,13 @@ async function seedProviders(): Promise<void> {
       await queryClient`
         INSERT INTO ai_providers (name, is_active, config)
         VALUES (${provider.name}, ${provider.isActive}, ${provider.config})
-        ON CONFLICT (name) DO NOTHING
+        ON CONFLICT (name) DO UPDATE SET 
+          is_active = EXCLUDED.is_active,
+          config = EXCLUDED.config
       `;
     }
     
-    console.log('[DB] ✓ AI providers seeded successfully');
+    console.log('[DB] ✓ AI providers synchronized');
   } catch (error: any) {
     console.warn('[DB] Warning seeding providers:', error?.message || error);
   }
@@ -170,80 +165,17 @@ async function seedProviders(): Promise<void> {
 // Seed default AI models
 async function seedModels(): Promise<void> {
   try {
-    const modelCount = await queryClient`SELECT COUNT(*) as count FROM ai_models`;
-    if (modelCount[0]?.count > 0) {
-      console.log('[DB] Models already seeded');
-      return;
-    }
+    console.log('[DB] Ensuring default AI models exist...');
     
-    console.log('[DB] Seeding default AI models...');
-    
-    // Get provider IDs
     const providers = await queryClient`SELECT id, name FROM ai_providers`;
     const providerMap = new Map(providers.map((p: any) => [p.name, p.id]));
     
     const models = [
-      // OpenAI - GPT-5.2 Series (Latest - Dec 2025)
-      { providerId: providerMap.get('openai'), modelName: 'gpt-5.2-instant', displayName: 'GPT-5.2 Instant', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'gpt-5.2-thinking', displayName: 'GPT-5.2 Thinking', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'gpt-5.2-pro', displayName: 'GPT-5.2 Pro', isActive: true },
-      
-      // OpenAI - GPT-5.1 Series (Reasoning)
-      { providerId: providerMap.get('openai'), modelName: 'gpt-5.1', displayName: 'GPT-5.1', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'gpt-5.1-chat', displayName: 'GPT-5.1 Chat', isActive: true },
-      
-      // OpenAI - GPT-5 Series
-      { providerId: providerMap.get('openai'), modelName: 'gpt-5', displayName: 'GPT-5', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'gpt-5-mini', displayName: 'GPT-5 Mini', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'gpt-5-nano', displayName: 'GPT-5 Nano', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'gpt-5-codex', displayName: 'GPT-5 Codex', isActive: true },
-      
-      // OpenAI - GPT-4.1 Series
-      { providerId: providerMap.get('openai'), modelName: 'gpt-4.1', displayName: 'GPT-4.1', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'gpt-4.1-mini', displayName: 'GPT-4.1 Mini', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'gpt-4.1-nano', displayName: 'GPT-4.1 Nano', isActive: true },
-      
-      // OpenAI - GPT-4o Series
       { providerId: providerMap.get('openai'), modelName: 'gpt-4o', displayName: 'GPT-4o', isActive: true },
       { providerId: providerMap.get('openai'), modelName: 'gpt-4o-mini', displayName: 'GPT-4o Mini', isActive: true },
-      
-      // OpenAI - O-Series (Advanced Reasoning)
-      { providerId: providerMap.get('openai'), modelName: 'o3', displayName: 'o3', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'o4-mini', displayName: 'o4 Mini', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'o3-deep-research', displayName: 'o3 Deep Research', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'o4-mini-deep-research', displayName: 'o4 Mini Deep Research', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'o1-pro', displayName: 'o1 Pro', isActive: true },
-      
-      // OpenAI - Audio Models
-      { providerId: providerMap.get('openai'), modelName: 'gpt-4o-transcribe', displayName: 'GPT-4o Transcribe', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'gpt-4o-mini-transcribe', displayName: 'GPT-4o Mini Transcribe', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'gpt-4o-mini-tts', displayName: 'GPT-4o Mini TTS', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'gpt-4o-audio', displayName: 'GPT-4o Audio', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'gpt-4o-mini-audio', displayName: 'GPT-4o Mini Audio', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'whisper-1', displayName: 'Whisper-1', isActive: true },
-      
-      // OpenAI - Vision & Image Generation
-      { providerId: providerMap.get('openai'), modelName: 'gpt-image-1', displayName: 'GPT Image-1', isActive: true },
-      
-      // OpenAI - Search & Specialized
-      { providerId: providerMap.get('openai'), modelName: 'gpt-4o-search-preview', displayName: 'GPT-4o Search', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'gpt-4o-mini-search-preview', displayName: 'GPT-4o Mini Search', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'computer-use-preview', displayName: 'Computer Use Preview', isActive: true },
-      
-      // OpenAI - Embeddings
-      { providerId: providerMap.get('openai'), modelName: 'text-embedding-3-large', displayName: 'Text Embedding 3 Large', isActive: true },
-      { providerId: providerMap.get('openai'), modelName: 'text-embedding-3-small', displayName: 'Text Embedding 3 Small', isActive: true },
-      
-      // Groq models
       { providerId: providerMap.get('groq'), modelName: 'llama-3.3-70b-versatile', displayName: 'LLaMA 3.3 70B', isActive: true },
-      { providerId: providerMap.get('groq'), modelName: 'qwen/qwen3-32b', displayName: 'Qwen 3 32B', isActive: true },
-      
-      // Claude models
       { providerId: providerMap.get('claude'), modelName: 'claude-3-opus-20240229', displayName: 'Claude 3 Opus', isActive: true },
       { providerId: providerMap.get('claude'), modelName: 'claude-3-sonnet-20240229', displayName: 'Claude 3 Sonnet', isActive: true },
-      
-      // HuggingFace models
-      { providerId: providerMap.get('huggingface'), modelName: 'meta-llama/Llama-2-70b-chat-hf', displayName: 'LLaMA 2 70B Chat', isActive: true },
     ];
     
     for (const model of models) {
@@ -251,12 +183,14 @@ async function seedModels(): Promise<void> {
         await queryClient`
           INSERT INTO ai_models (provider_id, model_name, display_name, is_active)
           VALUES (${model.providerId}, ${model.modelName}, ${model.displayName}, ${model.isActive})
-          ON CONFLICT DO NOTHING
+          ON CONFLICT (provider_id, model_name) DO UPDATE SET
+            display_name = EXCLUDED.display_name,
+            is_active = EXCLUDED.is_active
         `;
       }
     }
     
-    console.log('[DB] ✓ AI models seeded successfully');
+    console.log('[DB] ✓ AI models synchronized');
   } catch (error: any) {
     console.warn('[DB] Warning seeding models:', error?.message || error);
   }
@@ -270,7 +204,7 @@ export async function ensureTablesExist(): Promise<void> {
     // Run migrations automatically
     await runMigrations();
     
-    // Seed default providers and models
+    // Seed default providers and models on every startup to ensure they exist
     await seedProviders();
     await seedModels();
     
