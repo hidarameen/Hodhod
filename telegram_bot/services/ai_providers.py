@@ -103,9 +103,15 @@ class OpenAIProvider(AIProvider):
             elif "o4" in model_lower:
                 models_to_try.extend(["gpt-4o", "gpt-4-turbo", "gpt-4"])
             # Current stable models
+            # ✅ Fix: Use gpt-4o as default for unknown models to avoid 404
             elif model_lower not in ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"]:
-                # Unknown model, try fallbacks
-                models_to_try.extend(["gpt-4o", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"])
+                if model_lower == "whisper-1":
+                    # Whisper-1 is an audio model, not a chat model
+                    error_logger.log_warning(f"[OpenAI] ⚠️ whisper-1 is not a chat model, falling back to gpt-4o")
+                    models_to_try = ["gpt-4o", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"]
+                else:
+                    # Unknown model, try fallbacks
+                    models_to_try.extend(["gpt-4o", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"])
             
             # Per-model max_tokens limits
             model_token_limits = {

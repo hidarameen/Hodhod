@@ -1138,7 +1138,9 @@ export class DbStorage implements IStorage {
 
   async getPublishingTemplate(id: number): Promise<any> {
     const result = await database.select().from(schema.aiPublishingTemplates).where(eq(schema.aiPublishingTemplates.id, id)).limit(1);
-    return result[0];
+    if (!result[0]) return undefined;
+    const fields = await this.getTemplateCustomFields(id);
+    return { ...result[0], fields };
   }
 
   async getDefaultPublishingTemplate(taskId: number): Promise<any> {
@@ -1147,7 +1149,21 @@ export class DbStorage implements IStorage {
       .from(schema.aiPublishingTemplates)
       .where(and(eq(schema.aiPublishingTemplates.taskId, taskId), eq(schema.aiPublishingTemplates.isDefault, true)))
       .limit(1);
-    return result[0];
+    if (!result[0]) return undefined;
+    const fields = await this.getTemplateCustomFields(result[0].id);
+    return { ...result[0], fields };
+  }
+
+  async updateTrainingExample(id: number, updates: any): Promise<void> {
+    await database.update(schema.aiTrainingExamples).set(updates).where(eq(schema.aiTrainingExamples.id, id));
+  }
+
+  async resetSerialCounter(taskId: number): Promise<void> {
+    await database.update(schema.archiveSerialCounter).set({ lastSerial: 0, updatedAt: new Date() }).where(eq(schema.archiveSerialCounter.taskId, taskId));
+  }
+
+  async deleteArchiveMessagesByTask(taskId: number): Promise<void> {
+    await database.delete(schema.messageArchive).where(eq(schema.messageArchive.taskId, taskId));
   }
 
   async createPublishingTemplate(data: any): Promise<any> {

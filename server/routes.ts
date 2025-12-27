@@ -437,10 +437,40 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       if (isNaN(providerId)) {
         return res.status(400).json({ error: "Invalid provider ID" });
       }
-      const models = await storage.getModelsByProvider(providerId);
+      const models = await storage.getAiModelsByProvider(providerId);
       res.json(models);
     } catch (error) {
       handleError(res, error, "Failed to get models for provider");
+    }
+  });
+
+  app.patch("/api/ai/training-examples/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.updateTrainingExample(id, req.body);
+      res.json({ success: true });
+    } catch (error) {
+      handleError(res, error, "Failed to update training example");
+    }
+  });
+
+  app.post("/api/archive/reset-serial/:taskId", async (req, res) => {
+    try {
+      const taskId = parseInt(req.params.taskId);
+      await storage.resetSerialCounter(taskId);
+      res.json({ success: true });
+    } catch (error) {
+      handleError(res, error, "Failed to reset serial counter");
+    }
+  });
+
+  app.delete("/api/archive/messages/task/:taskId", async (req, res) => {
+    try {
+      const taskId = parseInt(req.params.taskId);
+      await storage.deleteArchiveMessagesByTask(taskId);
+      res.json({ success: true });
+    } catch (error) {
+      handleError(res, error, "Failed to delete archive messages");
     }
   });
 
