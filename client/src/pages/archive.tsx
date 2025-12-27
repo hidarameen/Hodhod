@@ -1121,6 +1121,21 @@ export default function ArchivePage() {
                 <Button
                   variant="outline"
                   size="sm"
+                  onClick={() => setClearArchiveDialogOpen(true)}
+                  className="gap-2 text-red-500 hover:text-red-600 hover:bg-red-50"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  <span className="hidden sm:inline">تفريغ الأرشيف</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>تفريغ الأرشيف وتصفير رقم القيد</TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={handleExportCSV}
                   className="gap-2"
                 >
