@@ -226,6 +226,7 @@ class LinkProcessor:
                 "--no-playlist",
                 "--dump-json",
                 "--socket-timeout", "15",
+                "--verbose",  # ✅ Added for detailed logging
             ]
             
             cookies_path = _get_cookies_path(platform_hint)
@@ -237,6 +238,8 @@ class LinkProcessor:
             
             cmd.append(url)
             
+            error_logger.log_info(f"[VIDEO_INFO] Running command: {' '.join(cmd)}")
+            
             process = await asyncio.create_subprocess_exec(
                 *cmd,
                 stdout=asyncio.subprocess.PIPE,
@@ -247,6 +250,10 @@ class LinkProcessor:
                 process.communicate(),
                 timeout=45
             )
+            
+            if stderr:
+                stderr_str = stderr.decode('utf-8', errors='ignore')
+                error_logger.log_info(f"[VIDEO_INFO] stderr: {stderr_str}")
             
             if process.returncode == 0 and stdout:
                 info = json.loads(stdout.decode('utf-8', errors='ignore'))
@@ -346,14 +353,21 @@ class LinkProcessor:
                     "--format", format_str,
                     "--merge-output-format", "mp4",
                     "--output", output_path,
-                    "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+                    "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+                    "--verbose",  # ✅ Added for detailed logging
                 ]
                 if cookies_path: cmd.extend(["--cookies", cookies_path])
                 cmd.append(url)
                 
+                await task_logger.log_info(f"   Command: {' '.join(cmd)}")
+                
                 try:
                     process = await asyncio.create_subprocess_exec(*cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
-                    await asyncio.wait_for(process.communicate(), timeout=DOWNLOAD_TIMEOUT)
+                    stdout, stderr = await asyncio.wait_for(process.communicate(), timeout=DOWNLOAD_TIMEOUT)
+                    
+                    if stderr:
+                        stderr_str = stderr.decode('utf-8', errors='ignore')
+                        await task_logger.log_info(f"   [DEBUG] stderr: {stderr_str}")
                     
                     if process.returncode == 0:
                         found_path = self._find_downloaded_file(task_id, output_path)
