@@ -691,10 +691,22 @@ class AIManager:
                 with open(audio_file_path, "rb") as audio_file:
                     error_logger.log_info(f"[Whisper] Sending to Groq Whisper API (whisper-large-v3-turbo) | MIME: {mime_type}")
                     
-                    transcript = client.audio.transcriptions.create(
-                        file=(os.path.basename(audio_file_path), audio_file, mime_type),
-                        **transcribe_params
-                    )
+                    # Build Groq-specific parameters (strict typing)
+                    groq_transcribe_params = {
+                        "model": "whisper-large-v3-turbo",
+                        "file": (os.path.basename(audio_file_path), audio_file, mime_type)
+                    }
+                    
+                    if response_format in ["json", "text", "verbose_json"]:
+                        groq_transcribe_params["response_format"] = response_format
+                    
+                    if language and language != "auto":
+                        groq_transcribe_params["language"] = language
+                    
+                    if prompt and isinstance(prompt, str):
+                        groq_transcribe_params["prompt"] = prompt
+                    
+                    transcript = client.audio.transcriptions.create(**groq_transcribe_params)
                 
                 transcribed_text = transcript.text if hasattr(transcript, 'text') else str(transcript)
                 

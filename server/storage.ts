@@ -1195,32 +1195,34 @@ export class DbStorage implements IStorage {
   }
 
   async updatePublishingTemplate(id: number, data: any): Promise<void> {
-    // Filter out customFields and fields before saving to database
-    const { customFields, fields, ...templateData } = data;
+    // Build update object - ONLY allowed fields with strict type checking
+    const updateData: Record<string, any> = {};
     
-    // Only include allowed fields
-    const allowedFields = {
-      name: templateData.name,
-      templateType: templateData.templateType,
-      isDefault: templateData.isDefault,
-      headerText: templateData.headerText,
-      headerFormatting: templateData.headerFormatting,
-      footerText: templateData.footerText,
-      footerFormatting: templateData.footerFormatting,
-      fieldSeparator: templateData.fieldSeparator,
-      useNewlineAfterHeader: templateData.useNewlineAfterHeader,
-      useNewlineBeforeFooter: templateData.useNewlineBeforeFooter,
-      maxLength: templateData.maxLength,
-      extractionPrompt: templateData.extractionPrompt,
-      isActive: templateData.isActive,
-      updatedAt: new Date()
-    };
+    // Whitelist of allowed string fields
+    const stringFields = ['name', 'templateType', 'headerText', 'headerFormatting', 'footerText', 'footerFormatting', 'fieldSeparator', 'extractionPrompt'];
+    for (const field of stringFields) {
+      if (field in data && typeof data[field] === 'string') {
+        updateData[field] = data[field];
+      }
+    }
     
-    // Filter out undefined values
-    const updateData = Object.fromEntries(
-      Object.entries(allowedFields).filter(([_, v]) => v !== undefined)
-    );
+    // Whitelist of allowed boolean fields
+    const booleanFields = ['isDefault', 'useNewlineAfterHeader', 'useNewlineBeforeFooter', 'isActive'];
+    for (const field of booleanFields) {
+      if (field in data && typeof data[field] === 'boolean') {
+        updateData[field] = data[field];
+      }
+    }
     
+    // Whitelist of allowed integer fields
+    if ('maxLength' in data && typeof data.maxLength === 'number' && Number.isInteger(data.maxLength)) {
+      updateData.maxLength = data.maxLength;
+    }
+    
+    // Always set the timestamp
+    updateData.updatedAt = new Date();
+    
+    // Execute the update
     await database.update(schema.aiPublishingTemplates).set(updateData).where(eq(schema.aiPublishingTemplates.id, id));
   }
 

@@ -1141,9 +1141,9 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   app.patch("/api/publishing-templates/:id", async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
-      const { customFields, ...templateData } = req.body;
+      const { customFields, fields, createdAt, updatedAt, id: _, taskId, ...templateData } = req.body;
       
-      // Update template
+      // Update template (all dangerous/metadata fields stripped)
       await storage.updatePublishingTemplate(id, templateData);
       
       // Handle custom fields if provided
