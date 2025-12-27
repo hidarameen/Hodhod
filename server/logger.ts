@@ -15,9 +15,8 @@ class Logger {
 
   log(entry: LogEntry) {
     this.queue.push(entry);
-    if (this.queue.length >= 10) {
-      this.flush();
-    }
+    // إرسال السجلات فوراً لضمان الظهور المباشر في لوحة الويب
+    this.flush();
   }
 
   async flush() {
