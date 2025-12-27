@@ -72,21 +72,31 @@ def _get_cookies_path(platform: Optional[str] = None) -> Optional[str]:
     cookies_content = ""
     target_path = "/tmp/cookies.txt"
     
+    # Debug: Check environment variables
+    # error_logger.log_info(f"Available cookie env vars: {list(os.environ.keys())}")
+    
     if env_var:
         cookies_content = os.environ.get(env_var, '')
+        if cookies_content:
+            error_logger.log_info(f"Found specific cookies for {platform} in {env_var}")
         target_path = f"/tmp/{env_var.lower()}.txt"
     
     # Check if we have specific cookies, if not, fallback to YOUTUBE_COOKIES
     if not cookies_content:
         cookies_content = os.environ.get('YOUTUBE_COOKIES', '')
+        if cookies_content:
+            error_logger.log_info("Falling back to YOUTUBE_COOKIES")
         target_path = "/tmp/youtube_cookies.txt"
     
     # If still no cookies, try generic COOKIES or GENERAL_COOKIES env var
     if not cookies_content:
         cookies_content = os.environ.get('COOKIES', '') or os.environ.get('GENERAL_COOKIES', '')
+        if cookies_content:
+            error_logger.log_info("Falling back to general COOKIES/GENERAL_COOKIES")
         target_path = "/tmp/general_cookies.txt"
         
     if not cookies_content:
+        error_logger.log_warning(f"No cookies found for {platform or 'generic'}. This will likely cause a rate-limit error.")
         return None
     
     try:
@@ -360,8 +370,10 @@ class LinkProcessor:
                     "--merge-output-format", "mp4",
                     "--output", output_path,
                     "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
-                    "--socket-timeout", "20",
-                    "--retries", "3",
+                    "--socket-timeout", "30",
+                    "--retries", "5",
+                    "--geo-bypass",
+                    "--no-check-certificate",
                     "--verbose",
                 ]
                 if cookies_path: cmd.extend(["--cookies", cookies_path])
