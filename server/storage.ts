@@ -336,6 +336,12 @@ export interface IStorage {
   getProcessingConfig(taskId?: number): Promise<any>;
   saveProcessingConfig(data: any): Promise<number>;
 
+  // AI Content Filters
+  getContentFilters(taskId: number): Promise<any[]>;
+  createContentFilter(data: any): Promise<any>;
+  updateContentFilter(id: number, data: any): Promise<void>;
+  deleteContentFilter(id: number): Promise<void>;
+
   // AI Publishing Templates
   getPublishingTemplates(taskId: number): Promise<any[]>;
   getPublishingTemplate(id: number): Promise<any>;
@@ -1027,6 +1033,36 @@ export class DbStorage implements IStorage {
       const result = await database.insert(schema.aiProcessingConfig).values(rest).returning();
       return result[0].id;
     }
+  }
+
+  // AI Content Filters
+  async getContentFilters(taskId: number): Promise<any[]> {
+    return await database
+      .select()
+      .from(schema.aiContentFilters)
+      .where(eq(schema.aiContentFilters.taskId, taskId))
+      .orderBy(desc(schema.aiContentFilters.priority));
+  }
+
+  async createContentFilter(data: any): Promise<any> {
+    const result = await database
+      .insert(schema.aiContentFilters)
+      .values(data)
+      .returning();
+    return result[0];
+  }
+
+  async updateContentFilter(id: number, data: any): Promise<void> {
+    await database
+      .update(schema.aiContentFilters)
+      .set(data)
+      .where(eq(schema.aiContentFilters.id, id));
+  }
+
+  async deleteContentFilter(id: number): Promise<void> {
+    await database
+      .delete(schema.aiContentFilters)
+      .where(eq(schema.aiContentFilters.id, id));
   }
 
   // AI Publishing Templates
