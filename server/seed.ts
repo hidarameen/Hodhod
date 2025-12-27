@@ -73,8 +73,32 @@ async function seed() {
       },
       {
         providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "gpt-5.1-codex",
+        displayName: "GPT-5.1 Codex",
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "gpt-5.1-codex-max",
+        displayName: "GPT-5.1 Codex Max",
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
         modelName: "gpt-5",
         displayName: "GPT-5",
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "gpt-5-pro",
+        displayName: "GPT-5 Pro",
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "gpt-5-codex",
+        displayName: "GPT-5 Codex",
         isActive: true,
       },
       {
@@ -137,6 +161,43 @@ async function seed() {
         providerId: insertedProviders.find(p => p.name === "openai")!.id,
         modelName: "o3-pro",
         displayName: "o3-pro",
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "o3-deep-research",
+        displayName: "o3 Deep Research",
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "o4-mini",
+        displayName: "o4-mini",
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "o4-mini-deep-research",
+        displayName: "o4-mini Deep Research",
+        isActive: true,
+      },
+      // OpenAI - GPT-4.1 Series
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "gpt-4.1",
+        displayName: "GPT-4.1",
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "gpt-4.1-mini",
+        displayName: "GPT-4.1 mini",
+        isActive: true,
+      },
+      {
+        providerId: insertedProviders.find(p => p.name === "openai")!.id,
+        modelName: "gpt-4.1-nano",
+        displayName: "GPT-4.1 nano",
         isActive: true,
       },
       // OpenAI - Specialized

@@ -179,7 +179,16 @@ async function seedModels(): Promise<void> {
       
       // GPT-5 Series
       { providerId: providerMap.get('openai'), modelName: 'gpt-5', displayName: 'GPT-5', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'gpt-5-pro', displayName: 'GPT-5 Pro', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'gpt-5-codex', displayName: 'GPT-5 Codex', isActive: true },
       { providerId: providerMap.get('openai'), modelName: 'gpt-5.1', displayName: 'GPT-5.1', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'gpt-5.1-codex', displayName: 'GPT-5.1 Codex', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'gpt-5.1-codex-max', displayName: 'GPT-5.1 Codex Max', isActive: true },
+      
+      // GPT-4.1 Series
+      { providerId: providerMap.get('openai'), modelName: 'gpt-4.1', displayName: 'GPT-4.1', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'gpt-4.1-mini', displayName: 'GPT-4.1 mini', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'gpt-4.1-nano', displayName: 'GPT-4.1 nano', isActive: true },
       
       // GPT-4o Series
       { providerId: providerMap.get('openai'), modelName: 'gpt-4o', displayName: 'GPT-4o', isActive: true },
@@ -193,6 +202,9 @@ async function seedModels(): Promise<void> {
       { providerId: providerMap.get('openai'), modelName: 'o3', displayName: 'o3', isActive: true },
       { providerId: providerMap.get('openai'), modelName: 'o3-mini', displayName: 'o3-mini', isActive: true },
       { providerId: providerMap.get('openai'), modelName: 'o3-pro', displayName: 'o3-pro', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'o3-deep-research', displayName: 'o3 Deep Research', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'o4-mini', displayName: 'o4-mini', isActive: true },
+      { providerId: providerMap.get('openai'), modelName: 'o4-mini-deep-research', displayName: 'o4-mini Deep Research', isActive: true },
       
       // Specialized & Audio
       { providerId: providerMap.get('openai'), modelName: 'whisper-1', displayName: 'Whisper-1 (Audio Only)', isActive: true, capabilities: JSON.stringify(['audio']) },
