@@ -171,20 +171,32 @@ class ForwardingEngine:
             extracted_data = initial_extracted_data.copy()
             
             # Improved link detection and extraction
+            # ✅ FIX: Only process links if message contains ONLY a URL with no other text
             url = None
             if link_processing and message_text:
+                # Check if the message is only a URL (no other text)
+                message_stripped = message_text.strip()
+                
                 if link_processor.is_video_link(message_text):
-                    url = link_processor.extract_url(message_text)
+                    extracted_url = link_processor.extract_url(message_text)
+                    # Only process if extracted URL is the entire message
+                    if extracted_url and message_stripped == extracted_url.strip():
+                        url = extracted_url
                 else:
-                    # Look for URLs within larger text
+                    # Look for URLs within the message
                     urls = re.findall(r'https?://[^\s<>"]+|www\.[^\s<>"]+', message_text)
                     if urls:
-                        # Prioritize video links if multiple URLs found
+                        # Check if message is ONLY a URL (no other text besides the URL)
                         for u in urls:
-                            if any(domain in u.lower() for domain in ['youtube.com', 'youtu.be', 'instagram.com', 'tiktok.com', 'facebook.com', 'fb.watch', 'x.com', 'twitter.com']):
-                                url = u
-                                break
-                        if not url: url = urls[0]
+                            if message_stripped == u:
+                                # Prioritize video links if multiple URLs found
+                                if any(domain in u.lower() for domain in ['youtube.com', 'youtu.be', 'instagram.com', 'tiktok.com', 'facebook.com', 'fb.watch', 'x.com', 'twitter.com']):
+                                    url = u
+                                    break
+                        # If no video link found, check the first URL
+                        if not url and len(urls) > 0:
+                            if message_stripped == urls[0]:
+                                url = urls[0]
             
             if url:
                 log_detailed("info", "forwarding_engine", "forward_message", f"Processing video link: {url}")
