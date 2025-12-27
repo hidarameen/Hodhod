@@ -642,7 +642,20 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   // ============ Error Logs ============
   app.get("/api/error-logs", async (req: Request, res: Response) => {
     try {
-      const logs = await storage.getErrorLogs();
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+      const minutes = req.query.minutes ? parseInt(req.query.minutes as string) : undefined;
+      
+      let logs;
+      if (minutes) {
+        const since = new Date(Date.now() - minutes * 60 * 1000);
+        // We'll need to update storage to support time-based filtering if needed, 
+        // but for now let's just use the existing getErrorLogs with a higher limit and filter in memory if necessary
+        // Or better, add the storage method if it's missing.
+        logs = await storage.getErrorLogs(limit || 1000);
+        logs = logs.filter((log: any) => new Date(log.timestamp) >= since);
+      } else {
+        logs = await storage.getErrorLogs(limit);
+      }
       res.json(logs);
     } catch (error) {
       handleError(res, error, "Failed to get error logs");

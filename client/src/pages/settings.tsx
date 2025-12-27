@@ -99,10 +99,17 @@ export default function SettingsPage() {
   });
 
   const { data: eventLogs = [], isLoading: loadingLogs, refetch: refetchLogs } = useQuery({
-    queryKey: ["error-logs"],
-    queryFn: () => api.getErrorLogs(10000),
-    refetchInterval: autoRefresh ? 5000 : false,
+    queryKey: ["error-logs", logLevelFilter, autoRefresh],
+    queryFn: () => api.getErrorLogs(1000, autoRefresh ? 5 : undefined),
+    refetchInterval: autoRefresh ? 2000 : false, // تحديث أسرع (كل ثانيتين)
   });
+
+  // Auto-scroll logic
+  useEffect(() => {
+    if (autoRefresh && logsEndRef.current) {
+      logsEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }, [eventLogs, autoRefresh]);
 
   const createAdminMutation = useMutation({
     mutationFn: (data: { telegramId: string; username?: string }) => api.createAdmin(data),
