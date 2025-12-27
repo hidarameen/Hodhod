@@ -232,6 +232,9 @@ class LinkProcessor:
             if cookies_path:
                 cmd.extend(["--cookies", cookies_path])
             
+            # Use general user agent to avoid some blocks
+            cmd.extend(["--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"])
+            
             cmd.append(url)
             
             process = await asyncio.create_subprocess_exec(
@@ -343,6 +346,7 @@ class LinkProcessor:
                     "--format", format_str,
                     "--merge-output-format", "mp4",
                     "--output", output_path,
+                    "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
                 ]
                 if cookies_path: cmd.extend(["--cookies", cookies_path])
                 cmd.append(url)
