@@ -22,6 +22,7 @@ FROM python:3.11-alpine AS python-deps
 WORKDIR /app
 RUN apk add --no-cache gcc g++ musl-dev libffi-dev openssl-dev
 COPY requirements-python.txt ./
+# تثبيت yt-dlp أو أي مكتبات بايثون هنا
 RUN pip install --no-cache-dir -r requirements-python.txt
 
 # Stage 4: Production runtime
@@ -63,6 +64,10 @@ RUN addgroup -g 1001 -S appgroup && \
     chown -R appuser:appgroup /app
 
 USER appuser
+
+# --- التعديل هنا: إضافة مسار البرامج المحلية للمستخدم إلى PATH ---
+ENV PATH="/home/appuser/.local/bin:${PATH}"
+# -----------------------------------------------------------
 
 ENV NODE_ENV=production
 ENV PYTHONUNBUFFERED=1
