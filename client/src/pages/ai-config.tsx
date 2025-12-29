@@ -275,11 +275,11 @@ export default function AIConfigPage() {
                             <span className="font-medium text-foreground">{model.displayName}</span>
                           </div>
                           <span className={`px-1.5 py-0.5 rounded text-[10px] ${
-                            model.capabilities?.includes('audio') 
+                            Array.isArray(model.capabilities) && model.capabilities.includes('audio')
                               ? 'bg-blue-500/20 text-blue-600 dark:text-blue-400' 
                               : 'bg-purple-500/20 text-purple-600 dark:text-purple-400'
                           }`}>
-                            {model.capabilities?.includes('audio') ? 'صوت' : 'نص'}
+                            {Array.isArray(model.capabilities) && model.capabilities.includes('audio') ? 'صوت' : 'نص'}
                           </span>
                         </div>
                       ))}
