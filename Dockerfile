@@ -1,48 +1,75 @@
 # ==========================================
-# Northflanks optimized Docker image
-# Node.js + Python + Alpine
+# Production Dockerfile
+# Node.js + Python 3.11 + Alpine
 # ==========================================
 
-# Stage 1: Node.js dependencies
-FROM node:20-alpine AS deps
+# --------------------------
+# Stage 1: Node.js dependencies (production)
+# --------------------------
+FROM node:20-alpine AS node-deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 
-# Stage 2: Node.js build (with devDependencies)
-FROM node:20-alpine AS builder
+# --------------------------
+# Stage 2: Node.js build
+# --------------------------
+FROM node:20-alpine AS node-builder
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
 RUN npm run build
 
+# --------------------------
 # Stage 3: Python dependencies
+# --------------------------
 FROM python:3.11-alpine AS python-deps
 WORKDIR /app
-RUN apk add --no-cache gcc g++ musl-dev libffi-dev openssl-dev
-COPY requirements-python.txt ./
-RUN pip install --no-cache-dir -r requirements-python.txt
 
+RUN apk add --no-cache \
+    gcc \
+    g++ \
+    musl-dev \
+    libffi-dev \
+    openssl-dev
+
+COPY requirements-python.txt ./
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements-python.txt && \
+    pip install --no-cache-dir yt-dlp
+
+# --------------------------
 # Stage 4: Production runtime
-FROM python:3.11-alpine AS production
+# --------------------------
+FROM python:3.11-alpine
 WORKDIR /app
 
-# Install runtime tools
-RUN apk add --no-cache nodejs npm ffmpeg postgresql-client dumb-init bash curl dos2unix libffi openssl
+# Runtime tools
+RUN apk add --no-cache \
+    nodejs \
+    npm \
+    ffmpeg \
+    postgresql-client \
+    dumb-init \
+    bash \
+    curl \
+    dos2unix \
+    libffi \
+    openssl
 
-# Copy Python packages
+# Copy Python packages & binaries (includes yt-dlp)
 COPY --from=python-deps /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY --from=python-deps /usr/local/bin /usr/local/bin
 
-# Copy built Node.js app and package.json
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package.json ./
+# Copy Node.js build
+COPY --from=node-builder /app/dist ./dist
+COPY --from=node-builder /app/package.json ./
 
 # Copy production node_modules
-COPY --from=deps /app/node_modules ./node_modules
+COPY --from=node-deps /app/node_modules ./node_modules
 
-# Copy all project folders
+# Copy project files
 COPY attached_assets ./attached_assets
 COPY client ./client
 COPY server ./server
@@ -67,6 +94,7 @@ USER appuser
 ENV NODE_ENV=production
 ENV PYTHONUNBUFFERED=1
 ENV PORT=5000
+ENV PATH="/usr/local/bin:${PATH}"
 
 EXPOSE 5000
 
